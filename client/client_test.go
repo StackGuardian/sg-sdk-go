@@ -16,7 +16,7 @@ import (
 
 func TestNewClient(t *testing.T) {
 
-	API_KEY := "apikey " + os.Getenv("SG_API_KEY")
+	API_KEY := "apikey " + os.Getenv("SG_API_TOKEN")
 	SG_ORG := "demo-org"
 	SG_WF_GROUP := "sg-sdk-go-test"
 	SG_WF := "2aumphefkejtj3bv4q3wo"

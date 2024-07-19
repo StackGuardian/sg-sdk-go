@@ -39,7 +39,7 @@ func (c *Client) CreateWorkflowRunStack(
 	wfGrp string,
 	request *sgsdkgo.WorkflowRun,
 	opts ...option.RequestOption,
-) error {
+) (*sgsdkgo.GeneratedWorkfkowRunsStackCreateResponse, error) {
 	options := core.NewRequestOptions(opts...)
 
 	baseURL := "https://api.app.stackguardian.io"
@@ -59,6 +59,7 @@ func (c *Client) CreateWorkflowRunStack(
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
 
+	var response *sgsdkgo.GeneratedWorkfkowRunsStackCreateResponse
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
@@ -68,11 +69,12 @@ func (c *Client) CreateWorkflowRunStack(
 			Headers:     headers,
 			Client:      options.HTTPClient,
 			Request:     request,
+			Response:    &response,
 		},
 	); err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return response, nil
 }
 
 // Get workflow run details

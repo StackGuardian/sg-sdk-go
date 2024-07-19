@@ -24,7 +24,7 @@ func TestNewClient(t *testing.T) {
 	SG_STACK := "Stack-test"
 	SG_STACK_WF := "ansible-Rfde"
 	SG_STACK_WF_RUN := "haoc1yepi6p5"
-	SQ_QA_BASE_URL := "https://testapi.qa.stackguardian.io"
+	SG_BASE_URL := os.Getenv("SG_BASE_URL")
 	t.Run("default", func(t *testing.T) {
 		c := NewClient()
 		assert.Empty(t, c.baseURL)
@@ -60,7 +60,7 @@ func TestNewClient(t *testing.T) {
 	t.Run("get workflow", func(t *testing.T) {
 		c := NewClient(
 			option.WithApiKey(API_KEY),
-			option.WithBaseURL(SQ_QA_BASE_URL),
+			option.WithBaseURL(SG_BASE_URL),
 		)
 		response, err := c.Workflows.Get(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP)
 		_ = response
@@ -70,7 +70,7 @@ func TestNewClient(t *testing.T) {
 	t.Run("ListAll workflow", func(t *testing.T) {
 		c := NewClient(
 			option.WithApiKey(API_KEY),
-			option.WithBaseURL(SQ_QA_BASE_URL),
+			option.WithBaseURL(SG_BASE_URL),
 		)
 		response, err := c.Workflows.ListAll(context.Background(), SG_ORG, SG_WF_GROUP)
 		_ = response
@@ -81,7 +81,7 @@ func TestNewClient(t *testing.T) {
 	t.Run("ListAll workflow runs", func(t *testing.T) {
 		c := NewClient(
 			option.WithApiKey(API_KEY),
-			option.WithBaseURL(SQ_QA_BASE_URL),
+			option.WithBaseURL(SG_BASE_URL),
 		)
 		response, err := c.WorkflowRuns.ListAllWorkflowRuns(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP)
 		_ = response
@@ -93,7 +93,7 @@ func TestNewClient(t *testing.T) {
 	t.Run("ListAll workflow runs stacks", func(t *testing.T) {
 		c := NewClient(
 			option.WithApiKey(API_KEY),
-			option.WithBaseURL(SQ_QA_BASE_URL),
+			option.WithBaseURL(SG_BASE_URL),
 		)
 		response, err := c.WorkflowRuns.ListAllWorkflowRunsStack(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP)
 		status := response.Msg[0].Statuses["pre_0_step"][0].Name
@@ -105,7 +105,7 @@ func TestNewClient(t *testing.T) {
 	t.Run("Get workflow runs stack", func(t *testing.T) {
 		c := NewClient(
 			option.WithApiKey(API_KEY),
-			option.WithBaseURL(SQ_QA_BASE_URL),
+			option.WithBaseURL(SG_BASE_URL),
 		)
 		response, err := c.WorkflowRuns.GetWorkflowRunStack(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP, SG_STACK_WF_RUN)
 		assert.Equal(t, "QUEUED", response.Msg.Statuses["pre_0_step"][0].Name)
@@ -116,7 +116,7 @@ func TestNewClient(t *testing.T) {
 	t.Run("Get workflow runs", func(t *testing.T) {
 		c := NewClient(
 			option.WithApiKey(API_KEY),
-			option.WithBaseURL(SQ_QA_BASE_URL),
+			option.WithBaseURL(SG_BASE_URL),
 		)
 		response, err := c.WorkflowRuns.GetWorkflowRun(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, SG_WF_RUN)
 		assert.Equal(t, "QUEUED", response.Msg.Statuses["pre_0_step"][0].Name)
@@ -127,7 +127,7 @@ func TestNewClient(t *testing.T) {
 	t.Run("Create workflow runs", func(t *testing.T) {
 		c := NewClient(
 			option.WithApiKey(API_KEY),
-			option.WithBaseURL(SQ_QA_BASE_URL),
+			option.WithBaseURL(SG_BASE_URL),
 		)
 		createWorkflowRunRequest := sggosdk.WorkflowRun{
 			DeploymentPlatformConfig: []*sggosdk.DeploymentPlatformConfig{{
@@ -170,7 +170,7 @@ func TestNewClient(t *testing.T) {
 		t.Skip("Skipping Approve workflow runs test since its not idempotent")
 		c := NewClient(
 			option.WithApiKey(API_KEY),
-			option.WithBaseURL(SQ_QA_BASE_URL),
+			option.WithBaseURL(SG_BASE_URL),
 		)
 		approveWfRunRequest := sggosdk.WorkflowRunApproval{
 			Approve: true,

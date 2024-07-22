@@ -38,7 +38,7 @@ func (c *Client) Create(
 	wfGrp string,
 	request *sgsdkgo.Workflow,
 	opts ...option.RequestOption,
-) (*sgsdkgo.WorkflowCreatePatchResponse, error) {
+) (*sgsdkgo.GeneratedWorkflowCreateResponse, error) {
 	options := core.NewRequestOptions(opts...)
 
 	baseURL := "https://api.app.stackguardian.io"
@@ -57,7 +57,7 @@ func (c *Client) Create(
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
 
-	var response *sgsdkgo.WorkflowCreatePatchResponse
+	var response *sgsdkgo.GeneratedWorkflowCreateResponse
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
@@ -163,7 +163,10 @@ func (c *Client) StackWorkflowDelete(
 	return nil
 }
 
+// patch:
 // Update Workflow (Stack)
+//
+// :param PATCH: Update Stack workflow attributes
 func (c *Client) StackWorkflowPatch(
 	ctx context.Context,
 	org string,
@@ -172,7 +175,7 @@ func (c *Client) StackWorkflowPatch(
 	wfGrp string,
 	request *sgsdkgo.PatchedWorkflow,
 	opts ...option.RequestOption,
-) (*sgsdkgo.WorkflowCreatePatchResponse, error) {
+) (*sgsdkgo.GeneratedWorkflowUpdateResponse, error) {
 	options := core.NewRequestOptions(opts...)
 
 	baseURL := "https://api.app.stackguardian.io"
@@ -192,7 +195,7 @@ func (c *Client) StackWorkflowPatch(
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
 
-	var response *sgsdkgo.WorkflowCreatePatchResponse
+	var response *sgsdkgo.GeneratedWorkflowUpdateResponse
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{

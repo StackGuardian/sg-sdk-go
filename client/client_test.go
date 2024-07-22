@@ -57,6 +57,86 @@ func TestNewClient(t *testing.T) {
 		assert.Equal(t, "test", c.header.Get("X-API-Tenancy"))
 	})
 	// Workflows
+
+	t.Run("Create and delete workflow", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		createWorkflowRequest := sggosdk.Workflow{
+			DeploymentPlatformConfig: []*sggosdk.DeploymentPlatformConfig{{
+				Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
+				Config: map[string]interface{}{
+					"profileName":   "DummyConnectorForGoSDK",
+					"integrationId": "/integrations/DummyConnectorForGoSDK"}}},
+			WfType: sggosdk.WfTypeEnumCustom.Ptr(),
+			EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
+				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}},
+			VcsConfig: &sggosdk.VcsConfig{
+				IacVcsConfig: &sggosdk.IacVcsConfig{
+					IacTemplateId:          sggosdk.String("/demo-org/ansible-dummy:3"),
+					UseMarketplaceTemplate: true,
+				},
+				IacInputData: &sggosdk.IacInputData{
+					SchemaType: sggosdk.IacInputDataSchemaTypeEnumFormJsonschema,
+					Data: map[string]interface{}{
+						"bucket_region": "eu-central-1",
+					},
+				},
+			},
+			UserJobCpu:    sggosdk.Int(512),
+			UserJobMemory: sggosdk.Int(1024),
+			RunnerConstraints: &sggosdk.RunnerConstraints{
+				Type: "shared",
+			},
+			Description: sggosdk.String("Dummy Workflow for GoSDK"),
+		}
+		createResponse, err := c.Workflows.Create(context.Background(), SG_ORG, SG_WF_GROUP, &createWorkflowRequest)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, createResponse.Data.ResourceName)
+
+		err = c.Workflows.Delete(context.Background(), SG_ORG, createResponse.Data.ResourceName, SG_WF_GROUP)
+		assert.Empty(t, err)
+	})
+
+	t.Run("Update workflow", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		UpdateWorkflowRequest := sggosdk.PatchedWorkflow{
+			DeploymentPlatformConfig: []*sggosdk.DeploymentPlatformConfig{{
+				Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
+				Config: map[string]interface{}{
+					"profileName":   "DummyConnectorForGoSDK",
+					"integrationId": "/integrations/DummyConnectorForGoSDK"}}},
+			WfType: sggosdk.WfTypeEnumCustom.Ptr(),
+			EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
+				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}},
+			VcsConfig: &sggosdk.VcsConfig{
+				IacVcsConfig: &sggosdk.IacVcsConfig{
+					IacTemplateId:          sggosdk.String("/demo-org/ansible-dummy:3"),
+					UseMarketplaceTemplate: true,
+				},
+				IacInputData: &sggosdk.IacInputData{
+					SchemaType: sggosdk.IacInputDataSchemaTypeEnumFormJsonschema,
+					Data: map[string]interface{}{
+						"bucket_region": "eu-central-1",
+					},
+				},
+			},
+			UserJobCpu:    sggosdk.Int(512),
+			UserJobMemory: sggosdk.Int(1024),
+			RunnerConstraints: &sggosdk.RunnerConstraints{
+				Type: "shared",
+			},
+			Description: sggosdk.String("Dummy Workflow for GoSDK"),
+		}
+		updateWorkflowResponse, err := c.Workflows.Patch(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, &UpdateWorkflowRequest)
+		assert.Empty(t, err)
+		assert.Equal(t, "Workflow "+SG_WF+" updated", updateWorkflowResponse.Msg)
+	})
+
 	t.Run("get workflow", func(t *testing.T) {
 		c := NewClient(
 			option.WithApiKey(API_KEY),
@@ -75,6 +155,26 @@ func TestNewClient(t *testing.T) {
 		response, err := c.Workflows.ListAll(context.Background(), SG_ORG, SG_WF_GROUP)
 		_ = response
 		assert.Empty(t, err)
+	})
+
+	t.Run("List all artifacts (workflow)", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		response, err := c.Workflows.ListAllArtifacts(context.Background(), SG_ORG, "CUSTOM-7OeX", "test-terragrunt")
+		assert.Empty(t, err)
+		assert.Equal(t, 15055, response.Data.Artifacts["orgs/demo-org/wfgrps/test-terragrunt/wfs/CUSTOM-7OeX/artifacts/tfstate.json"].Size)
+	})
+
+	t.Run("workflow output", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		response, err := c.Workflows.Output(context.Background(), SG_ORG, "CUSTOM-7OeX", "test-terragrunt")
+		assert.Empty(t, err)
+		assert.Equal(t, "stackguardian-proper-escargot", response.Data.Outputs["id"].Value)
 	})
 
 	// Workflow Runs
@@ -166,7 +266,7 @@ func TestNewClient(t *testing.T) {
 
 	})
 
-	t.Run("Create workflow runs (stack)", func(t *testing.T) {
+	t.Run("Create and delete workflow runs (stack)", func(t *testing.T) {
 		c := NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),

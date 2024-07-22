@@ -450,7 +450,7 @@ func (c *Client) UpdateWorkflowRun(
 	wfRun string,
 	request *sgsdkgo.PatchedWorkflowRun,
 	opts ...option.RequestOption,
-) (*sgsdkgo.WorkflowRunGetResponse, error) {
+) (*sgsdkgo.GeneratedWorkfkowRunsUpdateResponse, error) {
 	options := core.NewRequestOptions(opts...)
 
 	baseURL := "https://api.app.stackguardian.io"
@@ -470,7 +470,7 @@ func (c *Client) UpdateWorkflowRun(
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
 
-	var response *sgsdkgo.WorkflowRunGetResponse
+	var response *sgsdkgo.GeneratedWorkfkowRunsUpdateResponse
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{

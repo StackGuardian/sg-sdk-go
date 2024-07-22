@@ -15,6 +15,7 @@ Currently, the SDK supports the following SG APIs:
 - WorkflowRuns.CancelWorkflowRun
 - WorkflowRuns.DeleteWorkflowRun
 - WorkflowRuns.DeleteWorkflowRun(Stack)
+- WorkflowRuns.UpdateWorkflowRun
 - Workflow.Read
 - Workflow.List
 

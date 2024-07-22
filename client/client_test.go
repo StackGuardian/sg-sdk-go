@@ -295,4 +295,43 @@ func TestNewClient(t *testing.T) {
 		// We expect an error since the workflow run is already failed
 		assert.Contains(t, err.Error(), "Error cancelling Workflow Run "+SG_STACK_WF_RUN)
 	})
+
+	t.Run("Update workflow runs", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+
+		updateWfRunRequest := sggosdk.PatchedWorkflowRun{
+			DeploymentPlatformConfig: []*sggosdk.DeploymentPlatformConfig{{
+				Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
+				Config: map[string]interface{}{
+					"profileName":   "testAWSConnector",
+					"integrationId": "/integrations/testAWSConnector"}}},
+			WfType: sggosdk.WfTypeEnumTerraform.Ptr(),
+			EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
+				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("UpdatedValue")}}},
+			VcsConfig: &sggosdk.VcsConfig{
+				IacVcsConfig: &sggosdk.IacVcsConfig{
+					IacTemplateId:          sggosdk.String("/stackguardian/aws-s3-demo-website:16"),
+					UseMarketplaceTemplate: true,
+				},
+				IacInputData: &sggosdk.IacInputData{
+					SchemaType: sggosdk.IacInputDataSchemaTypeEnumFormJsonschema,
+					Data: map[string]interface{}{
+						"bucket_region": "eu-central-1",
+					},
+				},
+			},
+			UserJobCpu:    sggosdk.Int(512),
+			UserJobMemory: sggosdk.Int(1024),
+			RunnerConstraints: &sggosdk.RunnerConstraints{
+				Type: "shared",
+			},
+		}
+		updateWfRunResponse, err := c.WorkflowRuns.UpdateWorkflowRun(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, SG_WF_RUN, &updateWfRunRequest)
+		_ = updateWfRunResponse
+		assert.Empty(t, err)
+		assert.Equal(t, "Workflow Run "+SG_WF_RUN+" updated", updateWfRunResponse.Msg)
+	})
 }

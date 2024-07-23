@@ -3287,7 +3287,7 @@ func (g *GeneratedWorkflowOutputsResponse) String() string {
 }
 
 type GeneratedWorkflowOutputsResponseData struct {
-	Outputs map[string]*GeneratedWorkflowOutputsResponseDataOutputsId `json:"outputs,omitempty" url:"outputs,omitempty"`
+	Outputs map[string]map[string]interface{} `json:"outputs,omitempty" url:"outputs,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -3316,137 +3316,6 @@ func (g *GeneratedWorkflowOutputsResponseData) UnmarshalJSON(data []byte) error 
 }
 
 func (g *GeneratedWorkflowOutputsResponseData) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkflowOutputsResponseDataOutputsId struct {
-	Sensitive     bool                                                      `json:"sensitive" url:"sensitive"`
-	Type          string                                                    `json:"type" url:"type"`
-	Value         string                                                    `json:"value" url:"value"`
-	WebsiteDomain *GeneratedWorkflowOutputsResponseDataOutputsWebsiteDomain `json:"website_domain,omitempty" url:"website_domain,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkflowOutputsResponseDataOutputsId) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkflowOutputsResponseDataOutputsId) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkflowOutputsResponseDataOutputsId
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkflowOutputsResponseDataOutputsId(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkflowOutputsResponseDataOutputsId) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkflowOutputsResponseDataOutputsWebsiteDomain struct {
-	Sensitive       bool                                                        `json:"sensitive" url:"sensitive"`
-	Type            string                                                      `json:"type" url:"type"`
-	Value           string                                                      `json:"value" url:"value"`
-	WebsiteEndpoint *GeneratedWorkflowOutputsResponseDataOutputsWebsiteEndpoint `json:"website_endpoint,omitempty" url:"website_endpoint,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkflowOutputsResponseDataOutputsWebsiteDomain) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkflowOutputsResponseDataOutputsWebsiteDomain) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkflowOutputsResponseDataOutputsWebsiteDomain
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkflowOutputsResponseDataOutputsWebsiteDomain(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkflowOutputsResponseDataOutputsWebsiteDomain) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkflowOutputsResponseDataOutputsWebsiteEndpoint struct {
-	Sensitive bool   `json:"sensitive" url:"sensitive"`
-	Type      string `json:"type" url:"type"`
-	Value     string `json:"value" url:"value"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkflowOutputsResponseDataOutputsWebsiteEndpoint) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkflowOutputsResponseDataOutputsWebsiteEndpoint) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkflowOutputsResponseDataOutputsWebsiteEndpoint
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkflowOutputsResponseDataOutputsWebsiteEndpoint(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkflowOutputsResponseDataOutputsWebsiteEndpoint) String() string {
 	if len(g._rawJSON) > 0 {
 		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
 			return value

@@ -174,7 +174,133 @@ func TestNewClient(t *testing.T) {
 		)
 		response, err := c.Workflows.Output(context.Background(), SG_ORG, "CUSTOM-7OeX", "test-terragrunt")
 		assert.Empty(t, err)
-		assert.Equal(t, "stackguardian-proper-escargot", response.Data.Outputs["id"].Value)
+		assert.Equal(t, "Outputs retrived", response.Msg)
+		assert.Equal(t, "stackguardian-proper-escargot", response.Data.Outputs["id"]["value"].(string))
+	})
+
+	//Stack Workflows
+	t.Run("Create and delete stack workflow", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		createWorkflowRequest := sggosdk.Workflow{
+			DeploymentPlatformConfig: []*sggosdk.DeploymentPlatformConfig{{
+				Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
+				Config: map[string]interface{}{
+					"profileName":   "DummyConnectorForGoSDK",
+					"integrationId": "/integrations/DummyConnectorForGoSDK"}}},
+			WfType: sggosdk.WfTypeEnumCustom.Ptr(),
+			EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
+				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}},
+			VcsConfig: &sggosdk.VcsConfig{
+				IacVcsConfig: &sggosdk.IacVcsConfig{
+					IacTemplateId:          sggosdk.String("/demo-org/ansible-dummy:3"),
+					UseMarketplaceTemplate: true,
+				},
+				IacInputData: &sggosdk.IacInputData{
+					SchemaType: sggosdk.IacInputDataSchemaTypeEnumFormJsonschema,
+					Data: map[string]interface{}{
+						"bucket_region": "eu-central-1",
+					},
+				},
+			},
+			UserJobCpu:    sggosdk.Int(512),
+			UserJobMemory: sggosdk.Int(1024),
+			RunnerConstraints: &sggosdk.RunnerConstraints{
+				Type: "shared",
+			},
+			Description: sggosdk.String("Dummy Stack Workflow for GoSDK"),
+		}
+		createResponse, err := c.StackWorkflows.Create(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP, &createWorkflowRequest)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, createResponse.Data.ResourceName)
+
+		err = c.StackWorkflows.StackWorkflowDelete(context.Background(), SG_ORG, SG_STACK, createResponse.Data.ResourceName, SG_WF_GROUP)
+		assert.Empty(t, err)
+	})
+
+	t.Run("Update stack workflow", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		UpdateWorkflowRequest := sggosdk.PatchedWorkflow{
+			DeploymentPlatformConfig: []*sggosdk.DeploymentPlatformConfig{{
+				Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
+				Config: map[string]interface{}{
+					"profileName":   "DummyConnectorForGoSDK",
+					"integrationId": "/integrations/DummyConnectorForGoSDK"}}},
+			WfType: sggosdk.WfTypeEnumCustom.Ptr(),
+			EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
+				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}},
+			VcsConfig: &sggosdk.VcsConfig{
+				IacVcsConfig: &sggosdk.IacVcsConfig{
+					IacTemplateId:          sggosdk.String("/demo-org/ansible-dummy:3"),
+					UseMarketplaceTemplate: true,
+				},
+				IacInputData: &sggosdk.IacInputData{
+					SchemaType: sggosdk.IacInputDataSchemaTypeEnumFormJsonschema,
+					Data: map[string]interface{}{
+						"bucket_region": "eu-central-1",
+					},
+				},
+			},
+			UserJobCpu:    sggosdk.Int(512),
+			UserJobMemory: sggosdk.Int(1024),
+			RunnerConstraints: &sggosdk.RunnerConstraints{
+				Type: "shared",
+			},
+			Description: sggosdk.String("Dummy Workflow for GoSDK"),
+		}
+		updateWorkflowResponse, err := c.StackWorkflows.StackWorkflowPatch(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP, &UpdateWorkflowRequest)
+		assert.Empty(t, err)
+		assert.Equal(t, "Workflow "+SG_STACK_WF+" updated", updateWorkflowResponse.Msg)
+	})
+
+	t.Run("get stackworkflow", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		response, err := c.StackWorkflows.StackWorkflowGet(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP)
+		assert.Empty(t, err)
+		assert.Equal(t, SG_STACK_WF, response.Msg.GetExtraProperties()["ResourceName"].(string))
+
+	})
+
+	t.Run("ListAll stack workflow", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		response, err := c.StackWorkflows.ListAll(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP)
+		assert.Empty(t, err)
+		assert.GreaterOrEqual(t, len(response.Msg), 1)
+	})
+
+	t.Run("List all artifacts (stack workflow)", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		response, err := c.StackWorkflows.ListAllArtifacts(context.Background(), SG_ORG, "stack1",
+			"refeed2-null-resource-tf-JuNs", "refeed-test-nested-stackrunbug")
+		assert.Empty(t, err)
+		assert.Equal(t, "Outputs retrieved", response.Msg)
+		assert.Equal(t, 654,
+			response.Data.Artifacts["orgs/demo-org/wfgrps/refeed-test-nested-stackrunbug/stacks/stack1/wfs/refeed2-null-resource-tf-JuNs/artifacts/tfstate.json"].Size)
+	})
+
+	t.Run("stack workflow output", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		response, err := c.StackWorkflows.StackWorkflowOutput(context.Background(), SG_ORG, "stack1",
+			"refeed2-null-resource-tf-JuNs", "refeed-test-nested-stackrunbug")
+		assert.Empty(t, err)
+		assert.Equal(t, float64(13), response.Data.Outputs["message_length"]["value"].(float64))
 	})
 
 	// Workflow Runs

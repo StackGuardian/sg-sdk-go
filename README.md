@@ -23,6 +23,13 @@ Currently, the SDK supports the following SG APIs:
 - Workflow.List
 - Workflows.Output
 - Workflows.ListAllArtifacts
+- StackWorkflows.Create
+- StackWorkflows.Delete
+- StackWorkflows.Update
+- StackWorkflows.Get
+- StackWorkflows.ListAll
+- StackWorkflows.ListAllArtifacts
+- StackWorkflows.Output
 
 ### Setup
 

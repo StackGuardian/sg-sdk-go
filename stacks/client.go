@@ -35,9 +35,9 @@ func (c *Client) Create(
 	ctx context.Context,
 	org string,
 	wfGrp string,
-	request *sgsdkgo.StacksCreateRequest,
+	request *sgsdkgo.Stack,
 	opts ...option.RequestOption,
-) (*sgsdkgo.StackCreatePatchResponse, error) {
+) (*sgsdkgo.GeneratedStackCreateResponse, error) {
 	options := core.NewRequestOptions(opts...)
 
 	baseURL := "https://api.app.stackguardian.io"
@@ -63,7 +63,7 @@ func (c *Client) Create(
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
 
-	var response *sgsdkgo.StackCreatePatchResponse
+	var response *sgsdkgo.GeneratedStackCreateResponse
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
@@ -88,7 +88,7 @@ func (c *Client) ReadStack(
 	stack string,
 	wfGrp string,
 	opts ...option.RequestOption,
-) error {
+) (*sgsdkgo.GeneratedStackGetResponse, error) {
 	options := core.NewRequestOptions(opts...)
 
 	baseURL := "https://api.app.stackguardian.io"
@@ -107,6 +107,7 @@ func (c *Client) ReadStack(
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
 
+	var response *sgsdkgo.GeneratedStackGetResponse
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
@@ -115,11 +116,12 @@ func (c *Client) ReadStack(
 			MaxAttempts: options.MaxAttempts,
 			Headers:     headers,
 			Client:      options.HTTPClient,
+			Response:    &response,
 		},
 	); err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return response, nil
 }
 
 // Delete a Stack
@@ -129,7 +131,7 @@ func (c *Client) DeleteStack(
 	stack string,
 	wfGrp string,
 	opts ...option.RequestOption,
-) error {
+) (*sgsdkgo.GeneratedStackDeleteResponse, error) {
 	options := core.NewRequestOptions(opts...)
 
 	baseURL := "https://api.app.stackguardian.io"
@@ -148,6 +150,7 @@ func (c *Client) DeleteStack(
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
 
+	var response *sgsdkgo.GeneratedStackDeleteResponse
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
@@ -156,11 +159,12 @@ func (c *Client) DeleteStack(
 			MaxAttempts: options.MaxAttempts,
 			Headers:     headers,
 			Client:      options.HTTPClient,
+			Response:    &response,
 		},
 	); err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return response, nil
 }
 
 // Update workflow attributes
@@ -171,7 +175,7 @@ func (c *Client) UpdateStack(
 	wfGrp string,
 	request *sgsdkgo.PatchedStack,
 	opts ...option.RequestOption,
-) (*sgsdkgo.StackCreatePatchResponse, error) {
+) (*sgsdkgo.GeneratedStackCreateResponse, error) {
 	options := core.NewRequestOptions(opts...)
 
 	baseURL := "https://api.app.stackguardian.io"
@@ -190,7 +194,7 @@ func (c *Client) UpdateStack(
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
 
-	var response *sgsdkgo.StackCreatePatchResponse
+	var response *sgsdkgo.GeneratedStackCreateResponse
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
@@ -215,7 +219,7 @@ func (c *Client) GetStackOutputs(
 	stack string,
 	wfGrp string,
 	opts ...option.RequestOption,
-) error {
+) (*sgsdkgo.GeneratedStackOutputsResponse, error) {
 	options := core.NewRequestOptions(opts...)
 
 	baseURL := "https://api.app.stackguardian.io"
@@ -234,6 +238,7 @@ func (c *Client) GetStackOutputs(
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
 
+	var response *sgsdkgo.GeneratedStackOutputsResponse
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
@@ -242,11 +247,12 @@ func (c *Client) GetStackOutputs(
 			MaxAttempts: options.MaxAttempts,
 			Headers:     headers,
 			Client:      options.HTTPClient,
+			Response:    &response,
 		},
 	); err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return response, nil
 }
 
 // Run Stack
@@ -257,7 +263,7 @@ func (c *Client) RunStack(
 	wfGrp string,
 	request *sgsdkgo.StackAction,
 	opts ...option.RequestOption,
-) error {
+) (*sgsdkgo.GeneratedStackRunsResponse, error) {
 	options := core.NewRequestOptions(opts...)
 
 	baseURL := "https://api.app.stackguardian.io"
@@ -276,6 +282,7 @@ func (c *Client) RunStack(
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
 
+	var response *sgsdkgo.GeneratedStackRunsResponse
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
@@ -285,11 +292,12 @@ func (c *Client) RunStack(
 			Headers:     headers,
 			Client:      options.HTTPClient,
 			Request:     request,
+			Response:    &response,
 		},
 	); err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return response, nil
 }
 
 // List all Workflow Runs in a Stack
@@ -300,7 +308,7 @@ func (c *Client) GetStackRuns(
 	stackRun string,
 	wfGrp string,
 	opts ...option.RequestOption,
-) error {
+) (*sgsdkgo.GeneratedStackRunsGetResponse, error) {
 	options := core.NewRequestOptions(opts...)
 
 	baseURL := "https://api.app.stackguardian.io"
@@ -320,6 +328,7 @@ func (c *Client) GetStackRuns(
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
 
+	var response *sgsdkgo.GeneratedStackRunsGetResponse
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
@@ -328,11 +337,12 @@ func (c *Client) GetStackRuns(
 			MaxAttempts: options.MaxAttempts,
 			Headers:     headers,
 			Client:      options.HTTPClient,
+			Response:    &response,
 		},
 	); err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return response, nil
 }
 
 // List all Workflow Runs in a Stack
@@ -342,7 +352,7 @@ func (c *Client) ListAllStackRuns(
 	stack string,
 	wfGrp string,
 	opts ...option.RequestOption,
-) error {
+) (*sgsdkgo.GeneratedStackRunsListAllResponse, error) {
 	options := core.NewRequestOptions(opts...)
 
 	baseURL := "https://api.app.stackguardian.io"
@@ -361,6 +371,7 @@ func (c *Client) ListAllStackRuns(
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
 
+	var response *sgsdkgo.GeneratedStackRunsListAllResponse
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
@@ -369,11 +380,12 @@ func (c *Client) ListAllStackRuns(
 			MaxAttempts: options.MaxAttempts,
 			Headers:     headers,
 			Client:      options.HTTPClient,
+			Response:    &response,
 		},
 	); err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return response, nil
 }
 
 // List all Stacks in a Workflow Group
@@ -382,7 +394,7 @@ func (c *Client) ListAllStacks(
 	org string,
 	wfGrp string,
 	opts ...option.RequestOption,
-) error {
+) (*sgsdkgo.GeneratedStackListAllResponse, error) {
 	options := core.NewRequestOptions(opts...)
 
 	baseURL := "https://api.app.stackguardian.io"
@@ -400,6 +412,7 @@ func (c *Client) ListAllStacks(
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
 
+	var response *sgsdkgo.GeneratedStackListAllResponse
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
@@ -408,9 +421,10 @@ func (c *Client) ListAllStacks(
 			MaxAttempts: options.MaxAttempts,
 			Headers:     headers,
 			Client:      options.HTTPClient,
+			Response:    &response,
 		},
 	); err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return response, nil
 }

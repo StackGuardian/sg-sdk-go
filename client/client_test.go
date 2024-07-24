@@ -560,4 +560,141 @@ func TestNewClient(t *testing.T) {
 		assert.Empty(t, err)
 		assert.Equal(t, "Workflow Run "+SG_WF_RUN+" updated", updateWfRunResponse.Msg)
 	})
+
+	// Stacks
+	t.Run("Create and delete stack", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		createStackRequest := sggosdk.Stack{
+			RunOnCreate: sggosdk.Bool(false),
+			DeploymentPlatformConfig: []*sggosdk.DeploymentPlatformConfig{{
+				Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
+				Config: map[string]interface{}{
+					"profileName":   "DummyConnectorForGoSDK",
+					"integrationId": "/integrations/DummyConnectorForGoSDK"}}},
+			EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
+				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}},
+
+			Description: sggosdk.String("Dummy Stack for GoSDK"),
+			TemplatesConfig: &sggosdk.TemplatesConfig{
+				TemplateGroupId: sggosdk.String("/demo-org/ansible:4"),
+				Templates: []*sggosdk.TemplateWorkflow{{
+					NumberOfApprovalsRequired: sggosdk.Int(0),
+					Description:               sggosdk.String("Dummy Workflow for GoSDK"),
+					WfType:                    sggosdk.WfTypeEnumCustom.Ptr(),
+					Id:                        "cc0061e9-a75c-421b-a75b-ef918e9f4b28",
+				}},
+			},
+		}
+		createStackResponse, err := c.Stacks.Create(context.Background(), SG_ORG, SG_WF_GROUP, &createStackRequest)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, createStackResponse.Data.Stack.ResourceName)
+		assert.Equal(t, "Stack "+createStackResponse.Data.Stack.ResourceName+" created", createStackResponse.Msg)
+
+		err = c.StackWorkflows.StackWorkflowDelete(context.Background(), SG_ORG, createStackResponse.Data.Stack.ResourceName,
+			createStackResponse.Data.Workflows[0].ResourceName, SG_WF_GROUP)
+		assert.Empty(t, err)
+		deleteResponse, err := c.Stacks.DeleteStack(context.Background(), SG_ORG, createStackResponse.Data.Stack.ResourceName, SG_WF_GROUP)
+		assert.Empty(t, err)
+		assert.Equal(t, "Stack "+createStackResponse.Data.Stack.ResourceName+" deleted", deleteResponse.Msg)
+		assert.Empty(t, err)
+	})
+
+	t.Run("Read stack", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		response, err := c.Stacks.ReadStack(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP)
+		assert.Empty(t, err)
+		assert.Equal(t, SG_STACK, response.Msg.ResourceName)
+	})
+
+	t.Run("Run stack", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		runStackRequest := sggosdk.StackAction{
+			ActionType:   sggosdk.ActionTypeEnumApply,
+			ResourceName: sggosdk.String("5srghvu1y7nn"),
+		}
+		response, err := c.Stacks.RunStack(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP, &runStackRequest)
+		assert.Empty(t, err)
+		assert.Equal(t, "Stack run scheduled", response.Msg)
+	})
+
+	t.Run("ListAll stacks", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		response, err := c.Stacks.ListAllStackRuns(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, len(response.Msg))
+	})
+
+	t.Run("Get stack outputs", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		response, err := c.Stacks.GetStackOutputs(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, len(response.Msg))
+	})
+
+	t.Run("update stack", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		createStackRequest := sggosdk.PatchedStack{
+			DeploymentPlatformConfig: []*sggosdk.DeploymentPlatformConfig{{
+				Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
+				Config: map[string]interface{}{
+					"profileName":   "DummyConnectorForGoSDK",
+					"integrationId": "/integrations/DummyConnectorForGoSDK"}}},
+			EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
+				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}},
+
+			Description: sggosdk.String("Dummy Stack for GoSDK"),
+			TemplatesConfig: &sggosdk.TemplatesConfig{
+				TemplateGroupId: sggosdk.String("/demo-org/ansible:4"),
+				Templates: []*sggosdk.TemplateWorkflow{{
+					NumberOfApprovalsRequired: sggosdk.Int(0),
+					Description:               sggosdk.String("Dummy Workflow for GoSDK"),
+					WfType:                    sggosdk.WfTypeEnumCustom.Ptr(),
+					Id:                        "cc0061e9-a75c-421b-a75b-ef918e9f4b28",
+				}},
+			},
+		}
+		updateStackResponse, err := c.Stacks.UpdateStack(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP, &createStackRequest)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, updateStackResponse.Msg)
+		assert.Equal(t, "Stack "+SG_STACK+" updated", updateStackResponse.Msg)
+	})
+
+	t.Run("list all stack runs", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		listResponse, err := c.Stacks.ListAllStackRuns(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, len(listResponse.Msg))
+	})
+
+	t.Run("get stack runs", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		getStackRunResponse, err := c.Stacks.GetStackRuns(context.Background(), SG_ORG, SG_STACK, "5srghvu1y7nn", SG_WF_GROUP)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, getStackRunResponse.Msg.ResourceName)
+		assert.Equal(t, "/stackruns/5srghvu1y7nn", getStackRunResponse.Msg.ResourceName)
+	})
 }

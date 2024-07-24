@@ -1783,6 +1783,2567 @@ func (g *GeneratedMsgVcsconfigIacvcsconfig) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
+type GeneratedStackCreateResponse struct {
+	Msg  string                            `json:"msg" url:"msg"`
+	Data *GeneratedStackCreateResponseData `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackCreateResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackCreateResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackCreateResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackCreateResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackCreateResponse) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackCreateResponseData struct {
+	Stack     *GeneratedStackCreateResponseDataStack       `json:"stack,omitempty" url:"stack,omitempty"`
+	Workflows []*GeneratedStackCreateResponseDataWorkflows `json:"workflows,omitempty" url:"workflows,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackCreateResponseData) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackCreateResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackCreateResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackCreateResponseData(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackCreateResponseData) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackCreateResponseDataStack struct {
+	OrgId                    string                                                                  `json:"OrgId" url:"OrgId"`
+	SubResourceId            string                                                                  `json:"SubResourceId" url:"SubResourceId"`
+	CreatedAt                int                                                                     `json:"CreatedAt" url:"CreatedAt"`
+	ResourceName             string                                                                  `json:"ResourceName" url:"ResourceName"`
+	Description              string                                                                  `json:"Description" url:"Description"`
+	Tags                     []interface{}                                                           `json:"Tags,omitempty" url:"Tags,omitempty"`
+	Authors                  []string                                                                `json:"Authors,omitempty" url:"Authors,omitempty"`
+	DocVersion               string                                                                  `json:"DocVersion" url:"DocVersion"`
+	IsActive                 string                                                                  `json:"IsActive" url:"IsActive"`
+	IsArchive                string                                                                  `json:"IsArchive" url:"IsArchive"`
+	ActivitySubscribers      []string                                                                `json:"ActivitySubscribers,omitempty" url:"ActivitySubscribers,omitempty"`
+	LatestWfStatus           string                                                                  `json:"LatestWfStatus" url:"LatestWfStatus"`
+	VcsConfig                *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesVcsconfig `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
+	ResourceType             string                                                                  `json:"ResourceType" url:"ResourceType"`
+	ModifiedAt               int                                                                     `json:"ModifiedAt" url:"ModifiedAt"`
+	EnvironmentVariables     []interface{}                                                           `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
+	UserSchedules            []interface{}                                                           `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
+	CreationOrder            []string                                                                `json:"CreationOrder,omitempty" url:"CreationOrder,omitempty"`
+	DeletionOrder            []string                                                                `json:"DeletionOrder,omitempty" url:"DeletionOrder,omitempty"`
+	Actions                  map[string]map[string]interface{}                                       `json:"Actions,omitempty" url:"Actions,omitempty"`
+	WorkflowRelationsMap     map[string]interface{}                                                  `json:"WorkflowRelationsMap,omitempty" url:"WorkflowRelationsMap,omitempty"`
+	DeploymentPlatformConfig []*GeneratedStackCreateResponseDataStackDeploymentplatformconfig        `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	TemplatesConfig          *GeneratedStackCreateResponseDataStackTemplatesconfig                   `json:"TemplatesConfig,omitempty" url:"TemplatesConfig,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackCreateResponseDataStack) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackCreateResponseDataStack) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackCreateResponseDataStack
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackCreateResponseDataStack(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackCreateResponseDataStack) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackCreateResponseDataStackDeploymentplatformconfig struct {
+	Kind   string                                                               `json:"kind" url:"kind"`
+	Config *GeneratedStackCreateResponseDataStackDeploymentplatformconfigConfig `json:"config,omitempty" url:"config,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackCreateResponseDataStackDeploymentplatformconfig) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackCreateResponseDataStackDeploymentplatformconfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackCreateResponseDataStackDeploymentplatformconfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackCreateResponseDataStackDeploymentplatformconfig(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackCreateResponseDataStackDeploymentplatformconfig) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackCreateResponseDataStackDeploymentplatformconfigConfig struct {
+	ProfileName   string `json:"profileName" url:"profileName"`
+	IntegrationId string `json:"integrationId" url:"integrationId"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackCreateResponseDataStackDeploymentplatformconfigConfig) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackCreateResponseDataStackDeploymentplatformconfigConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackCreateResponseDataStackDeploymentplatformconfigConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackCreateResponseDataStackDeploymentplatformconfigConfig(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackCreateResponseDataStackDeploymentplatformconfigConfig) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackCreateResponseDataStackTemplatesconfig struct {
+	TemplateGroupId string                                                           `json:"templateGroupId" url:"templateGroupId"`
+	Templates       []*GeneratedStackCreateResponseDataStackTemplatesconfigTemplates `json:"templates,omitempty" url:"templates,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfig) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackCreateResponseDataStackTemplatesconfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackCreateResponseDataStackTemplatesconfig(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfig) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackCreateResponseDataStackTemplatesconfigTemplates struct {
+	Description               string                                                                  `json:"Description" url:"Description"`
+	WfStepsConfig             []interface{}                                                           `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
+	WfType                    string                                                                  `json:"WfType" url:"WfType"`
+	EnvironmentVariables      []interface{}                                                           `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
+	DeploymentPlatformConfig  []interface{}                                                           `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	UserSchedules             []interface{}                                                           `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
+	GitHubComSync             map[string]map[string]interface{}                                       `json:"GitHubComSync,omitempty" url:"GitHubComSync,omitempty"`
+	Approvers                 []interface{}                                                           `json:"Approvers,omitempty" url:"Approvers,omitempty"`
+	NumberOfApprovalsRequired int                                                                     `json:"NumberOfApprovalsRequired" url:"NumberOfApprovalsRequired"`
+	Id                        string                                                                  `json:"id" url:"id"`
+	MiniSteps                 *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinisteps `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfigTemplates) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfigTemplates) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackCreateResponseDataStackTemplatesconfigTemplates
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackCreateResponseDataStackTemplatesconfigTemplates(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfigTemplates) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinisteps struct {
+	Notifications *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinistepsNotifications `json:"notifications,omitempty" url:"notifications,omitempty"`
+	WfChaining    *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinistepsWfchaining    `json:"wfChaining,omitempty" url:"wfChaining,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinisteps) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinisteps) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinisteps
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinisteps(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinisteps) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinistepsNotifications struct {
+	Email *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinistepsNotificationsEmail `json:"email,omitempty" url:"email,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinistepsNotifications) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinistepsNotifications) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinistepsNotifications
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinistepsNotifications(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinistepsNotifications) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinistepsNotificationsEmail struct {
+	ApprovalRequired []interface{} `json:"APPROVAL_REQUIRED,omitempty" url:"APPROVAL_REQUIRED,omitempty"`
+	Cancelled        []interface{} `json:"CANCELLED,omitempty" url:"CANCELLED,omitempty"`
+	Completed        []interface{} `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
+	Errored          []interface{} `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinistepsNotificationsEmail) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinistepsNotificationsEmail) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinistepsNotificationsEmail
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinistepsNotificationsEmail(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinistepsNotificationsEmail) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinistepsWfchaining struct {
+	Completed []interface{} `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
+	Errored   []interface{} `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinistepsWfchaining) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinistepsWfchaining) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinistepsWfchaining
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinistepsWfchaining(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesMinistepsWfchaining) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesVcsconfig struct {
+	IacVcsConfig *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesVcsconfigIacvcsconfig `json:"iacVCSConfig,omitempty" url:"iacVCSConfig,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesVcsconfig) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesVcsconfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesVcsconfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesVcsconfig(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesVcsconfig) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesVcsconfigIacvcsconfig struct {
+	UseMarketplaceTemplate bool   `json:"useMarketplaceTemplate" url:"useMarketplaceTemplate"`
+	IacTemplateId          string `json:"iacTemplateId" url:"iacTemplateId"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesVcsconfigIacvcsconfig) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesVcsconfigIacvcsconfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesVcsconfigIacvcsconfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesVcsconfigIacvcsconfig(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackCreateResponseDataStackTemplatesconfigTemplatesVcsconfigIacvcsconfig) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackCreateResponseDataWorkflows struct {
+	OrgId                     string                                                      `json:"OrgId" url:"OrgId"`
+	SubResourceId             string                                                      `json:"SubResourceId" url:"SubResourceId"`
+	CreatedAt                 int                                                         `json:"CreatedAt" url:"CreatedAt"`
+	ResourceName              string                                                      `json:"ResourceName" url:"ResourceName"`
+	EnforcedPolicies          string                                                      `json:"EnforcedPolicies" url:"EnforcedPolicies"`
+	Description               string                                                      `json:"Description" url:"Description"`
+	Tags                      []interface{}                                               `json:"Tags,omitempty" url:"Tags,omitempty"`
+	Authors                   []string                                                    `json:"Authors,omitempty" url:"Authors,omitempty"`
+	DocVersion                string                                                      `json:"DocVersion" url:"DocVersion"`
+	IsActive                  string                                                      `json:"IsActive" url:"IsActive"`
+	IsArchive                 string                                                      `json:"IsArchive" url:"IsArchive"`
+	ActivitySubscribers       []string                                                    `json:"ActivitySubscribers,omitempty" url:"ActivitySubscribers,omitempty"`
+	LatestWfrunStatus         string                                                      `json:"LatestWfrunStatus" url:"LatestWfrunStatus"`
+	WfStepsConfig             []interface{}                                               `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
+	ResourceType              string                                                      `json:"ResourceType" url:"ResourceType"`
+	ModifiedAt                int                                                         `json:"ModifiedAt" url:"ModifiedAt"`
+	EnvironmentVariables      []interface{}                                               `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
+	DeploymentPlatformConfig  map[string]interface{}                                      `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	CacheConfig               map[string]interface{}                                      `json:"CacheConfig,omitempty" url:"CacheConfig,omitempty"`
+	WfType                    string                                                      `json:"WfType" url:"WfType"`
+	TerraformConfig           map[string]interface{}                                      `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
+	UserSchedules             []interface{}                                               `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
+	NumberOfApprovalsRequired int                                                         `json:"NumberOfApprovalsRequired" url:"NumberOfApprovalsRequired"`
+	VcsConfig                 *GeneratedStackCreateResponseDataWorkflowsVcsconfig         `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
+	RunnerConstraints         *GeneratedStackCreateResponseDataWorkflowsRunnerconstraints `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackCreateResponseDataWorkflows) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackCreateResponseDataWorkflows) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackCreateResponseDataWorkflows
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackCreateResponseDataWorkflows(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackCreateResponseDataWorkflows) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackCreateResponseDataWorkflowsRunnerconstraints struct {
+	Selectors []string `json:"selectors,omitempty" url:"selectors,omitempty"`
+	Type      string   `json:"type" url:"type"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackCreateResponseDataWorkflowsRunnerconstraints) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackCreateResponseDataWorkflowsRunnerconstraints) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackCreateResponseDataWorkflowsRunnerconstraints
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackCreateResponseDataWorkflowsRunnerconstraints(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackCreateResponseDataWorkflowsRunnerconstraints) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackCreateResponseDataWorkflowsVcsconfig struct {
+	IacVcsConfig *GeneratedStackCreateResponseDataWorkflowsVcsconfigIacvcsconfig `json:"iacVCSConfig,omitempty" url:"iacVCSConfig,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackCreateResponseDataWorkflowsVcsconfig) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackCreateResponseDataWorkflowsVcsconfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackCreateResponseDataWorkflowsVcsconfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackCreateResponseDataWorkflowsVcsconfig(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackCreateResponseDataWorkflowsVcsconfig) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackCreateResponseDataWorkflowsVcsconfigIacvcsconfig struct {
+	UseMarketplaceTemplate bool   `json:"useMarketplaceTemplate" url:"useMarketplaceTemplate"`
+	IacTemplateId          string `json:"iacTemplateId" url:"iacTemplateId"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackCreateResponseDataWorkflowsVcsconfigIacvcsconfig) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackCreateResponseDataWorkflowsVcsconfigIacvcsconfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackCreateResponseDataWorkflowsVcsconfigIacvcsconfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackCreateResponseDataWorkflowsVcsconfigIacvcsconfig(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackCreateResponseDataWorkflowsVcsconfigIacvcsconfig) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackDeleteResponse struct {
+	Msg string `json:"msg" url:"msg"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackDeleteResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackDeleteResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackDeleteResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackDeleteResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackDeleteResponse) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackGetResponse struct {
+	Msg *GeneratedStackGetResponseMsg `json:"msg,omitempty" url:"msg,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackGetResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackGetResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackGetResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackGetResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackGetResponse) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackGetResponseMsg struct {
+	StackFullId              string                                       `json:"StackFullId" url:"StackFullId"`
+	WorkflowRelationsMap     map[string]interface{}                       `json:"WorkflowRelationsMap,omitempty" url:"WorkflowRelationsMap,omitempty"`
+	IsActive                 string                                       `json:"IsActive" url:"IsActive"`
+	Tags                     []interface{}                                `json:"Tags,omitempty" url:"Tags,omitempty"`
+	DeploymentPlatformConfig []map[string]interface{}                     `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	Discrepancies            map[string]interface{}                       `json:"Discrepancies,omitempty" url:"Discrepancies,omitempty"`
+	Authors                  []string                                     `json:"Authors,omitempty" url:"Authors,omitempty"`
+	ActivitySubscribers      []string                                     `json:"ActivitySubscribers,omitempty" url:"ActivitySubscribers,omitempty"`
+	SubResourceId            string                                       `json:"SubResourceId" url:"SubResourceId"`
+	OrgId                    string                                       `json:"OrgId" url:"OrgId"`
+	CreatedAt                float64                                      `json:"CreatedAt" url:"CreatedAt"`
+	IsArchive                string                                       `json:"IsArchive" url:"IsArchive"`
+	Actions                  map[string]map[string]interface{}            `json:"Actions,omitempty" url:"Actions,omitempty"`
+	CreationOrder            []string                                     `json:"CreationOrder,omitempty" url:"CreationOrder,omitempty"`
+	StackParentId            string                                       `json:"StackParentId" url:"StackParentId"`
+	Description              string                                       `json:"Description" url:"Description"`
+	ResourceId               string                                       `json:"ResourceId" url:"ResourceId"`
+	ModifiedAt               float64                                      `json:"ModifiedAt" url:"ModifiedAt"`
+	ParentId                 string                                       `json:"ParentId" url:"ParentId"`
+	ResourceType             string                                       `json:"ResourceType" url:"ResourceType"`
+	CreatorEnv               string                                       `json:"CreatorEnv" url:"CreatorEnv"`
+	LatestWfStatus           string                                       `json:"LatestWfStatus" url:"LatestWfStatus"`
+	DeletionOrder            []string                                     `json:"DeletionOrder,omitempty" url:"DeletionOrder,omitempty"`
+	StackIndexId             string                                       `json:"StackIndexId" url:"StackIndexId"`
+	DocVersion               string                                       `json:"DocVersion" url:"DocVersion"`
+	EnvironmentVariables     []interface{}                                `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
+	ResourceName             string                                       `json:"ResourceName" url:"ResourceName"`
+	SgInternals              map[string]interface{}                       `json:"_SGInternals,omitempty" url:"_SGInternals,omitempty"`
+	TemplatesConfig          *GeneratedStackGetResponseMsgTemplatesconfig `json:"TemplatesConfig,omitempty" url:"TemplatesConfig,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackGetResponseMsg) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackGetResponseMsg) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackGetResponseMsg
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackGetResponseMsg(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackGetResponseMsg) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackGetResponseMsgTemplatesconfig struct {
+	Actions         map[string]map[string]interface{}                       `json:"actions,omitempty" url:"actions,omitempty"`
+	TemplateGroupId string                                                  `json:"templateGroupId" url:"templateGroupId"`
+	Templates       []*GeneratedStackGetResponseMsgTemplatesconfigTemplates `json:"templates,omitempty" url:"templates,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfig) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackGetResponseMsgTemplatesconfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackGetResponseMsgTemplatesconfig(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfig) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackGetResponseMsgTemplatesconfigTemplates struct {
+	NumberOfApprovalsRequired float64                                                        `json:"NumberOfApprovalsRequired" url:"NumberOfApprovalsRequired"`
+	DeploymentPlatformConfig  []interface{}                                                  `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	Description               string                                                         `json:"Description" url:"Description"`
+	ResourceName              string                                                         `json:"ResourceName" url:"ResourceName"`
+	WfStepsConfig             []interface{}                                                  `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
+	UserSchedules             []interface{}                                                  `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
+	WfType                    string                                                         `json:"WfType" url:"WfType"`
+	EnvironmentVariables      []interface{}                                                  `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
+	Approvers                 []interface{}                                                  `json:"Approvers,omitempty" url:"Approvers,omitempty"`
+	Id                        string                                                         `json:"id" url:"id"`
+	MiniSteps                 *GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinisteps `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplates) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplates) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackGetResponseMsgTemplatesconfigTemplates
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackGetResponseMsgTemplatesconfigTemplates(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplates) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackGetResponseMsgTemplatesconfigTemplatesGithubcomsync struct {
+	PullRequestOpened *GeneratedStackGetResponseMsgTemplatesconfigTemplatesGithubcomsyncPullRequestOpened `json:"pull_request_opened,omitempty" url:"pull_request_opened,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesGithubcomsync) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesGithubcomsync) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackGetResponseMsgTemplatesconfigTemplatesGithubcomsync
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackGetResponseMsgTemplatesconfigTemplatesGithubcomsync(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesGithubcomsync) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackGetResponseMsgTemplatesconfigTemplatesGithubcomsyncPullRequestOpened struct {
+	CreateWfRun *GeneratedStackGetResponseMsgTemplatesconfigTemplatesGithubcomsyncPullRequestOpenedCreatewfrun `json:"createWfRun,omitempty" url:"createWfRun,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesGithubcomsyncPullRequestOpened) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesGithubcomsyncPullRequestOpened) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackGetResponseMsgTemplatesconfigTemplatesGithubcomsyncPullRequestOpened
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackGetResponseMsgTemplatesconfigTemplatesGithubcomsyncPullRequestOpened(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesGithubcomsyncPullRequestOpened) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackGetResponseMsgTemplatesconfigTemplatesGithubcomsyncPullRequestOpenedCreatewfrun struct {
+	Enabled   bool                                                           `json:"enabled" url:"enabled"`
+	VcsConfig *GeneratedStackGetResponseMsgTemplatesconfigTemplatesVcsconfig `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesGithubcomsyncPullRequestOpenedCreatewfrun) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesGithubcomsyncPullRequestOpenedCreatewfrun) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackGetResponseMsgTemplatesconfigTemplatesGithubcomsyncPullRequestOpenedCreatewfrun
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackGetResponseMsgTemplatesconfigTemplatesGithubcomsyncPullRequestOpenedCreatewfrun(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesGithubcomsyncPullRequestOpenedCreatewfrun) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinisteps struct {
+	Webhooks *GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsWebhooks `json:"webhooks,omitempty" url:"webhooks,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinisteps) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinisteps) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinisteps
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinisteps(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinisteps) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsNotifications struct {
+	Email *GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsNotificationsEmail `json:"email,omitempty" url:"email,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsNotifications) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsNotifications) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsNotifications
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsNotifications(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsNotifications) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsNotificationsEmail struct {
+	ApprovalRequired []interface{}                                                            `json:"APPROVAL_REQUIRED,omitempty" url:"APPROVAL_REQUIRED,omitempty"`
+	Cancelled        []interface{}                                                            `json:"CANCELLED,omitempty" url:"CANCELLED,omitempty"`
+	Completed        []interface{}                                                            `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
+	Errored          []interface{}                                                            `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
+	WfChaining       *GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsWfchaining `json:"wfChaining,omitempty" url:"wfChaining,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsNotificationsEmail) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsNotificationsEmail) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsNotificationsEmail
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsNotificationsEmail(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsNotificationsEmail) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsWebhooks struct {
+	Completed     []interface{}                                                               `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
+	DriftDetected []interface{}                                                               `json:"DRIFT_DETECTED,omitempty" url:"DRIFT_DETECTED,omitempty"`
+	Errored       []interface{}                                                               `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
+	Notifications *GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsNotifications `json:"notifications,omitempty" url:"notifications,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsWebhooks) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsWebhooks) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsWebhooks
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsWebhooks(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsWebhooks) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsWfchaining struct {
+	Completed     []interface{}                                                      `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
+	Errored       []interface{}                                                      `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
+	GitHubComSync *GeneratedStackGetResponseMsgTemplatesconfigTemplatesGithubcomsync `json:"GitHubComSync,omitempty" url:"GitHubComSync,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsWfchaining) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsWfchaining) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsWfchaining
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsWfchaining(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesMinistepsWfchaining) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackGetResponseMsgTemplatesconfigTemplatesVcsconfig struct {
+	IacVcsConfig *GeneratedStackGetResponseMsgTemplatesconfigTemplatesVcsconfigIacvcsconfig `json:"iacVCSConfig,omitempty" url:"iacVCSConfig,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesVcsconfig) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesVcsconfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackGetResponseMsgTemplatesconfigTemplatesVcsconfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackGetResponseMsgTemplatesconfigTemplatesVcsconfig(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesVcsconfig) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackGetResponseMsgTemplatesconfigTemplatesVcsconfigIacvcsconfig struct {
+	IacTemplateId          string `json:"iacTemplateId" url:"iacTemplateId"`
+	UseMarketplaceTemplate bool   `json:"useMarketplaceTemplate" url:"useMarketplaceTemplate"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesVcsconfigIacvcsconfig) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesVcsconfigIacvcsconfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackGetResponseMsgTemplatesconfigTemplatesVcsconfigIacvcsconfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackGetResponseMsgTemplatesconfigTemplatesVcsconfigIacvcsconfig(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackGetResponseMsgTemplatesconfigTemplatesVcsconfigIacvcsconfig) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackListAllResponse struct {
+	Msg []*GeneratedStackListAllResponseMsg `json:"msg,omitempty" url:"msg,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackListAllResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackListAllResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackListAllResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackListAllResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackListAllResponse) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackListAllResponseMsg struct {
+	Authors        []string      `json:"Authors,omitempty" url:"Authors,omitempty"`
+	ResourceName   string        `json:"ResourceName" url:"ResourceName"`
+	IsActive       string        `json:"IsActive" url:"IsActive"`
+	SubResourceId  string        `json:"SubResourceId" url:"SubResourceId"`
+	Description    string        `json:"Description" url:"Description"`
+	ResourceId     string        `json:"ResourceId" url:"ResourceId"`
+	ModifiedAt     float64       `json:"ModifiedAt" url:"ModifiedAt"`
+	ParentId       string        `json:"ParentId" url:"ParentId"`
+	CreatedAt      float64       `json:"CreatedAt" url:"CreatedAt"`
+	LatestWfStatus string        `json:"LatestWfStatus" url:"LatestWfStatus"`
+	Tags           []interface{} `json:"Tags,omitempty" url:"Tags,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackListAllResponseMsg) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackListAllResponseMsg) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackListAllResponseMsg
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackListAllResponseMsg(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackListAllResponseMsg) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackOutputsResponse struct {
+	Msg  string                                        `json:"msg" url:"msg"`
+	Data map[string]*GeneratedStackOutputsResponseData `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackOutputsResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackOutputsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackOutputsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackOutputsResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackOutputsResponse) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackOutputsResponseData struct {
+	Outputs map[string]*GeneratedStackOutputsResponseDataOutputs `json:"outputs,omitempty" url:"outputs,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackOutputsResponseData) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackOutputsResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackOutputsResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackOutputsResponseData(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackOutputsResponseData) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackOutputsResponseDataOutputs struct {
+	Sensitive bool   `json:"sensitive" url:"sensitive"`
+	Type      string `json:"type" url:"type"`
+	Value     int    `json:"value" url:"value"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackOutputsResponseDataOutputs) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackOutputsResponseDataOutputs) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackOutputsResponseDataOutputs
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackOutputsResponseDataOutputs(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackOutputsResponseDataOutputs) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackRunsGetResponse struct {
+	Msg *GeneratedStackRunsGetResponseMsg `json:"msg,omitempty" url:"msg,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackRunsGetResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackRunsGetResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackRunsGetResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackRunsGetResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackRunsGetResponse) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackRunsGetResponseMsg struct {
+	WfRuns       []interface{} `json:"WfRuns,omitempty" url:"WfRuns,omitempty"`
+	LatestStatus string        `json:"LatestStatus" url:"LatestStatus"`
+	ResourceName string        `json:"ResourceName" url:"ResourceName"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackRunsGetResponseMsg) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackRunsGetResponseMsg) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackRunsGetResponseMsg
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackRunsGetResponseMsg(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackRunsGetResponseMsg) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackRunsListAllResponse struct {
+	Msg []*GeneratedStackRunsListAllResponseMsg `json:"msg,omitempty" url:"msg,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackRunsListAllResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackRunsListAllResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackRunsListAllResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackRunsListAllResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackRunsListAllResponse) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackRunsListAllResponseMsg struct {
+	LatestStatus string                 `json:"LatestStatus" url:"LatestStatus"`
+	Authors      []string               `json:"Authors,omitempty" url:"Authors,omitempty"`
+	ResourceName string                 `json:"ResourceName" url:"ResourceName"`
+	Statuses     map[string]interface{} `json:"Statuses,omitempty" url:"Statuses,omitempty"`
+	ModifiedAt   float64                `json:"ModifiedAt" url:"ModifiedAt"`
+	ParentId     string                 `json:"ParentId" url:"ParentId"`
+	ResourceType string                 `json:"ResourceType" url:"ResourceType"`
+	StackId      string                 `json:"StackId" url:"StackId"`
+	StackRunId   string                 `json:"StackRunId" url:"StackRunId"`
+	CreatedAt    float64                `json:"CreatedAt" url:"CreatedAt"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackRunsListAllResponseMsg) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackRunsListAllResponseMsg) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackRunsListAllResponseMsg
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackRunsListAllResponseMsg(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackRunsListAllResponseMsg) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackRunsResponse struct {
+	Msg  string                          `json:"msg" url:"msg"`
+	Data *GeneratedStackRunsResponseData `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackRunsResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackRunsResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackRunsResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackRunsResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackRunsResponse) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackRunsResponseData struct {
+	StackRunId   string                                        `json:"StackRunId" url:"StackRunId"`
+	Workflowruns []*GeneratedStackRunsResponseDataWorkflowruns `json:"workflowruns,omitempty" url:"workflowruns,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackRunsResponseData) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackRunsResponseData) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackRunsResponseData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackRunsResponseData(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackRunsResponseData) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackRunsResponseDataWorkflowruns struct {
+	OrgId             string                                                       `json:"OrgId" url:"OrgId"`
+	SubResourceId     string                                                       `json:"SubResourceId" url:"SubResourceId"`
+	CreatedAt         int                                                          `json:"CreatedAt" url:"CreatedAt"`
+	ResourceName      string                                                       `json:"ResourceName" url:"ResourceName"`
+	Authors           []string                                                     `json:"Authors,omitempty" url:"Authors,omitempty"`
+	ResourceType      string                                                       `json:"ResourceType" url:"ResourceType"`
+	ModifiedAt        int                                                          `json:"ModifiedAt" url:"ModifiedAt"`
+	LatestStatus      string                                                       `json:"LatestStatus" url:"LatestStatus"`
+	Comments          map[string]interface{}                                       `json:"Comments,omitempty" url:"Comments,omitempty"`
+	Statuses          map[string]interface{}                                       `json:"Statuses,omitempty" url:"Statuses,omitempty"`
+	LatestStatusKey   string                                                       `json:"LatestStatusKey" url:"LatestStatusKey"`
+	RuntimeParameters *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparameters `json:"RuntimeParameters,omitempty" url:"RuntimeParameters,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowruns) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowruns) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackRunsResponseDataWorkflowruns
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackRunsResponseDataWorkflowruns(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowruns) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackRunsResponseDataWorkflowrunsRuntimeparameters struct {
+	TfDriftWfRun              bool                                                                  `json:"tfDriftWfRun" url:"tfDriftWfRun"`
+	TfDriftIacInputData       map[string]interface{}                                                `json:"tfDriftIacInputData,omitempty" url:"tfDriftIacInputData,omitempty"`
+	Approvers                 []interface{}                                                         `json:"approvers,omitempty" url:"approvers,omitempty"`
+	VcsTriggers               map[string]interface{}                                                `json:"vcsTriggers,omitempty" url:"vcsTriggers,omitempty"`
+	WfStepsConfig             []interface{}                                                         `json:"wfStepsConfig,omitempty" url:"wfStepsConfig,omitempty"`
+	CacheConfig               map[string]interface{}                                                `json:"cacheConfig,omitempty" url:"cacheConfig,omitempty"`
+	WfType                    string                                                                `json:"wfType" url:"wfType"`
+	UserJobCpu                float64                                                               `json:"userJobCpu" url:"userJobCpu"`
+	UserJobMemory             float64                                                               `json:"userJobMemory" url:"userJobMemory"`
+	NumberOfApprovalsRequired float64                                                               `json:"numberOfApprovalsRequired" url:"numberOfApprovalsRequired"`
+	MiniSteps                 *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinisteps `json:"miniSteps,omitempty" url:"miniSteps,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparameters) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparameters) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackRunsResponseDataWorkflowrunsRuntimeparameters
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackRunsResponseDataWorkflowrunsRuntimeparameters(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparameters) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfig struct {
+	Kind   string                                                                                     `json:"kind" url:"kind"`
+	Config *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfigConfig `json:"config,omitempty" url:"config,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfig) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfig(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfig) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfigConfig struct {
+	ProfileName   string `json:"profileName" url:"profileName"`
+	IntegrationId string `json:"integrationId" url:"integrationId"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfigConfig) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfigConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfigConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfigConfig(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfigConfig) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersEnvironmentvariables struct {
+	Kind   string                                                                                 `json:"kind" url:"kind"`
+	Config *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersEnvironmentvariablesConfig `json:"config,omitempty" url:"config,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersEnvironmentvariables) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersEnvironmentvariables) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersEnvironmentvariables
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersEnvironmentvariables(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersEnvironmentvariables) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersEnvironmentvariablesConfig struct {
+	TextValue         string                                                                        `json:"textValue" url:"textValue"`
+	VarName           string                                                                        `json:"varName" url:"varName"`
+	RunnerConstraints *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersRunnerconstraints `json:"runnerConstraints,omitempty" url:"runnerConstraints,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersEnvironmentvariablesConfig) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersEnvironmentvariablesConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersEnvironmentvariablesConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersEnvironmentvariablesConfig(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersEnvironmentvariablesConfig) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinisteps struct {
+	Notifications *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinistepsNotifications `json:"notifications,omitempty" url:"notifications,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinisteps) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinisteps) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinisteps
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinisteps(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinisteps) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinistepsNotifications struct {
+	Email *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinistepsNotificationsEmail `json:"email,omitempty" url:"email,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinistepsNotifications) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinistepsNotifications) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinistepsNotifications
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinistepsNotifications(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinistepsNotifications) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinistepsNotificationsEmail struct {
+	ApprovalRequired []interface{}                                                                   `json:"APPROVAL_REQUIRED,omitempty" url:"APPROVAL_REQUIRED,omitempty"`
+	Cancelled        []interface{}                                                                   `json:"CANCELLED,omitempty" url:"CANCELLED,omitempty"`
+	Completed        []interface{}                                                                   `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
+	Errored          []interface{}                                                                   `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
+	WfChaining       *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinistepsWfchaining `json:"wfChaining,omitempty" url:"wfChaining,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinistepsNotificationsEmail) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinistepsNotificationsEmail) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinistepsNotificationsEmail
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinistepsNotificationsEmail(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinistepsNotificationsEmail) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinistepsWfchaining struct {
+	Completed []interface{}                                                         `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
+	Errored   []interface{}                                                         `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
+	VcsConfig *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfig `json:"vcsConfig,omitempty" url:"vcsConfig,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinistepsWfchaining) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinistepsWfchaining) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinistepsWfchaining
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinistepsWfchaining(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinistepsWfchaining) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersRunnerconstraints struct {
+	Type                     string                                                                                 `json:"type" url:"type"`
+	DeploymentPlatformConfig []*GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfig `json:"deploymentPlatformConfig,omitempty" url:"deploymentPlatformConfig,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersRunnerconstraints) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersRunnerconstraints) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersRunnerconstraints
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersRunnerconstraints(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersRunnerconstraints) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfig struct {
+	IacVcsConfig *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIacvcsconfig `json:"iacVCSConfig,omitempty" url:"iacVCSConfig,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfig) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfig(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfig) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIacinputdata struct {
+	SchemaType string                                                                                `json:"schemaType" url:"schemaType"`
+	Data       *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIacinputdataData `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIacinputdata) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIacinputdata) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIacinputdata
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIacinputdata(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIacinputdata) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIacinputdataData struct {
+	BucketRegion         string                                                                             `json:"bucket_region" url:"bucket_region"`
+	EnvironmentVariables []*GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersEnvironmentvariables `json:"environmentVariables,omitempty" url:"environmentVariables,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIacinputdataData) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIacinputdataData) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIacinputdataData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIacinputdataData(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIacinputdataData) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIacvcsconfig struct {
+	IacTemplateId          string                                                                            `json:"iacTemplateId" url:"iacTemplateId"`
+	UseMarketplaceTemplate bool                                                                              `json:"useMarketplaceTemplate" url:"useMarketplaceTemplate"`
+	IacInputData           *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIacinputdata `json:"iacInputData,omitempty" url:"iacInputData,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIacvcsconfig) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIacvcsconfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIacvcsconfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIacvcsconfig(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIacvcsconfig) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
 type GeneratedWorkfkowRunsStackCreateResponse struct {
 	Msg  string                                        `json:"msg" url:"msg"`
 	Data *GeneratedWorkfkowRunsStackCreateResponseData `json:"data,omitempty" url:"data,omitempty"`
@@ -9447,100 +12008,6 @@ func NewSourceConfigKindEnumFromString(s string) (SourceConfigKindEnum, error) {
 
 func (s SourceConfigKindEnum) Ptr() *SourceConfigKindEnum {
 	return &s
-}
-
-type Stack struct {
-	ResourceName             *string                     `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
-	Description              *string                     `json:"Description,omitempty" url:"Description,omitempty"`
-	Tags                     []string                    `json:"Tags,omitempty" url:"Tags,omitempty"`
-	EnvironmentVariables     []*EnvVars                  `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
-	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
-	Actions                  map[string]*Actions         `json:"Actions,omitempty" url:"Actions,omitempty"`
-	WorkflowRelationsMap     map[string]interface{}      `json:"WorkflowRelationsMap,omitempty" url:"WorkflowRelationsMap,omitempty"`
-	IsActive                 *IsActiveEnum               `json:"IsActive,omitempty" url:"IsActive,omitempty"`
-	Approvers                []string                    `json:"Approvers,omitempty" url:"Approvers,omitempty"`
-	TemplatesConfig          *TemplatesConfig            `json:"TemplatesConfig,omitempty" url:"TemplatesConfig,omitempty"`
-	UserSchedules            []*UserSchedules            `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
-	Operations               map[string]interface{}      `json:"Operations,omitempty" url:"Operations,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (s *Stack) GetExtraProperties() map[string]interface{} {
-	return s.extraProperties
-}
-
-func (s *Stack) UnmarshalJSON(data []byte) error {
-	type unmarshaler Stack
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*s = Stack(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *s)
-	if err != nil {
-		return err
-	}
-	s.extraProperties = extraProperties
-
-	s._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (s *Stack) String() string {
-	if len(s._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(s._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(s); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", s)
-}
-
-type StackCreatePatchResponse struct {
-	Msg  *string `json:"msg,omitempty" url:"msg,omitempty"`
-	Data *Stack  `json:"data,omitempty" url:"data,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (s *StackCreatePatchResponse) GetExtraProperties() map[string]interface{} {
-	return s.extraProperties
-}
-
-func (s *StackCreatePatchResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler StackCreatePatchResponse
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*s = StackCreatePatchResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *s)
-	if err != nil {
-		return err
-	}
-	s.extraProperties = extraProperties
-
-	s._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (s *StackCreatePatchResponse) String() string {
-	if len(s._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(s._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(s); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", s)
 }
 
 // - `ENABLED` - ENABLED

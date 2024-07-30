@@ -5574,6 +5574,47 @@ func (g *GeneratedWorkflowCreateResponseDataVcsconfigIacvcsconfig) String() stri
 	return fmt.Sprintf("%#v", g)
 }
 
+type GeneratedWorkflowDeleteResponse struct {
+	Msg string `json:"msg" url:"msg"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedWorkflowDeleteResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedWorkflowDeleteResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedWorkflowDeleteResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedWorkflowDeleteResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedWorkflowDeleteResponse) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
 type GeneratedWorkflowGetMsg struct {
 	UserJobMemory             float64                        `json:"UserJobMemory" url:"UserJobMemory"`
 	UserJobCpu                float64                        `json:"UserJobCPU" url:"UserJobCPU"`
@@ -11617,6 +11658,7 @@ type PatchedWorkflow struct {
 	K8SResources                map[string]interface{}      `json:"K8sResources,omitempty" url:"K8sResources,omitempty"`
 	K8SDrift                    map[string]interface{}      `json:"K8sDrift,omitempty" url:"K8sDrift,omitempty"`
 	CacheConfig                 *CacheConfig                `json:"CacheConfig,omitempty" url:"CacheConfig,omitempty"`
+	TerragruntDrift             map[string]interface{}      `json:"TerragruntDrift,omitempty" url:"TerragruntDrift,omitempty"`
 	AnsibleOutputs              map[string]interface{}      `json:"AnsibleOutputs,omitempty" url:"AnsibleOutputs,omitempty"`
 	AnsiblePlan                 map[string]interface{}      `json:"AnsiblePlan,omitempty" url:"AnsiblePlan,omitempty"`
 	AnsibleDrift                map[string]interface{}      `json:"AnsibleDrift,omitempty" url:"AnsibleDrift,omitempty"`
@@ -12082,6 +12124,7 @@ type TemplateWorkflow struct {
 	K8SResources                map[string]interface{}      `json:"K8sResources,omitempty" url:"K8sResources,omitempty"`
 	K8SDrift                    map[string]interface{}      `json:"K8sDrift,omitempty" url:"K8sDrift,omitempty"`
 	CacheConfig                 *CacheConfig                `json:"CacheConfig,omitempty" url:"CacheConfig,omitempty"`
+	TerragruntDrift             map[string]interface{}      `json:"TerragruntDrift,omitempty" url:"TerragruntDrift,omitempty"`
 	AnsibleOutputs              map[string]interface{}      `json:"AnsibleOutputs,omitempty" url:"AnsibleOutputs,omitempty"`
 	AnsiblePlan                 map[string]interface{}      `json:"AnsiblePlan,omitempty" url:"AnsiblePlan,omitempty"`
 	AnsibleDrift                map[string]interface{}      `json:"AnsibleDrift,omitempty" url:"AnsibleDrift,omitempty"`
@@ -12699,6 +12742,7 @@ type Workflow struct {
 	K8SResources                map[string]interface{}      `json:"K8sResources,omitempty" url:"K8sResources,omitempty"`
 	K8SDrift                    map[string]interface{}      `json:"K8sDrift,omitempty" url:"K8sDrift,omitempty"`
 	CacheConfig                 *CacheConfig                `json:"CacheConfig,omitempty" url:"CacheConfig,omitempty"`
+	TerragruntDrift             map[string]interface{}      `json:"TerragruntDrift,omitempty" url:"TerragruntDrift,omitempty"`
 	AnsibleOutputs              map[string]interface{}      `json:"AnsibleOutputs,omitempty" url:"AnsibleOutputs,omitempty"`
 	AnsiblePlan                 map[string]interface{}      `json:"AnsiblePlan,omitempty" url:"AnsiblePlan,omitempty"`
 	AnsibleDrift                map[string]interface{}      `json:"AnsibleDrift,omitempty" url:"AnsibleDrift,omitempty"`

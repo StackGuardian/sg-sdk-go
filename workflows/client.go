@@ -123,7 +123,7 @@ func (c *Client) Delete(
 	wf string,
 	wfGrp string,
 	opts ...option.RequestOption,
-) error {
+) (*sgsdkgo.GeneratedWorkflowDeleteResponse, error) {
 	options := core.NewRequestOptions(opts...)
 
 	baseURL := "https://api.app.stackguardian.io"
@@ -142,6 +142,7 @@ func (c *Client) Delete(
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
 
+	var response *sgsdkgo.GeneratedWorkflowDeleteResponse
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
@@ -150,11 +151,12 @@ func (c *Client) Delete(
 			MaxAttempts: options.MaxAttempts,
 			Headers:     headers,
 			Client:      options.HTTPClient,
+			Response:    &response,
 		},
 	); err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return response, nil
 }
 
 // Update Workflow

@@ -95,7 +95,8 @@ func TestNewClient(t *testing.T) {
 		assert.Empty(t, err)
 		assert.NotEmpty(t, createResponse.Data.ResourceName)
 
-		err = c.Workflows.Delete(context.Background(), SG_ORG, createResponse.Data.ResourceName, SG_WF_GROUP)
+		response, err := c.Workflows.Delete(context.Background(), SG_ORG, createResponse.Data.ResourceName, SG_WF_GROUP)
+		assert.Equal(t, "Workflow "+createResponse.Data.ResourceName+" deleted", response.Msg)
 		assert.Empty(t, err)
 	})
 

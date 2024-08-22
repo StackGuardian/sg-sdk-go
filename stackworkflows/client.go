@@ -31,7 +31,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 }
 
 // Create Workflow (Stack)
-func (c *Client) Create(
+func (c *Client) CreateStackWorkflow(
 	ctx context.Context,
 	org string,
 	stack string,
@@ -76,7 +76,7 @@ func (c *Client) Create(
 }
 
 // Read Workflow (Stack)
-func (c *Client) StackWorkflowGet(
+func (c *Client) ReadStackWorkflow(
 	ctx context.Context,
 	org string,
 	stack string,
@@ -121,7 +121,7 @@ func (c *Client) StackWorkflowGet(
 }
 
 // Delete Workflow (Stack)
-func (c *Client) StackWorkflowDelete(
+func (c *Client) DeleteStackWorkflow(
 	ctx context.Context,
 	org string,
 	stack string,
@@ -164,7 +164,7 @@ func (c *Client) StackWorkflowDelete(
 }
 
 // Update Workflow (Stack)
-func (c *Client) StackWorkflowPatch(
+func (c *Client) UpdateStackWorkflow(
 	ctx context.Context,
 	org string,
 	stack string,
@@ -211,7 +211,7 @@ func (c *Client) StackWorkflowPatch(
 }
 
 // List all artifacts (Stack)
-func (c *Client) ListAllArtifacts(
+func (c *Client) ListAllStackWorkflowsArtifacts(
 	ctx context.Context,
 	org string,
 	stack string,
@@ -256,7 +256,7 @@ func (c *Client) ListAllArtifacts(
 }
 
 // Workflow Outputs (Stack)
-func (c *Client) StackWorkflowOutput(
+func (c *Client) StackWorkflowOutputs(
 	ctx context.Context,
 	org string,
 	stack string,
@@ -301,7 +301,7 @@ func (c *Client) StackWorkflowOutput(
 }
 
 // List all Workflows (Stack)
-func (c *Client) ListAll(
+func (c *Client) ListAllStackWorkflows(
 	ctx context.Context,
 	org string,
 	stack string,

@@ -31,7 +31,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 }
 
 // Creates a Stack
-func (c *Client) Create(
+func (c *Client) CreateStack(
 	ctx context.Context,
 	org string,
 	wfGrp string,

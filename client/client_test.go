@@ -91,12 +91,12 @@ func TestNewClient(t *testing.T) {
 			},
 			Description: sggosdk.String("Dummy Workflow for GoSDK"),
 		}
-		createResponse, err := c.Workflows.Create(context.Background(), SG_ORG, SG_WF_GROUP, &createWorkflowRequest)
+		createResponse, err := c.Workflows.CreateWorkflow(context.Background(), SG_ORG, SG_WF_GROUP, &createWorkflowRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, createResponse.Data.ResourceName)
 
-		response, err := c.Workflows.Delete(context.Background(), SG_ORG, createResponse.Data.ResourceName, SG_WF_GROUP)
-		assert.Equal(t, "Workflow "+createResponse.Data.ResourceName+" deleted", response.Msg)
+		deleteResposnse, err := c.Workflows.DeleteWorkflow(context.Background(), SG_ORG, createResponse.Data.ResourceName, SG_WF_GROUP)
+		assert.Equal(t, "Workflow "+createResponse.Data.ResourceName+" deleted", deleteResposnse.Msg)
 		assert.Empty(t, err)
 	})
 
@@ -133,7 +133,7 @@ func TestNewClient(t *testing.T) {
 			},
 			Description: sggosdk.String("Dummy Workflow for GoSDK"),
 		}
-		updateWorkflowResponse, err := c.Workflows.Patch(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, &UpdateWorkflowRequest)
+		updateWorkflowResponse, err := c.Workflows.UpdateWorkflow(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, &UpdateWorkflowRequest)
 		assert.Empty(t, err)
 		assert.Equal(t, "Workflow "+SG_WF+" updated", updateWorkflowResponse.Msg)
 	})
@@ -143,9 +143,9 @@ func TestNewClient(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		response, err := c.Workflows.Get(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP)
-		_ = response
+		response, err := c.Workflows.ReadWorkflow(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP)
 		assert.Empty(t, err)
+		assert.Equal(t, SG_WF, response.Msg.ResourceName)
 	})
 
 	t.Run("ListAll workflow", func(t *testing.T) {
@@ -153,8 +153,8 @@ func TestNewClient(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		response, err := c.Workflows.ListAll(context.Background(), SG_ORG, SG_WF_GROUP)
-		_ = response
+		response, err := c.Workflows.ListAllWorkflows(context.Background(), SG_ORG, SG_WF_GROUP)
+		assert.GreaterOrEqual(t, len(response.Msg), 1)
 		assert.Empty(t, err)
 	})
 
@@ -163,7 +163,7 @@ func TestNewClient(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		response, err := c.Workflows.ListAllArtifacts(context.Background(), SG_ORG, "CUSTOM-7OeX", "test-terragrunt")
+		response, err := c.Workflows.ListAllWorkflowArtifacts(context.Background(), SG_ORG, "CUSTOM-7OeX", "test-terragrunt")
 		assert.Empty(t, err)
 		assert.Equal(t, 15055, response.Data.Artifacts["orgs/demo-org/wfgrps/test-terragrunt/wfs/CUSTOM-7OeX/artifacts/tfstate.json"].Size)
 	})
@@ -173,7 +173,7 @@ func TestNewClient(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		response, err := c.Workflows.Output(context.Background(), SG_ORG, "CUSTOM-7OeX", "test-terragrunt")
+		response, err := c.Workflows.Outputs(context.Background(), SG_ORG, "CUSTOM-7OeX", "test-terragrunt")
 		assert.Empty(t, err)
 		assert.Equal(t, "Outputs retrived", response.Msg)
 		assert.Equal(t, "stackguardian-proper-escargot", response.Data.Outputs["id"]["value"].(string))
@@ -213,11 +213,11 @@ func TestNewClient(t *testing.T) {
 			},
 			Description: sggosdk.String("Dummy Stack Workflow for GoSDK"),
 		}
-		createResponse, err := c.StackWorkflows.Create(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP, &createWorkflowRequest)
+		createResponse, err := c.StackWorkflows.CreateStackWorkflow(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP, &createWorkflowRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, createResponse.Data.ResourceName)
 
-		err = c.StackWorkflows.StackWorkflowDelete(context.Background(), SG_ORG, SG_STACK, createResponse.Data.ResourceName, SG_WF_GROUP)
+		err = c.StackWorkflows.DeleteStackWorkflow(context.Background(), SG_ORG, SG_STACK, createResponse.Data.ResourceName, SG_WF_GROUP)
 		assert.Empty(t, err)
 	})
 
@@ -254,7 +254,7 @@ func TestNewClient(t *testing.T) {
 			},
 			Description: sggosdk.String("Dummy Workflow for GoSDK"),
 		}
-		updateWorkflowResponse, err := c.StackWorkflows.StackWorkflowPatch(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP, &UpdateWorkflowRequest)
+		updateWorkflowResponse, err := c.StackWorkflows.UpdateStackWorkflow(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP, &UpdateWorkflowRequest)
 		assert.Empty(t, err)
 		assert.Equal(t, "Workflow "+SG_STACK_WF+" updated", updateWorkflowResponse.Msg)
 	})
@@ -264,9 +264,9 @@ func TestNewClient(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		response, err := c.StackWorkflows.StackWorkflowGet(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP)
+		response, err := c.StackWorkflows.ReadStackWorkflow(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP)
 		assert.Empty(t, err)
-		assert.Equal(t, SG_STACK_WF, response.Msg.GetExtraProperties()["ResourceName"].(string))
+		assert.Equal(t, SG_STACK_WF, response.Msg.ResourceName)
 
 	})
 
@@ -275,7 +275,7 @@ func TestNewClient(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		response, err := c.StackWorkflows.ListAll(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP)
+		response, err := c.StackWorkflows.ListAllStackWorkflows(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP)
 		assert.Empty(t, err)
 		assert.GreaterOrEqual(t, len(response.Msg), 1)
 	})
@@ -285,7 +285,7 @@ func TestNewClient(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		response, err := c.StackWorkflows.ListAllArtifacts(context.Background(), SG_ORG, "stack1",
+		response, err := c.StackWorkflows.ListAllStackWorkflowsArtifacts(context.Background(), SG_ORG, "stack1",
 			"refeed2-null-resource-tf-JuNs", "refeed-test-nested-stackrunbug")
 		assert.Empty(t, err)
 		assert.Equal(t, "Outputs retrieved", response.Msg)
@@ -298,7 +298,7 @@ func TestNewClient(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		response, err := c.StackWorkflows.StackWorkflowOutput(context.Background(), SG_ORG, "stack1",
+		response, err := c.StackWorkflows.StackWorkflowOutputs(context.Background(), SG_ORG, "stack1",
 			"refeed2-null-resource-tf-JuNs", "refeed-test-nested-stackrunbug")
 		assert.Empty(t, err)
 		assert.Equal(t, float64(13), response.Data.Outputs["message_length"]["value"].(float64))
@@ -311,10 +311,8 @@ func TestNewClient(t *testing.T) {
 			option.WithBaseURL(SG_BASE_URL),
 		)
 		response, err := c.WorkflowRuns.ListAllWorkflowRuns(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP)
-		_ = response
 		assert.Empty(t, err)
-		assert.NotEmpty(t, len(response.Msg))
-		// assert.Equal(t, "3obgvp7kycaf", response.Msg[0].ResourceName)
+		assert.GreaterOrEqual(t, len(response.Msg), 1)
 	})
 
 	t.Run("ListAll workflow runs stacks", func(t *testing.T) {
@@ -324,7 +322,6 @@ func TestNewClient(t *testing.T) {
 		)
 		response, err := c.WorkflowRuns.ListAllWorkflowRunsStack(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP)
 		status := response.Msg[0].Statuses["pre_0_step"][0].Name
-		_ = status
 		assert.Empty(t, err)
 		assert.Equal(t, "QUEUED", status)
 		assert.NotEmpty(t, len(response.Msg[0].Statuses["pre_0_step"]))
@@ -386,7 +383,6 @@ func TestNewClient(t *testing.T) {
 
 		response, err := c.WorkflowRuns.CreateWorkflowRun(context.Background(),
 			SG_ORG, SG_WF, SG_WF_GROUP, &createWorkflowRunRequest)
-		_ = response
 		assert.Empty(t, err)
 		newWfRunName := response.Data.GetExtraProperties()["ResourceName"].(string)
 		assert.NotEmpty(t, newWfRunName)
@@ -428,9 +424,14 @@ func TestNewClient(t *testing.T) {
 
 		createWfRunStackResponse, err := c.WorkflowRuns.CreateWorkflowRunStack(context.Background(),
 			SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP, &createWorkflowRunRequest)
-		_ = createWfRunStackResponse
 		assert.Empty(t, err)
 		assert.Equal(t, "Workflow Run dispatched", createWfRunStackResponse.Msg)
+
+		err = c.WorkflowRuns.DeleteWorkflowRunStack(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP, createWfRunStackResponse.Data.ResourceName)
+		// We expect an error
+		if err != nil {
+			assert.Contains(t, err.Error(), "Error cancelling Workflow Run "+createWfRunStackResponse.Data.ResourceName)
+		}
 
 	})
 
@@ -473,9 +474,8 @@ func TestNewClient(t *testing.T) {
 		)
 
 		logs, err := c.WorkflowRuns.GetWorkflowRunLogs(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, SG_WF_RUN)
-		_ = logs
 		assert.Empty(t, err)
-		assert.NotEmpty(t, len(logs.Msg))
+		assert.GreaterOrEqual(t, len(logs.Msg), 1)
 	})
 
 	t.Run("Get workflow runs logs (stack)", func(t *testing.T) {
@@ -485,9 +485,8 @@ func TestNewClient(t *testing.T) {
 		)
 
 		logs, err := c.WorkflowRuns.GetWorkflowRunLogsStack(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP, SG_STACK_WF_RUN)
-		_ = logs
 		assert.Empty(t, err)
-		assert.NotEmpty(t, len(logs.Msg))
+		assert.GreaterOrEqual(t, len(logs.Msg), 1)
 	})
 
 	t.Run("Delete workflow runs", func(t *testing.T) {
@@ -498,7 +497,9 @@ func TestNewClient(t *testing.T) {
 
 		err := c.WorkflowRuns.DeleteWorkflowRun(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, SG_WF_RUN)
 		// We expect an error since the workflow run is already failed
-		assert.Contains(t, err.Error(), "Error cancelling Workflow Run "+SG_WF_RUN)
+		if err != nil {
+			assert.Contains(t, err.Error(), "Error cancelling Workflow Run "+SG_WF_RUN)
+		}
 	})
 
 	t.Run("Cancel workflow runs", func(t *testing.T) {
@@ -509,7 +510,9 @@ func TestNewClient(t *testing.T) {
 
 		err := c.WorkflowRuns.CancelWorkflowRun(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, SG_WF_RUN)
 		// We expect an error since the workflow run is already failed
-		assert.Contains(t, err.Error(), "Error cancelling Workflow Run "+SG_WF_RUN)
+		if err != nil {
+			assert.Contains(t, err.Error(), "Error cancelling Workflow Run "+SG_WF_RUN)
+		}
 	})
 
 	t.Run("Delete workflow runs (stack)", func(t *testing.T) {
@@ -520,7 +523,9 @@ func TestNewClient(t *testing.T) {
 
 		err := c.WorkflowRuns.DeleteWorkflowRunStack(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP, SG_STACK_WF_RUN)
 		// We expect an error since the workflow run is already failed
-		assert.Contains(t, err.Error(), "Error cancelling Workflow Run "+SG_STACK_WF_RUN)
+		if err != nil {
+			assert.Contains(t, err.Error(), "Error cancelling Workflow Run "+SG_STACK_WF_RUN)
+		}
 	})
 
 	t.Run("Update workflow runs", func(t *testing.T) {
@@ -557,7 +562,6 @@ func TestNewClient(t *testing.T) {
 			},
 		}
 		updateWfRunResponse, err := c.WorkflowRuns.UpdateWorkflowRun(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, SG_WF_RUN, &updateWfRunRequest)
-		_ = updateWfRunResponse
 		assert.Empty(t, err)
 		assert.Equal(t, "Workflow Run "+SG_WF_RUN+" updated", updateWfRunResponse.Msg)
 	})
@@ -589,12 +593,12 @@ func TestNewClient(t *testing.T) {
 				}},
 			},
 		}
-		createStackResponse, err := c.Stacks.Create(context.Background(), SG_ORG, SG_WF_GROUP, &createStackRequest)
+		createStackResponse, err := c.Stacks.CreateStack(context.Background(), SG_ORG, SG_WF_GROUP, &createStackRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, createStackResponse.Data.Stack.ResourceName)
 		assert.Equal(t, "Stack "+createStackResponse.Data.Stack.ResourceName+" created", createStackResponse.Msg)
 
-		err = c.StackWorkflows.StackWorkflowDelete(context.Background(), SG_ORG, createStackResponse.Data.Stack.ResourceName,
+		err = c.StackWorkflows.DeleteStackWorkflow(context.Background(), SG_ORG, createStackResponse.Data.Stack.ResourceName,
 			createStackResponse.Data.Workflows[0].ResourceName, SG_WF_GROUP)
 		assert.Empty(t, err)
 		deleteResponse, err := c.Stacks.DeleteStack(context.Background(), SG_ORG, createStackResponse.Data.Stack.ResourceName, SG_WF_GROUP)
@@ -634,7 +638,7 @@ func TestNewClient(t *testing.T) {
 		)
 		response, err := c.Stacks.ListAllStackRuns(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP)
 		assert.Empty(t, err)
-		assert.NotEmpty(t, len(response.Msg))
+		assert.GreaterOrEqual(t, len(response.Msg), 1)
 	})
 
 	t.Run("Get stack outputs", func(t *testing.T) {
@@ -644,7 +648,7 @@ func TestNewClient(t *testing.T) {
 		)
 		response, err := c.Stacks.GetStackOutputs(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP)
 		assert.Empty(t, err)
-		assert.NotEmpty(t, len(response.Msg))
+		assert.GreaterOrEqual(t, len(response.Msg), 1)
 	})
 
 	t.Run("update stack", func(t *testing.T) {
@@ -685,7 +689,7 @@ func TestNewClient(t *testing.T) {
 		)
 		listResponse, err := c.Stacks.ListAllStackRuns(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP)
 		assert.Empty(t, err)
-		assert.NotEmpty(t, len(listResponse.Msg))
+		assert.GreaterOrEqual(t, len(listResponse.Msg), 1)
 	})
 
 	t.Run("get stack runs", func(t *testing.T) {

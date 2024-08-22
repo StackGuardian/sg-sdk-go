@@ -5,6 +5,7 @@ package api
 import (
 	json "encoding/json"
 	fmt "fmt"
+
 	core "github.com/StackGuardian/sg-sdk-go/core"
 )
 
@@ -105,6 +106,135 @@ func (a *Actions) UnmarshalJSON(data []byte) error {
 }
 
 func (a *Actions) String() string {
+	if len(a._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(a._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+type AddUserToOrganization struct {
+	UserId       string          `json:"userId" url:"userId"`
+	EntityType   *EntityTypeEnum `json:"entityType,omitempty" url:"entityType,omitempty"`
+	Role         string          `json:"role" url:"role"`
+	OrgId        string          `json:"orgId" url:"orgId"`
+	ResendInvite *bool           `json:"resendInvite,omitempty" url:"resendInvite,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (a *AddUserToOrganization) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AddUserToOrganization) UnmarshalJSON(data []byte) error {
+	type unmarshaler AddUserToOrganization
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AddUserToOrganization(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+
+	a._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AddUserToOrganization) String() string {
+	if len(a._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(a._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+type AddUserToOrganizationResponse struct {
+	Msg  *string                `json:"msg,omitempty" url:"msg,omitempty"`
+	Data *AddUserToOrganization `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (a *AddUserToOrganizationResponse) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AddUserToOrganizationResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler AddUserToOrganizationResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AddUserToOrganizationResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+
+	a._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AddUserToOrganizationResponse) String() string {
+	if len(a._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(a._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+type AllowedPermissions struct {
+	Name  string              `json:"name" url:"name"`
+	Paths map[string][]string `json:"paths,omitempty" url:"paths,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (a *AllowedPermissions) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AllowedPermissions) UnmarshalJSON(data []byte) error {
+	type unmarshaler AllowedPermissions
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AllowedPermissions(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+
+	a._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AllowedPermissions) String() string {
 	if len(a._rawJSON) > 0 {
 		if value, err := core.StringifyJSON(a._rawJSON); err == nil {
 			return value
@@ -510,6 +640,248 @@ func (d DeploymentPlatformConfigKindEnum) Ptr() *DeploymentPlatformConfigKindEnu
 	return &d
 }
 
+type Deprecation struct {
+	Message       *string `json:"message,omitempty" url:"message,omitempty"`
+	EffectiveDate *string `json:"effectiveDate,omitempty" url:"effectiveDate,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (d *Deprecation) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *Deprecation) UnmarshalJSON(data []byte) error {
+	type unmarshaler Deprecation
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = Deprecation(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+
+	d._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *Deprecation) String() string {
+	if len(d._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(d._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+type DiscoveryBenchmark struct {
+	RuntimeSource     *string                     `json:"runtimeSource,omitempty" url:"runtimeSource,omitempty"`
+	Checks            []string                    `json:"checks,omitempty" url:"checks,omitempty"`
+	Regions           map[string]*DiscoveryRegion `json:"regions,omitempty" url:"regions,omitempty"`
+	LastDiscoveryTime *int                        `json:"lastDiscoveryTime,omitempty" url:"lastDiscoveryTime,omitempty"`
+	Description       *string                     `json:"description,omitempty" url:"description,omitempty"`
+	SummaryDesc       *string                     `json:"summaryDesc,omitempty" url:"summaryDesc,omitempty"`
+	Active            *bool                       `json:"active,omitempty" url:"active,omitempty"`
+	Label             *string                     `json:"label,omitempty" url:"label,omitempty"`
+	IsCustomCheck     *bool                       `json:"isCustomCheck,omitempty" url:"isCustomCheck,omitempty"`
+	SummaryTitle      *string                     `json:"summaryTitle,omitempty" url:"summaryTitle,omitempty"`
+	DiscoveryInterval *int                        `json:"discoveryInterval,omitempty" url:"discoveryInterval,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (d *DiscoveryBenchmark) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *DiscoveryBenchmark) UnmarshalJSON(data []byte) error {
+	type unmarshaler DiscoveryBenchmark
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DiscoveryBenchmark(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+
+	d._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DiscoveryBenchmark) String() string {
+	if len(d._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(d._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+type DiscoveryRegion struct {
+	Emails []string `json:"emails,omitempty" url:"emails,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (d *DiscoveryRegion) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *DiscoveryRegion) UnmarshalJSON(data []byte) error {
+	type unmarshaler DiscoveryRegion
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DiscoveryRegion(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+
+	d._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DiscoveryRegion) String() string {
+	if len(d._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(d._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+type DiscoverySettingsRegions struct {
+	Region string `json:"region" url:"region"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (d *DiscoverySettingsRegions) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *DiscoverySettingsRegions) UnmarshalJSON(data []byte) error {
+	type unmarshaler DiscoverySettingsRegions
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DiscoverySettingsRegions(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+
+	d._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DiscoverySettingsRegions) String() string {
+	if len(d._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(d._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+type Discoverysettings struct {
+	DiscoveryInterval *int                           `json:"discoveryInterval,omitempty" url:"discoveryInterval,omitempty"`
+	Benchmarks        map[string]*DiscoveryBenchmark `json:"benchmarks,omitempty" url:"benchmarks,omitempty"`
+	Regions           []*DiscoverySettingsRegions    `json:"regions,omitempty" url:"regions,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (d *Discoverysettings) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *Discoverysettings) UnmarshalJSON(data []byte) error {
+	type unmarshaler Discoverysettings
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = Discoverysettings(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+
+	d._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *Discoverysettings) String() string {
+	if len(d._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(d._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+// - `EMAIL` - EMAIL
+// - `GROUP` - GROUP
+type EntityTypeEnum string
+
+const (
+	EntityTypeEnumEmail EntityTypeEnum = "EMAIL"
+	EntityTypeEnumGroup EntityTypeEnum = "GROUP"
+)
+
+func NewEntityTypeEnumFromString(s string) (EntityTypeEnum, error) {
+	switch s {
+	case "EMAIL":
+		return EntityTypeEnumEmail, nil
+	case "GROUP":
+		return EntityTypeEnumGroup, nil
+	}
+	var t EntityTypeEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (e EntityTypeEnum) Ptr() *EntityTypeEnum {
+	return &e
+}
+
 type EnvVarConfig struct {
 	VarName   string  `json:"varName" url:"varName"`
 	TextValue *string `json:"textValue,omitempty" url:"textValue,omitempty"`
@@ -617,6 +989,447 @@ func NewEnvVarsKindEnumFromString(s string) (EnvVarsKindEnum, error) {
 
 func (e EnvVarsKindEnum) Ptr() *EnvVarsKindEnum {
 	return &e
+}
+
+type GeneratedConnectorDeleteResponse struct {
+	Msg string `json:"msg" url:"msg"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedConnectorDeleteResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedConnectorDeleteResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedConnectorDeleteResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedConnectorDeleteResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedConnectorDeleteResponse) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedConnectorListAllResponseMsg struct {
+	Msg []*GeneratedConnectorReadResponse `json:"msg,omitempty" url:"msg,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedConnectorListAllResponseMsg) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedConnectorListAllResponseMsg) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedConnectorListAllResponseMsg
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedConnectorListAllResponseMsg(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedConnectorListAllResponseMsg) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedConnectorReadResponse struct {
+	Msg *GeneratedConnectorReadResponseMsg `json:"msg,omitempty" url:"msg,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedConnectorReadResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedConnectorReadResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedConnectorReadResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedConnectorReadResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedConnectorReadResponse) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedConnectorReadResponseMsg struct {
+	IsArchive         string                                              `json:"IsArchive" url:"IsArchive"`
+	IsActive          string                                              `json:"IsActive" url:"IsActive"`
+	Description       string                                              `json:"Description" url:"Description"`
+	ResourceId        string                                              `json:"ResourceId" url:"ResourceId"`
+	Scope             []string                                            `json:"Scope,omitempty" url:"Scope,omitempty"`
+	ModifiedAt        float64                                             `json:"ModifiedAt" url:"ModifiedAt"`
+	ParentId          string                                              `json:"ParentId" url:"ParentId"`
+	ResourceType      string                                              `json:"ResourceType" url:"ResourceType"`
+	Tags              []string                                            `json:"Tags,omitempty" url:"Tags,omitempty"`
+	DocVersion        string                                              `json:"DocVersion" url:"DocVersion"`
+	Authors           []string                                            `json:"Authors,omitempty" url:"Authors,omitempty"`
+	ResourceName      string                                              `json:"ResourceName" url:"ResourceName"`
+	SubResourceId     string                                              `json:"SubResourceId" url:"SubResourceId"`
+	OrgId             string                                              `json:"OrgId" url:"OrgId"`
+	CreatedAt         float64                                             `json:"CreatedAt" url:"CreatedAt"`
+	DiscoverySettings *GeneratedConnectorReadResponseMsgDiscoverysettings `json:"DiscoverySettings,omitempty" url:"DiscoverySettings,omitempty"`
+	Authentication    *GeneratedConnectorReadResponseMsgAuthentication    `json:"Authentication,omitempty" url:"Authentication,omitempty"`
+	Settings          *GeneratedConnectorReadResponseMsgSettings          `json:"Settings,omitempty" url:"Settings,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedConnectorReadResponseMsg) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedConnectorReadResponseMsg
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedConnectorReadResponseMsg(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedConnectorReadResponseMsg) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedConnectorReadResponseMsgAuthentication struct {
+	AuthenticatedAt float64 `json:"authenticatedAt" url:"authenticatedAt"`
+	Authenticated   bool    `json:"authenticated" url:"authenticated"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedConnectorReadResponseMsgAuthentication) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedConnectorReadResponseMsgAuthentication) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedConnectorReadResponseMsgAuthentication
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedConnectorReadResponseMsgAuthentication(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedConnectorReadResponseMsgAuthentication) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedConnectorReadResponseMsgDiscoverysettings struct {
+	DiscoveryInterval *int                                                                     `json:"discoveryInterval,omitempty" url:"discoveryInterval,omitempty"`
+	Benchmarks        map[string]*GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks `json:"benchmarks,omitempty" url:"benchmarks,omitempty"`
+	Regions           []*GeneratedConnectorReadResponseMsgDiscoverysettingsRegions             `json:"regions,omitempty" url:"regions,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettings) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettings) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedConnectorReadResponseMsgDiscoverysettings
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedConnectorReadResponseMsgDiscoverysettings(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettings) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks struct {
+	RuntimeSource     *string                                                                         `json:"runtimeSource,omitempty" url:"runtimeSource,omitempty"`
+	Checks            []string                                                                        `json:"checks,omitempty" url:"checks,omitempty"`
+	Regions           map[string]*GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarksRegions `json:"regions,omitempty" url:"regions,omitempty"`
+	LastDiscoveryTime *int                                                                            `json:"lastDiscoveryTime,omitempty" url:"lastDiscoveryTime,omitempty"`
+	Description       *string                                                                         `json:"description,omitempty" url:"description,omitempty"`
+	SummaryDesc       *string                                                                         `json:"summaryDesc,omitempty" url:"summaryDesc,omitempty"`
+	Active            bool                                                                            `json:"active" url:"active"`
+	Label             *string                                                                         `json:"label,omitempty" url:"label,omitempty"`
+	IsCustomCheck     *bool                                                                           `json:"isCustomCheck,omitempty" url:"isCustomCheck,omitempty"`
+	SummaryTitle      *string                                                                         `json:"summaryTitle,omitempty" url:"summaryTitle,omitempty"`
+	DiscoveryInterval *int                                                                            `json:"discoveryInterval,omitempty" url:"discoveryInterval,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarksRegions struct {
+	Emails []string `json:"emails,omitempty" url:"emails,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarksRegions) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarksRegions) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarksRegions
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarksRegions(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarksRegions) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedConnectorReadResponseMsgDiscoverysettingsRegions struct {
+	Region string `json:"region" url:"region"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsRegions) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsRegions) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedConnectorReadResponseMsgDiscoverysettingsRegions
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedConnectorReadResponseMsgDiscoverysettingsRegions(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsRegions) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedConnectorReadResponseMsgSettings struct {
+	Kind   string                   `json:"kind" url:"kind"`
+	Config []map[string]interface{} `json:"config,omitempty" url:"config,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedConnectorReadResponseMsgSettings) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedConnectorReadResponseMsgSettings) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedConnectorReadResponseMsgSettings
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedConnectorReadResponseMsgSettings(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedConnectorReadResponseMsgSettings) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
 }
 
 type GeneratedMsgDeploymentplatformconfig struct {
@@ -1889,7 +2702,7 @@ type GeneratedStackCreateResponseDataStack struct {
 	DeletionOrder            []string                                                                `json:"DeletionOrder,omitempty" url:"DeletionOrder,omitempty"`
 	Actions                  map[string]map[string]interface{}                                       `json:"Actions,omitempty" url:"Actions,omitempty"`
 	WorkflowRelationsMap     map[string]interface{}                                                  `json:"WorkflowRelationsMap,omitempty" url:"WorkflowRelationsMap,omitempty"`
-	DeploymentPlatformConfig []*GeneratedStackCreateResponseDataStackDeploymentplatformconfig        `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	DeploymentPlatformConfig []*GeneratedStackDeploymentplatformconfig                               `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
 	TemplatesConfig          *GeneratedStackCreateResponseDataStackTemplatesconfig                   `json:"TemplatesConfig,omitempty" url:"TemplatesConfig,omitempty"`
 
 	extraProperties map[string]interface{}
@@ -1919,90 +2732,6 @@ func (g *GeneratedStackCreateResponseDataStack) UnmarshalJSON(data []byte) error
 }
 
 func (g *GeneratedStackCreateResponseDataStack) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedStackCreateResponseDataStackDeploymentplatformconfig struct {
-	Kind   string                                                               `json:"kind" url:"kind"`
-	Config *GeneratedStackCreateResponseDataStackDeploymentplatformconfigConfig `json:"config,omitempty" url:"config,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedStackCreateResponseDataStackDeploymentplatformconfig) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedStackCreateResponseDataStackDeploymentplatformconfig) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedStackCreateResponseDataStackDeploymentplatformconfig
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedStackCreateResponseDataStackDeploymentplatformconfig(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedStackCreateResponseDataStackDeploymentplatformconfig) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedStackCreateResponseDataStackDeploymentplatformconfigConfig struct {
-	ProfileName   string `json:"profileName" url:"profileName"`
-	IntegrationId string `json:"integrationId" url:"integrationId"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedStackCreateResponseDataStackDeploymentplatformconfigConfig) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedStackCreateResponseDataStackDeploymentplatformconfigConfig) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedStackCreateResponseDataStackDeploymentplatformconfigConfig
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedStackCreateResponseDataStackDeploymentplatformconfigConfig(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedStackCreateResponseDataStackDeploymentplatformconfigConfig) String() string {
 	if len(g._rawJSON) > 0 {
 		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
 			return value
@@ -2061,7 +2790,7 @@ type GeneratedStackCreateResponseDataStackTemplatesconfigTemplates struct {
 	WfStepsConfig             []interface{}                                                           `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
 	WfType                    string                                                                  `json:"WfType" url:"WfType"`
 	EnvironmentVariables      []interface{}                                                           `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
-	DeploymentPlatformConfig  []interface{}                                                           `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	DeploymentPlatformConfig  []*GeneratedStackDeploymentplatformconfig                               `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
 	UserSchedules             []interface{}                                                           `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
 	GitHubComSync             map[string]map[string]interface{}                                       `json:"GitHubComSync,omitempty" url:"GitHubComSync,omitempty"`
 	Approvers                 []interface{}                                                           `json:"Approvers,omitempty" url:"Approvers,omitempty"`
@@ -2377,7 +3106,7 @@ type GeneratedStackCreateResponseDataWorkflows struct {
 	ResourceType              string                                                      `json:"ResourceType" url:"ResourceType"`
 	ModifiedAt                int                                                         `json:"ModifiedAt" url:"ModifiedAt"`
 	EnvironmentVariables      []interface{}                                               `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
-	DeploymentPlatformConfig  map[string]interface{}                                      `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	DeploymentPlatformConfig  []*GeneratedStackDeploymentplatformconfig                   `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
 	CacheConfig               map[string]interface{}                                      `json:"CacheConfig,omitempty" url:"CacheConfig,omitempty"`
 	WfType                    string                                                      `json:"WfType" url:"WfType"`
 	TerraformConfig           map[string]interface{}                                      `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
@@ -2590,6 +3319,90 @@ func (g *GeneratedStackDeleteResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
+type GeneratedStackDeploymentplatformconfig struct {
+	Kind   string                                        `json:"kind" url:"kind"`
+	Config *GeneratedStackDeploymentplatformconfigConfig `json:"config,omitempty" url:"config,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackDeploymentplatformconfig) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackDeploymentplatformconfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackDeploymentplatformconfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackDeploymentplatformconfig(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackDeploymentplatformconfig) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedStackDeploymentplatformconfigConfig struct {
+	ProfileName   string `json:"profileName" url:"profileName"`
+	IntegrationId string `json:"integrationId" url:"integrationId"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GeneratedStackDeploymentplatformconfigConfig) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackDeploymentplatformconfigConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackDeploymentplatformconfigConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackDeploymentplatformconfigConfig(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackDeploymentplatformconfigConfig) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
 type GeneratedStackGetResponse struct {
 	Msg *GeneratedStackGetResponseMsg `json:"msg,omitempty" url:"msg,omitempty"`
 
@@ -2636,7 +3449,7 @@ type GeneratedStackGetResponseMsg struct {
 	WorkflowRelationsMap     map[string]interface{}                       `json:"WorkflowRelationsMap,omitempty" url:"WorkflowRelationsMap,omitempty"`
 	IsActive                 string                                       `json:"IsActive" url:"IsActive"`
 	Tags                     []interface{}                                `json:"Tags,omitempty" url:"Tags,omitempty"`
-	DeploymentPlatformConfig []map[string]interface{}                     `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	DeploymentPlatformConfig []*GeneratedStackDeploymentplatformconfig    `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
 	Discrepancies            map[string]interface{}                       `json:"Discrepancies,omitempty" url:"Discrepancies,omitempty"`
 	Authors                  []string                                     `json:"Authors,omitempty" url:"Authors,omitempty"`
 	ActivitySubscribers      []string                                     `json:"ActivitySubscribers,omitempty" url:"ActivitySubscribers,omitempty"`
@@ -2745,7 +3558,7 @@ func (g *GeneratedStackGetResponseMsgTemplatesconfig) String() string {
 
 type GeneratedStackGetResponseMsgTemplatesconfigTemplates struct {
 	NumberOfApprovalsRequired float64                                                        `json:"NumberOfApprovalsRequired" url:"NumberOfApprovalsRequired"`
-	DeploymentPlatformConfig  []interface{}                                                  `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	DeploymentPlatformConfig  []*GeneratedStackDeploymentplatformconfig                      `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
 	Description               string                                                         `json:"Description" url:"Description"`
 	ResourceName              string                                                         `json:"ResourceName" url:"ResourceName"`
 	WfStepsConfig             []interface{}                                                  `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
@@ -3795,90 +4608,6 @@ func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparameters) String() s
 	return fmt.Sprintf("%#v", g)
 }
 
-type GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfig struct {
-	Kind   string                                                                                     `json:"kind" url:"kind"`
-	Config *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfigConfig `json:"config,omitempty" url:"config,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfig) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfig) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfig
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfig(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfig) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfigConfig struct {
-	ProfileName   string `json:"profileName" url:"profileName"`
-	IntegrationId string `json:"integrationId" url:"integrationId"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfigConfig) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfigConfig) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfigConfig
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfigConfig(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfigConfig) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
 type GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersEnvironmentvariables struct {
 	Kind   string                                                                                 `json:"kind" url:"kind"`
 	Config *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersEnvironmentvariablesConfig `json:"config,omitempty" url:"config,omitempty"`
@@ -4135,8 +4864,8 @@ func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersMinistepsWfc
 }
 
 type GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersRunnerconstraints struct {
-	Type                     string                                                                                 `json:"type" url:"type"`
-	DeploymentPlatformConfig []*GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersDeploymentplatformconfig `json:"deploymentPlatformConfig,omitempty" url:"deploymentPlatformConfig,omitempty"`
+	Type                     string                                    `json:"type" url:"type"`
+	DeploymentPlatformConfig []*GeneratedStackDeploymentplatformconfig `json:"deploymentPlatformConfig,omitempty" url:"deploymentPlatformConfig,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -4333,533 +5062,6 @@ func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIac
 }
 
 func (g *GeneratedStackRunsResponseDataWorkflowrunsRuntimeparametersVcsconfigIacvcsconfig) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkfkowRunsStackCreateResponse struct {
-	Msg  string                                        `json:"msg" url:"msg"`
-	Data *GeneratedWorkfkowRunsStackCreateResponseData `json:"data,omitempty" url:"data,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponse) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkfkowRunsStackCreateResponse
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkfkowRunsStackCreateResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponse) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkfkowRunsStackCreateResponseData struct {
-	OrgId             string                                                         `json:"OrgId" url:"OrgId"`
-	SubResourceId     string                                                         `json:"SubResourceId" url:"SubResourceId"`
-	CreatedAt         int                                                            `json:"CreatedAt" url:"CreatedAt"`
-	ResourceName      string                                                         `json:"ResourceName" url:"ResourceName"`
-	Authors           []string                                                       `json:"Authors,omitempty" url:"Authors,omitempty"`
-	ResourceType      string                                                         `json:"ResourceType" url:"ResourceType"`
-	ModifiedAt        int                                                            `json:"ModifiedAt" url:"ModifiedAt"`
-	LatestStatus      string                                                         `json:"LatestStatus" url:"LatestStatus"`
-	Comments          map[string]interface{}                                         `json:"Comments,omitempty" url:"Comments,omitempty"`
-	Statuses          map[string]interface{}                                         `json:"Statuses,omitempty" url:"Statuses,omitempty"`
-	LatestStatusKey   string                                                         `json:"LatestStatusKey" url:"LatestStatusKey"`
-	RuntimeParameters *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparameters `json:"RuntimeParameters,omitempty" url:"RuntimeParameters,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseData) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseData) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkfkowRunsStackCreateResponseData
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkfkowRunsStackCreateResponseData(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseData) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparameters struct {
-	TfDriftWfRun              bool                                                                    `json:"tfDriftWfRun" url:"tfDriftWfRun"`
-	TfDriftIacInputData       map[string]interface{}                                                  `json:"tfDriftIacInputData,omitempty" url:"tfDriftIacInputData,omitempty"`
-	Approvers                 []interface{}                                                           `json:"approvers,omitempty" url:"approvers,omitempty"`
-	VcsTriggers               map[string]interface{}                                                  `json:"vcsTriggers,omitempty" url:"vcsTriggers,omitempty"`
-	EnvironmentVariables      []interface{}                                                           `json:"environmentVariables,omitempty" url:"environmentVariables,omitempty"`
-	WfStepsConfig             []interface{}                                                           `json:"wfStepsConfig,omitempty" url:"wfStepsConfig,omitempty"`
-	CacheConfig               map[string]interface{}                                                  `json:"cacheConfig,omitempty" url:"cacheConfig,omitempty"`
-	WfType                    string                                                                  `json:"wfType" url:"wfType"`
-	UserJobCpu                float64                                                                 `json:"userJobCpu" url:"userJobCpu"`
-	UserJobMemory             float64                                                                 `json:"userJobMemory" url:"userJobMemory"`
-	NumberOfApprovalsRequired float64                                                                 `json:"numberOfApprovalsRequired" url:"numberOfApprovalsRequired"`
-	MiniSteps                 *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinisteps `json:"miniSteps,omitempty" url:"miniSteps,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparameters) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparameters) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparameters
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparameters(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparameters) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersDeploymentplatformconfig struct {
-	Kind   string                                                                                       `json:"kind" url:"kind"`
-	Config *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersDeploymentplatformconfigConfig `json:"config,omitempty" url:"config,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersDeploymentplatformconfig) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersDeploymentplatformconfig) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersDeploymentplatformconfig
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersDeploymentplatformconfig(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersDeploymentplatformconfig) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersDeploymentplatformconfigConfig struct {
-	ProfileName   string `json:"profileName" url:"profileName"`
-	IntegrationId string `json:"integrationId" url:"integrationId"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersDeploymentplatformconfigConfig) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersDeploymentplatformconfigConfig) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersDeploymentplatformconfigConfig
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersDeploymentplatformconfigConfig(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersDeploymentplatformconfigConfig) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinisteps struct {
-	Notifications *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinistepsNotifications `json:"notifications,omitempty" url:"notifications,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinisteps) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinisteps) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinisteps
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinisteps(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinisteps) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinistepsNotifications struct {
-	Email *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinistepsNotificationsEmail `json:"email,omitempty" url:"email,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinistepsNotifications) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinistepsNotifications) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinistepsNotifications
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinistepsNotifications(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinistepsNotifications) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinistepsNotificationsEmail struct {
-	ApprovalRequired []interface{}                                                                     `json:"APPROVAL_REQUIRED,omitempty" url:"APPROVAL_REQUIRED,omitempty"`
-	Cancelled        []interface{}                                                                     `json:"CANCELLED,omitempty" url:"CANCELLED,omitempty"`
-	Completed        []interface{}                                                                     `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
-	Errored          []interface{}                                                                     `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
-	WfChaining       *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinistepsWfchaining `json:"wfChaining,omitempty" url:"wfChaining,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinistepsNotificationsEmail) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinistepsNotificationsEmail) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinistepsNotificationsEmail
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinistepsNotificationsEmail(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinistepsNotificationsEmail) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinistepsWfchaining struct {
-	Completed []interface{}                                                           `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
-	Errored   []interface{}                                                           `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
-	VcsConfig *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersVcsconfig `json:"vcsConfig,omitempty" url:"vcsConfig,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinistepsWfchaining) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinistepsWfchaining) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinistepsWfchaining
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinistepsWfchaining(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersMinistepsWfchaining) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersRunnerconstraints struct {
-	Type                     string                                                                                   `json:"type" url:"type"`
-	Selectors                []string                                                                                 `json:"selectors,omitempty" url:"selectors,omitempty"`
-	DeploymentPlatformConfig []*GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersDeploymentplatformconfig `json:"deploymentPlatformConfig,omitempty" url:"deploymentPlatformConfig,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersRunnerconstraints) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersRunnerconstraints) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersRunnerconstraints
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersRunnerconstraints(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersRunnerconstraints) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersVcsconfig struct {
-	IacVcsConfig *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersVcsconfigIacvcsconfig `json:"iacVCSConfig,omitempty" url:"iacVCSConfig,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersVcsconfig) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersVcsconfig) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersVcsconfig
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersVcsconfig(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersVcsconfig) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersVcsconfigIacvcsconfig struct {
-	IacTemplateId          string                                                                          `json:"iacTemplateId" url:"iacTemplateId"`
-	UseMarketplaceTemplate bool                                                                            `json:"useMarketplaceTemplate" url:"useMarketplaceTemplate"`
-	RunnerConstraints      *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersRunnerconstraints `json:"runnerConstraints,omitempty" url:"runnerConstraints,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersVcsconfigIacvcsconfig) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersVcsconfigIacvcsconfig) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersVcsconfigIacvcsconfig
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersVcsconfigIacvcsconfig(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkfkowRunsStackCreateResponseDataRuntimeparametersVcsconfigIacvcsconfig) String() string {
 	if len(g._rawJSON) > 0 {
 		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
 			return value
@@ -5668,47 +5870,6 @@ func (g *GeneratedWorkflowGetMsg) UnmarshalJSON(data []byte) error {
 }
 
 func (g *GeneratedWorkflowGetMsg) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkflowGetResponse struct {
-	Msg *GeneratedWorkflowGetMsg `json:"msg,omitempty" url:"msg,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkflowGetResponse) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkflowGetResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkflowGetResponse
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkflowGetResponse(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkflowGetResponse) String() string {
 	if len(g._rawJSON) > 0 {
 		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
 			return value
@@ -6700,395 +6861,6 @@ func (g *GeneratedWorkflowRunListAllMsgRuntimeparametersVcsconfigIacvcsconfig) U
 }
 
 func (g *GeneratedWorkflowRunListAllMsgRuntimeparametersVcsconfigIacvcsconfig) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkflowRunListAllStack struct {
-	Msg []*GeneratedWorkflowRunListAllStackMsg `json:"msg,omitempty" url:"msg,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkflowRunListAllStack) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkflowRunListAllStack) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkflowRunListAllStack
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkflowRunListAllStack(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkflowRunListAllStack) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkflowRunListAllStackMsg struct {
-	LatestStatus      string                                                `json:"LatestStatus" url:"LatestStatus"`
-	LatestStatusKey   string                                                `json:"LatestStatusKey" url:"LatestStatusKey"`
-	Authors           []string                                              `json:"Authors,omitempty" url:"Authors,omitempty"`
-	ResourceName      string                                                `json:"ResourceName" url:"ResourceName"`
-	Statuses          map[string][]*GeneratedWorkflowRunStackStatuses       `json:"Statuses,omitempty" url:"Statuses,omitempty"`
-	ModifiedAt        float64                                               `json:"ModifiedAt" url:"ModifiedAt"`
-	ResourceType      string                                                `json:"ResourceType" url:"ResourceType"`
-	CreatedAt         float64                                               `json:"CreatedAt" url:"CreatedAt"`
-	RuntimeParameters *GeneratedWorkflowRunListAllStackMsgRuntimeparameters `json:"RuntimeParameters,omitempty" url:"RuntimeParameters,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsg) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsg) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkflowRunListAllStackMsg
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkflowRunListAllStackMsg(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsg) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkflowRunListAllStackMsgRuntimeparameters struct {
-	TerraformAction *GeneratedWorkflowRunListAllStackMsgRuntimeparametersTerraformaction `json:"terraformAction,omitempty" url:"terraformAction,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsgRuntimeparameters) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsgRuntimeparameters) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkflowRunListAllStackMsgRuntimeparameters
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkflowRunListAllStackMsgRuntimeparameters(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsgRuntimeparameters) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkflowRunListAllStackMsgRuntimeparametersTerraformaction struct {
-	Action          string                                                               `json:"action" url:"action"`
-	TerraformConfig *GeneratedWorkflowRunListAllStackMsgRuntimeparametersTerraformconfig `json:"terraformConfig,omitempty" url:"terraformConfig,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsgRuntimeparametersTerraformaction) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsgRuntimeparametersTerraformaction) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkflowRunListAllStackMsgRuntimeparametersTerraformaction
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkflowRunListAllStackMsgRuntimeparametersTerraformaction(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsgRuntimeparametersTerraformaction) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkflowRunListAllStackMsgRuntimeparametersTerraformconfig struct {
-	TerraformVersion      string                                                         `json:"terraformVersion" url:"terraformVersion"`
-	ApprovalPreApply      int                                                            `json:"approvalPreApply" url:"approvalPreApply"`
-	ManagedTerraformState bool                                                           `json:"managedTerraformState" url:"managedTerraformState"`
-	DriftCheck            int                                                            `json:"driftCheck" url:"driftCheck"`
-	VcsConfig             *GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfig `json:"vcsConfig,omitempty" url:"vcsConfig,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsgRuntimeparametersTerraformconfig) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsgRuntimeparametersTerraformconfig) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkflowRunListAllStackMsgRuntimeparametersTerraformconfig
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkflowRunListAllStackMsgRuntimeparametersTerraformconfig(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsgRuntimeparametersTerraformconfig) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfig struct {
-	IacVcsConfig *GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfigIacvcsconfig `json:"iacVCSConfig,omitempty" url:"iacVCSConfig,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfig) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfig) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfig
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfig(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfig) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfigIacinputdata struct {
-	SchemaType string                                                                         `json:"schemaType" url:"schemaType"`
-	Data       *GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfigIacinputdataData `json:"data,omitempty" url:"data,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfigIacinputdata) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfigIacinputdata) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfigIacinputdata
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfigIacinputdata(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfigIacinputdata) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfigIacinputdataData struct {
-	Name           string   `json:"name" url:"name"`
-	PublicSubnets  []string `json:"public_subnets,omitempty" url:"public_subnets,omitempty"`
-	Cidr           string   `json:"cidr" url:"cidr"`
-	Azs            []string `json:"azs,omitempty" url:"azs,omitempty"`
-	PrivateSubnets []string `json:"private_subnets,omitempty" url:"private_subnets,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfigIacinputdataData) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfigIacinputdataData) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfigIacinputdataData
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfigIacinputdataData(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfigIacinputdataData) String() string {
-	if len(g._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfigIacvcsconfig struct {
-	IacTemplateId          string                                                                     `json:"iacTemplateId" url:"iacTemplateId"`
-	UseMarketplaceTemplate int                                                                        `json:"useMarketplaceTemplate" url:"useMarketplaceTemplate"`
-	IacInputData           *GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfigIacinputdata `json:"iacInputData,omitempty" url:"iacInputData,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfigIacvcsconfig) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfigIacvcsconfig) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfigIacvcsconfig
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfigIacvcsconfig(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-
-	g._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedWorkflowRunListAllStackMsgRuntimeparametersVcsconfigIacvcsconfig) String() string {
 	if len(g._rawJSON) > 0 {
 		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
 			return value
@@ -11004,6 +10776,89 @@ func (g *GeneratedWorkflowsListAllMsg) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
+type GetSubscriptionResponse struct {
+	Lastevaluatedkey string        `json:"lastevaluatedkey" url:"lastevaluatedkey"`
+	Msg              *Subscription `json:"msg,omitempty" url:"msg,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GetSubscriptionResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GetSubscriptionResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetSubscriptionResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetSubscriptionResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetSubscriptionResponse) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GetorRemoveUserFromOrganization struct {
+	UserId string `json:"userId" url:"userId"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (g *GetorRemoveUserFromOrganization) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GetorRemoveUserFromOrganization) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetorRemoveUserFromOrganization
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetorRemoveUserFromOrganization(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+
+	g._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetorRemoveUserFromOrganization) String() string {
+	if len(g._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(g._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
 type IacInputData struct {
 	SchemaType IacInputDataSchemaTypeEnum `json:"schemaType" url:"schemaType"`
 	Data       map[string]interface{}     `json:"data,omitempty" url:"data,omitempty"`
@@ -11078,7 +10933,7 @@ func (i IacInputDataSchemaTypeEnum) Ptr() *IacInputDataSchemaTypeEnum {
 	return &i
 }
 
-type IacVcsConfig struct {
+type IacvcsConfig struct {
 	UseMarketplaceTemplate bool          `json:"useMarketplaceTemplate" url:"useMarketplaceTemplate"`
 	IacTemplateId          *string       `json:"iacTemplateId,omitempty" url:"iacTemplateId,omitempty"`
 	CustomSource           *CustomSource `json:"customSource,omitempty" url:"customSource,omitempty"`
@@ -11087,17 +10942,17 @@ type IacVcsConfig struct {
 	_rawJSON        json.RawMessage
 }
 
-func (i *IacVcsConfig) GetExtraProperties() map[string]interface{} {
+func (i *IacvcsConfig) GetExtraProperties() map[string]interface{} {
 	return i.extraProperties
 }
 
-func (i *IacVcsConfig) UnmarshalJSON(data []byte) error {
-	type unmarshaler IacVcsConfig
+func (i *IacvcsConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler IacvcsConfig
 	var value unmarshaler
 	if err := json.Unmarshal(data, &value); err != nil {
 		return err
 	}
-	*i = IacVcsConfig(value)
+	*i = IacvcsConfig(value)
 
 	extraProperties, err := core.ExtractExtraProperties(data, *i)
 	if err != nil {
@@ -11109,7 +10964,7 @@ func (i *IacVcsConfig) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (i *IacVcsConfig) String() string {
+func (i *IacvcsConfig) String() string {
 	if len(i._rawJSON) > 0 {
 		if value, err := core.StringifyJSON(i._rawJSON); err == nil {
 			return value
@@ -11195,28 +11050,159 @@ func (i InputDataSchemaTypeEnum) Ptr() *InputDataSchemaTypeEnum {
 	return &i
 }
 
-// - `0` - 0
-// - `1` - 1
-type IsActiveEnum string
+type InputSchemas struct {
+	Type         InputSchemasTypeEnum `json:"type" url:"type"`
+	EncodedData  string               `json:"encodedData" url:"encodedData"`
+	UiSchemaData *string              `json:"uiSchemaData,omitempty" url:"uiSchemaData,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (i *InputSchemas) GetExtraProperties() map[string]interface{} {
+	return i.extraProperties
+}
+
+func (i *InputSchemas) UnmarshalJSON(data []byte) error {
+	type unmarshaler InputSchemas
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*i = InputSchemas(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *i)
+	if err != nil {
+		return err
+	}
+	i.extraProperties = extraProperties
+
+	i._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (i *InputSchemas) String() string {
+	if len(i._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(i._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(i); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", i)
+}
+
+// - `FORM_JSONSCHEMA` - FORM_JSONSCHEMA
+// - `RAW_JSON` - RAW_JSON
+// - `TIRITH_JSON` - TIRITH_JSON
+type InputSchemasTypeEnum string
 
 const (
-	IsActiveEnumZero IsActiveEnum = "0"
-	IsActiveEnumOne  IsActiveEnum = "1"
+	InputSchemasTypeEnumFormJsonschema InputSchemasTypeEnum = "FORM_JSONSCHEMA"
+	InputSchemasTypeEnumRawJson        InputSchemasTypeEnum = "RAW_JSON"
+	InputSchemasTypeEnumTirithJson     InputSchemasTypeEnum = "TIRITH_JSON"
 )
 
-func NewIsActiveEnumFromString(s string) (IsActiveEnum, error) {
+func NewInputSchemasTypeEnumFromString(s string) (InputSchemasTypeEnum, error) {
 	switch s {
-	case "0":
-		return IsActiveEnumZero, nil
-	case "1":
-		return IsActiveEnumOne, nil
+	case "FORM_JSONSCHEMA":
+		return InputSchemasTypeEnumFormJsonschema, nil
+	case "RAW_JSON":
+		return InputSchemasTypeEnumRawJson, nil
+	case "TIRITH_JSON":
+		return InputSchemasTypeEnumTirithJson, nil
 	}
-	var t IsActiveEnum
+	var t InputSchemasTypeEnum
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
 }
 
-func (i IsActiveEnum) Ptr() *IsActiveEnum {
+func (i InputSchemasTypeEnum) Ptr() *InputSchemasTypeEnum {
 	return &i
+}
+
+type IntegrationCreateResponse struct {
+	Msg  *string                            `json:"msg,omitempty" url:"msg,omitempty"`
+	Data *GeneratedConnectorReadResponseMsg `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (i *IntegrationCreateResponse) GetExtraProperties() map[string]interface{} {
+	return i.extraProperties
+}
+
+func (i *IntegrationCreateResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler IntegrationCreateResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*i = IntegrationCreateResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *i)
+	if err != nil {
+		return err
+	}
+	i.extraProperties = extraProperties
+
+	i._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (i *IntegrationCreateResponse) String() string {
+	if len(i._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(i._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(i); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", i)
+}
+
+type IntegrationUpdateResponse struct {
+	Msg  *string                            `json:"msg,omitempty" url:"msg,omitempty"`
+	Data *GeneratedConnectorReadResponseMsg `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (i *IntegrationUpdateResponse) GetExtraProperties() map[string]interface{} {
+	return i.extraProperties
+}
+
+func (i *IntegrationUpdateResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler IntegrationUpdateResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*i = IntegrationUpdateResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *i)
+	if err != nil {
+		return err
+	}
+	i.extraProperties = extraProperties
+
+	i._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (i *IntegrationUpdateResponse) String() string {
+	if len(i._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(i._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(i); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", i)
 }
 
 // - `0` - 0
@@ -11285,6 +11271,48 @@ func NewLatestWfrunStatusEnumFromString(s string) (LatestWfrunStatusEnum, error)
 
 func (l LatestWfrunStatusEnum) Ptr() *LatestWfrunStatusEnum {
 	return &l
+}
+
+type ListallTemplatesResponse struct {
+	Lastevaluatedkey string      `json:"lastevaluatedkey" url:"lastevaluatedkey"`
+	Msg              []*Template `json:"msg,omitempty" url:"msg,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (l *ListallTemplatesResponse) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListallTemplatesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListallTemplatesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListallTemplatesResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+
+	l._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListallTemplatesResponse) String() string {
+	if len(l._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(l._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
 }
 
 type MiniSteps struct {
@@ -11610,23 +11638,117 @@ func (o OnPassEnum) Ptr() *OnPassEnum {
 	return &o
 }
 
+type OrgGetResponse struct {
+	Msg *Organization `json:"msg,omitempty" url:"msg,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (o *OrgGetResponse) GetExtraProperties() map[string]interface{} {
+	return o.extraProperties
+}
+
+func (o *OrgGetResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler OrgGetResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*o = OrgGetResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *o)
+	if err != nil {
+		return err
+	}
+	o.extraProperties = extraProperties
+
+	o._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (o *OrgGetResponse) String() string {
+	if len(o._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(o._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(o); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", o)
+}
+
+type Organization struct {
+	ResourceName             *string        `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	Admins                   []string       `json:"Admins,omitempty" url:"Admins,omitempty"`
+	MarketplaceSubscriptions []interface{}  `json:"MarketplaceSubscriptions,omitempty" url:"MarketplaceSubscriptions,omitempty"`
+	IsArchive                *string        `json:"IsArchive,omitempty" url:"IsArchive,omitempty"`
+	IsActive                 *IsArchiveEnum `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	ResourceId               *string        `json:"ResourceId,omitempty" url:"ResourceId,omitempty"`
+	ModifiedAt               *float64       `json:"ModifiedAt,omitempty" url:"ModifiedAt,omitempty"`
+	ParentId                 *string        `json:"ParentId,omitempty" url:"ParentId,omitempty"`
+	ResourceType             *string        `json:"ResourceType,omitempty" url:"ResourceType,omitempty"`
+	DocVersion               *string        `json:"DocVersion,omitempty" url:"DocVersion,omitempty"`
+	Authors                  []string       `json:"Authors,omitempty" url:"Authors,omitempty"`
+	ActivitySubscribers      []string       `json:"ActivitySubscribers,omitempty" url:"ActivitySubscribers,omitempty"`
+	SubResourceId            *string        `json:"SubResourceId,omitempty" url:"SubResourceId,omitempty"`
+	OrgId                    *string        `json:"OrgId,omitempty" url:"OrgId,omitempty"`
+	CreatedAt                *float64       `json:"CreatedAt,omitempty" url:"CreatedAt,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (o *Organization) GetExtraProperties() map[string]interface{} {
+	return o.extraProperties
+}
+
+func (o *Organization) UnmarshalJSON(data []byte) error {
+	type unmarshaler Organization
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*o = Organization(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *o)
+	if err != nil {
+		return err
+	}
+	o.extraProperties = extraProperties
+
+	o._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (o *Organization) String() string {
+	if len(o._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(o._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(o); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", o)
+}
+
 type PatchedWorkflow struct {
-	ResourceName         *string                `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
-	Description          *string                `json:"Description,omitempty" url:"Description,omitempty"`
-	Tags                 []string               `json:"Tags,omitempty" url:"Tags,omitempty"`
-	IsActive             *IsActiveEnum          `json:"IsActive,omitempty" url:"IsActive,omitempty"`
-	WfStepsConfig        []*WfStepsConfig       `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
-	WfType               *WfTypeEnum            `json:"WfType,omitempty" url:"WfType,omitempty"`
-	TerraformConfig      *TerraformConfig       `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
-	EnvironmentVariables []*EnvVars             `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
-	EnforcedPolicies     []interface{}          `json:"EnforcedPolicies,omitempty" url:"EnforcedPolicies,omitempty"`
-	RuntimeParameters    map[string]interface{} `json:"RuntimeParameters,omitempty" url:"RuntimeParameters,omitempty"`
-	Statuses             map[string]interface{} `json:"Statuses,omitempty" url:"Statuses,omitempty"`
-	Authors              []interface{}          `json:"Authors,omitempty" url:"Authors,omitempty"`
-	SubResourceId        *string                `json:"SubResourceId,omitempty" url:"SubResourceId,omitempty"`
-	OrgId                *string                `json:"OrgId,omitempty" url:"OrgId,omitempty"`
-	IsArchive            *IsArchiveEnum         `json:"IsArchive,omitempty" url:"IsArchive,omitempty"`
-	ResourceId           *string                `json:"ResourceId,omitempty" url:"ResourceId,omitempty"`
+	ResourceName         *string          `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	Description          *string          `json:"Description,omitempty" url:"Description,omitempty"`
+	Tags                 []string         `json:"Tags,omitempty" url:"Tags,omitempty"`
+	IsActive             *IsArchiveEnum   `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	WfStepsConfig        []*WfStepsConfig `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
+	WfType               *WfTypeEnum      `json:"WfType,omitempty" url:"WfType,omitempty"`
+	TerraformConfig      *TerraformConfig `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
+	EnvironmentVariables []*EnvVars       `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
+	EnforcedPolicies     []interface{}    `json:"EnforcedPolicies,omitempty" url:"EnforcedPolicies,omitempty"`
+	Authors              []interface{}    `json:"Authors,omitempty" url:"Authors,omitempty"`
+	SubResourceId        *string          `json:"SubResourceId,omitempty" url:"SubResourceId,omitempty"`
+	OrgId                *string          `json:"OrgId,omitempty" url:"OrgId,omitempty"`
+	IsArchive            *IsArchiveEnum   `json:"IsArchive,omitempty" url:"IsArchive,omitempty"`
+	ResourceId           *string          `json:"ResourceId,omitempty" url:"ResourceId,omitempty"`
 	// Time in milliseconds as a string
 	CreatedAt *string `json:"CreatedAt,omitempty" url:"CreatedAt,omitempty"`
 	// Time in milliseconds as a string
@@ -11646,6 +11768,7 @@ type PatchedWorkflow struct {
 	RunnerConstraints           *RunnerConstraints          `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
 	UserJobCpu                  *int                        `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
 	UserJobMemory               *int                        `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
+	CacheConfig                 *CacheConfig                `json:"CacheConfig,omitempty" url:"CacheConfig,omitempty"`
 	TfStateCleaned              map[string]interface{}      `json:"TfStateCleaned,omitempty" url:"TfStateCleaned,omitempty"`
 	InfracostBreakdown          map[string]interface{}      `json:"InfracostBreakdown,omitempty" url:"InfracostBreakdown,omitempty"`
 	PolicyEvalResults           map[string]interface{}      `json:"PolicyEvalResults,omitempty" url:"PolicyEvalResults,omitempty"`
@@ -11657,7 +11780,6 @@ type PatchedWorkflow struct {
 	CfDrift                     map[string]interface{}      `json:"CfDrift,omitempty" url:"CfDrift,omitempty"`
 	K8SResources                map[string]interface{}      `json:"K8sResources,omitempty" url:"K8sResources,omitempty"`
 	K8SDrift                    map[string]interface{}      `json:"K8sDrift,omitempty" url:"K8sDrift,omitempty"`
-	CacheConfig                 *CacheConfig                `json:"CacheConfig,omitempty" url:"CacheConfig,omitempty"`
 	TerragruntDrift             map[string]interface{}      `json:"TerragruntDrift,omitempty" url:"TerragruntDrift,omitempty"`
 	AnsibleOutputs              map[string]interface{}      `json:"AnsibleOutputs,omitempty" url:"AnsibleOutputs,omitempty"`
 	AnsiblePlan                 map[string]interface{}      `json:"AnsiblePlan,omitempty" url:"AnsiblePlan,omitempty"`
@@ -11763,7 +11885,7 @@ type Policy struct {
 	//
 	// - `0` - 0
 	// - `1` - 1
-	IsActive *IsActiveEnum `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	IsActive *IsArchiveEnum `json:"IsActive,omitempty" url:"IsActive,omitempty"`
 	// What the policy will be enforced on.
 	EnforcedOn []string `json:"EnforcedOn,omitempty" url:"EnforcedOn,omitempty"`
 	// Policies Config for the policy
@@ -11961,6 +12083,180 @@ func (p *PolicyVcsConfig) String() string {
 	return fmt.Sprintf("%#v", p)
 }
 
+type RemoveUserFromOrganizationResponse struct {
+	Msg  *string                `json:"msg,omitempty" url:"msg,omitempty"`
+	Data *AddUserToOrganization `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (r *RemoveUserFromOrganizationResponse) GetExtraProperties() map[string]interface{} {
+	return r.extraProperties
+}
+
+func (r *RemoveUserFromOrganizationResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler RemoveUserFromOrganizationResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = RemoveUserFromOrganizationResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+
+	r._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RemoveUserFromOrganizationResponse) String() string {
+	if len(r._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(r._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
+type Role struct {
+	ResourceName       string                         `json:"ResourceName" url:"ResourceName"`
+	ParentId           string                         `json:"ParentId" url:"ParentId"`
+	ResourceId         string                         `json:"ResourceId" url:"ResourceId"`
+	ResourceType       string                         `json:"ResourceType" url:"ResourceType"`
+	Authors            []interface{}                  `json:"Authors,omitempty" url:"Authors,omitempty"`
+	Description        *string                        `json:"Description,omitempty" url:"Description,omitempty"`
+	Tags               []string                       `json:"Tags,omitempty" url:"Tags,omitempty"`
+	AllowedPermissions map[string]*AllowedPermissions `json:"AllowedPermissions,omitempty" url:"AllowedPermissions,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (r *Role) GetExtraProperties() map[string]interface{} {
+	return r.extraProperties
+}
+
+func (r *Role) UnmarshalJSON(data []byte) error {
+	type unmarshaler Role
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = Role(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+
+	r._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *Role) String() string {
+	if len(r._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(r._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
+type RoleCreateUpdateResponse struct {
+	Msg  *string `json:"msg,omitempty" url:"msg,omitempty"`
+	Data *Role   `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (r *RoleCreateUpdateResponse) GetExtraProperties() map[string]interface{} {
+	return r.extraProperties
+}
+
+func (r *RoleCreateUpdateResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler RoleCreateUpdateResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = RoleCreateUpdateResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+
+	r._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RoleCreateUpdateResponse) String() string {
+	if len(r._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(r._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
+type RoleGetResponse struct {
+	Msg  *Role `json:"msg,omitempty" url:"msg,omitempty"`
+	Data *Role `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (r *RoleGetResponse) GetExtraProperties() map[string]interface{} {
+	return r.extraProperties
+}
+
+func (r *RoleGetResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler RoleGetResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = RoleGetResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+
+	r._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RoleGetResponse) String() string {
+	if len(r._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(r._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
 type RunnerConstraints struct {
 	Type      RunnerConstraintsTypeEnum `json:"type" url:"type"`
 	Names     []string                  `json:"names,omitempty" url:"names,omitempty"`
@@ -12028,6 +12324,254 @@ func (r RunnerConstraintsTypeEnum) Ptr() *RunnerConstraintsTypeEnum {
 	return &r
 }
 
+type RuntimeSource struct {
+	Config               *RuntimeSourceConfig                  `json:"config,omitempty" url:"config,omitempty"`
+	SourceConfigDestKind RuntimeSourceSourceConfigDestKindEnum `json:"sourceConfigDestKind" url:"sourceConfigDestKind"`
+	AdditionalConfig     map[string]interface{}                `json:"additionalConfig,omitempty" url:"additionalConfig,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (r *RuntimeSource) GetExtraProperties() map[string]interface{} {
+	return r.extraProperties
+}
+
+func (r *RuntimeSource) UnmarshalJSON(data []byte) error {
+	type unmarshaler RuntimeSource
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = RuntimeSource(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+
+	r._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RuntimeSource) String() string {
+	if len(r._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(r._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
+type RuntimeSourceConfig struct {
+	IsPrivate               *bool   `json:"isPrivate,omitempty" url:"isPrivate,omitempty"`
+	Auth                    *string `json:"auth,omitempty" url:"auth,omitempty"`
+	WorkingDir              *string `json:"workingDir,omitempty" url:"workingDir,omitempty"`
+	Ref                     *string `json:"ref,omitempty" url:"ref,omitempty"`
+	Repo                    *string `json:"repo,omitempty" url:"repo,omitempty"`
+	DockerImage             *string `json:"dockerImage,omitempty" url:"dockerImage,omitempty"`
+	DockerRegistryUsername  *string `json:"dockerRegistryUsername,omitempty" url:"dockerRegistryUsername,omitempty"`
+	LocalWorkspaceDir       *string `json:"localWorkspaceDir,omitempty" url:"localWorkspaceDir,omitempty"`
+	IncludeSubModule        *bool   `json:"includeSubModule,omitempty" url:"includeSubModule,omitempty"`
+	GitSparseCheckoutConfig *string `json:"gitSparseCheckoutConfig,omitempty" url:"gitSparseCheckoutConfig,omitempty"`
+	GitCoreAutoCrlf         *bool   `json:"gitCoreAutoCRLF,omitempty" url:"gitCoreAutoCRLF,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (r *RuntimeSourceConfig) GetExtraProperties() map[string]interface{} {
+	return r.extraProperties
+}
+
+func (r *RuntimeSourceConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler RuntimeSourceConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = RuntimeSourceConfig(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+
+	r._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RuntimeSourceConfig) String() string {
+	if len(r._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(r._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
+// - `GITHUB_COM` - GITHUB_COM
+// - `GITHUB_APP_CUSTOM` - GITHUB_APP_CUSTOM
+// - `GIT_OTHER` - GIT_OTHER
+// - `BITBUCKET_ORG` - BITBUCKET_ORG
+// - `GITLAB_COM` - GITLAB_COM
+// - `AZURE_DEVOPS` - AZURE_DEVOPS
+// - `INLINE` - INLINE
+// - `EXTERNAL` - EXTERNAL
+// - `CONTAINER_REGISTRY` - CONTAINER_REGISTRY
+type RuntimeSourceSourceConfigDestKindEnum string
+
+const (
+	RuntimeSourceSourceConfigDestKindEnumGithubCom         RuntimeSourceSourceConfigDestKindEnum = "GITHUB_COM"
+	RuntimeSourceSourceConfigDestKindEnumGithubAppCustom   RuntimeSourceSourceConfigDestKindEnum = "GITHUB_APP_CUSTOM"
+	RuntimeSourceSourceConfigDestKindEnumGitOther          RuntimeSourceSourceConfigDestKindEnum = "GIT_OTHER"
+	RuntimeSourceSourceConfigDestKindEnumBitbucketOrg      RuntimeSourceSourceConfigDestKindEnum = "BITBUCKET_ORG"
+	RuntimeSourceSourceConfigDestKindEnumGitlabCom         RuntimeSourceSourceConfigDestKindEnum = "GITLAB_COM"
+	RuntimeSourceSourceConfigDestKindEnumAzureDevops       RuntimeSourceSourceConfigDestKindEnum = "AZURE_DEVOPS"
+	RuntimeSourceSourceConfigDestKindEnumInline            RuntimeSourceSourceConfigDestKindEnum = "INLINE"
+	RuntimeSourceSourceConfigDestKindEnumExternal          RuntimeSourceSourceConfigDestKindEnum = "EXTERNAL"
+	RuntimeSourceSourceConfigDestKindEnumContainerRegistry RuntimeSourceSourceConfigDestKindEnum = "CONTAINER_REGISTRY"
+)
+
+func NewRuntimeSourceSourceConfigDestKindEnumFromString(s string) (RuntimeSourceSourceConfigDestKindEnum, error) {
+	switch s {
+	case "GITHUB_COM":
+		return RuntimeSourceSourceConfigDestKindEnumGithubCom, nil
+	case "GITHUB_APP_CUSTOM":
+		return RuntimeSourceSourceConfigDestKindEnumGithubAppCustom, nil
+	case "GIT_OTHER":
+		return RuntimeSourceSourceConfigDestKindEnumGitOther, nil
+	case "BITBUCKET_ORG":
+		return RuntimeSourceSourceConfigDestKindEnumBitbucketOrg, nil
+	case "GITLAB_COM":
+		return RuntimeSourceSourceConfigDestKindEnumGitlabCom, nil
+	case "AZURE_DEVOPS":
+		return RuntimeSourceSourceConfigDestKindEnumAzureDevops, nil
+	case "INLINE":
+		return RuntimeSourceSourceConfigDestKindEnumInline, nil
+	case "EXTERNAL":
+		return RuntimeSourceSourceConfigDestKindEnumExternal, nil
+	case "CONTAINER_REGISTRY":
+		return RuntimeSourceSourceConfigDestKindEnumContainerRegistry, nil
+	}
+	var t RuntimeSourceSourceConfigDestKindEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (r RuntimeSourceSourceConfigDestKindEnum) Ptr() *RuntimeSourceSourceConfigDestKindEnum {
+	return &r
+}
+
+type Settings struct {
+	Kind   SettingsKindEnum         `json:"kind" url:"kind"`
+	Config []map[string]interface{} `json:"config,omitempty" url:"config,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (s *Settings) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
+}
+
+func (s *Settings) UnmarshalJSON(data []byte) error {
+	type unmarshaler Settings
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = Settings(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+
+	s._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *Settings) String() string {
+	if len(s._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(s._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
+// - `GITHUB_COM` - GITHUB_COM
+// - `GITHUB_APP_CUSTOM` - GITHUB_APP_CUSTOM
+// - `AWS_STATIC` - AWS_STATIC
+// - `GCP_STATIC` - GCP_STATIC
+// - `AWS_RBAC` - AWS_RBAC
+// - `AWS_OIDC` - AWS_OIDC
+// - `AZURE_STATIC` - AZURE_STATIC
+// - `AZURE_OIDC` - AZURE_OIDC
+// - `BITBUCKET_ORG` - BITBUCKET_ORG
+// - `GITLAB_COM` - GITLAB_COM
+// - `AZURE_DEVOPS` - AZURE_DEVOPS
+type SettingsKindEnum string
+
+const (
+	SettingsKindEnumGithubCom       SettingsKindEnum = "GITHUB_COM"
+	SettingsKindEnumGithubAppCustom SettingsKindEnum = "GITHUB_APP_CUSTOM"
+	SettingsKindEnumAwsStatic       SettingsKindEnum = "AWS_STATIC"
+	SettingsKindEnumGcpStatic       SettingsKindEnum = "GCP_STATIC"
+	SettingsKindEnumAwsRbac         SettingsKindEnum = "AWS_RBAC"
+	SettingsKindEnumAwsOidc         SettingsKindEnum = "AWS_OIDC"
+	SettingsKindEnumAzureStatic     SettingsKindEnum = "AZURE_STATIC"
+	SettingsKindEnumAzureOidc       SettingsKindEnum = "AZURE_OIDC"
+	SettingsKindEnumBitbucketOrg    SettingsKindEnum = "BITBUCKET_ORG"
+	SettingsKindEnumGitlabCom       SettingsKindEnum = "GITLAB_COM"
+	SettingsKindEnumAzureDevops     SettingsKindEnum = "AZURE_DEVOPS"
+)
+
+func NewSettingsKindEnumFromString(s string) (SettingsKindEnum, error) {
+	switch s {
+	case "GITHUB_COM":
+		return SettingsKindEnumGithubCom, nil
+	case "GITHUB_APP_CUSTOM":
+		return SettingsKindEnumGithubAppCustom, nil
+	case "AWS_STATIC":
+		return SettingsKindEnumAwsStatic, nil
+	case "GCP_STATIC":
+		return SettingsKindEnumGcpStatic, nil
+	case "AWS_RBAC":
+		return SettingsKindEnumAwsRbac, nil
+	case "AWS_OIDC":
+		return SettingsKindEnumAwsOidc, nil
+	case "AZURE_STATIC":
+		return SettingsKindEnumAzureStatic, nil
+	case "AZURE_OIDC":
+		return SettingsKindEnumAzureOidc, nil
+	case "BITBUCKET_ORG":
+		return SettingsKindEnumBitbucketOrg, nil
+	case "GITLAB_COM":
+		return SettingsKindEnumGitlabCom, nil
+	case "AZURE_DEVOPS":
+		return SettingsKindEnumAzureDevops, nil
+	}
+	var t SettingsKindEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (s SettingsKindEnum) Ptr() *SettingsKindEnum {
+	return &s
+}
+
 // - `OPA_REGO` - OPA_REGO
 // - `SG_POLICY_FRAMEWORK` - SG_POLICY_FRAMEWORK
 type SourceConfigKindEnum string
@@ -12076,23 +12620,272 @@ func (s StateEnum) Ptr() *StateEnum {
 	return &s
 }
 
+// - `ACTIVE` - ACTIVE
+// - `DRAINING` - DRAINING
+type StatusEnum string
+
+const (
+	StatusEnumActive   StatusEnum = "ACTIVE"
+	StatusEnumDraining StatusEnum = "DRAINING"
+)
+
+func NewStatusEnumFromString(s string) (StatusEnum, error) {
+	switch s {
+	case "ACTIVE":
+		return StatusEnumActive, nil
+	case "DRAINING":
+		return StatusEnumDraining, nil
+	}
+	var t StatusEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (s StatusEnum) Ptr() *StatusEnum {
+	return &s
+}
+
+type Subscription struct {
+	ResourceName          *string                           `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	IacSubscriptions      map[string]map[string]interface{} `json:"IACSubscriptions,omitempty" url:"IACSubscriptions,omitempty"`
+	WfStepSubscriptions   map[string]map[string]interface{} `json:"WfStepSubscriptions,omitempty" url:"WfStepSubscriptions,omitempty"`
+	PolicySubscriptions   map[string]map[string]interface{} `json:"PolicySubscriptions,omitempty" url:"PolicySubscriptions,omitempty"`
+	IacGroupSubscriptions map[string]map[string]interface{} `json:"IACGroupSubscriptions,omitempty" url:"IACGroupSubscriptions,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (s *Subscription) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
+}
+
+func (s *Subscription) UnmarshalJSON(data []byte) error {
+	type unmarshaler Subscription
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = Subscription(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+
+	s._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *Subscription) String() string {
+	if len(s._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(s._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
+type Template struct {
+	TemplateName          string                 `json:"TemplateName" url:"TemplateName"`
+	TemplateId            string                 `json:"TemplateId" url:"TemplateId"`
+	OwnerOrg              string                 `json:"OwnerOrg" url:"OwnerOrg"`
+	SharedOrgsList        []string               `json:"SharedOrgsList,omitempty" url:"SharedOrgsList,omitempty"`
+	TemplateType          TemplateTypeEnum       `json:"TemplateType" url:"TemplateType"`
+	Templates             []*Templates           `json:"Templates,omitempty" url:"Templates,omitempty"`
+	Actions               map[string]*Actions    `json:"Actions,omitempty" url:"Actions,omitempty"`
+	ShortDescription      *string                `json:"ShortDescription,omitempty" url:"ShortDescription,omitempty"`
+	LongDescription       *string                `json:"LongDescription,omitempty" url:"LongDescription,omitempty"`
+	Deprecation           *Deprecation           `json:"Deprecation,omitempty" url:"Deprecation,omitempty"`
+	SourceConfigKind      SourceConfigKindEnum   `json:"SourceConfigKind" url:"SourceConfigKind"`
+	InputSchemas          []*InputSchemas        `json:"InputSchemas,omitempty" url:"InputSchemas,omitempty"`
+	RuntimeSource         *RuntimeSource         `json:"RuntimeSource,omitempty" url:"RuntimeSource,omitempty"`
+	GitHubComSync         map[string]interface{} `json:"GitHubComSync,omitempty" url:"GitHubComSync,omitempty"`
+	VcsTriggers           *VcsTriggers           `json:"VCSTriggers,omitempty" url:"VCSTriggers,omitempty"`
+	Tags                  []string               `json:"Tags,omitempty" url:"Tags,omitempty"`
+	IsActive              *IsArchiveEnum         `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	IsPublic              *IsArchiveEnum         `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
+	TerraformIntelligence map[string]interface{} `json:"TerraformIntelligence,omitempty" url:"TerraformIntelligence,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (t *Template) GetExtraProperties() map[string]interface{} {
+	return t.extraProperties
+}
+
+func (t *Template) UnmarshalJSON(data []byte) error {
+	type unmarshaler Template
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*t = Template(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *t)
+	if err != nil {
+		return err
+	}
+	t.extraProperties = extraProperties
+
+	t._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (t *Template) String() string {
+	if len(t._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(t._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(t); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", t)
+}
+
+type TemplateCreatePatchResponse struct {
+	Msg  *string   `json:"msg,omitempty" url:"msg,omitempty"`
+	Data *Template `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (t *TemplateCreatePatchResponse) GetExtraProperties() map[string]interface{} {
+	return t.extraProperties
+}
+
+func (t *TemplateCreatePatchResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler TemplateCreatePatchResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*t = TemplateCreatePatchResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *t)
+	if err != nil {
+		return err
+	}
+	t.extraProperties = extraProperties
+
+	t._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (t *TemplateCreatePatchResponse) String() string {
+	if len(t._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(t._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(t); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", t)
+}
+
+type TemplateGetResponse struct {
+	Msg *Template `json:"msg,omitempty" url:"msg,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (t *TemplateGetResponse) GetExtraProperties() map[string]interface{} {
+	return t.extraProperties
+}
+
+func (t *TemplateGetResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler TemplateGetResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*t = TemplateGetResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *t)
+	if err != nil {
+		return err
+	}
+	t.extraProperties = extraProperties
+
+	t._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (t *TemplateGetResponse) String() string {
+	if len(t._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(t._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(t); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", t)
+}
+
+// - `IAC` - IAC
+// - `IAC_GROUP` - IAC_GROUP
+// - `WORKFLOW_STEP` - WORKFLOW_STEP
+// - `IAC_POLICY` - IAC_POLICY
+// - `WORKFLOW_STEP_POLICY` - WORKFLOW_STEP_POLICY
+// - `REACTIVE_POLICY` - REACTIVE_POLICY
+type TemplateTypeEnum string
+
+const (
+	TemplateTypeEnumIac                TemplateTypeEnum = "IAC"
+	TemplateTypeEnumIacGroup           TemplateTypeEnum = "IAC_GROUP"
+	TemplateTypeEnumWorkflowStep       TemplateTypeEnum = "WORKFLOW_STEP"
+	TemplateTypeEnumIacPolicy          TemplateTypeEnum = "IAC_POLICY"
+	TemplateTypeEnumWorkflowStepPolicy TemplateTypeEnum = "WORKFLOW_STEP_POLICY"
+	TemplateTypeEnumReactivePolicy     TemplateTypeEnum = "REACTIVE_POLICY"
+)
+
+func NewTemplateTypeEnumFromString(s string) (TemplateTypeEnum, error) {
+	switch s {
+	case "IAC":
+		return TemplateTypeEnumIac, nil
+	case "IAC_GROUP":
+		return TemplateTypeEnumIacGroup, nil
+	case "WORKFLOW_STEP":
+		return TemplateTypeEnumWorkflowStep, nil
+	case "IAC_POLICY":
+		return TemplateTypeEnumIacPolicy, nil
+	case "WORKFLOW_STEP_POLICY":
+		return TemplateTypeEnumWorkflowStepPolicy, nil
+	case "REACTIVE_POLICY":
+		return TemplateTypeEnumReactivePolicy, nil
+	}
+	var t TemplateTypeEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (t TemplateTypeEnum) Ptr() *TemplateTypeEnum {
+	return &t
+}
+
 type TemplateWorkflow struct {
-	ResourceName         *string                `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
-	Description          *string                `json:"Description,omitempty" url:"Description,omitempty"`
-	Tags                 []string               `json:"Tags,omitempty" url:"Tags,omitempty"`
-	IsActive             *IsActiveEnum          `json:"IsActive,omitempty" url:"IsActive,omitempty"`
-	WfStepsConfig        []*WfStepsConfig       `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
-	WfType               *WfTypeEnum            `json:"WfType,omitempty" url:"WfType,omitempty"`
-	TerraformConfig      *TerraformConfig       `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
-	EnvironmentVariables []*EnvVars             `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
-	EnforcedPolicies     []interface{}          `json:"EnforcedPolicies,omitempty" url:"EnforcedPolicies,omitempty"`
-	RuntimeParameters    map[string]interface{} `json:"RuntimeParameters,omitempty" url:"RuntimeParameters,omitempty"`
-	Statuses             map[string]interface{} `json:"Statuses,omitempty" url:"Statuses,omitempty"`
-	Authors              []interface{}          `json:"Authors,omitempty" url:"Authors,omitempty"`
-	SubResourceId        string                 `json:"SubResourceId" url:"SubResourceId"`
-	OrgId                string                 `json:"OrgId" url:"OrgId"`
-	IsArchive            IsArchiveEnum          `json:"IsArchive" url:"IsArchive"`
-	ResourceId           string                 `json:"ResourceId" url:"ResourceId"`
+	ResourceName         *string          `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	Description          *string          `json:"Description,omitempty" url:"Description,omitempty"`
+	Tags                 []string         `json:"Tags,omitempty" url:"Tags,omitempty"`
+	IsActive             *IsArchiveEnum   `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	WfStepsConfig        []*WfStepsConfig `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
+	WfType               *WfTypeEnum      `json:"WfType,omitempty" url:"WfType,omitempty"`
+	TerraformConfig      *TerraformConfig `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
+	EnvironmentVariables []*EnvVars       `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
+	EnforcedPolicies     []interface{}    `json:"EnforcedPolicies,omitempty" url:"EnforcedPolicies,omitempty"`
+	Authors              []interface{}    `json:"Authors,omitempty" url:"Authors,omitempty"`
+	SubResourceId        string           `json:"SubResourceId" url:"SubResourceId"`
+	OrgId                string           `json:"OrgId" url:"OrgId"`
+	IsArchive            IsArchiveEnum    `json:"IsArchive" url:"IsArchive"`
+	ResourceId           string           `json:"ResourceId" url:"ResourceId"`
 	// Time in milliseconds as a string
 	CreatedAt string `json:"CreatedAt" url:"CreatedAt"`
 	// Time in milliseconds as a string
@@ -12112,6 +12905,7 @@ type TemplateWorkflow struct {
 	RunnerConstraints           *RunnerConstraints          `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
 	UserJobCpu                  *int                        `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
 	UserJobMemory               *int                        `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
+	CacheConfig                 *CacheConfig                `json:"CacheConfig,omitempty" url:"CacheConfig,omitempty"`
 	TfStateCleaned              map[string]interface{}      `json:"TfStateCleaned,omitempty" url:"TfStateCleaned,omitempty"`
 	InfracostBreakdown          map[string]interface{}      `json:"InfracostBreakdown,omitempty" url:"InfracostBreakdown,omitempty"`
 	PolicyEvalResults           map[string]interface{}      `json:"PolicyEvalResults,omitempty" url:"PolicyEvalResults,omitempty"`
@@ -12123,13 +12917,12 @@ type TemplateWorkflow struct {
 	CfDrift                     map[string]interface{}      `json:"CfDrift,omitempty" url:"CfDrift,omitempty"`
 	K8SResources                map[string]interface{}      `json:"K8sResources,omitempty" url:"K8sResources,omitempty"`
 	K8SDrift                    map[string]interface{}      `json:"K8sDrift,omitempty" url:"K8sDrift,omitempty"`
-	CacheConfig                 *CacheConfig                `json:"CacheConfig,omitempty" url:"CacheConfig,omitempty"`
 	TerragruntDrift             map[string]interface{}      `json:"TerragruntDrift,omitempty" url:"TerragruntDrift,omitempty"`
 	AnsibleOutputs              map[string]interface{}      `json:"AnsibleOutputs,omitempty" url:"AnsibleOutputs,omitempty"`
 	AnsiblePlan                 map[string]interface{}      `json:"AnsiblePlan,omitempty" url:"AnsiblePlan,omitempty"`
 	AnsibleDrift                map[string]interface{}      `json:"AnsibleDrift,omitempty" url:"AnsibleDrift,omitempty"`
 	SgCustomWorkflowRunFacts    map[string]interface{}      `json:"SGCustomWorkflowRunFacts,omitempty" url:"SGCustomWorkflowRunFacts,omitempty"`
-	Id                          string                      `json:"id" url:"id"`
+	Id                          *string                     `json:"id,omitempty" url:"id,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -12158,6 +12951,51 @@ func (t *TemplateWorkflow) UnmarshalJSON(data []byte) error {
 }
 
 func (t *TemplateWorkflow) String() string {
+	if len(t._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(t._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(t); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", t)
+}
+
+type Templates struct {
+	TemplateId               string                      `json:"templateId" url:"templateId"`
+	Id                       *string                     `json:"id,omitempty" url:"id,omitempty"`
+	IacInputData             *IacInputData               `json:"iacInputData,omitempty" url:"iacInputData,omitempty"`
+	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"deploymentPlatformConfig,omitempty" url:"deploymentPlatformConfig,omitempty"`
+	EnvironmentVariables     []map[string]interface{}    `json:"environmentVariables,omitempty" url:"environmentVariables,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (t *Templates) GetExtraProperties() map[string]interface{} {
+	return t.extraProperties
+}
+
+func (t *Templates) UnmarshalJSON(data []byte) error {
+	type unmarshaler Templates
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*t = Templates(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *t)
+	if err != nil {
+		return err
+	}
+	t.extraProperties = extraProperties
+
+	t._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (t *Templates) String() string {
 	if len(t._rawJSON) > 0 {
 		if value, err := core.StringifyJSON(t._rawJSON); err == nil {
 			return value
@@ -12254,16 +13092,25 @@ func (t *TerraformAction) String() string {
 }
 
 type TerraformConfig struct {
-	TerraformVersion       *string          `json:"terraformVersion,omitempty" url:"terraformVersion,omitempty"`
-	DriftCheck             *bool            `json:"driftCheck,omitempty" url:"driftCheck,omitempty"`
-	ManagedTerraformState  *bool            `json:"managedTerraformState,omitempty" url:"managedTerraformState,omitempty"`
-	ApprovalPreApply       *bool            `json:"approvalPreApply,omitempty" url:"approvalPreApply,omitempty"`
-	TerraformPlanOptions   *string          `json:"terraformPlanOptions,omitempty" url:"terraformPlanOptions,omitempty"`
-	TerraformBinPath       []*MountPoint    `json:"terraformBinPath,omitempty" url:"terraformBinPath,omitempty"`
-	Timeout                *int             `json:"timeout,omitempty" url:"timeout,omitempty"`
-	PostApplyWfStepsConfig []*WfStepsConfig `json:"postApplyWfStepsConfig,omitempty" url:"postApplyWfStepsConfig,omitempty"`
-	PreApplyWfStepsConfig  []*WfStepsConfig `json:"preApplyWfStepsConfig,omitempty" url:"preApplyWfStepsConfig,omitempty"`
-	PrePlanWfStepsConfig   []*WfStepsConfig `json:"prePlanWfStepsConfig,omitempty" url:"prePlanWfStepsConfig,omitempty"`
+	TerraformVersion        *string          `json:"terraformVersion,omitempty" url:"terraformVersion,omitempty"`
+	DriftCheck              *bool            `json:"driftCheck,omitempty" url:"driftCheck,omitempty"`
+	ManagedTerraformState   *bool            `json:"managedTerraformState,omitempty" url:"managedTerraformState,omitempty"`
+	ApprovalPreApply        *bool            `json:"approvalPreApply,omitempty" url:"approvalPreApply,omitempty"`
+	TerraformPlanOptions    *string          `json:"terraformPlanOptions,omitempty" url:"terraformPlanOptions,omitempty"`
+	TerraformBinPath        []*MountPoint    `json:"terraformBinPath,omitempty" url:"terraformBinPath,omitempty"`
+	Timeout                 *int             `json:"timeout,omitempty" url:"timeout,omitempty"`
+	PostApplyWfStepsConfig  []*WfStepsConfig `json:"postApplyWfStepsConfig,omitempty" url:"postApplyWfStepsConfig,omitempty"`
+	PreApplyWfStepsConfig   []*WfStepsConfig `json:"preApplyWfStepsConfig,omitempty" url:"preApplyWfStepsConfig,omitempty"`
+	PrePlanWfStepsConfig    []*WfStepsConfig `json:"prePlanWfStepsConfig,omitempty" url:"prePlanWfStepsConfig,omitempty"`
+	PostPlanWfStepsConfig   []*WfStepsConfig `json:"postPlanWfStepsConfig,omitempty" url:"postPlanWfStepsConfig,omitempty"`
+	PreInitHooks            []string         `json:"preInitHooks,omitempty" url:"preInitHooks,omitempty"`
+	PrePlanHooks            []string         `json:"prePlanHooks,omitempty" url:"prePlanHooks,omitempty"`
+	PostPlanHooks           []string         `json:"postPlanHooks,omitempty" url:"postPlanHooks,omitempty"`
+	PreApplyHooks           []string         `json:"preApplyHooks,omitempty" url:"preApplyHooks,omitempty"`
+	PostApplyHooks          []string         `json:"postApplyHooks,omitempty" url:"postApplyHooks,omitempty"`
+	RunPreInitHooksOnDrift  *bool            `json:"runPreInitHooksOnDrift,omitempty" url:"runPreInitHooksOnDrift,omitempty"`
+	RunPrePlanHooksOnDrift  *bool            `json:"runPrePlanHooksOnDrift,omitempty" url:"runPrePlanHooksOnDrift,omitempty"`
+	RunPostPlanHooksOnDrift *bool            `json:"runPostPlanHooksOnDrift,omitempty" url:"runPostPlanHooksOnDrift,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -12349,7 +13196,7 @@ func (u *UserSchedules) String() string {
 }
 
 type VcsConfig struct {
-	IacVcsConfig *IacVcsConfig `json:"iacVCSConfig,omitempty" url:"iacVCSConfig,omitempty"`
+	IacVcsConfig *IacvcsConfig `json:"iacVCSConfig,omitempty" url:"iacVCSConfig,omitempty"`
 	IacInputData *IacInputData `json:"iacInputData,omitempty" url:"iacInputData,omitempty"`
 
 	extraProperties map[string]interface{}
@@ -12396,10 +13243,10 @@ type VcsTriggers struct {
 	GhWebhookUrl            *string                    `json:"gh_webhook_url,omitempty" url:"gh_webhook_url,omitempty"`
 	GithubAppInstallationId *int                       `json:"github_app_installation_id,omitempty" url:"github_app_installation_id,omitempty"`
 	TrackedBranch           *string                    `json:"tracked_branch,omitempty" url:"tracked_branch,omitempty"`
-	PostComments            *bool                      `json:"post_comments,omitempty" url:"post_comments,omitempty"`
+	PostComments            bool                       `json:"post_comments" url:"post_comments"`
 	ApprovalPreApply        *bool                      `json:"approval_pre_apply,omitempty" url:"approval_pre_apply,omitempty"`
-	GhCheck                 *bool                      `json:"gh_check,omitempty" url:"gh_check,omitempty"`
-	GlPipeline              *bool                      `json:"gl_pipeline,omitempty" url:"gl_pipeline,omitempty"`
+	GhCheck                 bool                       `json:"gh_check" url:"gh_check"`
+	GlPipeline              bool                       `json:"gl_pipeline" url:"gl_pipeline"`
 	PlanOnly                *bool                      `json:"plan_only,omitempty" url:"plan_only,omitempty"`
 	FileTriggersEnabled     *bool                      `json:"file_triggers_enabled,omitempty" url:"file_triggers_enabled,omitempty"`
 	FileTriggerPatterns     []string                   `json:"file_trigger_patterns,omitempty" url:"file_trigger_patterns,omitempty"`
@@ -12694,100 +13541,8 @@ func (w WfTypeEnum) Ptr() *WfTypeEnum {
 	return &w
 }
 
-type Workflow struct {
-	ResourceName         *string                `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
-	Description          *string                `json:"Description,omitempty" url:"Description,omitempty"`
-	Tags                 []string               `json:"Tags,omitempty" url:"Tags,omitempty"`
-	IsActive             *IsActiveEnum          `json:"IsActive,omitempty" url:"IsActive,omitempty"`
-	WfStepsConfig        []*WfStepsConfig       `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
-	WfType               *WfTypeEnum            `json:"WfType,omitempty" url:"WfType,omitempty"`
-	TerraformConfig      *TerraformConfig       `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
-	EnvironmentVariables []*EnvVars             `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
-	EnforcedPolicies     []interface{}          `json:"EnforcedPolicies,omitempty" url:"EnforcedPolicies,omitempty"`
-	RuntimeParameters    map[string]interface{} `json:"RuntimeParameters,omitempty" url:"RuntimeParameters,omitempty"`
-	Statuses             map[string]interface{} `json:"Statuses,omitempty" url:"Statuses,omitempty"`
-	Authors              []interface{}          `json:"Authors,omitempty" url:"Authors,omitempty"`
-	SubResourceId        string                 `json:"SubResourceId" url:"SubResourceId"`
-	OrgId                string                 `json:"OrgId" url:"OrgId"`
-	IsArchive            IsArchiveEnum          `json:"IsArchive" url:"IsArchive"`
-	ResourceId           string                 `json:"ResourceId" url:"ResourceId"`
-	// Time in milliseconds as a string
-	CreatedAt string `json:"CreatedAt" url:"CreatedAt"`
-	// Time in milliseconds as a string
-	ModifiedAt                  string                      `json:"ModifiedAt" url:"ModifiedAt"`
-	ParentId                    string                      `json:"ParentId" url:"ParentId"`
-	ResourceType                string                      `json:"ResourceType" url:"ResourceType"`
-	LatestWfrunStatus           LatestWfrunStatusEnum       `json:"LatestWfrunStatus" url:"LatestWfrunStatus"`
-	DocVersion                  string                      `json:"DocVersion" url:"DocVersion"`
-	DeploymentPlatformConfig    []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
-	VcsConfig                   *VcsConfig                  `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
-	UserSchedules               []*UserSchedules            `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
-	GitHubComSync               map[string]interface{}      `json:"GitHubComSync,omitempty" url:"GitHubComSync,omitempty"`
-	VcsTriggers                 *VcsTriggers                `json:"VCSTriggers,omitempty" url:"VCSTriggers,omitempty"`
-	MiniSteps                   *MiniStepsSchema            `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
-	Approvers                   []string                    `json:"Approvers,omitempty" url:"Approvers,omitempty"`
-	NumberOfApprovalsRequired   *int                        `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
-	RunnerConstraints           *RunnerConstraints          `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
-	UserJobCpu                  *int                        `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
-	UserJobMemory               *int                        `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
-	TfStateCleaned              map[string]interface{}      `json:"TfStateCleaned,omitempty" url:"TfStateCleaned,omitempty"`
-	InfracostBreakdown          map[string]interface{}      `json:"InfracostBreakdown,omitempty" url:"InfracostBreakdown,omitempty"`
-	PolicyEvalResults           map[string]interface{}      `json:"PolicyEvalResults,omitempty" url:"PolicyEvalResults,omitempty"`
-	InfracostBreakdownPreApply  map[string]interface{}      `json:"InfracostBreakdownPreApply,omitempty" url:"InfracostBreakdownPreApply,omitempty"`
-	InfracostBreakdownPostApply map[string]interface{}      `json:"InfracostBreakdownPostApply,omitempty" url:"InfracostBreakdownPostApply,omitempty"`
-	TfDrift                     map[string]interface{}      `json:"TfDrift,omitempty" url:"TfDrift,omitempty"`
-	CfStateCleaned              map[string]interface{}      `json:"CfStateCleaned,omitempty" url:"CfStateCleaned,omitempty"`
-	CfStackPlan                 map[string]interface{}      `json:"CfStackPlan,omitempty" url:"CfStackPlan,omitempty"`
-	CfDrift                     map[string]interface{}      `json:"CfDrift,omitempty" url:"CfDrift,omitempty"`
-	K8SResources                map[string]interface{}      `json:"K8sResources,omitempty" url:"K8sResources,omitempty"`
-	K8SDrift                    map[string]interface{}      `json:"K8sDrift,omitempty" url:"K8sDrift,omitempty"`
-	CacheConfig                 *CacheConfig                `json:"CacheConfig,omitempty" url:"CacheConfig,omitempty"`
-	TerragruntDrift             map[string]interface{}      `json:"TerragruntDrift,omitempty" url:"TerragruntDrift,omitempty"`
-	AnsibleOutputs              map[string]interface{}      `json:"AnsibleOutputs,omitempty" url:"AnsibleOutputs,omitempty"`
-	AnsiblePlan                 map[string]interface{}      `json:"AnsiblePlan,omitempty" url:"AnsiblePlan,omitempty"`
-	AnsibleDrift                map[string]interface{}      `json:"AnsibleDrift,omitempty" url:"AnsibleDrift,omitempty"`
-	SgCustomWorkflowRunFacts    map[string]interface{}      `json:"SGCustomWorkflowRunFacts,omitempty" url:"SGCustomWorkflowRunFacts,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (w *Workflow) GetExtraProperties() map[string]interface{} {
-	return w.extraProperties
-}
-
-func (w *Workflow) UnmarshalJSON(data []byte) error {
-	type unmarshaler Workflow
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*w = Workflow(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *w)
-	if err != nil {
-		return err
-	}
-	w.extraProperties = extraProperties
-
-	w._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (w *Workflow) String() string {
-	if len(w._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(w._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(w); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", w)
-}
-
 type WorkflowGetResponse struct {
-	Msg *GeneratedWorkflowGetResponse `json:"msg,omitempty" url:"msg,omitempty"`
+	Msg *GeneratedWorkflowGetMsg `json:"msg,omitempty" url:"msg,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -12816,6 +13571,271 @@ func (w *WorkflowGetResponse) UnmarshalJSON(data []byte) error {
 }
 
 func (w *WorkflowGetResponse) String() string {
+	if len(w._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(w._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WorkflowGroup struct {
+	ResourceName  *string        `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	Description   *string        `json:"Description,omitempty" url:"Description,omitempty"`
+	Tags          []string       `json:"Tags,omitempty" url:"Tags,omitempty"`
+	IsActive      *IsArchiveEnum `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	ParentId      string         `json:"ParentId" url:"ParentId"`
+	ResourceId    string         `json:"ResourceId" url:"ResourceId"`
+	WfGrpParentId string         `json:"WfGrpParentId" url:"WfGrpParentId"`
+	WfGrpFullId   string         `json:"WfGrpFullId" url:"WfGrpFullId"`
+	OrgId         string         `json:"OrgId" url:"OrgId"`
+	SubResourceId string         `json:"SubResourceId" url:"SubResourceId"`
+	WfgrpIndexId  string         `json:"WfgrpIndexId" url:"WfgrpIndexId"`
+	Authors       []string       `json:"Authors,omitempty" url:"Authors,omitempty"`
+	IsArchive     string         `json:"IsArchive" url:"IsArchive"`
+	ResourceType  string         `json:"ResourceType" url:"ResourceType"`
+	DocVersion    string         `json:"DocVersion" url:"DocVersion"`
+	CreatorEnv    string         `json:"CreatorEnv" url:"CreatorEnv"`
+	SgOwned       bool           `json:"SGOwned" url:"SGOwned"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (w *WorkflowGroup) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WorkflowGroup) UnmarshalJSON(data []byte) error {
+	type unmarshaler WorkflowGroup
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WorkflowGroup(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+
+	w._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WorkflowGroup) String() string {
+	if len(w._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(w._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WorkflowGroupCreateResponse struct {
+	Msg  *string        `json:"msg,omitempty" url:"msg,omitempty"`
+	Data *WorkflowGroup `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (w *WorkflowGroupCreateResponse) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WorkflowGroupCreateResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler WorkflowGroupCreateResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WorkflowGroupCreateResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+
+	w._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WorkflowGroupCreateResponse) String() string {
+	if len(w._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(w._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WorkflowGroupDeleteResponse struct {
+	Msg *string `json:"msg,omitempty" url:"msg,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (w *WorkflowGroupDeleteResponse) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WorkflowGroupDeleteResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler WorkflowGroupDeleteResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WorkflowGroupDeleteResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+
+	w._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WorkflowGroupDeleteResponse) String() string {
+	if len(w._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(w._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WorkflowGroupGetResponse struct {
+	Msg *WorkflowGroup `json:"msg,omitempty" url:"msg,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (w *WorkflowGroupGetResponse) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WorkflowGroupGetResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler WorkflowGroupGetResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WorkflowGroupGetResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+
+	w._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WorkflowGroupGetResponse) String() string {
+	if len(w._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(w._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WorkflowGroupListAllResponse struct {
+	Msg              []*WorkflowGroup `json:"msg,omitempty" url:"msg,omitempty"`
+	Lastevaluatedkey *string          `json:"lastevaluatedkey,omitempty" url:"lastevaluatedkey,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (w *WorkflowGroupListAllResponse) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WorkflowGroupListAllResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler WorkflowGroupListAllResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WorkflowGroupListAllResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+
+	w._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WorkflowGroupListAllResponse) String() string {
+	if len(w._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(w._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WorkflowGroupPatch struct {
+	Msg  *string        `json:"msg,omitempty" url:"msg,omitempty"`
+	Data *WorkflowGroup `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (w *WorkflowGroupPatch) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WorkflowGroupPatch) UnmarshalJSON(data []byte) error {
+	type unmarshaler WorkflowGroupPatch
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WorkflowGroupPatch(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+
+	w._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WorkflowGroupPatch) String() string {
 	if len(w._rawJSON) > 0 {
 		if value, err := core.StringifyJSON(w._rawJSON); err == nil {
 			return value

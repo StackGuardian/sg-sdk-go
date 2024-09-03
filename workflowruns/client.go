@@ -30,285 +30,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
-// Create workflow run inside a workflow
-func (c *Client) CreateWorkflowRunStack(
-	ctx context.Context,
-	org string,
-	stack string,
-	wf string,
-	wfGrp string,
-	request *sgsdkgo.WorkflowRun,
-	opts ...option.RequestOption,
-) (*sgsdkgo.GeneratedWorkfkowRunsStackCreateResponse, error) {
-	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/wfruns/",
-		org,
-		wfGrp,
-		stack,
-		wf,
-	)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
-	var response *sgsdkgo.GeneratedWorkfkowRunsStackCreateResponse
-	if err := c.caller.Call(
-		ctx,
-		&core.CallParams{
-			URL:         endpointURL,
-			Method:      http.MethodPost,
-			MaxAttempts: options.MaxAttempts,
-			Headers:     headers,
-			Client:      options.HTTPClient,
-			Request:     request,
-			Response:    &response,
-		},
-	); err != nil {
-		return nil, err
-	}
-	return response, nil
-}
-
-// Get workflow run details
-func (c *Client) GetWorkflowRunStack(
-	ctx context.Context,
-	org string,
-	stack string,
-	wf string,
-	wfGrp string,
-	wfRun string,
-	opts ...option.RequestOption,
-) (*sgsdkgo.GeneratedWorkflowRunStackGet, error) {
-	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/wfruns/%v/",
-		org,
-		wfGrp,
-		stack,
-		wf,
-		wfRun,
-	)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
-	var response *sgsdkgo.GeneratedWorkflowRunStackGet
-	if err := c.caller.Call(
-		ctx,
-		&core.CallParams{
-			URL:         endpointURL,
-			Method:      http.MethodGet,
-			MaxAttempts: options.MaxAttempts,
-			Headers:     headers,
-			Client:      options.HTTPClient,
-			Response:    &response,
-		},
-	); err != nil {
-		return nil, err
-	}
-	return response, nil
-}
-
-// Delete workflow run inside a workflow
-func (c *Client) DeleteWorkflowRunStack(
-	ctx context.Context,
-	org string,
-	stack string,
-	wf string,
-	wfGrp string,
-	wfRun string,
-	opts ...option.RequestOption,
-) error {
-	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/wfruns/%v/",
-		org,
-		wfGrp,
-		stack,
-		wf,
-		wfRun,
-	)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
-	if err := c.caller.Call(
-		ctx,
-		&core.CallParams{
-			URL:         endpointURL,
-			Method:      http.MethodDelete,
-			MaxAttempts: options.MaxAttempts,
-			Headers:     headers,
-			Client:      options.HTTPClient,
-		},
-	); err != nil {
-		return err
-	}
-	return nil
-}
-
-// Get execution logs for a Workflow Run inside a workflow
-func (c *Client) GetWorkflowRunLogsStack(
-	ctx context.Context,
-	org string,
-	stack string,
-	wf string,
-	wfGrp string,
-	wfRun string,
-	opts ...option.RequestOption,
-) (*sgsdkgo.GeneratedWorkflowRunLogs, error) {
-	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/wfruns/%v/logs/",
-		org,
-		wfGrp,
-		stack,
-		wf,
-		wfRun,
-	)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
-	var response *sgsdkgo.GeneratedWorkflowRunLogs
-	if err := c.caller.Call(
-		ctx,
-		&core.CallParams{
-			URL:         endpointURL,
-			Method:      http.MethodGet,
-			MaxAttempts: options.MaxAttempts,
-			Headers:     headers,
-			Client:      options.HTTPClient,
-			Response:    &response,
-		},
-	); err != nil {
-		return nil, err
-	}
-	return response, nil
-}
-
-// Provide approval for a Workflow Run
-func (c *Client) ApprovalWorkflowRunStack(
-	ctx context.Context,
-	org string,
-	stack string,
-	wf string,
-	wfGrp string,
-	wfRun string,
-	request *sgsdkgo.WorkflowRunApproval,
-	opts ...option.RequestOption,
-) error {
-	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/wfruns/%v/resume/",
-		org,
-		wfGrp,
-		stack,
-		wf,
-		wfRun,
-	)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
-	if err := c.caller.Call(
-		ctx,
-		&core.CallParams{
-			URL:         endpointURL,
-			Method:      http.MethodPost,
-			MaxAttempts: options.MaxAttempts,
-			Headers:     headers,
-			Client:      options.HTTPClient,
-			Request:     request,
-		},
-	); err != nil {
-		return err
-	}
-	return nil
-}
-
-// List all Workflow Runs in a Workflow
-func (c *Client) ListAllWorkflowRunsStack(
-	ctx context.Context,
-	org string,
-	stack string,
-	wf string,
-	wfGrp string,
-	opts ...option.RequestOption,
-) (*sgsdkgo.GeneratedWorkflowRunListAllStack, error) {
-	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/wfruns/listall/",
-		org,
-		wfGrp,
-		stack,
-		wf,
-	)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
-	var response *sgsdkgo.GeneratedWorkflowRunListAllStack
-	if err := c.caller.Call(
-		ctx,
-		&core.CallParams{
-			URL:         endpointURL,
-			Method:      http.MethodGet,
-			MaxAttempts: options.MaxAttempts,
-			Headers:     headers,
-			Client:      options.HTTPClient,
-			Response:    &response,
-		},
-	); err != nil {
-		return nil, err
-	}
-	return response, nil
-}
-
-// Create workflow run inside a workflow
+// Run workflow
 func (c *Client) CreateWorkflowRun(
 	ctx context.Context,
 	org string,
@@ -353,8 +75,8 @@ func (c *Client) CreateWorkflowRun(
 	return response, nil
 }
 
-// Get workflow run details
-func (c *Client) GetWorkflowRun(
+// Read workflow run details
+func (c *Client) ReadWorkflowRun(
 	ctx context.Context,
 	org string,
 	wf string,
@@ -396,49 +118,6 @@ func (c *Client) GetWorkflowRun(
 		return nil, err
 	}
 	return response, nil
-}
-
-// Delete workflow run inside a workflow
-func (c *Client) DeleteWorkflowRun(
-	ctx context.Context,
-	org string,
-	wf string,
-	wfGrp string,
-	wfRun string,
-	opts ...option.RequestOption,
-) error {
-	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/wfruns/%v/",
-		org,
-		wfGrp,
-		wf,
-		wfRun,
-	)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
-	if err := c.caller.Call(
-		ctx,
-		&core.CallParams{
-			URL:         endpointURL,
-			Method:      http.MethodDelete,
-			MaxAttempts: options.MaxAttempts,
-			Headers:     headers,
-			Client:      options.HTTPClient,
-		},
-	); err != nil {
-		return err
-	}
-	return nil
 }
 
 // Patch Workflow Run inside a workflow
@@ -531,8 +210,8 @@ func (c *Client) CancelWorkflowRun(
 	return nil
 }
 
-// Get execution logs for a Workflow Run inside a workflow
-func (c *Client) GetWorkflowRunLogs(
+// Read execution logs for a Workflow Run inside a workflow
+func (c *Client) ReadWorkflowRunLogs(
 	ctx context.Context,
 	org string,
 	wf string,
@@ -577,7 +256,7 @@ func (c *Client) GetWorkflowRunLogs(
 }
 
 // Provide approval for a Workflow Run
-func (c *Client) ApprovalWorkflowRun(
+func (c *Client) ApproveWorkflowRun(
 	ctx context.Context,
 	org string,
 	wf string,

@@ -73,7 +73,7 @@ func TestNewClient(t *testing.T) {
 			EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
 				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}},
 			VcsConfig: &sggosdk.VcsConfig{
-				IacVcsConfig: &sggosdk.IacVcsConfig{
+				IacVcsConfig: &sggosdk.IacvcsConfig{
 					IacTemplateId:          sggosdk.String("/demo-org/ansible-dummy:3"),
 					UseMarketplaceTemplate: true,
 				},
@@ -115,7 +115,7 @@ func TestNewClient(t *testing.T) {
 			EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
 				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}},
 			VcsConfig: &sggosdk.VcsConfig{
-				IacVcsConfig: &sggosdk.IacVcsConfig{
+				IacVcsConfig: &sggosdk.IacvcsConfig{
 					IacTemplateId:          sggosdk.String("/demo-org/ansible-dummy:3"),
 					UseMarketplaceTemplate: true,
 				},
@@ -179,48 +179,6 @@ func TestNewClient(t *testing.T) {
 		assert.Equal(t, "stackguardian-proper-escargot", response.Data.Outputs["id"]["value"].(string))
 	})
 
-	//Stack Workflows
-	t.Run("Create and delete stack workflow", func(t *testing.T) {
-		c := NewClient(
-			option.WithApiKey(API_KEY),
-			option.WithBaseURL(SG_BASE_URL),
-		)
-		createWorkflowRequest := sggosdk.Workflow{
-			DeploymentPlatformConfig: []*sggosdk.DeploymentPlatformConfig{{
-				Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
-				Config: map[string]interface{}{
-					"profileName":   "DummyConnectorForGoSDK",
-					"integrationId": "/integrations/DummyConnectorForGoSDK"}}},
-			WfType: sggosdk.WfTypeEnumCustom.Ptr(),
-			EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
-				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}},
-			VcsConfig: &sggosdk.VcsConfig{
-				IacVcsConfig: &sggosdk.IacVcsConfig{
-					IacTemplateId:          sggosdk.String("/demo-org/ansible-dummy:3"),
-					UseMarketplaceTemplate: true,
-				},
-				IacInputData: &sggosdk.IacInputData{
-					SchemaType: sggosdk.IacInputDataSchemaTypeEnumFormJsonschema,
-					Data: map[string]interface{}{
-						"bucket_region": "eu-central-1",
-					},
-				},
-			},
-			UserJobCpu:    sggosdk.Int(512),
-			UserJobMemory: sggosdk.Int(1024),
-			RunnerConstraints: &sggosdk.RunnerConstraints{
-				Type: "shared",
-			},
-			Description: sggosdk.String("Dummy Stack Workflow for GoSDK"),
-		}
-		createResponse, err := c.StackWorkflows.CreateStackWorkflow(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP, &createWorkflowRequest)
-		assert.Empty(t, err)
-		assert.NotEmpty(t, createResponse.Data.ResourceName)
-
-		err = c.StackWorkflows.DeleteStackWorkflow(context.Background(), SG_ORG, SG_STACK, createResponse.Data.ResourceName, SG_WF_GROUP)
-		assert.Empty(t, err)
-	})
-
 	t.Run("Update stack workflow", func(t *testing.T) {
 		c := NewClient(
 			option.WithApiKey(API_KEY),
@@ -236,7 +194,7 @@ func TestNewClient(t *testing.T) {
 			EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
 				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}},
 			VcsConfig: &sggosdk.VcsConfig{
-				IacVcsConfig: &sggosdk.IacVcsConfig{
+				IacVcsConfig: &sggosdk.IacvcsConfig{
 					IacTemplateId:          sggosdk.String("/demo-org/ansible-dummy:3"),
 					UseMarketplaceTemplate: true,
 				},
@@ -315,23 +273,12 @@ func TestNewClient(t *testing.T) {
 		assert.GreaterOrEqual(t, len(response.Msg), 1)
 	})
 
-	t.Run("ListAll workflow runs stacks", func(t *testing.T) {
-		c := NewClient(
-			option.WithApiKey(API_KEY),
-			option.WithBaseURL(SG_BASE_URL),
-		)
-		response, err := c.WorkflowRuns.ListAllWorkflowRunsStack(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP)
-		status := response.Msg[0].Statuses["pre_0_step"][0].Name
-		assert.Empty(t, err)
-		assert.Equal(t, "QUEUED", status)
-		assert.NotEmpty(t, len(response.Msg[0].Statuses["pre_0_step"]))
-	})
 	t.Run("Get workflow runs stack", func(t *testing.T) {
 		c := NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		response, err := c.WorkflowRuns.GetWorkflowRunStack(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP, SG_STACK_WF_RUN)
+		response, err := c.StackWorkflowRuns.ReadStackWorkflowRun(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP, SG_STACK_WF_RUN)
 		assert.Equal(t, "QUEUED", response.Msg.Statuses["pre_0_step"][0].Name)
 		assert.Empty(t, err)
 
@@ -342,7 +289,7 @@ func TestNewClient(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		response, err := c.WorkflowRuns.GetWorkflowRun(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, SG_WF_RUN)
+		response, err := c.WorkflowRuns.ReadWorkflowRun(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, SG_WF_RUN)
 		assert.Equal(t, "QUEUED", response.Msg.Statuses["pre_0_step"][0].Name)
 		assert.Empty(t, err)
 
@@ -363,7 +310,7 @@ func TestNewClient(t *testing.T) {
 			EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
 				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}},
 			VcsConfig: &sggosdk.VcsConfig{
-				IacVcsConfig: &sggosdk.IacVcsConfig{
+				IacVcsConfig: &sggosdk.IacvcsConfig{
 					IacTemplateId:          sggosdk.String("/stackguardian/aws-s3-demo-website:16"),
 					UseMarketplaceTemplate: true,
 				},
@@ -389,52 +336,6 @@ func TestNewClient(t *testing.T) {
 
 	})
 
-	t.Run("Create and delete workflow runs (stack)", func(t *testing.T) {
-		c := NewClient(
-			option.WithApiKey(API_KEY),
-			option.WithBaseURL(SG_BASE_URL),
-		)
-		createWorkflowRunRequest := sggosdk.WorkflowRun{
-			DeploymentPlatformConfig: []*sggosdk.DeploymentPlatformConfig{{
-				Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
-				Config: map[string]interface{}{
-					"profileName":   "testAWSConnector",
-					"integrationId": "/integrations/testAWSConnector"}}},
-			WfType: sggosdk.WfTypeEnumTerraform.Ptr(),
-			EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
-				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}},
-			VcsConfig: &sggosdk.VcsConfig{
-				IacVcsConfig: &sggosdk.IacVcsConfig{
-					IacTemplateId:          sggosdk.String("/stackguardian/aws-s3-demo-website:16"),
-					UseMarketplaceTemplate: true,
-				},
-				IacInputData: &sggosdk.IacInputData{
-					SchemaType: sggosdk.IacInputDataSchemaTypeEnumFormJsonschema,
-					Data: map[string]interface{}{
-						"bucket_region": "eu-central-1",
-					},
-				},
-			},
-			UserJobCpu:    sggosdk.Int(512),
-			UserJobMemory: sggosdk.Int(1024),
-			RunnerConstraints: &sggosdk.RunnerConstraints{
-				Type: "shared",
-			},
-		}
-
-		createWfRunStackResponse, err := c.WorkflowRuns.CreateWorkflowRunStack(context.Background(),
-			SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP, &createWorkflowRunRequest)
-		assert.Empty(t, err)
-		assert.Equal(t, "Workflow Run dispatched", createWfRunStackResponse.Msg)
-
-		err = c.WorkflowRuns.DeleteWorkflowRunStack(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP, createWfRunStackResponse.Data.ResourceName)
-		// We expect an error
-		if err != nil {
-			assert.Contains(t, err.Error(), "Error cancelling Workflow Run "+createWfRunStackResponse.Data.ResourceName)
-		}
-
-	})
-
 	t.Run("Approve workflow runs", func(t *testing.T) {
 		c := NewClient(
 			option.WithApiKey(API_KEY),
@@ -444,7 +345,7 @@ func TestNewClient(t *testing.T) {
 			Approve: true,
 			Message: sggosdk.String("Approved"),
 		}
-		err := c.WorkflowRuns.ApprovalWorkflowRun(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, SG_WF_RUN,
+		err := c.WorkflowRuns.ApproveWorkflowRun(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, SG_WF_RUN,
 			&approveWfRunRequest)
 		// We expect an error since the workflow run doesnt have any approvals pending
 		assert.Contains(t, err.Error(), "No approval pending")
@@ -460,7 +361,7 @@ func TestNewClient(t *testing.T) {
 			Approve: true,
 			Message: sggosdk.String("Approved"),
 		}
-		err := c.WorkflowRuns.ApprovalWorkflowRunStack(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP, SG_STACK_WF_RUN,
+		err := c.StackWorkflowRuns.ApproveStackWorkflowRun(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP, SG_STACK_WF_RUN,
 			&approveWfRunRequest)
 		// We expect an error since the workflow run doesnt have any approvals pending
 		assert.Contains(t, err.Error(), "No approval pending")
@@ -473,7 +374,7 @@ func TestNewClient(t *testing.T) {
 			option.WithBaseURL(SG_BASE_URL),
 		)
 
-		logs, err := c.WorkflowRuns.GetWorkflowRunLogs(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, SG_WF_RUN)
+		logs, err := c.WorkflowRuns.ReadWorkflowRunLogs(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, SG_WF_RUN)
 		assert.Empty(t, err)
 		assert.GreaterOrEqual(t, len(logs.Msg), 1)
 	})
@@ -484,22 +385,9 @@ func TestNewClient(t *testing.T) {
 			option.WithBaseURL(SG_BASE_URL),
 		)
 
-		logs, err := c.WorkflowRuns.GetWorkflowRunLogsStack(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP, SG_STACK_WF_RUN)
+		logs, err := c.StackWorkflowRuns.ReadStackWorkflowRunLogs(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP, SG_STACK_WF_RUN)
 		assert.Empty(t, err)
 		assert.GreaterOrEqual(t, len(logs.Msg), 1)
-	})
-
-	t.Run("Delete workflow runs", func(t *testing.T) {
-		c := NewClient(
-			option.WithApiKey(API_KEY),
-			option.WithBaseURL(SG_BASE_URL),
-		)
-
-		err := c.WorkflowRuns.DeleteWorkflowRun(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, SG_WF_RUN)
-		// We expect an error since the workflow run is already failed
-		if err != nil {
-			assert.Contains(t, err.Error(), "Error cancelling Workflow Run "+SG_WF_RUN)
-		}
 	})
 
 	t.Run("Cancel workflow runs", func(t *testing.T) {
@@ -512,19 +400,6 @@ func TestNewClient(t *testing.T) {
 		// We expect an error since the workflow run is already failed
 		if err != nil {
 			assert.Contains(t, err.Error(), "Error cancelling Workflow Run "+SG_WF_RUN)
-		}
-	})
-
-	t.Run("Delete workflow runs (stack)", func(t *testing.T) {
-		c := NewClient(
-			option.WithApiKey(API_KEY),
-			option.WithBaseURL(SG_BASE_URL),
-		)
-
-		err := c.WorkflowRuns.DeleteWorkflowRunStack(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP, SG_STACK_WF_RUN)
-		// We expect an error since the workflow run is already failed
-		if err != nil {
-			assert.Contains(t, err.Error(), "Error cancelling Workflow Run "+SG_STACK_WF_RUN)
 		}
 	})
 
@@ -544,7 +419,7 @@ func TestNewClient(t *testing.T) {
 			EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
 				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("UpdatedValue")}}},
 			VcsConfig: &sggosdk.VcsConfig{
-				IacVcsConfig: &sggosdk.IacVcsConfig{
+				IacVcsConfig: &sggosdk.IacvcsConfig{
 					IacTemplateId:          sggosdk.String("/stackguardian/aws-s3-demo-website:16"),
 					UseMarketplaceTemplate: true,
 				},
@@ -626,7 +501,7 @@ func TestNewClient(t *testing.T) {
 			ActionType:   sggosdk.ActionTypeEnumApply,
 			ResourceName: sggosdk.String("5srghvu1y7nn"),
 		}
-		response, err := c.Stacks.RunStack(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP, &runStackRequest)
+		response, err := c.StackWorkflowRuns.CreateStackRun(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP, &runStackRequest)
 		assert.Empty(t, err)
 		assert.Equal(t, "Stack run scheduled", response.Msg)
 	})
@@ -636,7 +511,7 @@ func TestNewClient(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		response, err := c.Stacks.ListAllStackRuns(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP)
+		response, err := c.Stacks.ListAllStacks(context.Background(), SG_ORG, SG_WF_GROUP)
 		assert.Empty(t, err)
 		assert.GreaterOrEqual(t, len(response.Msg), 1)
 	})
@@ -646,7 +521,7 @@ func TestNewClient(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		response, err := c.Stacks.GetStackOutputs(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP)
+		response, err := c.Stacks.ReadStackOutputs(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP)
 		assert.Empty(t, err)
 		assert.GreaterOrEqual(t, len(response.Msg), 1)
 	})
@@ -687,7 +562,7 @@ func TestNewClient(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		listResponse, err := c.Stacks.ListAllStackRuns(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP)
+		listResponse, err := c.StackWorkflowRuns.ListAllStackRuns(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP)
 		assert.Empty(t, err)
 		assert.GreaterOrEqual(t, len(listResponse.Msg), 1)
 	})
@@ -697,7 +572,7 @@ func TestNewClient(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		getStackRunResponse, err := c.Stacks.GetStackRuns(context.Background(), SG_ORG, SG_STACK, "5srghvu1y7nn", SG_WF_GROUP)
+		getStackRunResponse, err := c.StackWorkflowRuns.ReadStackRun(context.Background(), SG_ORG, SG_STACK, "5srghvu1y7nn", SG_WF_GROUP)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, getStackRunResponse.Msg.ResourceName)
 		assert.Equal(t, "/stackruns/5srghvu1y7nn", getStackRunResponse.Msg.ResourceName)

@@ -3,16 +3,18 @@
 package client
 
 import (
+	connectors "github.com/StackGuardian/sg-sdk-go/connectors"
 	core "github.com/StackGuardian/sg-sdk-go/core"
-	integrations "github.com/StackGuardian/sg-sdk-go/integrations"
 	option "github.com/StackGuardian/sg-sdk-go/option"
 	organizations "github.com/StackGuardian/sg-sdk-go/organizations"
 	policies "github.com/StackGuardian/sg-sdk-go/policies"
-	role "github.com/StackGuardian/sg-sdk-go/role"
 	runnergroups "github.com/StackGuardian/sg-sdk-go/runnergroups"
 	stacks "github.com/StackGuardian/sg-sdk-go/stacks"
+	stackworkflowrunfacts "github.com/StackGuardian/sg-sdk-go/stackworkflowrunfacts"
+	stackworkflowruns "github.com/StackGuardian/sg-sdk-go/stackworkflowruns"
 	stackworkflows "github.com/StackGuardian/sg-sdk-go/stackworkflows"
 	templates "github.com/StackGuardian/sg-sdk-go/templates"
+	usersroles "github.com/StackGuardian/sg-sdk-go/usersroles"
 	workflowgroups "github.com/StackGuardian/sg-sdk-go/workflowgroups"
 	workflowrunfacts "github.com/StackGuardian/sg-sdk-go/workflowrunfacts"
 	workflowruns "github.com/StackGuardian/sg-sdk-go/workflowruns"
@@ -25,18 +27,20 @@ type Client struct {
 	caller  *core.Caller
 	header  http.Header
 
-	Organizations    *organizations.Client
-	Integrations     *integrations.Client
-	Policies         *policies.Client
-	Role             *role.Client
-	RunnerGroups     *runnergroups.Client
-	WorkflowGroups   *workflowgroups.Client
-	Stacks           *stacks.Client
-	StackWorkflows   *stackworkflows.Client
-	WorkflowRuns     *workflowruns.Client
-	WorkflowRunFacts *workflowrunfacts.Client
-	Workflows        *workflows.Client
-	Templates        *templates.Client
+	Organizations         *organizations.Client
+	Connectors            *connectors.Client
+	UsersRoles            *usersroles.Client
+	Policies              *policies.Client
+	RunnerGroups          *runnergroups.Client
+	Templates             *templates.Client
+	WorkflowGroups        *workflowgroups.Client
+	Stacks                *stacks.Client
+	StackWorkflowRuns     *stackworkflowruns.Client
+	StackWorkflows        *stackworkflows.Client
+	StackWorkflowRunFacts *stackworkflowrunfacts.Client
+	Workflows             *workflows.Client
+	WorkflowRuns          *workflowruns.Client
+	WorkflowRunFacts      *workflowrunfacts.Client
 }
 
 func NewClient(opts ...option.RequestOption) *Client {
@@ -49,18 +53,20 @@ func NewClient(opts ...option.RequestOption) *Client {
 				MaxAttempts: options.MaxAttempts,
 			},
 		),
-		header:           options.ToHeader(),
-		Organizations:    organizations.NewClient(opts...),
-		Integrations:     integrations.NewClient(opts...),
-		Policies:         policies.NewClient(opts...),
-		Role:             role.NewClient(opts...),
-		RunnerGroups:     runnergroups.NewClient(opts...),
-		WorkflowGroups:   workflowgroups.NewClient(opts...),
-		Stacks:           stacks.NewClient(opts...),
-		StackWorkflows:   stackworkflows.NewClient(opts...),
-		WorkflowRuns:     workflowruns.NewClient(opts...),
-		WorkflowRunFacts: workflowrunfacts.NewClient(opts...),
-		Workflows:        workflows.NewClient(opts...),
-		Templates:        templates.NewClient(opts...),
+		header:                options.ToHeader(),
+		Organizations:         organizations.NewClient(opts...),
+		Connectors:            connectors.NewClient(opts...),
+		UsersRoles:            usersroles.NewClient(opts...),
+		Policies:              policies.NewClient(opts...),
+		RunnerGroups:          runnergroups.NewClient(opts...),
+		Templates:             templates.NewClient(opts...),
+		WorkflowGroups:        workflowgroups.NewClient(opts...),
+		Stacks:                stacks.NewClient(opts...),
+		StackWorkflowRuns:     stackworkflowruns.NewClient(opts...),
+		StackWorkflows:        stackworkflows.NewClient(opts...),
+		StackWorkflowRunFacts: stackworkflowrunfacts.NewClient(opts...),
+		Workflows:             workflows.NewClient(opts...),
+		WorkflowRuns:          workflowruns.NewClient(opts...),
+		WorkflowRunFacts:      workflowrunfacts.NewClient(opts...),
 	}
 }

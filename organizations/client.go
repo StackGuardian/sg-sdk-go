@@ -30,8 +30,8 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
-// Create a new Organization in StackGuardian Platform
-func (c *Client) GetOrganization(
+// Read Organization
+func (c *Client) ReadOrganization(
 	ctx context.Context,
 	org string,
 	opts ...option.RequestOption,
@@ -58,44 +58,6 @@ func (c *Client) GetOrganization(
 			MaxAttempts: options.MaxAttempts,
 			Headers:     headers,
 			Client:      options.HTTPClient,
-			Response:    &response,
-		},
-	); err != nil {
-		return nil, err
-	}
-	return response, nil
-}
-
-// Add registered user to an Organization
-func (c *Client) AddRegisteredUserToAnOrganization(
-	ctx context.Context,
-	org string,
-	request *sgsdkgo.AddUserToOrganization,
-	opts ...option.RequestOption,
-) (*sgsdkgo.AddUserToOrganizationResponse, error) {
-	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(baseURL+"/api/v1/orgs/%v/invite_user/", org)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
-	var response *sgsdkgo.AddUserToOrganizationResponse
-	if err := c.caller.Call(
-		ctx,
-		&core.CallParams{
-			URL:         endpointURL,
-			Method:      http.MethodPost,
-			MaxAttempts: options.MaxAttempts,
-			Headers:     headers,
-			Client:      options.HTTPClient,
-			Request:     request,
 			Response:    &response,
 		},
 	); err != nil {

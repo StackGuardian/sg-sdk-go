@@ -31,10 +31,61 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
-// Create Template or Revision
-func (c *Client) CreateTemplateOrRevision(
+// Read all subscribed templates by an organization
+func (c *Client) ReadSubscription(
 	ctx context.Context,
-	request *sgsdkgo.CreateTemplateOrRevisionRequest,
+	org string,
+	// Always use default
+	subscription string,
+	request *sgsdkgo.ReadSubscriptionRequest,
+	opts ...option.RequestOption,
+) (*sgsdkgo.GetSubscriptionResponse, error) {
+	options := core.NewRequestOptions(opts...)
+
+	baseURL := "https://api.app.stackguardian.io"
+	if c.baseURL != "" {
+		baseURL = c.baseURL
+	}
+	if options.BaseURL != "" {
+		baseURL = options.BaseURL
+	}
+	endpointURL := core.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/subscriptions/%v/",
+		org,
+		subscription,
+	)
+
+	queryParams, err := core.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
+
+	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+
+	var response *sgsdkgo.GetSubscriptionResponse
+	if err := c.caller.Call(
+		ctx,
+		&core.CallParams{
+			URL:         endpointURL,
+			Method:      http.MethodGet,
+			MaxAttempts: options.MaxAttempts,
+			Headers:     headers,
+			Client:      options.HTTPClient,
+			Response:    &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Create Template and its first revision if the template does not exist, otherwise create a new revision of the template
+func (c *Client) CreateTemplateRevision(
+	ctx context.Context,
+	request *sgsdkgo.CreateTemplateRevisionRequest,
 	opts ...option.RequestOption,
 ) (*sgsdkgo.TemplateCreatePatchResponse, error) {
 	options := core.NewRequestOptions(opts...)
@@ -69,12 +120,13 @@ func (c *Client) CreateTemplateOrRevision(
 	return response, nil
 }
 
-// Read Template
-func (c *Client) ReadTemplate(
+// Read parent template or its revision
+func (c *Client) ReadTemplateRevision(
 	ctx context.Context,
 	org string,
 	template string,
 	templateType string,
+	request *sgsdkgo.ReadTemplateRevisionRequest,
 	opts ...option.RequestOption,
 ) (*sgsdkgo.TemplateGetResponse, error) {
 	options := core.NewRequestOptions(opts...)
@@ -94,6 +146,7 @@ func (c *Client) ReadTemplate(
 	)
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers.Add("x-sg-orgid", fmt.Sprintf("%v", request.SgOrgid))
 
 	var response *sgsdkgo.TemplateGetResponse
 	if err := c.caller.Call(
@@ -112,12 +165,13 @@ func (c *Client) ReadTemplate(
 	return response, nil
 }
 
-// Delete a template
-func (c *Client) DeleteArchiveTemplate(
+// Delete a template revision. A template parent is automatically deleted when all revisions are deleted.
+func (c *Client) DeleteTemplateRevision(
 	ctx context.Context,
 	org string,
 	template string,
 	templateType string,
+	request *sgsdkgo.DeleteTemplateRevisionRequest,
 	opts ...option.RequestOption,
 ) error {
 	options := core.NewRequestOptions(opts...)
@@ -137,6 +191,7 @@ func (c *Client) DeleteArchiveTemplate(
 	)
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers.Add("x-sg-orgid", fmt.Sprintf("%v", request.SgOrgid))
 
 	if err := c.caller.Call(
 		ctx,
@@ -153,7 +208,7 @@ func (c *Client) DeleteArchiveTemplate(
 	return nil
 }
 
-// Update Template Revision
+// Update parent template or its revision
 func (c *Client) UpdateTemplateRevision(
 	ctx context.Context,
 	org string,
@@ -191,6 +246,52 @@ func (c *Client) UpdateTemplateRevision(
 			Headers:     headers,
 			Client:      options.HTTPClient,
 			Request:     request,
+			Response:    &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// List all Templates and its revisions created or subscribed by the Organization
+func (c *Client) ListAllTemplates(
+	ctx context.Context,
+	// Type of the template
+	templateType sgsdkgo.ListAllTemplatesRequestTemplateType,
+	request *sgsdkgo.ListAllTemplatesRequest,
+	opts ...option.RequestOption,
+) (*sgsdkgo.ListallTemplatesResponse, error) {
+	options := core.NewRequestOptions(opts...)
+
+	baseURL := "https://api.app.stackguardian.io"
+	if c.baseURL != "" {
+		baseURL = c.baseURL
+	}
+	if options.BaseURL != "" {
+		baseURL = options.BaseURL
+	}
+	endpointURL := core.EncodeURL(baseURL+"/api/v1/templatetypes/%v/templates/listall/", templateType)
+
+	queryParams, err := core.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
+
+	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+
+	var response *sgsdkgo.ListallTemplatesResponse
+	if err := c.caller.Call(
+		ctx,
+		&core.CallParams{
+			URL:         endpointURL,
+			Method:      http.MethodGet,
+			MaxAttempts: options.MaxAttempts,
+			Headers:     headers,
+			Client:      options.HTTPClient,
 			Response:    &response,
 		},
 	); err != nil {

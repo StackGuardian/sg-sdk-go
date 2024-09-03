@@ -4,15 +4,16 @@ package api
 
 import (
 	json "encoding/json"
+	fmt "fmt"
 )
 
-type CreateTemplateOrRevisionRequest struct {
-	// Organization name of the template owner, e.g. my-sg-org
+type CreateTemplateRevisionRequest struct {
+	// Current organization name of the user, e.g. my-sg-org
 	SgOrgid string    `json:"-" url:"-"`
 	Body    *Template `json:"-" url:"-"`
 }
 
-func (c *CreateTemplateOrRevisionRequest) UnmarshalJSON(data []byte) error {
+func (c *CreateTemplateRevisionRequest) UnmarshalJSON(data []byte) error {
 	body := new(Template)
 	if err := json.Unmarshal(data, &body); err != nil {
 		return err
@@ -21,12 +22,38 @@ func (c *CreateTemplateOrRevisionRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (c *CreateTemplateOrRevisionRequest) MarshalJSON() ([]byte, error) {
+func (c *CreateTemplateRevisionRequest) MarshalJSON() ([]byte, error) {
 	return json.Marshal(c.Body)
 }
 
+type DeleteTemplateRevisionRequest struct {
+	// Current organization name of the user, e.g. my-sg-org
+	SgOrgid string `json:"-" url:"-"`
+}
+
+type ListAllTemplatesRequest struct {
+	// Pass 0 for private and 1 for public
+	IsPublic *string `json:"-" url:"IsPublic,omitempty"`
+	// Comma separated list of Organizations which own the template
+	OwnerOrgs *string `json:"-" url:"OwnerOrgs,omitempty"`
+	// Search using the name, tags or description of template
+	SearchQuery *string `json:"-" url:"SearchQuery,omitempty"`
+	// Parent Template Id to list all revisions
+	TemplateId *string `json:"-" url:"TemplateId,omitempty"`
+}
+
+type ReadSubscriptionRequest struct {
+	// Choose a type of template like IAC, IaC Group, Policy, Workflow Step to get subscriptions for
+	SubscriptionType ReadSubscriptionRequestSubscriptionType `json:"-" url:"subscriptionType"`
+}
+
+type ReadTemplateRevisionRequest struct {
+	// Current organization name of the user, e.g. my-sg-org
+	SgOrgid string `json:"-" url:"-"`
+}
+
 type PatchedTemplateUpdate struct {
-	// Organization name of the template owner, e.g. my-sg-org
+	// Current organization name of the user, e.g. my-sg-org
 	SgOrgid               string                 `json:"-" url:"-"`
 	IsPublic              *IsArchiveEnum         `json:"IsPublic,omitempty" url:"-"`
 	LongDescription       *string                `json:"LongDescription,omitempty" url:"-"`
@@ -40,4 +67,60 @@ type PatchedTemplateUpdate struct {
 	VcsTriggers           *VcsTriggers           `json:"VCSTriggers,omitempty" url:"-"`
 	TerraformIntelligence map[string]interface{} `json:"TerraformIntelligence,omitempty" url:"-"`
 	RuntimeSource         *RuntimeSource         `json:"RuntimeSource,omitempty" url:"-"`
+}
+
+type ListAllTemplatesRequestTemplateType string
+
+const (
+	ListAllTemplatesRequestTemplateTypeIac          ListAllTemplatesRequestTemplateType = "IAC"
+	ListAllTemplatesRequestTemplateTypeIacGroup     ListAllTemplatesRequestTemplateType = "IAC_GROUP"
+	ListAllTemplatesRequestTemplateTypeIacPolicy    ListAllTemplatesRequestTemplateType = "IAC_POLICY"
+	ListAllTemplatesRequestTemplateTypeWorkflowStep ListAllTemplatesRequestTemplateType = "WORKFLOW_STEP"
+)
+
+func NewListAllTemplatesRequestTemplateTypeFromString(s string) (ListAllTemplatesRequestTemplateType, error) {
+	switch s {
+	case "IAC":
+		return ListAllTemplatesRequestTemplateTypeIac, nil
+	case "IAC_GROUP":
+		return ListAllTemplatesRequestTemplateTypeIacGroup, nil
+	case "IAC_POLICY":
+		return ListAllTemplatesRequestTemplateTypeIacPolicy, nil
+	case "WORKFLOW_STEP":
+		return ListAllTemplatesRequestTemplateTypeWorkflowStep, nil
+	}
+	var t ListAllTemplatesRequestTemplateType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (l ListAllTemplatesRequestTemplateType) Ptr() *ListAllTemplatesRequestTemplateType {
+	return &l
+}
+
+type ReadSubscriptionRequestSubscriptionType string
+
+const (
+	ReadSubscriptionRequestSubscriptionTypeIacGroupSubscriptions ReadSubscriptionRequestSubscriptionType = "IACGroupSubscriptions"
+	ReadSubscriptionRequestSubscriptionTypeIacSubscriptions      ReadSubscriptionRequestSubscriptionType = "IACSubscriptions"
+	ReadSubscriptionRequestSubscriptionTypePolicySubscriptions   ReadSubscriptionRequestSubscriptionType = "PolicySubscriptions"
+	ReadSubscriptionRequestSubscriptionTypeWfStepSubscriptions   ReadSubscriptionRequestSubscriptionType = "WfStepSubscriptions"
+)
+
+func NewReadSubscriptionRequestSubscriptionTypeFromString(s string) (ReadSubscriptionRequestSubscriptionType, error) {
+	switch s {
+	case "IACGroupSubscriptions":
+		return ReadSubscriptionRequestSubscriptionTypeIacGroupSubscriptions, nil
+	case "IACSubscriptions":
+		return ReadSubscriptionRequestSubscriptionTypeIacSubscriptions, nil
+	case "PolicySubscriptions":
+		return ReadSubscriptionRequestSubscriptionTypePolicySubscriptions, nil
+	case "WfStepSubscriptions":
+		return ReadSubscriptionRequestSubscriptionTypeWfStepSubscriptions, nil
+	}
+	var t ReadSubscriptionRequestSubscriptionType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (r ReadSubscriptionRequestSubscriptionType) Ptr() *ReadSubscriptionRequestSubscriptionType {
+	return &r
 }

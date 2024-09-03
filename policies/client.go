@@ -68,8 +68,8 @@ func (c *Client) CreatePolicy(
 	return response, nil
 }
 
-// Get Policy
-func (c *Client) GetPolicy(
+// Read policy details in an organization
+func (c *Client) ReadPolicy(
 	ctx context.Context,
 	org string,
 	policy string,

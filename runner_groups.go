@@ -29,7 +29,7 @@ type RunnerDeregister struct {
 	ForceDeregister       *bool    `json:"ForceDeregister,omitempty" url:"-"`
 }
 
-type ReadRunnerGroupAttributesRequest struct {
+type ReadRunnerGroupRequest struct {
 	GetActiveWorkflows        *bool `json:"-" url:"getActiveWorkflows,omitempty"`
 	GetActiveWorkflowsDetails *bool `json:"-" url:"getActiveWorkflowsDetails,omitempty"`
 }

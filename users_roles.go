@@ -2,6 +2,13 @@
 
 package api
 
+type AddUserToOrganization struct {
+	UserId       string          `json:"userId" url:"-"`
+	EntityType   *EntityTypeEnum `json:"entityType,omitempty" url:"-"`
+	Role         string          `json:"role" url:"-"`
+	ResendInvite *bool           `json:"resendInvite,omitempty" url:"-"`
+}
+
 type PatchedRole struct {
 	ResourceName       *string                `json:"ResourceName,omitempty" url:"-"`
 	Description        *string                `json:"Description,omitempty" url:"-"`

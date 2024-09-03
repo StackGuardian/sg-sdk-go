@@ -66,12 +66,12 @@ func (c *Client) CreateNewRunnerGroup(
 	return nil
 }
 
-// Read Runner Group attributes
-func (c *Client) ReadRunnerGroupAttributes(
+// Read Runner Group
+func (c *Client) ReadRunnerGroup(
 	ctx context.Context,
 	org string,
 	runnerGroup string,
-	request *sgsdkgo.ReadRunnerGroupAttributesRequest,
+	request *sgsdkgo.ReadRunnerGroupRequest,
 	opts ...option.RequestOption,
 ) (map[string]interface{}, error) {
 	options := core.NewRequestOptions(opts...)

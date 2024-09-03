@@ -19,11 +19,6 @@ type Stack struct {
 	Operations               map[string]interface{}      `json:"Operations,omitempty" url:"-"`
 }
 
-type StackAction struct {
-	ResourceName *string        `json:"ResourceName,omitempty" url:"-"`
-	ActionType   ActionTypeEnum `json:"ActionType" url:"-"`
-}
-
 type PatchedStack struct {
 	ResourceName             *string                     `json:"ResourceName,omitempty" url:"-"`
 	Description              *string                     `json:"Description,omitempty" url:"-"`

@@ -212,8 +212,8 @@ func (c *Client) UpdateStack(
 	return response, nil
 }
 
-// Get outputs for a Stack
-func (c *Client) GetStackOutputs(
+// Read outputs for a Stack
+func (c *Client) ReadStackOutputs(
 	ctx context.Context,
 	org string,
 	stack string,
@@ -239,139 +239,6 @@ func (c *Client) GetStackOutputs(
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
 
 	var response *sgsdkgo.GeneratedStackOutputsResponse
-	if err := c.caller.Call(
-		ctx,
-		&core.CallParams{
-			URL:         endpointURL,
-			Method:      http.MethodGet,
-			MaxAttempts: options.MaxAttempts,
-			Headers:     headers,
-			Client:      options.HTTPClient,
-			Response:    &response,
-		},
-	); err != nil {
-		return nil, err
-	}
-	return response, nil
-}
-
-// Run Stack
-func (c *Client) RunStack(
-	ctx context.Context,
-	org string,
-	stack string,
-	wfGrp string,
-	request *sgsdkgo.StackAction,
-	opts ...option.RequestOption,
-) (*sgsdkgo.GeneratedStackRunsResponse, error) {
-	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/stackruns/",
-		org,
-		wfGrp,
-		stack,
-	)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
-	var response *sgsdkgo.GeneratedStackRunsResponse
-	if err := c.caller.Call(
-		ctx,
-		&core.CallParams{
-			URL:         endpointURL,
-			Method:      http.MethodPost,
-			MaxAttempts: options.MaxAttempts,
-			Headers:     headers,
-			Client:      options.HTTPClient,
-			Request:     request,
-			Response:    &response,
-		},
-	); err != nil {
-		return nil, err
-	}
-	return response, nil
-}
-
-// List all Workflow Runs in a Stack
-func (c *Client) GetStackRuns(
-	ctx context.Context,
-	org string,
-	stack string,
-	stackRun string,
-	wfGrp string,
-	opts ...option.RequestOption,
-) (*sgsdkgo.GeneratedStackRunsGetResponse, error) {
-	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/stackruns/%v",
-		org,
-		wfGrp,
-		stack,
-		stackRun,
-	)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
-	var response *sgsdkgo.GeneratedStackRunsGetResponse
-	if err := c.caller.Call(
-		ctx,
-		&core.CallParams{
-			URL:         endpointURL,
-			Method:      http.MethodGet,
-			MaxAttempts: options.MaxAttempts,
-			Headers:     headers,
-			Client:      options.HTTPClient,
-			Response:    &response,
-		},
-	); err != nil {
-		return nil, err
-	}
-	return response, nil
-}
-
-// List all Workflow Runs in a Stack
-func (c *Client) ListAllStackRuns(
-	ctx context.Context,
-	org string,
-	stack string,
-	wfGrp string,
-	opts ...option.RequestOption,
-) (*sgsdkgo.GeneratedStackRunsListAllResponse, error) {
-	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/stackruns/listall/",
-		org,
-		wfGrp,
-		stack,
-	)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
-	var response *sgsdkgo.GeneratedStackRunsListAllResponse
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{

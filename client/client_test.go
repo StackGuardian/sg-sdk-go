@@ -583,19 +583,19 @@ func TestNewClient(t *testing.T) {
 			option.WithBaseURL(SG_BASE_URL),
 		)
 		connectorName := "test-connector-go-sdk-test"
+		var settingsConfigArray []*sggosdk.SettingsConfig
+		settingsConfigArray = append(settingsConfigArray, &sggosdk.SettingsConfig{
+			ArmTenantId:       sggosdk.String("1"),
+			ArmSubscriptionId: sggosdk.String("1"),
+			ArmClientId:       sggosdk.String("1"),
+			ArmClientSecret:   sggosdk.String("1"),
+		})
 		createConnectorRequest := sggosdk.Integration{
 			ResourceName: sggosdk.String(connectorName),
 			Description:  sggosdk.String("test-connector description"),
 			Settings: &sggosdk.Settings{
-				Kind: sggosdk.SettingsKindEnumAzureStatic,
-				Config: []map[string]interface{}{
-					{
-						"armTenantId":       "1",
-						"armSubscriptionId": "1",
-						"armClientId":       "1",
-						"armClientSecret":   "1",
-					},
-				},
+				Kind:   sggosdk.SettingsKindEnumAzureStatic,
+				Config: settingsConfigArray,
 			},
 		}
 		createConnectorResponse, err := c.Connectors.CreateConnector(context.Background(), SG_ORG, &createConnectorRequest)
@@ -630,19 +630,19 @@ func TestNewClient(t *testing.T) {
 			option.WithBaseURL(SG_BASE_URL),
 		)
 		connectorName := "DummyConnectorForGoSDK"
+		var settingsConfigArray []*sggosdk.SettingsConfig
+		settingsConfigArray = append(settingsConfigArray, &sggosdk.SettingsConfig{
+			ArmTenantId:       sggosdk.String("1"),
+			ArmSubscriptionId: sggosdk.String("1"),
+			ArmClientId:       sggosdk.String("1"),
+			ArmClientSecret:   sggosdk.String("1"),
+		})
 		updateConnectorRequest := sggosdk.PatchedIntegration{
 			ResourceName: sggosdk.String(connectorName),
 			Description:  sggosdk.String("updated description"),
 			Settings: &sggosdk.Settings{
-				Kind: sggosdk.SettingsKindEnumAzureStatic,
-				Config: []map[string]interface{}{
-					{
-						"armTenantId":       "1",
-						"armSubscriptionId": "1",
-						"armClientId":       "1",
-						"armClientSecret":   "1",
-					},
-				},
+				Kind:   sggosdk.SettingsKindEnumAzureStatic,
+				Config: settingsConfigArray,
 			},
 		}
 		updateConnectorResponse, err := c.Connectors.UpdateConnector(context.Background(), *updateConnectorRequest.ResourceName, SG_ORG, &updateConnectorRequest)

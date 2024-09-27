@@ -17,7 +17,7 @@ type PatchedPolicy struct {
 	//
 	// * `0` - 0
 	// * `1` - 1
-	IsActive *IsActiveEnum `json:"IsActive,omitempty" url:"-"`
+	IsActive *IsArchiveEnum `json:"IsActive,omitempty" url:"-"`
 	// What the policy will be enforced on.
 	EnforcedOn []string `json:"EnforcedOn,omitempty" url:"-"`
 	// Policies Config for the policy

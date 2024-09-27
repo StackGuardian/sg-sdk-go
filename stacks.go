@@ -2,26 +2,6 @@
 
 package api
 
-type StackAction struct {
-	ResourceName *string        `json:"ResourceName,omitempty" url:"-"`
-	ActionType   ActionTypeEnum `json:"ActionType" url:"-"`
-}
-
-type PatchedStack struct {
-	ResourceName             *string                     `json:"ResourceName,omitempty" url:"-"`
-	Description              *string                     `json:"Description,omitempty" url:"-"`
-	Tags                     []string                    `json:"Tags,omitempty" url:"-"`
-	EnvironmentVariables     []*EnvVars                  `json:"EnvironmentVariables,omitempty" url:"-"`
-	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"-"`
-	Actions                  map[string]*Actions         `json:"Actions,omitempty" url:"-"`
-	WorkflowRelationsMap     map[string]interface{}      `json:"WorkflowRelationsMap,omitempty" url:"-"`
-	IsActive                 *IsActiveEnum               `json:"IsActive,omitempty" url:"-"`
-	Approvers                []string                    `json:"Approvers,omitempty" url:"-"`
-	TemplatesConfig          *TemplatesConfig            `json:"TemplatesConfig,omitempty" url:"-"`
-	UserSchedules            []*UserSchedules            `json:"UserSchedules,omitempty" url:"-"`
-	Operations               map[string]interface{}      `json:"Operations,omitempty" url:"-"`
-}
-
 type Stack struct {
 	// Triggers immediate stack creation process if true.
 	RunOnCreate              *bool                       `json:"-" url:"runOnCreate,omitempty"`
@@ -32,7 +12,22 @@ type Stack struct {
 	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"-"`
 	Actions                  map[string]*Actions         `json:"Actions,omitempty" url:"-"`
 	WorkflowRelationsMap     map[string]interface{}      `json:"WorkflowRelationsMap,omitempty" url:"-"`
-	IsActive                 *IsActiveEnum               `json:"IsActive,omitempty" url:"-"`
+	IsActive                 *IsArchiveEnum              `json:"IsActive,omitempty" url:"-"`
+	Approvers                []string                    `json:"Approvers,omitempty" url:"-"`
+	TemplatesConfig          *TemplatesConfig            `json:"TemplatesConfig,omitempty" url:"-"`
+	UserSchedules            []*UserSchedules            `json:"UserSchedules,omitempty" url:"-"`
+	Operations               map[string]interface{}      `json:"Operations,omitempty" url:"-"`
+}
+
+type PatchedStack struct {
+	ResourceName             *string                     `json:"ResourceName,omitempty" url:"-"`
+	Description              *string                     `json:"Description,omitempty" url:"-"`
+	Tags                     []string                    `json:"Tags,omitempty" url:"-"`
+	EnvironmentVariables     []*EnvVars                  `json:"EnvironmentVariables,omitempty" url:"-"`
+	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"-"`
+	Actions                  map[string]*Actions         `json:"Actions,omitempty" url:"-"`
+	WorkflowRelationsMap     map[string]interface{}      `json:"WorkflowRelationsMap,omitempty" url:"-"`
+	IsActive                 *IsArchiveEnum              `json:"IsActive,omitempty" url:"-"`
 	Approvers                []string                    `json:"Approvers,omitempty" url:"-"`
 	TemplatesConfig          *TemplatesConfig            `json:"TemplatesConfig,omitempty" url:"-"`
 	UserSchedules            []*UserSchedules            `json:"UserSchedules,omitempty" url:"-"`

@@ -30,53 +30,8 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
-// Create Workflow (Stack)
-func (c *Client) Create(
-	ctx context.Context,
-	org string,
-	stack string,
-	wfGrp string,
-	request *sgsdkgo.Workflow,
-	opts ...option.RequestOption,
-) (*sgsdkgo.GeneratedWorkflowCreateResponse, error) {
-	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/",
-		org,
-		wfGrp,
-		stack,
-	)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
-	var response *sgsdkgo.GeneratedWorkflowCreateResponse
-	if err := c.caller.Call(
-		ctx,
-		&core.CallParams{
-			URL:         endpointURL,
-			Method:      http.MethodPost,
-			MaxAttempts: options.MaxAttempts,
-			Headers:     headers,
-			Client:      options.HTTPClient,
-			Request:     request,
-			Response:    &response,
-		},
-	); err != nil {
-		return nil, err
-	}
-	return response, nil
-}
-
 // Read Workflow (Stack)
-func (c *Client) StackWorkflowGet(
+func (c *Client) ReadStackWorkflow(
 	ctx context.Context,
 	org string,
 	stack string,
@@ -121,7 +76,7 @@ func (c *Client) StackWorkflowGet(
 }
 
 // Delete Workflow (Stack)
-func (c *Client) StackWorkflowDelete(
+func (c *Client) DeleteStackWorkflow(
 	ctx context.Context,
 	org string,
 	stack string,
@@ -164,7 +119,7 @@ func (c *Client) StackWorkflowDelete(
 }
 
 // Update Workflow (Stack)
-func (c *Client) StackWorkflowPatch(
+func (c *Client) UpdateStackWorkflow(
 	ctx context.Context,
 	org string,
 	stack string,
@@ -211,7 +166,7 @@ func (c *Client) StackWorkflowPatch(
 }
 
 // List all artifacts (Stack)
-func (c *Client) ListAllArtifacts(
+func (c *Client) ListAllStackWorkflowsArtifacts(
 	ctx context.Context,
 	org string,
 	stack string,
@@ -256,7 +211,7 @@ func (c *Client) ListAllArtifacts(
 }
 
 // Workflow Outputs (Stack)
-func (c *Client) StackWorkflowOutput(
+func (c *Client) StackWorkflowOutputs(
 	ctx context.Context,
 	org string,
 	stack string,
@@ -301,7 +256,7 @@ func (c *Client) StackWorkflowOutput(
 }
 
 // List all Workflows (Stack)
-func (c *Client) ListAll(
+func (c *Client) ListAllStackWorkflows(
 	ctx context.Context,
 	org string,
 	stack string,

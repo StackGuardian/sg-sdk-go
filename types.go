@@ -121,7 +121,6 @@ type AddUserToOrganization struct {
 	UserId       string          `json:"userId" url:"userId"`
 	EntityType   *EntityTypeEnum `json:"entityType,omitempty" url:"entityType,omitempty"`
 	Role         string          `json:"role" url:"role"`
-	OrgId        string          `json:"orgId" url:"orgId"`
 	ResendInvite *bool           `json:"resendInvite,omitempty" url:"resendInvite,omitempty"`
 
 	extraProperties map[string]interface{}
@@ -1391,8 +1390,8 @@ func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsRegions) String() str
 }
 
 type GeneratedConnectorReadResponseMsgSettings struct {
-	Kind   string                   `json:"kind" url:"kind"`
-	Config []map[string]interface{} `json:"config,omitempty" url:"config,omitempty"`
+	Kind   string            `json:"kind" url:"kind"`
+	Config []*SettingsConfig `json:"config,omitempty" url:"config,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -10860,6 +10859,7 @@ func (g *GetorRemoveUserFromOrganization) String() string {
 }
 
 type IacInputData struct {
+	SchemaId   *string                    `json:"schemaId,omitempty" url:"schemaId,omitempty"`
 	SchemaType IacInputDataSchemaTypeEnum `json:"schemaType" url:"schemaType"`
 	Data       map[string]interface{}     `json:"data,omitempty" url:"data,omitempty"`
 
@@ -11051,9 +11051,13 @@ func (i InputDataSchemaTypeEnum) Ptr() *InputDataSchemaTypeEnum {
 }
 
 type InputSchemas struct {
+	Id           *string              `json:"id,omitempty" url:"id,omitempty"`
+	Name         *string              `json:"name,omitempty" url:"name,omitempty"`
+	Description  *string              `json:"description,omitempty" url:"description,omitempty"`
 	Type         InputSchemasTypeEnum `json:"type" url:"type"`
 	EncodedData  string               `json:"encodedData" url:"encodedData"`
 	UiSchemaData *string              `json:"uiSchemaData,omitempty" url:"uiSchemaData,omitempty"`
+	IsCommitted  *bool                `json:"isCommitted,omitempty" url:"isCommitted,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -12471,8 +12475,8 @@ func (r RuntimeSourceSourceConfigDestKindEnum) Ptr() *RuntimeSourceSourceConfigD
 }
 
 type Settings struct {
-	Kind   SettingsKindEnum         `json:"kind" url:"kind"`
-	Config []map[string]interface{} `json:"config,omitempty" url:"config,omitempty"`
+	Kind   SettingsKindEnum  `json:"kind" url:"kind"`
+	Config []*SettingsConfig `json:"config,omitempty" url:"config,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -12501,6 +12505,74 @@ func (s *Settings) UnmarshalJSON(data []byte) error {
 }
 
 func (s *Settings) String() string {
+	if len(s._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(s._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
+type SettingsConfig struct {
+	InstallationId          *string `json:"installationId,omitempty" url:"installationId,omitempty"`
+	AvatarUrl               *string `json:"avatar_url,omitempty" url:"avatar_url,omitempty"`
+	FailedGhapiCall         *string `json:"failedGHAPICall,omitempty" url:"failedGHAPICall,omitempty"`
+	Login                   *string `json:"login,omitempty" url:"login,omitempty"`
+	SetupAction             *string `json:"setupAction,omitempty" url:"setupAction,omitempty"`
+	GithubAppId             *string `json:"githubAppId,omitempty" url:"githubAppId,omitempty"`
+	GithubAppWebhookSecret  *string `json:"githubAppWebhookSecret,omitempty" url:"githubAppWebhookSecret,omitempty"`
+	GithubApiUrl            *string `json:"githubApiUrl,omitempty" url:"githubApiUrl,omitempty"`
+	GithubHttpUrl           *string `json:"githubHttpUrl,omitempty" url:"githubHttpUrl,omitempty"`
+	GithubAppClientId       *string `json:"githubAppClientId,omitempty" url:"githubAppClientId,omitempty"`
+	GithubAppClientSecret   *string `json:"githubAppClientSecret,omitempty" url:"githubAppClientSecret,omitempty"`
+	GithubAppPemFileContent *string `json:"githubAppPemFileContent,omitempty" url:"githubAppPemFileContent,omitempty"`
+	GithubAppWebhookUrl     *string `json:"githubAppWebhookURL,omitempty" url:"githubAppWebhookURL,omitempty"`
+	GitlabCreds             *string `json:"gitlabCreds,omitempty" url:"gitlabCreds,omitempty"`
+	GitlabHttpUrl           *string `json:"gitlabHttpUrl,omitempty" url:"gitlabHttpUrl,omitempty"`
+	GitlabApiUrl            *string `json:"gitlabApiUrl,omitempty" url:"gitlabApiUrl,omitempty"`
+	AzureCreds              *string `json:"azureCreds,omitempty" url:"azureCreds,omitempty"`
+	AzureDevopsHttpUrl      *string `json:"azureDevopsHttpUrl,omitempty" url:"azureDevopsHttpUrl,omitempty"`
+	AzureDevopsApiUrl       *string `json:"azureDevopsApiUrl,omitempty" url:"azureDevopsApiUrl,omitempty"`
+	BitbucketCreds          *string `json:"bitbucketCreds,omitempty" url:"bitbucketCreds,omitempty"`
+	AwsAccessKeyId          *string `json:"awsAccessKeyId,omitempty" url:"awsAccessKeyId,omitempty"`
+	AwsSecretAccessKey      *string `json:"awsSecretAccessKey,omitempty" url:"awsSecretAccessKey,omitempty"`
+	AwsDefaultRegion        *string `json:"awsDefaultRegion,omitempty" url:"awsDefaultRegion,omitempty"`
+	ArmTenantId             *string `json:"armTenantId,omitempty" url:"armTenantId,omitempty"`
+	ArmSubscriptionId       *string `json:"armSubscriptionId,omitempty" url:"armSubscriptionId,omitempty"`
+	ArmClientId             *string `json:"armClientId,omitempty" url:"armClientId,omitempty"`
+	ArmClientSecret         *string `json:"armClientSecret,omitempty" url:"armClientSecret,omitempty"`
+	GcpConfigFileContent    *string `json:"gcpConfigFileContent,omitempty" url:"gcpConfigFileContent,omitempty"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (s *SettingsConfig) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
+}
+
+func (s *SettingsConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler SettingsConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = SettingsConfig(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+
+	s._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *SettingsConfig) String() string {
 	if len(s._rawJSON) > 0 {
 		if value, err := core.StringifyJSON(s._rawJSON); err == nil {
 			return value
@@ -12709,6 +12781,7 @@ type Template struct {
 	IsActive              *IsArchiveEnum         `json:"IsActive,omitempty" url:"IsActive,omitempty"`
 	IsPublic              *IsArchiveEnum         `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
 	TerraformIntelligence map[string]interface{} `json:"TerraformIntelligence,omitempty" url:"TerraformIntelligence,omitempty"`
+	DefaultSchema         *string                `json:"DefaultSchema,omitempty" url:"DefaultSchema,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage

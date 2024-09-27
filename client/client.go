@@ -3,6 +3,8 @@
 package client
 
 import (
+	http "net/http"
+
 	connectors "github.com/StackGuardian/sg-sdk-go/connectors"
 	core "github.com/StackGuardian/sg-sdk-go/core"
 	option "github.com/StackGuardian/sg-sdk-go/option"
@@ -19,7 +21,6 @@ import (
 	workflowrunfacts "github.com/StackGuardian/sg-sdk-go/workflowrunfacts"
 	workflowruns "github.com/StackGuardian/sg-sdk-go/workflowruns"
 	workflows "github.com/StackGuardian/sg-sdk-go/workflows"
-	http "net/http"
 )
 
 type Client struct {
@@ -28,8 +29,8 @@ type Client struct {
 	header  http.Header
 
 	Organizations         *organizations.Client
-	Connectors            *connectors.Client
 	UsersRoles            *usersroles.Client
+	Connectors            *connectors.Client
 	Policies              *policies.Client
 	RunnerGroups          *runnergroups.Client
 	Templates             *templates.Client
@@ -55,8 +56,8 @@ func NewClient(opts ...option.RequestOption) *Client {
 		),
 		header:                options.ToHeader(),
 		Organizations:         organizations.NewClient(opts...),
-		Connectors:            connectors.NewClient(opts...),
 		UsersRoles:            usersroles.NewClient(opts...),
+		Connectors:            connectors.NewClient(opts...),
 		Policies:              policies.NewClient(opts...),
 		RunnerGroups:          runnergroups.NewClient(opts...),
 		Templates:             templates.NewClient(opts...),

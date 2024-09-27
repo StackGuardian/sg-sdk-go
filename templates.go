@@ -68,6 +68,7 @@ type PatchedTemplateUpdate struct {
 	GitHubComSync         map[string]interface{} `json:"GitHubComSync,omitempty" url:"-"`
 	VcsTriggers           *VcsTriggers           `json:"VCSTriggers,omitempty" url:"-"`
 	TerraformIntelligence map[string]interface{} `json:"TerraformIntelligence,omitempty" url:"-"`
+	DefaultSchema         *string                `json:"DefaultSchema,omitempty" url:"-"`
 	RuntimeSource         *RuntimeSource         `json:"RuntimeSource,omitempty" url:"-"`
 }
 

@@ -964,4 +964,63 @@ func TestNewClient(t *testing.T) {
 	// 	assert.NotEmpty(t, updateUserResponse.Msg)
 	// })
 
+	t.Run("create_and_delete_policy", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		createPolicyRequest := sggosdk.Policy{
+			ResourceName:              sggosdk.String("GoSDKTestPolicyCreate"),
+			Description:               sggosdk.String("SDK Test Policy Description"),
+			NumberOfApprovalsRequired: sggosdk.Int(1),
+		}
+		createPolicyResponse, err := c.Policies.CreatePolicy(context.Background(), SG_ORG, &createPolicyRequest)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, createPolicyResponse.Msg)
+		assert.Equal(t, "Policy "+*createPolicyRequest.ResourceName+" created", *createPolicyResponse.Msg)
+
+		//TODO: Add response
+		err = c.Policies.DeletePolicy(context.Background(), SG_ORG, *createPolicyRequest.ResourceName)
+		assert.Empty(t, err)
+	})
+
+	t.Run("read_policies", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		policyName := "SDKTestPolicyForUpdate"
+		readPolicyResponse, err := c.Policies.ReadPolicy(context.Background(), SG_ORG, policyName)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, readPolicyResponse.Msg)
+		assert.Equal(t, policyName, *readPolicyResponse.Msg.ResourceName)
+	})
+
+	t.Run("listAll_policies", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		//TODO: Add response
+		err := c.Policies.ListAllPolicies(context.Background(), SG_ORG)
+		assert.Empty(t, err)
+	})
+
+	t.Run("update_policy", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		policyName := "SDKTestPolicyForUpdate"
+		updatePolicyRequest := sggosdk.PatchedPolicy{
+			ResourceName:              sggosdk.String(policyName),
+			Description:               sggosdk.String("Updated SDK Test Policy Description"),
+			NumberOfApprovalsRequired: sggosdk.Int(3),
+		}
+		createPolicyResponse, err := c.Policies.UpdatePolicy(context.Background(), SG_ORG, policyName, &updatePolicyRequest)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, createPolicyResponse.Msg)
+		assert.Equal(t, "Policy "+*updatePolicyRequest.ResourceName+" updated", *createPolicyResponse.Msg)
+	})
+
 }

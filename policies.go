@@ -2,24 +2,28 @@
 
 package api
 
+import (
+	core "github.com/StackGuardian/sg-sdk-go/core"
+)
+
 type PatchedPolicy struct {
 	// Resource Name of the policy
-	ResourceName *string `json:"ResourceName,omitempty" url:"-"`
+	ResourceName *core.Optional[string] `json:"ResourceName,omitempty" url:"-"`
 	// Description of the policy
-	Description *string `json:"Description,omitempty" url:"-"`
+	Description *core.Optional[string] `json:"Description,omitempty" url:"-"`
 	// List of IDs of the approvers for the policy
-	Approvers []string `json:"Approvers,omitempty" url:"-"`
+	Approvers *core.Optional[[]string] `json:"Approvers,omitempty" url:"-"`
 	// Number of approvals required for the policy to be enforced
-	NumberOfApprovalsRequired *int `json:"NumberOfApprovalsRequired,omitempty" url:"-"`
+	NumberOfApprovalsRequired *core.Optional[int] `json:"NumberOfApprovalsRequired,omitempty" url:"-"`
 	// Tags for the policy
-	Tags []string `json:"Tags,omitempty" url:"-"`
+	Tags *core.Optional[[]string] `json:"Tags,omitempty" url:"-"`
 	// Should the policy be active?, choices are 0 or 1
 	//
 	// * `0` - 0
 	// * `1` - 1
-	IsActive *IsArchiveEnum `json:"IsActive,omitempty" url:"-"`
+	IsActive *core.Optional[IsArchiveEnum] `json:"IsActive,omitempty" url:"-"`
 	// What the policy will be enforced on.
-	EnforcedOn []string `json:"EnforcedOn,omitempty" url:"-"`
+	EnforcedOn *core.Optional[[]string] `json:"EnforcedOn,omitempty" url:"-"`
 	// Policies Config for the policy
-	PoliciesConfig []*PoliciesConfig `json:"PoliciesConfig,omitempty" url:"-"`
+	PoliciesConfig *core.Optional[[]*PoliciesConfig] `json:"PoliciesConfig,omitempty" url:"-"`
 }

@@ -2,22 +2,26 @@
 
 package api
 
+import (
+	core "github.com/StackGuardian/sg-sdk-go/core"
+)
+
 type Integration struct {
-	ResourceName      *string            `json:"ResourceName,omitempty" url:"-"`
-	Description       *string            `json:"Description,omitempty" url:"-"`
-	Settings          *Settings          `json:"Settings,omitempty" url:"-"`
-	DiscoverySettings *Discoverysettings `json:"DiscoverySettings,omitempty" url:"-"`
-	IsActive          *IsArchiveEnum     `json:"IsActive,omitempty" url:"-"`
-	Scope             []string           `json:"Scope,omitempty" url:"-"`
-	Tags              []string           `json:"Tags,omitempty" url:"-"`
+	ResourceName      *core.Optional[string]            `json:"ResourceName,omitempty" url:"-"`
+	Description       *core.Optional[string]            `json:"Description,omitempty" url:"-"`
+	Settings          *core.Optional[Settings]          `json:"Settings,omitempty" url:"-"`
+	DiscoverySettings *core.Optional[Discoverysettings] `json:"DiscoverySettings,omitempty" url:"-"`
+	IsActive          *core.Optional[IsArchiveEnum]     `json:"IsActive,omitempty" url:"-"`
+	Scope             *core.Optional[[]string]          `json:"Scope,omitempty" url:"-"`
+	Tags              *core.Optional[[]string]          `json:"Tags,omitempty" url:"-"`
 }
 
 type PatchedIntegration struct {
-	ResourceName      *string            `json:"ResourceName,omitempty" url:"-"`
-	Description       *string            `json:"Description,omitempty" url:"-"`
-	Settings          *Settings          `json:"Settings,omitempty" url:"-"`
-	DiscoverySettings *Discoverysettings `json:"DiscoverySettings,omitempty" url:"-"`
-	IsActive          *IsArchiveEnum     `json:"IsActive,omitempty" url:"-"`
-	Scope             []string           `json:"Scope,omitempty" url:"-"`
-	Tags              []string           `json:"Tags,omitempty" url:"-"`
+	ResourceName      *core.Optional[string]            `json:"ResourceName,omitempty" url:"-"`
+	Description       *core.Optional[string]            `json:"Description,omitempty" url:"-"`
+	Settings          *core.Optional[Settings]          `json:"Settings,omitempty" url:"-"`
+	DiscoverySettings *core.Optional[Discoverysettings] `json:"DiscoverySettings,omitempty" url:"-"`
+	IsActive          *core.Optional[IsArchiveEnum]     `json:"IsActive,omitempty" url:"-"`
+	Scope             *core.Optional[[]string]          `json:"Scope,omitempty" url:"-"`
+	Tags              *core.Optional[[]string]          `json:"Tags,omitempty" url:"-"`
 }

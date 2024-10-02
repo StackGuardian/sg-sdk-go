@@ -2,22 +2,26 @@
 
 package api
 
+import (
+	core "github.com/StackGuardian/sg-sdk-go/core"
+)
+
 type PatchedWorkflowGroup struct {
-	ResourceName  *string        `json:"ResourceName,omitempty" url:"-"`
-	Description   *string        `json:"Description,omitempty" url:"-"`
-	Tags          []string       `json:"Tags,omitempty" url:"-"`
-	IsActive      *IsArchiveEnum `json:"IsActive,omitempty" url:"-"`
-	ParentId      *string        `json:"ParentId,omitempty" url:"-"`
-	ResourceId    *string        `json:"ResourceId,omitempty" url:"-"`
-	WfGrpParentId *string        `json:"WfGrpParentId,omitempty" url:"-"`
-	WfGrpFullId   *string        `json:"WfGrpFullId,omitempty" url:"-"`
-	OrgId         *string        `json:"OrgId,omitempty" url:"-"`
-	SubResourceId *string        `json:"SubResourceId,omitempty" url:"-"`
-	WfgrpIndexId  *string        `json:"WfgrpIndexId,omitempty" url:"-"`
-	Authors       []string       `json:"Authors,omitempty" url:"-"`
-	IsArchive     *string        `json:"IsArchive,omitempty" url:"-"`
-	ResourceType  *string        `json:"ResourceType,omitempty" url:"-"`
-	DocVersion    *string        `json:"DocVersion,omitempty" url:"-"`
-	CreatorEnv    *string        `json:"CreatorEnv,omitempty" url:"-"`
-	SgOwned       *bool          `json:"SGOwned,omitempty" url:"-"`
+	ResourceName  *core.Optional[string]        `json:"ResourceName,omitempty" url:"-"`
+	Description   *core.Optional[string]        `json:"Description,omitempty" url:"-"`
+	Tags          *core.Optional[[]string]      `json:"Tags,omitempty" url:"-"`
+	IsActive      *core.Optional[IsArchiveEnum] `json:"IsActive,omitempty" url:"-"`
+	ParentId      *core.Optional[string]        `json:"ParentId,omitempty" url:"-"`
+	ResourceId    *core.Optional[string]        `json:"ResourceId,omitempty" url:"-"`
+	WfGrpParentId *core.Optional[string]        `json:"WfGrpParentId,omitempty" url:"-"`
+	WfGrpFullId   *core.Optional[string]        `json:"WfGrpFullId,omitempty" url:"-"`
+	OrgId         *core.Optional[string]        `json:"OrgId,omitempty" url:"-"`
+	SubResourceId *core.Optional[string]        `json:"SubResourceId,omitempty" url:"-"`
+	WfgrpIndexId  *core.Optional[string]        `json:"WfgrpIndexId,omitempty" url:"-"`
+	Authors       *core.Optional[[]string]      `json:"Authors,omitempty" url:"-"`
+	IsArchive     *core.Optional[string]        `json:"IsArchive,omitempty" url:"-"`
+	ResourceType  *core.Optional[string]        `json:"ResourceType,omitempty" url:"-"`
+	DocVersion    *core.Optional[string]        `json:"DocVersion,omitempty" url:"-"`
+	CreatorEnv    *core.Optional[string]        `json:"CreatorEnv,omitempty" url:"-"`
+	SgOwned       *core.Optional[bool]          `json:"SGOwned,omitempty" url:"-"`
 }

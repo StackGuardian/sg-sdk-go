@@ -62,15 +62,15 @@ func TestNewClient(t *testing.T) {
 			option.WithBaseURL(SG_BASE_URL),
 		)
 		createWorkflowRequest := sggosdk.Workflow{
-			DeploymentPlatformConfig: []*sggosdk.DeploymentPlatformConfig{{
+			DeploymentPlatformConfig: sggosdk.Optional([]*sggosdk.DeploymentPlatformConfig{{
 				Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
 				Config: map[string]interface{}{
 					"profileName":   "DummyConnectorForGoSDK",
-					"integrationId": "/integrations/DummyConnectorForGoSDK"}}},
-			WfType: sggosdk.WfTypeEnumCustom.Ptr(),
-			EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
-				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}},
-			VcsConfig: &sggosdk.VcsConfig{
+					"integrationId": "/integrations/DummyConnectorForGoSDK"}}}),
+			WfType: sggosdk.Optional(*sggosdk.WfTypeEnumCustom.Ptr()),
+			EnvironmentVariables: sggosdk.Optional([]*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
+				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}}),
+			VcsConfig: sggosdk.Optional(sggosdk.VcsConfig{
 				IacVcsConfig: &sggosdk.IacvcsConfig{
 					IacTemplateId:          sggosdk.String("/demo-org/ansible-dummy:3"),
 					UseMarketplaceTemplate: true,
@@ -81,13 +81,13 @@ func TestNewClient(t *testing.T) {
 						"bucket_region": "eu-central-1",
 					},
 				},
-			},
-			UserJobCpu:    sggosdk.Int(512),
-			UserJobMemory: sggosdk.Int(1024),
-			RunnerConstraints: &sggosdk.RunnerConstraints{
+			}),
+			UserJobCpu:    sggosdk.Optional(512),
+			UserJobMemory: sggosdk.Optional(1024),
+			RunnerConstraints: sggosdk.Optional(sggosdk.RunnerConstraints{
 				Type: "shared",
-			},
-			Description: sggosdk.String("Dummy Workflow for GoSDK"),
+			}),
+			Description: sggosdk.Optional("Dummy Workflow for GoSDK"),
 		}
 		createResponse, err := c.Workflows.CreateWorkflow(context.Background(), SG_ORG, SG_WF_GROUP, &createWorkflowRequest)
 		assert.Empty(t, err)
@@ -408,15 +408,15 @@ func TestNewClient(t *testing.T) {
 		)
 
 		updateWfRunRequest := sggosdk.PatchedWorkflowRun{
-			DeploymentPlatformConfig: []*sggosdk.DeploymentPlatformConfig{{
+			DeploymentPlatformConfig: sggosdk.Optional([]*sggosdk.DeploymentPlatformConfig{{
 				Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
 				Config: map[string]interface{}{
 					"profileName":   "testAWSConnector",
-					"integrationId": "/integrations/testAWSConnector"}}},
-			WfType: sggosdk.WfTypeEnumTerraform.Ptr(),
-			EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
-				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("UpdatedValue")}}},
-			VcsConfig: &sggosdk.VcsConfig{
+					"integrationId": "/integrations/testAWSConnector"}}}),
+			WfType: sggosdk.Optional(*sggosdk.WfTypeEnumTerraform.Ptr()),
+			EnvironmentVariables: sggosdk.Optional([]*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
+				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("UpdatedValue")}}}),
+			VcsConfig: sggosdk.Optional(sggosdk.VcsConfig{
 				IacVcsConfig: &sggosdk.IacvcsConfig{
 					IacTemplateId:          sggosdk.String("/stackguardian/aws-s3-demo-website:16"),
 					UseMarketplaceTemplate: true,
@@ -427,12 +427,12 @@ func TestNewClient(t *testing.T) {
 						"bucket_region": "eu-central-1",
 					},
 				},
-			},
-			UserJobCpu:    sggosdk.Int(512),
-			UserJobMemory: sggosdk.Int(1024),
-			RunnerConstraints: &sggosdk.RunnerConstraints{
+			}),
+			UserJobCpu:    sggosdk.Optional(512),
+			UserJobMemory: sggosdk.Optional(1024),
+			RunnerConstraints: sggosdk.Optional(sggosdk.RunnerConstraints{
 				Type: "shared",
-			},
+			}),
 		}
 		updateWfRunResponse, err := c.WorkflowRuns.UpdateWorkflowRun(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, SG_WF_RUN, &updateWfRunRequest)
 		assert.Empty(t, err)
@@ -497,7 +497,7 @@ func TestNewClient(t *testing.T) {
 		)
 		runStackRequest := sggosdk.StackAction{
 			ActionType:   sggosdk.ActionTypeEnumApply,
-			ResourceName: sggosdk.String("5srghvu1y7nn"),
+			ResourceName: sggosdk.Optional("5srghvu1y7nn"),
 		}
 		response, err := c.StackWorkflowRuns.CreateStackRun(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP, &runStackRequest)
 		assert.Empty(t, err)
@@ -530,16 +530,16 @@ func TestNewClient(t *testing.T) {
 			option.WithBaseURL(SG_BASE_URL),
 		)
 		createStackRequest := sggosdk.PatchedStack{
-			DeploymentPlatformConfig: []*sggosdk.DeploymentPlatformConfig{{
+			DeploymentPlatformConfig: sggosdk.Optional([]*sggosdk.DeploymentPlatformConfig{{
 				Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
 				Config: map[string]interface{}{
 					"profileName":   "DummyConnectorForGoSDK",
-					"integrationId": "/integrations/DummyConnectorForGoSDK"}}},
-			EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
-				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}},
+					"integrationId": "/integrations/DummyConnectorForGoSDK"}}}),
+			EnvironmentVariables: sggosdk.Optional([]*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
+				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}}),
 
-			Description: sggosdk.String("Dummy Stack for GoSDK"),
-			TemplatesConfig: &sggosdk.TemplatesConfig{
+			Description: sggosdk.Optional("Dummy Stack for GoSDK"),
+			TemplatesConfig: sggosdk.Optional(sggosdk.TemplatesConfig{
 				TemplateGroupId: sggosdk.String("/demo-org/ansible:4"),
 				Templates: []*sggosdk.TemplateWorkflow{{
 					NumberOfApprovalsRequired: sggosdk.Int(0),
@@ -547,7 +547,7 @@ func TestNewClient(t *testing.T) {
 					WfType:                    sggosdk.WfTypeEnumCustom.Ptr(),
 					Id:                        sggosdk.String("cc0061e9-a75c-421b-a75b-ef918e9f4b28"),
 				}},
-			},
+			}),
 		}
 		updateStackResponse, err := c.Stacks.UpdateStack(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP, &createStackRequest)
 		assert.Empty(t, err)
@@ -591,17 +591,17 @@ func TestNewClient(t *testing.T) {
 			ArmClientSecret:   sggosdk.String("1"),
 		})
 		createConnectorRequest := sggosdk.Integration{
-			ResourceName: sggosdk.String(connectorName),
-			Description:  sggosdk.String("test-connector description"),
-			Settings: &sggosdk.Settings{
+			ResourceName: sggosdk.Optional(connectorName),
+			Description:  sggosdk.Optional("test-connector description"),
+			Settings: sggosdk.Optional(sggosdk.Settings{
 				Kind:   sggosdk.SettingsKindEnumAzureStatic,
 				Config: settingsConfigArray,
-			},
+			}),
 		}
 		createConnectorResponse, err := c.Connectors.CreateConnector(context.Background(), SG_ORG, &createConnectorRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, createConnectorResponse.Msg)
-		assert.Equal(t, "Connector "+*createConnectorRequest.ResourceName+" created", *createConnectorResponse.Msg)
+		assert.Equal(t, "Connector "+connectorName+" created", *createConnectorResponse.Msg)
 		//Check that the response contains the resource name
 		assert.NotEmpty(t, createConnectorResponse.Data.ResourceName)
 		assert.Equal(t, connectorName, createConnectorResponse.Data.ResourceName)
@@ -638,14 +638,14 @@ func TestNewClient(t *testing.T) {
 			ArmClientSecret:   sggosdk.String("1"),
 		})
 		updateConnectorRequest := sggosdk.PatchedIntegration{
-			ResourceName: sggosdk.String(connectorName),
-			Description:  sggosdk.String("updated description"),
-			Settings: &sggosdk.Settings{
+			ResourceName: sggosdk.Optional(connectorName),
+			Description:  sggosdk.Optional("updated description"),
+			Settings: sggosdk.Optional(sggosdk.Settings{
 				Kind:   sggosdk.SettingsKindEnumAzureStatic,
 				Config: settingsConfigArray,
-			},
+			}),
 		}
-		updateConnectorResponse, err := c.Connectors.UpdateConnector(context.Background(), *updateConnectorRequest.ResourceName, SG_ORG, &updateConnectorRequest)
+		updateConnectorResponse, err := c.Connectors.UpdateConnector(context.Background(), connectorName, SG_ORG, &updateConnectorRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, updateConnectorResponse.Msg)
 		assert.Equal(t, "Integration "+connectorName+" updated", *updateConnectorResponse.Msg)
@@ -692,11 +692,11 @@ func TestNewClient(t *testing.T) {
 		)
 		workflowGroupName := "go-sdk-test-wfg"
 		updateWorkflowGroupRequest := sggosdk.PatchedWorkflowGroup{
-			ResourceName: sggosdk.String(workflowGroupName),
-			Description:  sggosdk.String("updated description"),
-			IsActive:     sggosdk.IsArchiveEnumZero.Ptr(),
+			ResourceName: sggosdk.Optional(workflowGroupName),
+			Description:  sggosdk.Optional("updated description"),
+			IsActive:     sggosdk.Optional(*sggosdk.IsArchiveEnumZero.Ptr()),
 		}
-		updateWorkflowGroupResponse, err := c.WorkflowGroups.UpdateWorkflowGroup(context.Background(), SG_ORG, *updateWorkflowGroupRequest.ResourceName, &updateWorkflowGroupRequest)
+		updateWorkflowGroupResponse, err := c.WorkflowGroups.UpdateWorkflowGroup(context.Background(), SG_ORG, workflowGroupName, &updateWorkflowGroupRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, updateWorkflowGroupResponse.Msg)
 		assert.Equal(t, "Workflow Group "+workflowGroupName+" updated", *updateWorkflowGroupResponse.Msg)
@@ -711,8 +711,8 @@ func TestNewClient(t *testing.T) {
 		workflowGroupName := "sg-sdk-go-test/1bger5ydab697a4jxe2gu"
 		updateWorkflowGroupRequest := sggosdk.PatchedWorkflowGroup{
 			// ResourceName: sggosdk.String(workflowGroupName),
-			Description: sggosdk.String("updated description"),
-			IsActive:    sggosdk.IsArchiveEnumZero.Ptr(),
+			Description: sggosdk.Optional("updated description"),
+			IsActive:    sggosdk.Optional(*sggosdk.IsArchiveEnumZero.Ptr()),
 		}
 		updateWorkflowGroupResponse, err := c.WorkflowGroups.UpdateWorkflowGroup(context.Background(), SG_ORG, workflowGroupName, &updateWorkflowGroupRequest)
 		assert.Empty(t, err)
@@ -1013,14 +1013,14 @@ func TestNewClient(t *testing.T) {
 		)
 		policyName := "SDKTestPolicyForUpdate"
 		updatePolicyRequest := sggosdk.PatchedPolicy{
-			ResourceName:              sggosdk.String(policyName),
-			Description:               sggosdk.String("Updated SDK Test Policy Description"),
-			NumberOfApprovalsRequired: sggosdk.Int(3),
+			ResourceName:              sggosdk.Optional(policyName),
+			Description:               sggosdk.Optional("Updated SDK Test Policy Description"),
+			NumberOfApprovalsRequired: sggosdk.Optional(3),
 		}
 		createPolicyResponse, err := c.Policies.UpdatePolicy(context.Background(), SG_ORG, policyName, &updatePolicyRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, createPolicyResponse.Msg)
-		assert.Equal(t, "Policy "+*updatePolicyRequest.ResourceName+" updated", *createPolicyResponse.Msg)
+		assert.Equal(t, "Policy "+policyName+" updated", *createPolicyResponse.Msg)
 	})
 
 }

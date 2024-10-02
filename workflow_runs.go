@@ -2,20 +2,24 @@
 
 package api
 
+import (
+	core "github.com/StackGuardian/sg-sdk-go/core"
+)
+
 type PatchedWorkflowRun struct {
-	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"-"`
-	WfStepsConfig            []*WfStepsConfig            `json:"WfStepsConfig,omitempty" url:"-"`
-	EnvironmentVariables     []*EnvVars                  `json:"EnvironmentVariables,omitempty" url:"-"`
-	WfType                   *WfTypeEnum                 `json:"WfType,omitempty" url:"-"`
-	TerraformConfig          map[string]interface{}      `json:"TerraformConfig,omitempty" url:"-"`
-	TerraformAction          *TerraformAction            `json:"TerraformAction,omitempty" url:"-"`
-	TriggerDetails           map[string]interface{}      `json:"TriggerDetails,omitempty" url:"-"`
-	ScheduledAt              *string                     `json:"ScheduledAt,omitempty" url:"-"`
-	VcsConfig                *VcsConfig                  `json:"VCSConfig,omitempty" url:"-"`
-	SgInternals              map[string]interface{}      `json:"SGInternals,omitempty" url:"-"`
-	RunnerConstraints        *RunnerConstraints          `json:"RunnerConstraints,omitempty" url:"-"`
-	UserJobCpu               *int                        `json:"UserJobCPU,omitempty" url:"-"`
-	UserJobMemory            *int                        `json:"UserJobMemory,omitempty" url:"-"`
-	EnableChaining           *bool                       `json:"EnableChaining,omitempty" url:"-"`
-	MiniSteps                map[string]interface{}      `json:"MiniSteps,omitempty" url:"-"`
+	DeploymentPlatformConfig *core.Optional[[]*DeploymentPlatformConfig] `json:"DeploymentPlatformConfig,omitempty" url:"-"`
+	WfStepsConfig            *core.Optional[[]*WfStepsConfig]            `json:"WfStepsConfig,omitempty" url:"-"`
+	EnvironmentVariables     *core.Optional[[]*EnvVars]                  `json:"EnvironmentVariables,omitempty" url:"-"`
+	WfType                   *core.Optional[WfTypeEnum]                  `json:"WfType,omitempty" url:"-"`
+	TerraformConfig          *core.Optional[map[string]interface{}]      `json:"TerraformConfig,omitempty" url:"-"`
+	TerraformAction          *core.Optional[TerraformAction]             `json:"TerraformAction,omitempty" url:"-"`
+	TriggerDetails           *core.Optional[map[string]interface{}]      `json:"TriggerDetails,omitempty" url:"-"`
+	ScheduledAt              *core.Optional[string]                      `json:"ScheduledAt,omitempty" url:"-"`
+	VcsConfig                *core.Optional[VcsConfig]                   `json:"VCSConfig,omitempty" url:"-"`
+	SgInternals              *core.Optional[map[string]interface{}]      `json:"SGInternals,omitempty" url:"-"`
+	RunnerConstraints        *core.Optional[RunnerConstraints]           `json:"RunnerConstraints,omitempty" url:"-"`
+	UserJobCpu               *core.Optional[int]                         `json:"UserJobCPU,omitempty" url:"-"`
+	UserJobMemory            *core.Optional[int]                         `json:"UserJobMemory,omitempty" url:"-"`
+	EnableChaining           *core.Optional[bool]                        `json:"EnableChaining,omitempty" url:"-"`
+	MiniSteps                *core.Optional[map[string]interface{}]      `json:"MiniSteps,omitempty" url:"-"`
 }

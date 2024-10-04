@@ -3,25 +3,132 @@
 package api
 
 import (
+	json "encoding/json"
+	fmt "fmt"
+
 	core "github.com/StackGuardian/sg-sdk-go/core"
 )
 
 type Integration struct {
-	ResourceName      *core.Optional[string]            `json:"ResourceName,omitempty" url:"-"`
-	Description       *core.Optional[string]            `json:"Description,omitempty" url:"-"`
-	Settings          *core.Optional[Settings]          `json:"Settings,omitempty" url:"-"`
-	DiscoverySettings *core.Optional[Discoverysettings] `json:"DiscoverySettings,omitempty" url:"-"`
-	IsActive          *core.Optional[IsArchiveEnum]     `json:"IsActive,omitempty" url:"-"`
-	Scope             *core.Optional[[]string]          `json:"Scope,omitempty" url:"-"`
-	Tags              *core.Optional[[]string]          `json:"Tags,omitempty" url:"-"`
+	ResourceName      *core.Optional[string]              `json:"ResourceName,omitempty" url:"-"`
+	Description       *core.Optional[string]              `json:"Description,omitempty" url:"-"`
+	Settings          *core.Optional[Settings]            `json:"Settings,omitempty" url:"-"`
+	DiscoverySettings *core.Optional[Discoverysettings]   `json:"DiscoverySettings,omitempty" url:"-"`
+	IsActive          *core.Optional[IntegrationIsActive] `json:"IsActive,omitempty" url:"-"`
+	Scope             *core.Optional[[]string]            `json:"Scope,omitempty" url:"-"`
+	Tags              *core.Optional[[]string]            `json:"Tags,omitempty" url:"-"`
 }
 
 type PatchedIntegration struct {
-	ResourceName      *core.Optional[string]            `json:"ResourceName,omitempty" url:"-"`
-	Description       *core.Optional[string]            `json:"Description,omitempty" url:"-"`
-	Settings          *core.Optional[Settings]          `json:"Settings,omitempty" url:"-"`
-	DiscoverySettings *core.Optional[Discoverysettings] `json:"DiscoverySettings,omitempty" url:"-"`
-	IsActive          *core.Optional[IsArchiveEnum]     `json:"IsActive,omitempty" url:"-"`
-	Scope             *core.Optional[[]string]          `json:"Scope,omitempty" url:"-"`
-	Tags              *core.Optional[[]string]          `json:"Tags,omitempty" url:"-"`
+	ResourceName      *core.Optional[string]                     `json:"ResourceName,omitempty" url:"-"`
+	Description       *core.Optional[string]                     `json:"Description,omitempty" url:"-"`
+	Settings          *core.Optional[Settings]                   `json:"Settings,omitempty" url:"-"`
+	DiscoverySettings *core.Optional[Discoverysettings]          `json:"DiscoverySettings,omitempty" url:"-"`
+	IsActive          *core.Optional[PatchedIntegrationIsActive] `json:"IsActive,omitempty" url:"-"`
+	Scope             *core.Optional[[]string]                   `json:"Scope,omitempty" url:"-"`
+	Tags              *core.Optional[[]string]                   `json:"Tags,omitempty" url:"-"`
+}
+
+type IntegrationIsActive struct {
+	IsArchiveEnum IsArchiveEnum
+	NullEnum      NullEnum
+}
+
+func NewIntegrationIsActiveFromIsArchiveEnum(value IsArchiveEnum) *IntegrationIsActive {
+	return &IntegrationIsActive{IsArchiveEnum: value}
+}
+
+func NewIntegrationIsActiveFromNullEnum(value NullEnum) *IntegrationIsActive {
+	return &IntegrationIsActive{NullEnum: value}
+}
+
+func (i *IntegrationIsActive) UnmarshalJSON(data []byte) error {
+	var valueIsArchiveEnum IsArchiveEnum
+	if err := json.Unmarshal(data, &valueIsArchiveEnum); err == nil {
+		i.IsArchiveEnum = valueIsArchiveEnum
+		return nil
+	}
+	var valueNullEnum NullEnum
+	if err := json.Unmarshal(data, &valueNullEnum); err == nil {
+		i.NullEnum = valueNullEnum
+		return nil
+	}
+	return fmt.Errorf("%s cannot be deserialized as a %T", data, i)
+}
+
+func (i IntegrationIsActive) MarshalJSON() ([]byte, error) {
+	if i.IsArchiveEnum != "" {
+		return json.Marshal(i.IsArchiveEnum)
+	}
+	if i.NullEnum != "" {
+		return json.Marshal(i.NullEnum)
+	}
+	return nil, fmt.Errorf("type %T does not include a non-empty union type", i)
+}
+
+type IntegrationIsActiveVisitor interface {
+	VisitIsArchiveEnum(IsArchiveEnum) error
+	VisitNullEnum(NullEnum) error
+}
+
+func (i *IntegrationIsActive) Accept(visitor IntegrationIsActiveVisitor) error {
+	if i.IsArchiveEnum != "" {
+		return visitor.VisitIsArchiveEnum(i.IsArchiveEnum)
+	}
+	if i.NullEnum != "" {
+		return visitor.VisitNullEnum(i.NullEnum)
+	}
+	return fmt.Errorf("type %T does not include a non-empty union type", i)
+}
+
+type PatchedIntegrationIsActive struct {
+	IsArchiveEnum IsArchiveEnum
+	NullEnum      NullEnum
+}
+
+func NewPatchedIntegrationIsActiveFromIsArchiveEnum(value IsArchiveEnum) *PatchedIntegrationIsActive {
+	return &PatchedIntegrationIsActive{IsArchiveEnum: value}
+}
+
+func NewPatchedIntegrationIsActiveFromNullEnum(value NullEnum) *PatchedIntegrationIsActive {
+	return &PatchedIntegrationIsActive{NullEnum: value}
+}
+
+func (p *PatchedIntegrationIsActive) UnmarshalJSON(data []byte) error {
+	var valueIsArchiveEnum IsArchiveEnum
+	if err := json.Unmarshal(data, &valueIsArchiveEnum); err == nil {
+		p.IsArchiveEnum = valueIsArchiveEnum
+		return nil
+	}
+	var valueNullEnum NullEnum
+	if err := json.Unmarshal(data, &valueNullEnum); err == nil {
+		p.NullEnum = valueNullEnum
+		return nil
+	}
+	return fmt.Errorf("%s cannot be deserialized as a %T", data, p)
+}
+
+func (p PatchedIntegrationIsActive) MarshalJSON() ([]byte, error) {
+	if p.IsArchiveEnum != "" {
+		return json.Marshal(p.IsArchiveEnum)
+	}
+	if p.NullEnum != "" {
+		return json.Marshal(p.NullEnum)
+	}
+	return nil, fmt.Errorf("type %T does not include a non-empty union type", p)
+}
+
+type PatchedIntegrationIsActiveVisitor interface {
+	VisitIsArchiveEnum(IsArchiveEnum) error
+	VisitNullEnum(NullEnum) error
+}
+
+func (p *PatchedIntegrationIsActive) Accept(visitor PatchedIntegrationIsActiveVisitor) error {
+	if p.IsArchiveEnum != "" {
+		return visitor.VisitIsArchiveEnum(p.IsArchiveEnum)
+	}
+	if p.NullEnum != "" {
+		return visitor.VisitNullEnum(p.NullEnum)
+	}
+	return fmt.Errorf("type %T does not include a non-empty union type", p)
 }

@@ -440,45 +440,61 @@ func TestNewClient(t *testing.T) {
 	})
 
 	// Stacks
-	// t.Run("Create and delete stack", func(t *testing.T) {
-	// 	c := NewClient(
-	// 		option.WithApiKey(API_KEY),
-	// 		option.WithBaseURL(SG_BASE_URL),
-	// 	)
-	// 	createStackRequest := sggosdk.Stack{
-	// 		RunOnCreate: sggosdk.Bool(false),
-	// 		DeploymentPlatformConfig: []*sggosdk.DeploymentPlatformConfig{{
-	// 			Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
-	// 			Config: map[string]interface{}{
-	// 				"profileName":   "DummyConnectorForGoSDK",
-	// 				"integrationId": "/integrations/DummyConnectorForGoSDK"}}},
-	// 		EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
-	// 			Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}},
+	t.Run("Create and delete stack", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		createStackRequest := sggosdk.Stack{
+			RunOnCreate: sggosdk.Bool(false),
+			DeploymentPlatformConfig: sggosdk.Optional([]*sggosdk.DeploymentPlatformConfig{
+				{
+					Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
+					Config: map[string]interface{}{
+						"profileName":   "DummyConnectorForGoSDK",
+						"integrationId": "/integrations/DummyConnectorForGoSDK",
+					},
+				},
+			}),
+			EnvironmentVariables: sggosdk.Optional([]*sggosdk.EnvVars{
+				{
+					Kind: sggosdk.EnvVarsKindEnumPlainText,
+					Config: &sggosdk.EnvVarConfig{
+						VarName: "test", TextValue: sggosdk.String("testValue"),
+					},
+				},
+			}),
 
-	// 		Description: sggosdk.String("Dummy Stack for GoSDK"),
-	// 		TemplatesConfig: &sggosdk.TemplatesConfig{
-	// 			TemplateGroupId: sggosdk.String("/demo-org/ansible:4"),
-	// 			Templates: []*sggosdk.TemplateWorkflow{{
-	// 				NumberOfApprovalsRequired: sggosdk.Int(0),
-	// 				Description:               sggosdk.String("Dummy Workflow for GoSDK"),
-	// 				WfType:                    sggosdk.WfTypeEnumCustom.Ptr(),
-	// 				Id:                        "cc0061e9-a75c-421b-a75b-ef918e9f4b28",
-	// 			}},
-	// 		},
-	// 	}
-	// 	createStackResponse, err := c.Stacks.CreateStack(context.Background(), SG_ORG, SG_WF_GROUP, &createStackRequest)
-	// 	assert.Empty(t, err)
-	// 	assert.NotEmpty(t, createStackResponse.Data.Stack.ResourceName)
-	// 	assert.Equal(t, "Stack "+createStackResponse.Data.Stack.ResourceName+" created", createStackResponse.Msg)
+			Description: sggosdk.Optional("Dummy Stack for GoSDK"),
+			TemplatesConfig: sggosdk.Optional(sggosdk.TemplatesConfig{
+				TemplateGroupId: sggosdk.String("/demo-org/ansible:4"),
+				Templates: []*sggosdk.TemplateWorkflow{
+					{
+						NumberOfApprovalsRequired: sggosdk.Int(0),
+						Description:               sggosdk.String("Dummy Workflow for GoSDK"),
+						WfType:                    sggosdk.WfTypeEnumCustom.Ptr(),
+						Id:                        sggosdk.String("cc0061e9-a75c-421b-a75b-ef918e9f4b28"),
+						DeploymentPlatformConfig: []*sggosdk.DeploymentPlatformConfig{{
+							Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
+							Config: map[string]interface{}{
+								"profileName":   "DummyConnectorForGoSDK",
+								"integrationId": "/integrations/DummyConnectorForGoSDK"}}},
+					},
+				}}),
+		}
+		createStackResponse, err := c.Stacks.CreateStack(context.Background(), SG_ORG, SG_WF_GROUP, &createStackRequest)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, createStackResponse.Data.Stack.ResourceName)
+		assert.Equal(t, "Stack "+createStackResponse.Data.Stack.ResourceName+" created", createStackResponse.Msg)
 
-	// 	err = c.StackWorkflows.DeleteStackWorkflow(context.Background(), SG_ORG, createStackResponse.Data.Stack.ResourceName,
-	// 		createStackResponse.Data.Workflows[0].ResourceName, SG_WF_GROUP)
-	// 	assert.Empty(t, err)
-	// 	deleteResponse, err := c.Stacks.DeleteStack(context.Background(), SG_ORG, createStackResponse.Data.Stack.ResourceName, SG_WF_GROUP)
-	// 	assert.Empty(t, err)
-	// 	assert.Equal(t, "Stack "+createStackResponse.Data.Stack.ResourceName+" deleted", deleteResponse.Msg)
-	// 	assert.Empty(t, err)
-	// })
+		err = c.StackWorkflows.DeleteStackWorkflow(context.Background(), SG_ORG, createStackResponse.Data.Stack.ResourceName,
+			createStackResponse.Data.Workflows[0].ResourceName, SG_WF_GROUP)
+		assert.Empty(t, err)
+		deleteResponse, err := c.Stacks.DeleteStack(context.Background(), SG_ORG, createStackResponse.Data.Stack.ResourceName, SG_WF_GROUP)
+		assert.Empty(t, err)
+		assert.Equal(t, "Stack "+createStackResponse.Data.Stack.ResourceName+" deleted", deleteResponse.Msg)
+		assert.Empty(t, err)
+	})
 
 	t.Run("Read stack", func(t *testing.T) {
 		c := NewClient(

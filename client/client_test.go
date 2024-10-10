@@ -688,7 +688,7 @@ func TestNewClient(t *testing.T) {
 		createWorkflowGroupRequest := sggosdk.WorkflowGroup{
 			ResourceName: sggosdk.String(workflowGroupName),
 			Description:  sggosdk.String("test-workflowGroup description"),
-			IsActive:     sggosdk.IsPublicEnumZero.Ptr(),
+			IsActive:     sggosdk.IsArchiveEnumZero.Ptr(),
 		}
 		createWorkflowGroupResponse, err := c.WorkflowGroups.CreateWorkflowGroup(context.Background(), SG_ORG, &createWorkflowGroupRequest)
 		assert.Empty(t, err)
@@ -710,7 +710,7 @@ func TestNewClient(t *testing.T) {
 		updateWorkflowGroupRequest := sggosdk.PatchedWorkflowGroup{
 			ResourceName: sggosdk.Optional(workflowGroupName),
 			Description:  sggosdk.Optional("updated description"),
-			IsActive:     sggosdk.Optional(*sggosdk.IsPublicEnumZero.Ptr()),
+			IsActive:     sggosdk.Optional(*sggosdk.IsArchiveEnumZero.Ptr()),
 		}
 		updateWorkflowGroupResponse, err := c.WorkflowGroups.UpdateWorkflowGroup(context.Background(), SG_ORG, workflowGroupName, &updateWorkflowGroupRequest)
 		assert.Empty(t, err)
@@ -728,7 +728,7 @@ func TestNewClient(t *testing.T) {
 		updateWorkflowGroupRequest := sggosdk.PatchedWorkflowGroup{
 			// ResourceName: sggosdk.String(workflowGroupName),
 			Description: sggosdk.Optional("updated description"),
-			IsActive:    sggosdk.Optional(*sggosdk.IsPublicEnumZero.Ptr()),
+			IsActive:    sggosdk.Optional(*sggosdk.IsArchiveEnumZero.Ptr()),
 		}
 		updateWorkflowGroupResponse, err := c.WorkflowGroups.UpdateWorkflowGroup(context.Background(), SG_ORG, workflowGroupName, &updateWorkflowGroupRequest)
 		assert.Empty(t, err)
@@ -792,7 +792,7 @@ func TestNewClient(t *testing.T) {
 		parentWorkflowGroupName := "sg-sdk-go-test"
 		createWorkflowGroupRequest := sggosdk.WorkflowGroup{
 			Description: sggosdk.String("child workflowGroup description"),
-			IsActive:    sggosdk.IsPublicEnumZero.Ptr(),
+			IsActive:    sggosdk.IsArchiveEnumZero.Ptr(),
 		}
 		createChildWorkflowGroupResponse, err := c.WorkflowGroups.CreateChildWorkflowGroup(
 			context.Background(),
@@ -820,7 +820,7 @@ func TestNewClient(t *testing.T) {
 		parentWorkflowGroupName := "sg-sdk-go-test/1bger5ydab697a4jxe2gu"
 		createWorkflowGroupRequest := sggosdk.WorkflowGroup{
 			Description: sggosdk.String("child workflowGroup description"),
-			IsActive:    sggosdk.IsPublicEnumZero.Ptr(),
+			IsActive:    sggosdk.IsArchiveEnumZero.Ptr(),
 		}
 		createChildWorkflowGroupResponse, err := c.WorkflowGroups.CreateChildWorkflowGroup(
 			context.Background(),
@@ -841,74 +841,80 @@ func TestNewClient(t *testing.T) {
 	})
 
 	//Roles
-	// t.Run("create_and_delete_roles", func(t *testing.T) {
-	// 	c := NewClient(
-	// 		option.WithApiKey(API_KEY),
-	// 		option.WithBaseURL(SG_BASE_URL),
-	// 	)
-	// 	roleName := "Go-SDK-Test-Role"
-	// 	createRoleRequest := sggosdk.Role{
-	// 		ResourceName: roleName,
-	// 		Description:  sggosdk.String("role description"),
-	// 		AllowedPermissions: map[string]interface{}{
-	// 			"GET/api/v1/orgs/demo-org/policies/<policy>/": "",
-	// 		},
-	// 		Actions: []string{"demo-org"},
-	// 	}
-	// 	createRoleResponse, err := c.UsersRoles.CreateRole(context.Background(), SG_ORG, &createRoleRequest)
-	// 	assert.Empty(t, err)
-	// 	assert.NotEmpty(t, createRoleResponse)
-	// 	assert.Equal(t, "Role "+createRoleResponse.Data.ResourceName+" created", *createRoleResponse.Msg)
+	t.Run("create_and_delete_roles", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		roleName := "Go-SDK-Test-Role"
+		allowedPermissions := &sggosdk.AllowedPermissions{
+			Name: "GET/api/v1/orgs/demo-org/policies/<policy>/",
+			Paths: map[string][]string{
+				"<wfGrps>": {"test"},
+			},
+		}
+		createRoleRequest := sggosdk.Role{
+			ResourceName: roleName,
+			Description:  sggosdk.String("role description"),
+			AllowedPermissions: map[string]*sggosdk.AllowedPermissions{
+				"GET/api/v1/orgs/demo-org/policies/<policy>/": allowedPermissions,
+			},
+		}
+		createRoleResponse, err := c.UsersRoles.CreateRole(context.Background(), SG_ORG, &createRoleRequest)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, createRoleResponse)
+		assert.Equal(t, "Role "+createRoleResponse.Data.ResourceName+" created", *createRoleResponse.Msg)
 
-	// 	deleteRoleResponse, err := c.UsersRoles.DeleteRole(context.Background(), SG_ORG, roleName)
-	// 	assert.Empty(t, err)
-	// 	assert.NotEmpty(t, deleteRoleResponse.Msg)
-	// 	assert.Equal(t, "Role "+roleName+" deleted", *deleteRoleResponse.Msg)
-	// })
+		err = c.UsersRoles.DeleteRole(context.Background(), SG_ORG, roleName)
+		assert.Empty(t, err)
+	})
 
-	// t.Run("update_role", func(t *testing.T) {
-	// 	c := NewClient(
-	// 		option.WithApiKey(API_KEY),
-	// 		option.WithBaseURL(SG_BASE_URL),
-	// 	)
-	// 	roleName := "SDK-Test-Role"
-	// 	updateRoleRequest := sggosdk.PatchedRole{
-	// 		ResourceName: sggosdk.String(roleName),
-	// 		Description:  sggosdk.String("updated description"),
-	// 		AllowedPermissions: map[string]interface{}{
-	// 			"GET/api/v1/orgs/demo-org/policies/<policy>/": "",
-	// 		},
-	// 		Actions: []string{"demo-org"},
-	// 	}
-	// 	updateRoleResponse, err := c.UsersRoles.UpdateRole(context.Background(), SG_ORG, *updateRoleRequest.ResourceName, &updateRoleRequest)
-	// 	assert.Empty(t, err)
-	// 	assert.NotEmpty(t, updateRoleResponse.Msg)
-	// 	assert.Equal(t, "Role /roles/"+roleName+" updated", *updateRoleResponse.Msg)
-	// 	assert.Equal(t, "updated description", *updateRoleResponse.Data.Description)
-	// })
+	t.Run("update_role", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		roleName := "SDK-Test-Role"
+		allowedPermissions := &sggosdk.AllowedPermissions{
+			Name: "GET/api/v1/orgs/demo-org/policies/<policy>/",
+			Paths: map[string][]string{
+				"<wfGrps>": {"test"},
+			},
+		}
+		updateRoleRequest := sggosdk.PatchedRole{
+			ResourceName: sggosdk.Optional(roleName),
+			Description:  sggosdk.Optional("updated description"),
+			AllowedPermissions: sggosdk.Optional[map[string]*sggosdk.AllowedPermissions](map[string]*sggosdk.AllowedPermissions{
+				"GET/api/v1/orgs/demo-org/policies/<policy>/": allowedPermissions,
+			}),
+		}
+		updateRoleResponse, err := c.UsersRoles.UpdateRole(context.Background(), SG_ORG, roleName, &updateRoleRequest)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, updateRoleResponse.Msg)
+		assert.Equal(t, "Role /roles/"+roleName+" updated", *updateRoleResponse.Msg)
+		assert.Equal(t, "updated description", *updateRoleResponse.Data.Description)
+	})
 
-	// t.Run("read_role", func(t *testing.T) {
-	// 	c := NewClient(
-	// 		option.WithApiKey(API_KEY),
-	// 		option.WithBaseURL(SG_BASE_URL),
-	// 	)
-	// 	roleName := "SDK-Test-Role"
-	// 	readRoleResponse, err := c.UsersRoles.ReadRole(context.Background(), SG_ORG, roleName)
-	// 	assert.Empty(t, err)
-	// 	assert.NotEmpty(t, readRoleResponse.Msg)
-	// 	assert.Equal(t, roleName, readRoleResponse.Msg.ResourceName)
-	// })
+	t.Run("read_role", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		roleName := "SDK-Test-Role"
+		readRoleResponse, err := c.UsersRoles.ReadRole(context.Background(), SG_ORG, roleName)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, readRoleResponse.Msg)
+		assert.Equal(t, roleName, readRoleResponse.Msg.ResourceName)
+	})
 
-	// t.Run("listall_role", func(t *testing.T) {
-	// 	c := NewClient(
-	// 		option.WithApiKey(API_KEY),
-	// 		option.WithBaseURL(SG_BASE_URL),
-	// 	)
-	// 	listAllRoleResponse, err := c.UsersRoles.ListAllRoles(context.Background(), SG_ORG)
-	// 	assert.Empty(t, err)
-	// 	assert.NotEmpty(t, listAllRoleResponse.Msg)
-	// 	assert.GreaterOrEqual(t, len(listAllRoleResponse.Msg), 1)
-	// })
+	t.Run("listall_role", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		err := c.UsersRoles.ListAllRoles(context.Background(), SG_ORG)
+		assert.Empty(t, err)
+	})
 
 	// Users
 	t.Run("add_and_remove_users", func(t *testing.T) {

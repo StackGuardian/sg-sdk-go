@@ -688,7 +688,6 @@ func TestNewClient(t *testing.T) {
 		createWorkflowGroupRequest := sggosdk.WorkflowGroup{
 			ResourceName: sggosdk.String(workflowGroupName),
 			Description:  sggosdk.String("test-workflowGroup description"),
-			IsActive:     sggosdk.IsArchiveEnumZero.Ptr(),
 		}
 		createWorkflowGroupResponse, err := c.WorkflowGroups.CreateWorkflowGroup(context.Background(), SG_ORG, &createWorkflowGroupRequest)
 		assert.Empty(t, err)
@@ -710,7 +709,6 @@ func TestNewClient(t *testing.T) {
 		updateWorkflowGroupRequest := sggosdk.PatchedWorkflowGroup{
 			ResourceName: sggosdk.Optional(workflowGroupName),
 			Description:  sggosdk.Optional("updated description"),
-			IsActive:     sggosdk.Optional(*sggosdk.IsArchiveEnumZero.Ptr()),
 		}
 		updateWorkflowGroupResponse, err := c.WorkflowGroups.UpdateWorkflowGroup(context.Background(), SG_ORG, workflowGroupName, &updateWorkflowGroupRequest)
 		assert.Empty(t, err)
@@ -728,7 +726,6 @@ func TestNewClient(t *testing.T) {
 		updateWorkflowGroupRequest := sggosdk.PatchedWorkflowGroup{
 			// ResourceName: sggosdk.String(workflowGroupName),
 			Description: sggosdk.Optional("updated description"),
-			IsActive:    sggosdk.Optional(*sggosdk.IsArchiveEnumZero.Ptr()),
 		}
 		updateWorkflowGroupResponse, err := c.WorkflowGroups.UpdateWorkflowGroup(context.Background(), SG_ORG, workflowGroupName, &updateWorkflowGroupRequest)
 		assert.Empty(t, err)
@@ -792,7 +789,6 @@ func TestNewClient(t *testing.T) {
 		parentWorkflowGroupName := "sg-sdk-go-test"
 		createWorkflowGroupRequest := sggosdk.WorkflowGroup{
 			Description: sggosdk.String("child workflowGroup description"),
-			IsActive:    sggosdk.IsArchiveEnumZero.Ptr(),
 		}
 		createChildWorkflowGroupResponse, err := c.WorkflowGroups.CreateChildWorkflowGroup(
 			context.Background(),
@@ -820,7 +816,6 @@ func TestNewClient(t *testing.T) {
 		parentWorkflowGroupName := "sg-sdk-go-test/1bger5ydab697a4jxe2gu"
 		createWorkflowGroupRequest := sggosdk.WorkflowGroup{
 			Description: sggosdk.String("child workflowGroup description"),
-			IsActive:    sggosdk.IsArchiveEnumZero.Ptr(),
 		}
 		createChildWorkflowGroupResponse, err := c.WorkflowGroups.CreateChildWorkflowGroup(
 			context.Background(),

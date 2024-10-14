@@ -291,8 +291,9 @@ func (c *CacheConfig) String() string {
 }
 
 type CustomSource struct {
-	SourceConfigDestKind *string             `json:"sourceConfigDestKind,omitempty" url:"sourceConfigDestKind,omitempty"`
-	Config               *CustomSourceConfig `json:"config,omitempty" url:"config,omitempty"`
+	SourceConfigDestKind CustomSourceSourceConfigDestKindEnum `json:"sourceConfigDestKind" url:"sourceConfigDestKind"`
+	Config               *CustomSourceConfig                  `json:"config,omitempty" url:"config,omitempty"`
+	AdditionalConfig     map[string]interface{}               `json:"additionalConfig,omitempty" url:"additionalConfig,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -333,13 +334,14 @@ func (c *CustomSource) String() string {
 }
 
 type CustomSourceConfig struct {
-	IncludeSubModule *bool   `json:"includeSubModule,omitempty" url:"includeSubModule,omitempty"`
-	Ref              *string `json:"ref,omitempty" url:"ref,omitempty"`
-	GitCoreAutoCrlf  *bool   `json:"gitCoreAutoCRLF,omitempty" url:"gitCoreAutoCRLF,omitempty"`
-	Auth             *string `json:"auth,omitempty" url:"auth,omitempty"`
-	WorkingDir       *string `json:"workingDir,omitempty" url:"workingDir,omitempty"`
-	Repo             *string `json:"repo,omitempty" url:"repo,omitempty"`
-	IsPrivate        *bool   `json:"isPrivate,omitempty" url:"isPrivate,omitempty"`
+	IsPrivate               *bool   `json:"isPrivate,omitempty" url:"isPrivate,omitempty"`
+	Auth                    *string `json:"auth,omitempty" url:"auth,omitempty"`
+	WorkingDir              *string `json:"workingDir,omitempty" url:"workingDir,omitempty"`
+	GitSparseCheckoutConfig *string `json:"gitSparseCheckoutConfig,omitempty" url:"gitSparseCheckoutConfig,omitempty"`
+	GitCoreAutoCrlf         *bool   `json:"gitCoreAutoCRLF,omitempty" url:"gitCoreAutoCRLF,omitempty"`
+	Ref                     *string `json:"ref,omitempty" url:"ref,omitempty"`
+	Repo                    *string `json:"repo,omitempty" url:"repo,omitempty"`
+	IncludeSubModule        *bool   `json:"includeSubModule,omitempty" url:"includeSubModule,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -515,6 +517,46 @@ func (c CustomSourcePolicySourceConfigDestKindEnum) Ptr() *CustomSourcePolicySou
 	return &c
 }
 
+// - `GITHUB_COM` - GITHUB_COM
+// - `GITHUB_APP_CUSTOM` - GITHUB_APP_CUSTOM
+// - `GIT_OTHER` - GIT_OTHER
+// - `BITBUCKET_ORG` - BITBUCKET_ORG
+// - `GITLAB_COM` - GITLAB_COM
+// - `AZURE_DEVOPS` - AZURE_DEVOPS
+type CustomSourceSourceConfigDestKindEnum string
+
+const (
+	CustomSourceSourceConfigDestKindEnumGithubCom       CustomSourceSourceConfigDestKindEnum = "GITHUB_COM"
+	CustomSourceSourceConfigDestKindEnumGithubAppCustom CustomSourceSourceConfigDestKindEnum = "GITHUB_APP_CUSTOM"
+	CustomSourceSourceConfigDestKindEnumGitOther        CustomSourceSourceConfigDestKindEnum = "GIT_OTHER"
+	CustomSourceSourceConfigDestKindEnumBitbucketOrg    CustomSourceSourceConfigDestKindEnum = "BITBUCKET_ORG"
+	CustomSourceSourceConfigDestKindEnumGitlabCom       CustomSourceSourceConfigDestKindEnum = "GITLAB_COM"
+	CustomSourceSourceConfigDestKindEnumAzureDevops     CustomSourceSourceConfigDestKindEnum = "AZURE_DEVOPS"
+)
+
+func NewCustomSourceSourceConfigDestKindEnumFromString(s string) (CustomSourceSourceConfigDestKindEnum, error) {
+	switch s {
+	case "GITHUB_COM":
+		return CustomSourceSourceConfigDestKindEnumGithubCom, nil
+	case "GITHUB_APP_CUSTOM":
+		return CustomSourceSourceConfigDestKindEnumGithubAppCustom, nil
+	case "GIT_OTHER":
+		return CustomSourceSourceConfigDestKindEnumGitOther, nil
+	case "BITBUCKET_ORG":
+		return CustomSourceSourceConfigDestKindEnumBitbucketOrg, nil
+	case "GITLAB_COM":
+		return CustomSourceSourceConfigDestKindEnumGitlabCom, nil
+	case "AZURE_DEVOPS":
+		return CustomSourceSourceConfigDestKindEnumAzureDevops, nil
+	}
+	var t CustomSourceSourceConfigDestKindEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CustomSourceSourceConfigDestKindEnum) Ptr() *CustomSourceSourceConfigDestKindEnum {
+	return &c
+}
+
 type DeploymentPlatformConfig struct {
 	Kind   DeploymentPlatformConfigKindEnum `json:"kind" url:"kind"`
 	Config map[string]interface{}           `json:"config,omitempty" url:"config,omitempty"`
@@ -563,6 +605,7 @@ func (d *DeploymentPlatformConfig) String() string {
 // - `AZURE_STATIC` - AZURE_STATIC
 // - `AZURE_OIDC` - AZURE_OIDC
 // - `GCP_STATIC` - GCP_STATIC
+// - `GCP_OIDC` - GCP_OIDC
 type DeploymentPlatformConfigKindEnum string
 
 const (
@@ -572,6 +615,7 @@ const (
 	DeploymentPlatformConfigKindEnumAzureStatic DeploymentPlatformConfigKindEnum = "AZURE_STATIC"
 	DeploymentPlatformConfigKindEnumAzureOidc   DeploymentPlatformConfigKindEnum = "AZURE_OIDC"
 	DeploymentPlatformConfigKindEnumGcpStatic   DeploymentPlatformConfigKindEnum = "GCP_STATIC"
+	DeploymentPlatformConfigKindEnumGcpOidc     DeploymentPlatformConfigKindEnum = "GCP_OIDC"
 )
 
 func NewDeploymentPlatformConfigKindEnumFromString(s string) (DeploymentPlatformConfigKindEnum, error) {
@@ -588,6 +632,8 @@ func NewDeploymentPlatformConfigKindEnumFromString(s string) (DeploymentPlatform
 		return DeploymentPlatformConfigKindEnumAzureOidc, nil
 	case "GCP_STATIC":
 		return DeploymentPlatformConfigKindEnumGcpStatic, nil
+	case "GCP_OIDC":
+		return DeploymentPlatformConfigKindEnumGcpOidc, nil
 	}
 	var t DeploymentPlatformConfigKindEnum
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -640,17 +686,16 @@ func (d *Deprecation) String() string {
 }
 
 type DiscoveryBenchmark struct {
-	RuntimeSource     *DiscoveryBenchmarkRuntimeSource `json:"runtimeSource,omitempty" url:"runtimeSource,omitempty"`
-	Checks            []string                         `json:"checks,omitempty" url:"checks,omitempty"`
-	Regions           map[string]*DiscoveryRegion      `json:"regions,omitempty" url:"regions,omitempty"`
-	LastDiscoveryTime *int                             `json:"lastDiscoveryTime,omitempty" url:"lastDiscoveryTime,omitempty"`
-	Description       *string                          `json:"description,omitempty" url:"description,omitempty"`
-	SummaryDesc       *string                          `json:"summaryDesc,omitempty" url:"summaryDesc,omitempty"`
-	Active            *bool                            `json:"active,omitempty" url:"active,omitempty"`
-	Label             *string                          `json:"label,omitempty" url:"label,omitempty"`
-	IsCustomCheck     *bool                            `json:"isCustomCheck,omitempty" url:"isCustomCheck,omitempty"`
-	SummaryTitle      *string                          `json:"summaryTitle,omitempty" url:"summaryTitle,omitempty"`
-	DiscoveryInterval *int                             `json:"discoveryInterval,omitempty" url:"discoveryInterval,omitempty"`
+	RuntimeSource     *CustomSource               `json:"runtimeSource,omitempty" url:"runtimeSource,omitempty"`
+	Checks            []string                    `json:"checks,omitempty" url:"checks,omitempty"`
+	Regions           map[string]*DiscoveryRegion `json:"regions,omitempty" url:"regions,omitempty"`
+	Description       *string                     `json:"description,omitempty" url:"description,omitempty"`
+	SummaryDesc       *string                     `json:"summaryDesc,omitempty" url:"summaryDesc,omitempty"`
+	Active            *bool                       `json:"active,omitempty" url:"active,omitempty"`
+	Label             string                      `json:"label" url:"label"`
+	IsCustomCheck     *bool                       `json:"isCustomCheck,omitempty" url:"isCustomCheck,omitempty"`
+	SummaryTitle      string                      `json:"summaryTitle" url:"summaryTitle"`
+	DiscoveryInterval *int                        `json:"discoveryInterval,omitempty" url:"discoveryInterval,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -679,47 +724,6 @@ func (d *DiscoveryBenchmark) UnmarshalJSON(data []byte) error {
 }
 
 func (d *DiscoveryBenchmark) String() string {
-	if len(d._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(d._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(d); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", d)
-}
-
-type DiscoveryBenchmarkRuntimeSource struct {
-	CustomSource *CustomSource `json:"customSource,omitempty" url:"customSource,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (d *DiscoveryBenchmarkRuntimeSource) GetExtraProperties() map[string]interface{} {
-	return d.extraProperties
-}
-
-func (d *DiscoveryBenchmarkRuntimeSource) UnmarshalJSON(data []byte) error {
-	type unmarshaler DiscoveryBenchmarkRuntimeSource
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*d = DiscoveryBenchmarkRuntimeSource(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *d)
-	if err != nil {
-		return err
-	}
-	d.extraProperties = extraProperties
-
-	d._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (d *DiscoveryBenchmarkRuntimeSource) String() string {
 	if len(d._rawJSON) > 0 {
 		if value, err := core.StringifyJSON(d._rawJSON); err == nil {
 			return value
@@ -772,51 +776,8 @@ func (d *DiscoveryRegion) String() string {
 	return fmt.Sprintf("%#v", d)
 }
 
-type DiscoverySettingsRegions struct {
-	Region *string `json:"region,omitempty" url:"region,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (d *DiscoverySettingsRegions) GetExtraProperties() map[string]interface{} {
-	return d.extraProperties
-}
-
-func (d *DiscoverySettingsRegions) UnmarshalJSON(data []byte) error {
-	type unmarshaler DiscoverySettingsRegions
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*d = DiscoverySettingsRegions(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *d)
-	if err != nil {
-		return err
-	}
-	d.extraProperties = extraProperties
-
-	d._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (d *DiscoverySettingsRegions) String() string {
-	if len(d._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(d._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(d); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", d)
-}
-
 type Discoverysettings struct {
-	DiscoveryInterval *int                           `json:"discoveryInterval,omitempty" url:"discoveryInterval,omitempty"`
-	Benchmarks        map[string]*DiscoveryBenchmark `json:"benchmarks,omitempty" url:"benchmarks,omitempty"`
-	Regions           []*DiscoverySettingsRegions    `json:"regions,omitempty" url:"regions,omitempty"`
+	Benchmarks map[string]*DiscoveryBenchmark `json:"benchmarks,omitempty" url:"benchmarks,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -1256,7 +1217,7 @@ func (g *GeneratedConnectorReadResponseMsgDiscoverysettings) String() string {
 }
 
 type GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks struct {
-	RuntimeSource     *DiscoveryBenchmarkRuntimeSource                                                `json:"runtimeSource,omitempty" url:"runtimeSource,omitempty"`
+	RuntimeSource     *CustomSource                                                                   `json:"runtimeSource,omitempty" url:"runtimeSource,omitempty"`
 	Checks            []string                                                                        `json:"checks,omitempty" url:"checks,omitempty"`
 	Regions           map[string]*GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarksRegions `json:"regions,omitempty" url:"regions,omitempty"`
 	LastDiscoveryTime *int                                                                            `json:"lastDiscoveryTime,omitempty" url:"lastDiscoveryTime,omitempty"`
@@ -11577,8 +11538,6 @@ func (n *Notifications) String() string {
 	return fmt.Sprintf("%#v", n)
 }
 
-type NullEnum = string
-
 // - `FAIL` - FAIL
 // - `WARN` - WARN
 // - `PASS` - PASS
@@ -11876,7 +11835,7 @@ func (p *PoliciesConfig) String() string {
 }
 
 type Policy struct {
-	// Resource Name of the policy
+	// Name of the policy
 	ResourceName *string `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
 	// Description of the policy
 	Description *string `json:"Description,omitempty" url:"Description,omitempty"`
@@ -11890,7 +11849,7 @@ type Policy struct {
 	//
 	// - `0` - 0
 	// - `1` - 1
-	IsActive *IsArchiveEnum `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	IsActive IsArchiveEnum `json:"IsActive" url:"IsActive"`
 	// What the policy will be enforced on.
 	EnforcedOn []string `json:"EnforcedOn,omitempty" url:"EnforcedOn,omitempty"`
 	// Policies Config for the policy
@@ -12130,57 +12089,9 @@ func (r *RemoveUserFromOrganizationResponse) String() string {
 	return fmt.Sprintf("%#v", r)
 }
 
-type Role struct {
-	ResourceName       string                         `json:"ResourceName" url:"ResourceName"`
-	ParentId           string                         `json:"ParentId" url:"ParentId"`
-	ResourceId         string                         `json:"ResourceId" url:"ResourceId"`
-	ResourceType       string                         `json:"ResourceType" url:"ResourceType"`
-	Authors            []interface{}                  `json:"Authors,omitempty" url:"Authors,omitempty"`
-	Description        *string                        `json:"Description,omitempty" url:"Description,omitempty"`
-	Tags               []string                       `json:"Tags,omitempty" url:"Tags,omitempty"`
-	AllowedPermissions map[string]*AllowedPermissions `json:"AllowedPermissions,omitempty" url:"AllowedPermissions,omitempty"`
-
-	extraProperties map[string]interface{}
-	_rawJSON        json.RawMessage
-}
-
-func (r *Role) GetExtraProperties() map[string]interface{} {
-	return r.extraProperties
-}
-
-func (r *Role) UnmarshalJSON(data []byte) error {
-	type unmarshaler Role
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*r = Role(value)
-
-	extraProperties, err := core.ExtractExtraProperties(data, *r)
-	if err != nil {
-		return err
-	}
-	r.extraProperties = extraProperties
-
-	r._rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (r *Role) String() string {
-	if len(r._rawJSON) > 0 {
-		if value, err := core.StringifyJSON(r._rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := core.StringifyJSON(r); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", r)
-}
-
 type RoleCreateUpdateResponse struct {
-	Msg  *string `json:"msg,omitempty" url:"msg,omitempty"`
-	Data *Role   `json:"data,omitempty" url:"data,omitempty"`
+	Msg  *string           `json:"msg,omitempty" url:"msg,omitempty"`
+	Data *RoleDataResponse `json:"data,omitempty" url:"data,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -12220,9 +12131,64 @@ func (r *RoleCreateUpdateResponse) String() string {
 	return fmt.Sprintf("%#v", r)
 }
 
+type RoleDataResponse struct {
+	ResourceName       string                         `json:"ResourceName" url:"ResourceName"`
+	Description        *string                        `json:"Description,omitempty" url:"Description,omitempty"`
+	Tags               []string                       `json:"Tags,omitempty" url:"Tags,omitempty"`
+	AllowedPermissions map[string]*AllowedPermissions `json:"AllowedPermissions,omitempty" url:"AllowedPermissions,omitempty"`
+	ParentId           string                         `json:"ParentId" url:"ParentId"`
+	ResourceId         string                         `json:"ResourceId" url:"ResourceId"`
+	ResourceType       string                         `json:"ResourceType" url:"ResourceType"`
+	Authors            []interface{}                  `json:"Authors,omitempty" url:"Authors,omitempty"`
+	DocVersion         string                         `json:"DocVersion" url:"DocVersion"`
+	// Time in milliseconds as a string
+	CreatedAt int `json:"CreatedAt" url:"CreatedAt"`
+	// Time in milliseconds as a string
+	ModifiedAt int            `json:"ModifiedAt" url:"ModifiedAt"`
+	IsActive   *IsArchiveEnum `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	IsArchive  IsArchiveEnum  `json:"IsArchive" url:"IsArchive"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (r *RoleDataResponse) GetExtraProperties() map[string]interface{} {
+	return r.extraProperties
+}
+
+func (r *RoleDataResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler RoleDataResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = RoleDataResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+
+	r._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RoleDataResponse) String() string {
+	if len(r._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(r._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
 type RoleGetResponse struct {
-	Msg  *Role `json:"msg,omitempty" url:"msg,omitempty"`
-	Data *Role `json:"data,omitempty" url:"data,omitempty"`
+	Msg  *RoleDataResponse `json:"msg,omitempty" url:"msg,omitempty"`
+	Data *RoleDataResponse `json:"data,omitempty" url:"data,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -12592,6 +12558,7 @@ func (s *SettingsConfig) String() string {
 // - `GITHUB_APP_CUSTOM` - GITHUB_APP_CUSTOM
 // - `AWS_STATIC` - AWS_STATIC
 // - `GCP_STATIC` - GCP_STATIC
+// - `GCP_OIDC` - GCP_OIDC
 // - `AWS_RBAC` - AWS_RBAC
 // - `AWS_OIDC` - AWS_OIDC
 // - `AZURE_STATIC` - AZURE_STATIC
@@ -12606,6 +12573,7 @@ const (
 	SettingsKindEnumGithubAppCustom SettingsKindEnum = "GITHUB_APP_CUSTOM"
 	SettingsKindEnumAwsStatic       SettingsKindEnum = "AWS_STATIC"
 	SettingsKindEnumGcpStatic       SettingsKindEnum = "GCP_STATIC"
+	SettingsKindEnumGcpOidc         SettingsKindEnum = "GCP_OIDC"
 	SettingsKindEnumAwsRbac         SettingsKindEnum = "AWS_RBAC"
 	SettingsKindEnumAwsOidc         SettingsKindEnum = "AWS_OIDC"
 	SettingsKindEnumAzureStatic     SettingsKindEnum = "AZURE_STATIC"
@@ -12625,6 +12593,8 @@ func NewSettingsKindEnumFromString(s string) (SettingsKindEnum, error) {
 		return SettingsKindEnumAwsStatic, nil
 	case "GCP_STATIC":
 		return SettingsKindEnumGcpStatic, nil
+	case "GCP_OIDC":
+		return SettingsKindEnumGcpOidc, nil
 	case "AWS_RBAC":
 		return SettingsKindEnumAwsRbac, nil
 	case "AWS_OIDC":
@@ -13660,23 +13630,9 @@ func (w *WorkflowGetResponse) String() string {
 }
 
 type WorkflowGroup struct {
-	ResourceName  *string        `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
-	Description   *string        `json:"Description,omitempty" url:"Description,omitempty"`
-	Tags          []string       `json:"Tags,omitempty" url:"Tags,omitempty"`
-	IsActive      *IsArchiveEnum `json:"IsActive,omitempty" url:"IsActive,omitempty"`
-	ParentId      string         `json:"ParentId" url:"ParentId"`
-	ResourceId    string         `json:"ResourceId" url:"ResourceId"`
-	WfGrpParentId string         `json:"WfGrpParentId" url:"WfGrpParentId"`
-	WfGrpFullId   string         `json:"WfGrpFullId" url:"WfGrpFullId"`
-	OrgId         string         `json:"OrgId" url:"OrgId"`
-	SubResourceId string         `json:"SubResourceId" url:"SubResourceId"`
-	WfgrpIndexId  string         `json:"WfgrpIndexId" url:"WfgrpIndexId"`
-	Authors       []string       `json:"Authors,omitempty" url:"Authors,omitempty"`
-	IsArchive     string         `json:"IsArchive" url:"IsArchive"`
-	ResourceType  string         `json:"ResourceType" url:"ResourceType"`
-	DocVersion    string         `json:"DocVersion" url:"DocVersion"`
-	CreatorEnv    string         `json:"CreatorEnv" url:"CreatorEnv"`
-	SgOwned       bool           `json:"SGOwned" url:"SGOwned"`
+	ResourceName *string  `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	Description  *string  `json:"Description,omitempty" url:"Description,omitempty"`
+	Tags         []string `json:"Tags,omitempty" url:"Tags,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -13717,8 +13673,8 @@ func (w *WorkflowGroup) String() string {
 }
 
 type WorkflowGroupCreateResponse struct {
-	Msg  *string        `json:"msg,omitempty" url:"msg,omitempty"`
-	Data *WorkflowGroup `json:"data,omitempty" url:"data,omitempty"`
+	Msg  *string                    `json:"msg,omitempty" url:"msg,omitempty"`
+	Data *WorkflowGroupDataResponse `json:"data,omitempty" url:"data,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -13747,6 +13703,63 @@ func (w *WorkflowGroupCreateResponse) UnmarshalJSON(data []byte) error {
 }
 
 func (w *WorkflowGroupCreateResponse) String() string {
+	if len(w._rawJSON) > 0 {
+		if value, err := core.StringifyJSON(w._rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := core.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WorkflowGroupDataResponse struct {
+	ResourceName  *string       `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	Description   *string       `json:"Description,omitempty" url:"Description,omitempty"`
+	Tags          []string      `json:"Tags,omitempty" url:"Tags,omitempty"`
+	IsArchive     *string       `json:"IsArchive,omitempty" url:"IsArchive,omitempty"`
+	ResourceType  *string       `json:"ResourceType,omitempty" url:"ResourceType,omitempty"`
+	DocVersion    *string       `json:"DocVersion,omitempty" url:"DocVersion,omitempty"`
+	CreatorEnv    *string       `json:"CreatorEnv,omitempty" url:"CreatorEnv,omitempty"`
+	SgOwned       *bool         `json:"SGOwned,omitempty" url:"SGOwned,omitempty"`
+	ParentId      *string       `json:"ParentId,omitempty" url:"ParentId,omitempty"`
+	ResourceId    *string       `json:"ResourceId,omitempty" url:"ResourceId,omitempty"`
+	WfGrpParentId *string       `json:"WfGrpParentId,omitempty" url:"WfGrpParentId,omitempty"`
+	WfGrpFullId   *string       `json:"WfGrpFullId,omitempty" url:"WfGrpFullId,omitempty"`
+	OrgId         *string       `json:"OrgId,omitempty" url:"OrgId,omitempty"`
+	SubResourceId *string       `json:"SubResourceId,omitempty" url:"SubResourceId,omitempty"`
+	WfgrpIndexId  *string       `json:"WfgrpIndexId,omitempty" url:"WfgrpIndexId,omitempty"`
+	Authors       []string      `json:"Authors,omitempty" url:"Authors,omitempty"`
+	IsActive      IsArchiveEnum `json:"IsActive" url:"IsActive"`
+
+	extraProperties map[string]interface{}
+	_rawJSON        json.RawMessage
+}
+
+func (w *WorkflowGroupDataResponse) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WorkflowGroupDataResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler WorkflowGroupDataResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WorkflowGroupDataResponse(value)
+
+	extraProperties, err := core.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+
+	w._rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WorkflowGroupDataResponse) String() string {
 	if len(w._rawJSON) > 0 {
 		if value, err := core.StringifyJSON(w._rawJSON); err == nil {
 			return value
@@ -13800,7 +13813,7 @@ func (w *WorkflowGroupDeleteResponse) String() string {
 }
 
 type WorkflowGroupGetResponse struct {
-	Msg *WorkflowGroup `json:"msg,omitempty" url:"msg,omitempty"`
+	Msg *WorkflowGroupDataResponse `json:"msg,omitempty" url:"msg,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -13841,8 +13854,8 @@ func (w *WorkflowGroupGetResponse) String() string {
 }
 
 type WorkflowGroupListAllResponse struct {
-	Msg              []*WorkflowGroup `json:"msg,omitempty" url:"msg,omitempty"`
-	Lastevaluatedkey *string          `json:"lastevaluatedkey,omitempty" url:"lastevaluatedkey,omitempty"`
+	Msg              []*WorkflowGroupDataResponse `json:"msg,omitempty" url:"msg,omitempty"`
+	Lastevaluatedkey *string                      `json:"lastevaluatedkey,omitempty" url:"lastevaluatedkey,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage
@@ -13883,8 +13896,8 @@ func (w *WorkflowGroupListAllResponse) String() string {
 }
 
 type WorkflowGroupPatch struct {
-	Msg  *string        `json:"msg,omitempty" url:"msg,omitempty"`
-	Data *WorkflowGroup `json:"data,omitempty" url:"data,omitempty"`
+	Msg  *string                    `json:"msg,omitempty" url:"msg,omitempty"`
+	Data *WorkflowGroupDataResponse `json:"data,omitempty" url:"data,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage

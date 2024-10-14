@@ -7,7 +7,7 @@ import (
 )
 
 type PatchedPolicy struct {
-	// Resource Name of the policy
+	// Name of the policy
 	ResourceName *core.Optional[string] `json:"ResourceName,omitempty" url:"-"`
 	// Description of the policy
 	Description *core.Optional[string] `json:"Description,omitempty" url:"-"`

@@ -855,10 +855,10 @@ func TestNewClient(t *testing.T) {
 		}
 		createRoleRequest := sggosdk.Role{
 			ResourceName: roleName,
-			Description:  sggosdk.String("role description"),
-			AllowedPermissions: map[string]*sggosdk.AllowedPermissions{
+			Description:  sggosdk.Optional("role description"),
+			AllowedPermissions: sggosdk.Optional[map[string]*sggosdk.AllowedPermissions](map[string]*sggosdk.AllowedPermissions{
 				"GET/api/v1/orgs/demo-org/policies/<policy>/": allowedPermissions,
-			},
+			}),
 		}
 		createRoleResponse, err := c.UsersRoles.CreateRole(context.Background(), SG_ORG, &createRoleRequest)
 		assert.Empty(t, err)
@@ -916,7 +916,7 @@ func TestNewClient(t *testing.T) {
 		assert.Empty(t, err)
 	})
 
-	// Users
+	// Users/Role assignment
 	t.Run("add_and_remove_users", func(t *testing.T) {
 		c := NewClient(
 			option.WithApiKey(API_KEY),
@@ -941,50 +941,36 @@ func TestNewClient(t *testing.T) {
 		assert.Equal(t, userName+" removed from /orgs/demo-org", *deleteUserResponse.Msg)
 	})
 
-	// t.Run("read_users", func(t *testing.T) {
-	// 	principalHeader := http.Header{}
-	// 	principalHeader.Add("PrincipalId", "test")
-	// 	c := NewClient(
-	// 		option.WithApiKey(API_KEY),
-	// 		option.WithBaseURL("http://localhost:8000"),
-	// 		option.WithHTTPHeader(principalHeader),
-	// 	)
-	// 	// c := NewClient(
-	// 	// 	option.WithApiKey(API_KEY),
-	// 	// 	option.WithBaseURL(SG_BASE_URL),
-	// 	// )
-	// 	userName := "test@dummy.com"
+	t.Run("read_users", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		userName := "test@dummy.com"
 
-	// 	removeUserRequest := sggosdk.GetorRemoveUserFromOrganization{
-	// 		UserId: userName,
-	// 	}
-	// 	getUserResponse, err := c.UsersRoles.GetUser(context.Background(), SG_ORG, &removeUserRequest)
-	// 	assert.Empty(t, err)
-	// 	assert.NotEmpty(t, getUserResponse.Msg)
-	// })
+		removeUserRequest := sggosdk.GetorRemoveUserFromOrganization{
+			UserId: userName,
+		}
+		getUserResponse, err := c.UsersRoles.GetUser(context.Background(), SG_ORG, &removeUserRequest)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, getUserResponse.Msg)
+	})
 
-	// t.Run("update_users", func(t *testing.T) {
-	// 	principalHeader := http.Header{}
-	// 	principalHeader.Add("PrincipalId", "test")
-	// 	c := NewClient(
-	// 		option.WithApiKey(API_KEY),
-	// 		option.WithBaseURL("http://localhost:8000"),
-	// 		option.WithHTTPHeader(principalHeader),
-	// 	)
-	// 	// c := NewClient(
-	// 	// 	option.WithApiKey(API_KEY),
-	// 	// 	option.WithBaseURL(SG_BASE_URL),
-	// 	// )
-	// 	userName := "test@dummy.com"
+	t.Run("update_users", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		userName := "test@dummy.com"
 
-	// 	updateUserRequest := sggosdk.AddUserToOrganization{
-	// 		Role:   "SDK-Test-Role",
-	// 		UserId: userName,
-	// 	}
-	// 	updateUserResponse, err := c.UsersRoles.UpdateUser(context.Background(), SG_ORG, &updateUserRequest)
-	// 	assert.Empty(t, err)
-	// 	assert.NotEmpty(t, updateUserResponse.Msg)
-	// })
+		updateUserRequest := sggosdk.AddUserToOrganization{
+			Role:   "SDK-Test-Role",
+			UserId: userName,
+		}
+		updateUserResponse, err := c.UsersRoles.UpdateUser(context.Background(), SG_ORG, &updateUserRequest)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, updateUserResponse.Msg)
+	})
 
 	t.Run("create_and_delete_policy", func(t *testing.T) {
 		c := NewClient(

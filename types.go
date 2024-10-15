@@ -13285,26 +13285,26 @@ func (v *VcsConfig) String() string {
 }
 
 type VcsTriggers struct {
-	Type                    VcsTriggersTypeEnum         `json:"type" url:"type"`
-	GlHookId                *string                     `json:"gl_hook_id,omitempty" url:"gl_hook_id,omitempty"`
-	GhWebhookUrl            *string                     `json:"gh_webhook_url,omitempty" url:"gh_webhook_url,omitempty"`
-	GithubAppInstallationId *int                        `json:"github_app_installation_id,omitempty" url:"github_app_installation_id,omitempty"`
-	TrackedBranch           *string                     `json:"tracked_branch,omitempty" url:"tracked_branch,omitempty"`
-	PostComments            bool                        `json:"post_comments" url:"post_comments"`
-	ApprovalPreApply        *bool                       `json:"approval_pre_apply,omitempty" url:"approval_pre_apply,omitempty"`
-	GhCheck                 bool                        `json:"gh_check" url:"gh_check"`
-	GlPipeline              bool                        `json:"gl_pipeline" url:"gl_pipeline"`
-	PlanOnly                *bool                       `json:"plan_only,omitempty" url:"plan_only,omitempty"`
-	FileTriggersEnabled     *bool                       `json:"file_triggers_enabled,omitempty" url:"file_triggers_enabled,omitempty"`
-	FileTriggerPatterns     []string                    `json:"file_trigger_patterns,omitempty" url:"file_trigger_patterns,omitempty"`
-	FileTriggerPrefixes     []string                    `json:"file_trigger_prefixes,omitempty" url:"file_trigger_prefixes,omitempty"`
-	TagsRegex               *string                     `json:"tags_regex,omitempty" url:"tags_regex,omitempty"`
-	GenerateNoCodeSchema    *bool                       `json:"generate_no_code_schema,omitempty" url:"generate_no_code_schema,omitempty"`
-	AllPullRequests         map[string]map[string]*bool `json:"all_pull_requests,omitempty" url:"all_pull_requests,omitempty"`
-	PullRequestOpened       map[string]map[string]*bool `json:"pull_request_opened,omitempty" url:"pull_request_opened,omitempty"`
-	PullRequestModified     map[string]map[string]*bool `json:"pull_request_modified,omitempty" url:"pull_request_modified,omitempty"`
-	CreateTag               map[string]map[string]*bool `json:"create_tag,omitempty" url:"create_tag,omitempty"`
-	Push                    map[string]map[string]*bool `json:"push,omitempty" url:"push,omitempty"`
+	Type                    VcsTriggersTypeEnum        `json:"type" url:"type"`
+	GlHookId                *string                    `json:"gl_hook_id,omitempty" url:"gl_hook_id,omitempty"`
+	GhWebhookUrl            *string                    `json:"gh_webhook_url,omitempty" url:"gh_webhook_url,omitempty"`
+	GithubAppInstallationId *int                       `json:"github_app_installation_id,omitempty" url:"github_app_installation_id,omitempty"`
+	TrackedBranch           *string                    `json:"tracked_branch,omitempty" url:"tracked_branch,omitempty"`
+	PostComments            bool                       `json:"post_comments" url:"post_comments"`
+	ApprovalPreApply        *bool                      `json:"approval_pre_apply,omitempty" url:"approval_pre_apply,omitempty"`
+	GhCheck                 bool                       `json:"gh_check" url:"gh_check"`
+	GlPipeline              bool                       `json:"gl_pipeline" url:"gl_pipeline"`
+	PlanOnly                *bool                      `json:"plan_only,omitempty" url:"plan_only,omitempty"`
+	FileTriggersEnabled     *bool                      `json:"file_triggers_enabled,omitempty" url:"file_triggers_enabled,omitempty"`
+	FileTriggerPatterns     []string                   `json:"file_trigger_patterns,omitempty" url:"file_trigger_patterns,omitempty"`
+	FileTriggerPrefixes     []string                   `json:"file_trigger_prefixes,omitempty" url:"file_trigger_prefixes,omitempty"`
+	TagsRegex               *string                    `json:"tags_regex,omitempty" url:"tags_regex,omitempty"`
+	GenerateNoCodeSchema    *bool                      `json:"generate_no_code_schema,omitempty" url:"generate_no_code_schema,omitempty"`
+	AllPullRequests         map[string]map[string]bool `json:"all_pull_requests,omitempty" url:"all_pull_requests,omitempty"`
+	PullRequestOpened       map[string]map[string]bool `json:"pull_request_opened,omitempty" url:"pull_request_opened,omitempty"`
+	PullRequestModified     map[string]map[string]bool `json:"pull_request_modified,omitempty" url:"pull_request_modified,omitempty"`
+	CreateTag               map[string]map[string]bool `json:"create_tag,omitempty" url:"create_tag,omitempty"`
+	Push                    map[string]map[string]bool `json:"push,omitempty" url:"push,omitempty"`
 
 	extraProperties map[string]interface{}
 	_rawJSON        json.RawMessage

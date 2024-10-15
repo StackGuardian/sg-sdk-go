@@ -2,20 +2,24 @@
 
 package api
 
+import (
+	core "github.com/StackGuardian/sg-sdk-go/core"
+)
+
 type RunnerGroup struct {
-	ResourceName         *string                `json:"ResourceName,omitempty" url:"-"`
-	Tags                 []string               `json:"Tags,omitempty" url:"-"`
-	Description          *string                `json:"Description,omitempty" url:"-"`
-	MaxNumberOfRunners   *int                   `json:"MaxNumberOfRunners,omitempty" url:"-"`
-	StorageBackendConfig map[string]interface{} `json:"StorageBackendConfig,omitempty" url:"-"`
-	IsActive             *IsArchiveEnum         `json:"IsActive,omitempty" url:"-"`
+	ResourceName         *core.Optional[string]        `json:"ResourceName,omitempty" url:"-"`
+	Tags                 *core.Optional[[]string]      `json:"Tags,omitempty" url:"-"`
+	Description          *core.Optional[string]        `json:"Description,omitempty" url:"-"`
+	MaxNumberOfRunners   *core.Optional[int]           `json:"MaxNumberOfRunners,omitempty" url:"-"`
+	StorageBackendConfig map[string]interface{}        `json:"StorageBackendConfig,omitempty" url:"-"`
+	IsActive             *core.Optional[IsArchiveEnum] `json:"IsActive,omitempty" url:"-"`
 	// Time in milliseconds as a string
 	CreatedAt string `json:"CreatedAt" url:"-"`
 	// Time in milliseconds as a string
 	ModifiedAt            string                   `json:"ModifiedAt" url:"-"`
 	ParentId              string                   `json:"ParentId" url:"-"`
 	ResourceType          string                   `json:"ResourceType" url:"-"`
-	RunnerToken           *string                  `json:"RunnerToken,omitempty" url:"-"`
+	RunnerToken           *core.Optional[string]   `json:"RunnerToken,omitempty" url:"-"`
 	ContainerInstances    []map[string]interface{} `json:"ContainerInstances,omitempty" url:"-"`
 	ActiveWorkflows       map[string]interface{}   `json:"ActiveWorkflows,omitempty" url:"-"`
 	QueuedWorkflowsCount  int                      `json:"QueuedWorkflowsCount" url:"-"`
@@ -24,9 +28,9 @@ type RunnerGroup struct {
 }
 
 type RunnerDeregister struct {
-	RunnerId              *string  `json:"RunnerId,omitempty" url:"-"`
-	ContainerInstanceArns []string `json:"ContainerInstanceArns,omitempty" url:"-"`
-	ForceDeregister       *bool    `json:"ForceDeregister,omitempty" url:"-"`
+	RunnerId              *core.Optional[string]   `json:"RunnerId,omitempty" url:"-"`
+	ContainerInstanceArns *core.Optional[[]string] `json:"ContainerInstanceArns,omitempty" url:"-"`
+	ForceDeregister       *core.Optional[bool]     `json:"ForceDeregister,omitempty" url:"-"`
 }
 
 type ReadRunnerGroupRequest struct {
@@ -35,7 +39,7 @@ type ReadRunnerGroupRequest struct {
 }
 
 type RunnerStatus struct {
-	RunnerId              *string    `json:"RunnerId,omitempty" url:"-"`
-	ContainerInstanceArns []string   `json:"ContainerInstanceArns,omitempty" url:"-"`
-	Status                StatusEnum `json:"Status" url:"-"`
+	RunnerId              *core.Optional[string]   `json:"RunnerId,omitempty" url:"-"`
+	ContainerInstanceArns *core.Optional[[]string] `json:"ContainerInstanceArns,omitempty" url:"-"`
+	Status                StatusEnum               `json:"Status" url:"-"`
 }

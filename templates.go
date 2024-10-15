@@ -5,6 +5,8 @@ package api
 import (
 	json "encoding/json"
 	fmt "fmt"
+
+	core "github.com/StackGuardian/sg-sdk-go/core"
 )
 
 type CreateTemplateRevisionRequest struct {
@@ -56,20 +58,20 @@ type ReadTemplateRevisionRequest struct {
 
 type PatchedTemplateUpdate struct {
 	// Current organization name of the user, e.g. my-sg-org
-	SgOrgid               string                 `json:"-" url:"-"`
-	IsPublic              *IsArchiveEnum         `json:"IsPublic,omitempty" url:"-"`
-	LongDescription       *string                `json:"LongDescription,omitempty" url:"-"`
-	ShortDescription      *string                `json:"ShortDescription,omitempty" url:"-"`
-	Deprecation           *Deprecation           `json:"Deprecation,omitempty" url:"-"`
-	SharedOrgsList        []string               `json:"SharedOrgsList,omitempty" url:"-"`
-	InputSchemas          []*InputSchemas        `json:"InputSchemas,omitempty" url:"-"`
-	Templates             []*Templates           `json:"Templates,omitempty" url:"-"`
-	Tags                  []string               `json:"Tags,omitempty" url:"-"`
-	GitHubComSync         map[string]interface{} `json:"GitHubComSync,omitempty" url:"-"`
-	VcsTriggers           *VcsTriggers           `json:"VCSTriggers,omitempty" url:"-"`
-	TerraformIntelligence map[string]interface{} `json:"TerraformIntelligence,omitempty" url:"-"`
-	DefaultSchema         *string                `json:"DefaultSchema,omitempty" url:"-"`
-	RuntimeSource         *RuntimeSource         `json:"RuntimeSource,omitempty" url:"-"`
+	SgOrgid               string                                 `json:"-" url:"-"`
+	IsPublic              *core.Optional[IsArchiveEnum]          `json:"IsPublic,omitempty" url:"-"`
+	LongDescription       *core.Optional[string]                 `json:"LongDescription,omitempty" url:"-"`
+	ShortDescription      *core.Optional[string]                 `json:"ShortDescription,omitempty" url:"-"`
+	Deprecation           *core.Optional[Deprecation]            `json:"Deprecation,omitempty" url:"-"`
+	SharedOrgsList        *core.Optional[[]string]               `json:"SharedOrgsList,omitempty" url:"-"`
+	InputSchemas          *core.Optional[[]*InputSchemas]        `json:"InputSchemas,omitempty" url:"-"`
+	Templates             *core.Optional[[]*Templates]           `json:"Templates,omitempty" url:"-"`
+	Tags                  *core.Optional[[]string]               `json:"Tags,omitempty" url:"-"`
+	GitHubComSync         *core.Optional[map[string]interface{}] `json:"GitHubComSync,omitempty" url:"-"`
+	VcsTriggers           *core.Optional[VcsTriggers]            `json:"VCSTriggers,omitempty" url:"-"`
+	TerraformIntelligence *core.Optional[map[string]interface{}] `json:"TerraformIntelligence,omitempty" url:"-"`
+	DefaultSchema         *core.Optional[string]                 `json:"DefaultSchema,omitempty" url:"-"`
+	RuntimeSource         *core.Optional[RuntimeSource]          `json:"RuntimeSource,omitempty" url:"-"`
 }
 
 type ListAllTemplatesRequestTemplateType string

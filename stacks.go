@@ -2,34 +2,38 @@
 
 package api
 
+import (
+	core "github.com/StackGuardian/sg-sdk-go/core"
+)
+
 type Stack struct {
 	// Triggers immediate stack creation process if true.
-	RunOnCreate              *bool                       `json:"-" url:"runOnCreate,omitempty"`
-	ResourceName             *string                     `json:"ResourceName,omitempty" url:"-"`
-	Description              *string                     `json:"Description,omitempty" url:"-"`
-	Tags                     []string                    `json:"Tags,omitempty" url:"-"`
-	EnvironmentVariables     []*EnvVars                  `json:"EnvironmentVariables,omitempty" url:"-"`
-	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"-"`
-	Actions                  map[string]*Actions         `json:"Actions,omitempty" url:"-"`
-	WorkflowRelationsMap     map[string]interface{}      `json:"WorkflowRelationsMap,omitempty" url:"-"`
-	IsActive                 *IsArchiveEnum              `json:"IsActive,omitempty" url:"-"`
-	Approvers                []string                    `json:"Approvers,omitempty" url:"-"`
-	TemplatesConfig          *TemplatesConfig            `json:"TemplatesConfig,omitempty" url:"-"`
-	UserSchedules            []*UserSchedules            `json:"UserSchedules,omitempty" url:"-"`
-	Operations               map[string]interface{}      `json:"Operations,omitempty" url:"-"`
+	RunOnCreate              *bool                                       `json:"-" url:"runOnCreate,omitempty"`
+	ResourceName             *core.Optional[string]                      `json:"ResourceName,omitempty" url:"-"`
+	Description              *core.Optional[string]                      `json:"Description,omitempty" url:"-"`
+	Tags                     *core.Optional[[]string]                    `json:"Tags,omitempty" url:"-"`
+	EnvironmentVariables     *core.Optional[[]*EnvVars]                  `json:"EnvironmentVariables,omitempty" url:"-"`
+	DeploymentPlatformConfig *core.Optional[[]*DeploymentPlatformConfig] `json:"DeploymentPlatformConfig,omitempty" url:"-"`
+	Actions                  *core.Optional[map[string]*Actions]         `json:"Actions,omitempty" url:"-"`
+	WorkflowRelationsMap     *core.Optional[map[string]interface{}]      `json:"WorkflowRelationsMap,omitempty" url:"-"`
+	IsActive                 *core.Optional[IsArchiveEnum]               `json:"IsActive,omitempty" url:"-"`
+	Approvers                *core.Optional[[]string]                    `json:"Approvers,omitempty" url:"-"`
+	TemplatesConfig          *core.Optional[TemplatesConfig]             `json:"TemplatesConfig,omitempty" url:"-"`
+	UserSchedules            *core.Optional[[]*UserSchedules]            `json:"UserSchedules,omitempty" url:"-"`
+	Operations               *core.Optional[map[string]interface{}]      `json:"Operations,omitempty" url:"-"`
 }
 
 type PatchedStack struct {
-	ResourceName             *string                     `json:"ResourceName,omitempty" url:"-"`
-	Description              *string                     `json:"Description,omitempty" url:"-"`
-	Tags                     []string                    `json:"Tags,omitempty" url:"-"`
-	EnvironmentVariables     []*EnvVars                  `json:"EnvironmentVariables,omitempty" url:"-"`
-	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"-"`
-	Actions                  map[string]*Actions         `json:"Actions,omitempty" url:"-"`
-	WorkflowRelationsMap     map[string]interface{}      `json:"WorkflowRelationsMap,omitempty" url:"-"`
-	IsActive                 *IsArchiveEnum              `json:"IsActive,omitempty" url:"-"`
-	Approvers                []string                    `json:"Approvers,omitempty" url:"-"`
-	TemplatesConfig          *TemplatesConfig            `json:"TemplatesConfig,omitempty" url:"-"`
-	UserSchedules            []*UserSchedules            `json:"UserSchedules,omitempty" url:"-"`
-	Operations               map[string]interface{}      `json:"Operations,omitempty" url:"-"`
+	ResourceName             *core.Optional[string]                      `json:"ResourceName,omitempty" url:"-"`
+	Description              *core.Optional[string]                      `json:"Description,omitempty" url:"-"`
+	Tags                     *core.Optional[[]string]                    `json:"Tags,omitempty" url:"-"`
+	EnvironmentVariables     *core.Optional[[]*EnvVars]                  `json:"EnvironmentVariables,omitempty" url:"-"`
+	DeploymentPlatformConfig *core.Optional[[]*DeploymentPlatformConfig] `json:"DeploymentPlatformConfig,omitempty" url:"-"`
+	Actions                  *core.Optional[map[string]*Actions]         `json:"Actions,omitempty" url:"-"`
+	WorkflowRelationsMap     *core.Optional[map[string]interface{}]      `json:"WorkflowRelationsMap,omitempty" url:"-"`
+	IsActive                 *core.Optional[IsArchiveEnum]               `json:"IsActive,omitempty" url:"-"`
+	Approvers                *core.Optional[[]string]                    `json:"Approvers,omitempty" url:"-"`
+	TemplatesConfig          *core.Optional[TemplatesConfig]             `json:"TemplatesConfig,omitempty" url:"-"`
+	UserSchedules            *core.Optional[[]*UserSchedules]            `json:"UserSchedules,omitempty" url:"-"`
+	Operations               *core.Optional[map[string]interface{}]      `json:"Operations,omitempty" url:"-"`
 }

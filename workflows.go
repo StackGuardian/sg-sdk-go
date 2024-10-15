@@ -2,55 +2,59 @@
 
 package api
 
+import (
+	core "github.com/StackGuardian/sg-sdk-go/core"
+)
+
 type Workflow struct {
-	ResourceName         *string          `json:"ResourceName,omitempty" url:"-"`
-	Description          *string          `json:"Description,omitempty" url:"-"`
-	Tags                 []string         `json:"Tags,omitempty" url:"-"`
-	IsActive             *IsArchiveEnum   `json:"IsActive,omitempty" url:"-"`
-	WfStepsConfig        []*WfStepsConfig `json:"WfStepsConfig,omitempty" url:"-"`
-	WfType               *WfTypeEnum      `json:"WfType,omitempty" url:"-"`
-	TerraformConfig      *TerraformConfig `json:"TerraformConfig,omitempty" url:"-"`
-	EnvironmentVariables []*EnvVars       `json:"EnvironmentVariables,omitempty" url:"-"`
-	EnforcedPolicies     []interface{}    `json:"EnforcedPolicies,omitempty" url:"-"`
-	Authors              []interface{}    `json:"Authors,omitempty" url:"-"`
-	SubResourceId        string           `json:"SubResourceId" url:"-"`
-	OrgId                string           `json:"OrgId" url:"-"`
-	IsArchive            IsArchiveEnum    `json:"IsArchive" url:"-"`
-	ResourceId           string           `json:"ResourceId" url:"-"`
+	ResourceName         *core.Optional[string]           `json:"ResourceName,omitempty" url:"-"`
+	Description          *core.Optional[string]           `json:"Description,omitempty" url:"-"`
+	Tags                 *core.Optional[[]string]         `json:"Tags,omitempty" url:"-"`
+	IsActive             *core.Optional[IsArchiveEnum]    `json:"IsActive,omitempty" url:"-"`
+	WfStepsConfig        *core.Optional[[]*WfStepsConfig] `json:"WfStepsConfig,omitempty" url:"-"`
+	WfType               *core.Optional[WfTypeEnum]       `json:"WfType,omitempty" url:"-"`
+	TerraformConfig      *core.Optional[TerraformConfig]  `json:"TerraformConfig,omitempty" url:"-"`
+	EnvironmentVariables *core.Optional[[]*EnvVars]       `json:"EnvironmentVariables,omitempty" url:"-"`
+	EnforcedPolicies     []interface{}                    `json:"EnforcedPolicies,omitempty" url:"-"`
+	Authors              []interface{}                    `json:"Authors,omitempty" url:"-"`
+	SubResourceId        string                           `json:"SubResourceId" url:"-"`
+	OrgId                string                           `json:"OrgId" url:"-"`
+	IsArchive            IsArchiveEnum                    `json:"IsArchive" url:"-"`
+	ResourceId           string                           `json:"ResourceId" url:"-"`
 	// Time in milliseconds as a string
 	CreatedAt string `json:"CreatedAt" url:"-"`
 	// Time in milliseconds as a string
-	ModifiedAt                  string                      `json:"ModifiedAt" url:"-"`
-	ParentId                    string                      `json:"ParentId" url:"-"`
-	ResourceType                string                      `json:"ResourceType" url:"-"`
-	LatestWfrunStatus           LatestWfrunStatusEnum       `json:"LatestWfrunStatus" url:"-"`
-	DocVersion                  string                      `json:"DocVersion" url:"-"`
-	DeploymentPlatformConfig    []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"-"`
-	VcsConfig                   *VcsConfig                  `json:"VCSConfig,omitempty" url:"-"`
-	UserSchedules               []*UserSchedules            `json:"UserSchedules,omitempty" url:"-"`
-	GitHubComSync               map[string]interface{}      `json:"GitHubComSync,omitempty" url:"-"`
-	VcsTriggers                 *VcsTriggers                `json:"VCSTriggers,omitempty" url:"-"`
-	MiniSteps                   *MiniStepsSchema            `json:"MiniSteps,omitempty" url:"-"`
-	Approvers                   []string                    `json:"Approvers,omitempty" url:"-"`
-	NumberOfApprovalsRequired   *int                        `json:"NumberOfApprovalsRequired,omitempty" url:"-"`
-	RunnerConstraints           *RunnerConstraints          `json:"RunnerConstraints,omitempty" url:"-"`
-	UserJobCpu                  *int                        `json:"UserJobCPU,omitempty" url:"-"`
-	UserJobMemory               *int                        `json:"UserJobMemory,omitempty" url:"-"`
-	CacheConfig                 *CacheConfig                `json:"CacheConfig,omitempty" url:"-"`
-	TfStateCleaned              map[string]interface{}      `json:"TfStateCleaned,omitempty" url:"-"`
-	InfracostBreakdown          map[string]interface{}      `json:"InfracostBreakdown,omitempty" url:"-"`
-	PolicyEvalResults           map[string]interface{}      `json:"PolicyEvalResults,omitempty" url:"-"`
-	InfracostBreakdownPreApply  map[string]interface{}      `json:"InfracostBreakdownPreApply,omitempty" url:"-"`
-	InfracostBreakdownPostApply map[string]interface{}      `json:"InfracostBreakdownPostApply,omitempty" url:"-"`
-	TfDrift                     map[string]interface{}      `json:"TfDrift,omitempty" url:"-"`
-	CfStateCleaned              map[string]interface{}      `json:"CfStateCleaned,omitempty" url:"-"`
-	CfStackPlan                 map[string]interface{}      `json:"CfStackPlan,omitempty" url:"-"`
-	CfDrift                     map[string]interface{}      `json:"CfDrift,omitempty" url:"-"`
-	K8SResources                map[string]interface{}      `json:"K8sResources,omitempty" url:"-"`
-	K8SDrift                    map[string]interface{}      `json:"K8sDrift,omitempty" url:"-"`
-	TerragruntDrift             map[string]interface{}      `json:"TerragruntDrift,omitempty" url:"-"`
-	AnsibleOutputs              map[string]interface{}      `json:"AnsibleOutputs,omitempty" url:"-"`
-	AnsiblePlan                 map[string]interface{}      `json:"AnsiblePlan,omitempty" url:"-"`
-	AnsibleDrift                map[string]interface{}      `json:"AnsibleDrift,omitempty" url:"-"`
-	SgCustomWorkflowRunFacts    map[string]interface{}      `json:"SGCustomWorkflowRunFacts,omitempty" url:"-"`
+	ModifiedAt                  string                                      `json:"ModifiedAt" url:"-"`
+	ParentId                    string                                      `json:"ParentId" url:"-"`
+	ResourceType                string                                      `json:"ResourceType" url:"-"`
+	LatestWfrunStatus           LatestWfrunStatusEnum                       `json:"LatestWfrunStatus" url:"-"`
+	DocVersion                  string                                      `json:"DocVersion" url:"-"`
+	DeploymentPlatformConfig    *core.Optional[[]*DeploymentPlatformConfig] `json:"DeploymentPlatformConfig,omitempty" url:"-"`
+	VcsConfig                   *core.Optional[VcsConfig]                   `json:"VCSConfig,omitempty" url:"-"`
+	UserSchedules               *core.Optional[[]*UserSchedules]            `json:"UserSchedules,omitempty" url:"-"`
+	GitHubComSync               *core.Optional[map[string]interface{}]      `json:"GitHubComSync,omitempty" url:"-"`
+	VcsTriggers                 *VcsTriggers                                `json:"VCSTriggers,omitempty" url:"-"`
+	MiniSteps                   *core.Optional[MiniStepsSchema]             `json:"MiniSteps,omitempty" url:"-"`
+	Approvers                   *core.Optional[[]string]                    `json:"Approvers,omitempty" url:"-"`
+	NumberOfApprovalsRequired   *core.Optional[int]                         `json:"NumberOfApprovalsRequired,omitempty" url:"-"`
+	RunnerConstraints           *core.Optional[RunnerConstraints]           `json:"RunnerConstraints,omitempty" url:"-"`
+	UserJobCpu                  *core.Optional[int]                         `json:"UserJobCPU,omitempty" url:"-"`
+	UserJobMemory               *core.Optional[int]                         `json:"UserJobMemory,omitempty" url:"-"`
+	CacheConfig                 *core.Optional[CacheConfig]                 `json:"CacheConfig,omitempty" url:"-"`
+	TfStateCleaned              *core.Optional[map[string]interface{}]      `json:"TfStateCleaned,omitempty" url:"-"`
+	InfracostBreakdown          *core.Optional[map[string]interface{}]      `json:"InfracostBreakdown,omitempty" url:"-"`
+	PolicyEvalResults           *core.Optional[map[string]interface{}]      `json:"PolicyEvalResults,omitempty" url:"-"`
+	InfracostBreakdownPreApply  *core.Optional[map[string]interface{}]      `json:"InfracostBreakdownPreApply,omitempty" url:"-"`
+	InfracostBreakdownPostApply *core.Optional[map[string]interface{}]      `json:"InfracostBreakdownPostApply,omitempty" url:"-"`
+	TfDrift                     *core.Optional[map[string]interface{}]      `json:"TfDrift,omitempty" url:"-"`
+	CfStateCleaned              *core.Optional[map[string]interface{}]      `json:"CfStateCleaned,omitempty" url:"-"`
+	CfStackPlan                 *core.Optional[map[string]interface{}]      `json:"CfStackPlan,omitempty" url:"-"`
+	CfDrift                     *core.Optional[map[string]interface{}]      `json:"CfDrift,omitempty" url:"-"`
+	K8SResources                *core.Optional[map[string]interface{}]      `json:"K8sResources,omitempty" url:"-"`
+	K8SDrift                    *core.Optional[map[string]interface{}]      `json:"K8sDrift,omitempty" url:"-"`
+	TerragruntDrift             *core.Optional[map[string]interface{}]      `json:"TerragruntDrift,omitempty" url:"-"`
+	AnsibleOutputs              *core.Optional[map[string]interface{}]      `json:"AnsibleOutputs,omitempty" url:"-"`
+	AnsiblePlan                 *core.Optional[map[string]interface{}]      `json:"AnsiblePlan,omitempty" url:"-"`
+	AnsibleDrift                *core.Optional[map[string]interface{}]      `json:"AnsibleDrift,omitempty" url:"-"`
+	SgCustomWorkflowRunFacts    *core.Optional[map[string]interface{}]      `json:"SGCustomWorkflowRunFacts,omitempty" url:"-"`
 }

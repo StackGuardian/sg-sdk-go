@@ -4,9 +4,10 @@ package workflowrunfacts
 
 import (
 	context "context"
+	http "net/http"
+
 	core "github.com/StackGuardian/sg-sdk-go/core"
 	option "github.com/StackGuardian/sg-sdk-go/option"
-	http "net/http"
 )
 
 type Client struct {
@@ -62,11 +63,13 @@ func (c *Client) ReadWorkflowRunFacts(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:         endpointURL,
-			Method:      http.MethodGet,
-			MaxAttempts: options.MaxAttempts,
-			Headers:     headers,
-			Client:      options.HTTPClient,
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
 		},
 	); err != nil {
 		return err

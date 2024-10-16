@@ -1,37 +1,17 @@
-# StackGuardian Go SDK (sg-sdk-go)
-Go SDK for StackGuardian APIs. This SDK is currently in alpha.
+<a href="https://www.stackguardian.io/">
+    <img src=".github/stackguardian_logo.svg" alt="StackGuardian logo" title="StackGuardian" align="right" height="40" />
+</a>
 
-Currently, the SDK supports the following SG APIs:
-- WorkflowRuns.GetWorkflowRun
-- WorkflowRuns.GetWorkflowRuns(Stack)
-- WorkflowRuns.ApproveWorkflowRun
-- WorkflowRuns.ApproveWorkflowRun(Stack)
-- WorkflowRuns.CreateWorkflowRun
-- WorkflowRuns.CreateWorkflowRun(Stack)
-- WorkflowRuns.ListWorkflowRuns
-- WorkflowRuns.ListWorkflowRuns(Stack)
-- WorkflowRuns.GetWorkflowRunLogs
-- WorkflowRuns.GetWorkflowRunLogs(Stack)
-- WorkflowRuns.CancelWorkflowRun
-- WorkflowRuns.DeleteWorkflowRun
-- WorkflowRuns.DeleteWorkflowRun(Stack)
-- WorkflowRuns.UpdateWorkflowRun
-- Workflows.Create
-- Workflows.Delete
-- Workflows.Update
-- Workflow.Read
-- Workflow.List
-- Workflows.Output
-- Workflows.ListAllArtifacts
-- StackWorkflows.Create
-- StackWorkflows.Delete
-- StackWorkflows.Update
-- StackWorkflows.Get
-- StackWorkflows.ListAll
-- StackWorkflows.ListAllArtifacts
-- StackWorkflows.Output
+# StackGuardian SDK For Go (sg-sdk-go)
+`sg-sdk-go` is the StackGuardian SDK for the Go Programming language.
 
-### Setup
+_**DISCLAIMER:** The StackGuardian SDK for Go is currently in pre-release mode and is intended to be used with StackGuardian test servers and not in production environments_.
+
+The SG SDK requires a minimum version of `Go 1.19`.
+
+Check out the notes in the release for information about the latest bug fixes, updates and features added to the SDK.
+
+### Getting started
 
 It's recommended to store your API token and base URL in environment variables:
 ```
@@ -40,8 +20,9 @@ SG_API_TOKEN
 ```
 
 Install the SDK:
+To get started working with the SDK, setup your project for Go modules and retrieve the SDK dependencies using `go get`.
 ```
-go get github.com/stackguardian/sg-sdk-go
+go get github.com/StackGuardian/sg-sdk-go@v1.0.0-beta-2
 ```
 
 ### Sample Usage
@@ -83,7 +64,7 @@ func main() {
 		EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
 			Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}},
 		VcsConfig: &sggosdk.VcsConfig{
-			IacVcsConfig: &sggosdk.IacVcsConfig{
+			IacVcsConfig: &sggosdk.IacvcsConfig{
 				IacTemplateId:          sggosdk.String("/stackguardian/aws-s3-demo-website:16"),
 				UseMarketplaceTemplate: true,
 			},
@@ -111,7 +92,7 @@ func main() {
 	var wfRunResourceName string = response.Data.GetExtraProperties()["ResourceName"].(string)
 
 	// Get the status of the newly created WF run
-	wfRunResponse, err := c.WorkflowRuns.GetWorkflowRun(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, wfRunResourceName)
+	wfRunResponse, err := c.WorkflowRuns.ReadWorkflowRun(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, wfRunResourceName)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -119,4 +100,10 @@ func main() {
 
 }
 ```
+
+
+### Reporting bugs
+If you encounter a bug with the SG SDK for Go we would like to hear about it. Please search the [existing issues](https://github.com/StackGuardian/sg-sdk-go/issues) and see if others are experiencing the same issue before opening a new one. 
+
+Please include the version of the SG SDK for Go, the Go version and the OS you are using along with steps to replicate the issue when appropriate.
 

@@ -89,7 +89,7 @@ func (c *Client) ReadWorkflowGroup(
 		baseURL = options.BaseURL
 	}
 
-	//If wfGrp contains "/" then it might be a nested workflow group
+	//DO NOT REVERT - If wfGrp contains "/" then it might be a nested workflow group
 	//In this case we need to pass through the / without encoding it
 	var endpointURL string
 	if strings.Contains(wfGrp, "/") {
@@ -144,7 +144,7 @@ func (c *Client) DeleteWorkflowGroup(
 		baseURL = options.BaseURL
 	}
 
-	//If wfGrp contains "/" then it might be a nested workflow group
+	//DO NOT REVERT - If wfGrp contains "/" then it might be a nested workflow group
 	//In this case we need to pass through the / without encoding it
 	var endpointURL string
 	if strings.Contains(wfGrp, "/") {
@@ -200,7 +200,7 @@ func (c *Client) UpdateWorkflowGroup(
 		baseURL = options.BaseURL
 	}
 
-	//If wfGrp contains "/" then it might be a nested workflow group
+	//DO NOT REVERT - If wfGrp contains "/" then it might be a nested workflow group
 	//In this case we need to pass through the / without encoding it
 	var endpointURL string
 	if strings.Contains(wfGrp, "/") {
@@ -257,7 +257,7 @@ func (c *Client) CreateChildWorkflowGroup(
 		baseURL = options.BaseURL
 	}
 
-	//If wfGrp contains "/" then it might be a nested workflow group
+	//DO NOT REVERT - If wfGrp contains "/" then it might be a nested workflow group
 	//In this case we need to pass through the / without encoding it
 	var endpointURL string
 	if strings.Contains(wfGrp, "/") {

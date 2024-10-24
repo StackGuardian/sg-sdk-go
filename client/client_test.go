@@ -62,15 +62,15 @@ func TestNewClient(t *testing.T) {
 			option.WithBaseURL(SG_BASE_URL),
 		)
 		createWorkflowRequest := sggosdk.Workflow{
-			DeploymentPlatformConfig: []*sggosdk.DeploymentPlatformConfig{{
+			DeploymentPlatformConfig: sggosdk.Optional([]*sggosdk.DeploymentPlatformConfig{{
 				Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
 				Config: map[string]interface{}{
 					"profileName":   "DummyConnectorForGoSDK",
-					"integrationId": "/integrations/DummyConnectorForGoSDK"}}},
-			WfType: sggosdk.WfTypeEnumCustom.Ptr(),
-			EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
-				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}},
-			VcsConfig: &sggosdk.VcsConfig{
+					"integrationId": "/integrations/DummyConnectorForGoSDK"}}}),
+			WfType: sggosdk.Optional(*sggosdk.WfTypeEnumCustom.Ptr()),
+			EnvironmentVariables: sggosdk.Optional([]*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
+				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}}),
+			VcsConfig: sggosdk.Optional(sggosdk.VcsConfig{
 				IacVcsConfig: &sggosdk.IacvcsConfig{
 					IacTemplateId:          sggosdk.String("/demo-org/ansible-dummy:3"),
 					UseMarketplaceTemplate: true,
@@ -81,13 +81,13 @@ func TestNewClient(t *testing.T) {
 						"bucket_region": "eu-central-1",
 					},
 				},
-			},
-			UserJobCpu:    sggosdk.Int(512),
-			UserJobMemory: sggosdk.Int(1024),
-			RunnerConstraints: &sggosdk.RunnerConstraints{
+			}),
+			UserJobCpu:    sggosdk.Optional(512),
+			UserJobMemory: sggosdk.Optional(1024),
+			RunnerConstraints: sggosdk.Optional(sggosdk.RunnerConstraints{
 				Type: "shared",
-			},
-			Description: sggosdk.String("Dummy Workflow for GoSDK"),
+			}),
+			Description: sggosdk.Optional("Dummy Workflow for GoSDK"),
 		}
 		createResponse, err := c.Workflows.CreateWorkflow(context.Background(), SG_ORG, SG_WF_GROUP, &createWorkflowRequest)
 		assert.Empty(t, err)
@@ -408,15 +408,15 @@ func TestNewClient(t *testing.T) {
 		)
 
 		updateWfRunRequest := sggosdk.PatchedWorkflowRun{
-			DeploymentPlatformConfig: []*sggosdk.DeploymentPlatformConfig{{
+			DeploymentPlatformConfig: sggosdk.Optional([]*sggosdk.DeploymentPlatformConfig{{
 				Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
 				Config: map[string]interface{}{
 					"profileName":   "testAWSConnector",
-					"integrationId": "/integrations/testAWSConnector"}}},
-			WfType: sggosdk.WfTypeEnumTerraform.Ptr(),
-			EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
-				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("UpdatedValue")}}},
-			VcsConfig: &sggosdk.VcsConfig{
+					"integrationId": "/integrations/testAWSConnector"}}}),
+			WfType: sggosdk.Optional(*sggosdk.WfTypeEnumTerraform.Ptr()),
+			EnvironmentVariables: sggosdk.Optional([]*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
+				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("UpdatedValue")}}}),
+			VcsConfig: sggosdk.Optional(sggosdk.VcsConfig{
 				IacVcsConfig: &sggosdk.IacvcsConfig{
 					IacTemplateId:          sggosdk.String("/stackguardian/aws-s3-demo-website:16"),
 					UseMarketplaceTemplate: true,
@@ -427,12 +427,12 @@ func TestNewClient(t *testing.T) {
 						"bucket_region": "eu-central-1",
 					},
 				},
-			},
-			UserJobCpu:    sggosdk.Int(512),
-			UserJobMemory: sggosdk.Int(1024),
-			RunnerConstraints: &sggosdk.RunnerConstraints{
+			}),
+			UserJobCpu:    sggosdk.Optional(512),
+			UserJobMemory: sggosdk.Optional(1024),
+			RunnerConstraints: sggosdk.Optional(sggosdk.RunnerConstraints{
 				Type: "shared",
-			},
+			}),
 		}
 		updateWfRunResponse, err := c.WorkflowRuns.UpdateWorkflowRun(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, SG_WF_RUN, &updateWfRunRequest)
 		assert.Empty(t, err)
@@ -440,45 +440,61 @@ func TestNewClient(t *testing.T) {
 	})
 
 	// Stacks
-	// t.Run("Create and delete stack", func(t *testing.T) {
-	// 	c := NewClient(
-	// 		option.WithApiKey(API_KEY),
-	// 		option.WithBaseURL(SG_BASE_URL),
-	// 	)
-	// 	createStackRequest := sggosdk.Stack{
-	// 		RunOnCreate: sggosdk.Bool(false),
-	// 		DeploymentPlatformConfig: []*sggosdk.DeploymentPlatformConfig{{
-	// 			Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
-	// 			Config: map[string]interface{}{
-	// 				"profileName":   "DummyConnectorForGoSDK",
-	// 				"integrationId": "/integrations/DummyConnectorForGoSDK"}}},
-	// 		EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
-	// 			Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}},
+	t.Run("Create and delete stack", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		createStackRequest := sggosdk.Stack{
+			RunOnCreate: sggosdk.Bool(false),
+			DeploymentPlatformConfig: sggosdk.Optional([]*sggosdk.DeploymentPlatformConfig{
+				{
+					Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
+					Config: map[string]interface{}{
+						"profileName":   "DummyConnectorForGoSDK",
+						"integrationId": "/integrations/DummyConnectorForGoSDK",
+					},
+				},
+			}),
+			EnvironmentVariables: sggosdk.Optional([]*sggosdk.EnvVars{
+				{
+					Kind: sggosdk.EnvVarsKindEnumPlainText,
+					Config: &sggosdk.EnvVarConfig{
+						VarName: "test", TextValue: sggosdk.String("testValue"),
+					},
+				},
+			}),
 
-	// 		Description: sggosdk.String("Dummy Stack for GoSDK"),
-	// 		TemplatesConfig: &sggosdk.TemplatesConfig{
-	// 			TemplateGroupId: sggosdk.String("/demo-org/ansible:4"),
-	// 			Templates: []*sggosdk.TemplateWorkflow{{
-	// 				NumberOfApprovalsRequired: sggosdk.Int(0),
-	// 				Description:               sggosdk.String("Dummy Workflow for GoSDK"),
-	// 				WfType:                    sggosdk.WfTypeEnumCustom.Ptr(),
-	// 				Id:                        "cc0061e9-a75c-421b-a75b-ef918e9f4b28",
-	// 			}},
-	// 		},
-	// 	}
-	// 	createStackResponse, err := c.Stacks.CreateStack(context.Background(), SG_ORG, SG_WF_GROUP, &createStackRequest)
-	// 	assert.Empty(t, err)
-	// 	assert.NotEmpty(t, createStackResponse.Data.Stack.ResourceName)
-	// 	assert.Equal(t, "Stack "+createStackResponse.Data.Stack.ResourceName+" created", createStackResponse.Msg)
+			Description: sggosdk.Optional("Dummy Stack for GoSDK"),
+			TemplatesConfig: sggosdk.Optional(sggosdk.TemplatesConfig{
+				TemplateGroupId: sggosdk.String("/demo-org/ansible:4"),
+				Templates: []*sggosdk.TemplateWorkflow{
+					{
+						NumberOfApprovalsRequired: sggosdk.Int(0),
+						Description:               sggosdk.String("Dummy Workflow for GoSDK"),
+						WfType:                    sggosdk.WfTypeEnumCustom.Ptr(),
+						Id:                        sggosdk.String("cc0061e9-a75c-421b-a75b-ef918e9f4b28"),
+						DeploymentPlatformConfig: []*sggosdk.DeploymentPlatformConfig{{
+							Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
+							Config: map[string]interface{}{
+								"profileName":   "DummyConnectorForGoSDK",
+								"integrationId": "/integrations/DummyConnectorForGoSDK"}}},
+					},
+				}}),
+		}
+		createStackResponse, err := c.Stacks.CreateStack(context.Background(), SG_ORG, SG_WF_GROUP, &createStackRequest)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, createStackResponse.Data.Stack.ResourceName)
+		assert.Equal(t, "Stack "+createStackResponse.Data.Stack.ResourceName+" created", createStackResponse.Msg)
 
-	// 	err = c.StackWorkflows.DeleteStackWorkflow(context.Background(), SG_ORG, createStackResponse.Data.Stack.ResourceName,
-	// 		createStackResponse.Data.Workflows[0].ResourceName, SG_WF_GROUP)
-	// 	assert.Empty(t, err)
-	// 	deleteResponse, err := c.Stacks.DeleteStack(context.Background(), SG_ORG, createStackResponse.Data.Stack.ResourceName, SG_WF_GROUP)
-	// 	assert.Empty(t, err)
-	// 	assert.Equal(t, "Stack "+createStackResponse.Data.Stack.ResourceName+" deleted", deleteResponse.Msg)
-	// 	assert.Empty(t, err)
-	// })
+		err = c.StackWorkflows.DeleteStackWorkflow(context.Background(), SG_ORG, createStackResponse.Data.Stack.ResourceName,
+			createStackResponse.Data.Workflows[0].ResourceName, SG_WF_GROUP)
+		assert.Empty(t, err)
+		deleteResponse, err := c.Stacks.DeleteStack(context.Background(), SG_ORG, createStackResponse.Data.Stack.ResourceName, SG_WF_GROUP)
+		assert.Empty(t, err)
+		assert.Equal(t, "Stack "+createStackResponse.Data.Stack.ResourceName+" deleted", deleteResponse.Msg)
+		assert.Empty(t, err)
+	})
 
 	t.Run("Read stack", func(t *testing.T) {
 		c := NewClient(
@@ -497,7 +513,7 @@ func TestNewClient(t *testing.T) {
 		)
 		runStackRequest := sggosdk.StackAction{
 			ActionType:   sggosdk.ActionTypeEnumApply,
-			ResourceName: sggosdk.String("5srghvu1y7nn"),
+			ResourceName: sggosdk.Optional("5srghvu1y7nn"),
 		}
 		response, err := c.StackWorkflowRuns.CreateStackRun(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP, &runStackRequest)
 		assert.Empty(t, err)
@@ -530,16 +546,16 @@ func TestNewClient(t *testing.T) {
 			option.WithBaseURL(SG_BASE_URL),
 		)
 		createStackRequest := sggosdk.PatchedStack{
-			DeploymentPlatformConfig: []*sggosdk.DeploymentPlatformConfig{{
+			DeploymentPlatformConfig: sggosdk.Optional([]*sggosdk.DeploymentPlatformConfig{{
 				Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
 				Config: map[string]interface{}{
 					"profileName":   "DummyConnectorForGoSDK",
-					"integrationId": "/integrations/DummyConnectorForGoSDK"}}},
-			EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
-				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}},
+					"integrationId": "/integrations/DummyConnectorForGoSDK"}}}),
+			EnvironmentVariables: sggosdk.Optional([]*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
+				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}}),
 
-			Description: sggosdk.String("Dummy Stack for GoSDK"),
-			TemplatesConfig: &sggosdk.TemplatesConfig{
+			Description: sggosdk.Optional("Dummy Stack for GoSDK"),
+			TemplatesConfig: sggosdk.Optional(sggosdk.TemplatesConfig{
 				TemplateGroupId: sggosdk.String("/demo-org/ansible:4"),
 				Templates: []*sggosdk.TemplateWorkflow{{
 					NumberOfApprovalsRequired: sggosdk.Int(0),
@@ -547,7 +563,7 @@ func TestNewClient(t *testing.T) {
 					WfType:                    sggosdk.WfTypeEnumCustom.Ptr(),
 					Id:                        sggosdk.String("cc0061e9-a75c-421b-a75b-ef918e9f4b28"),
 				}},
-			},
+			}),
 		}
 		updateStackResponse, err := c.Stacks.UpdateStack(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP, &createStackRequest)
 		assert.Empty(t, err)
@@ -591,17 +607,17 @@ func TestNewClient(t *testing.T) {
 			ArmClientSecret:   sggosdk.String("1"),
 		})
 		createConnectorRequest := sggosdk.Integration{
-			ResourceName: sggosdk.String(connectorName),
-			Description:  sggosdk.String("test-connector description"),
-			Settings: &sggosdk.Settings{
+			ResourceName: sggosdk.Optional(connectorName),
+			Description:  sggosdk.Optional("test-connector description"),
+			Settings: sggosdk.Optional(sggosdk.Settings{
 				Kind:   sggosdk.SettingsKindEnumAzureStatic,
 				Config: settingsConfigArray,
-			},
+			}),
 		}
 		createConnectorResponse, err := c.Connectors.CreateConnector(context.Background(), SG_ORG, &createConnectorRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, createConnectorResponse.Msg)
-		assert.Equal(t, "Connector "+*createConnectorRequest.ResourceName+" created", *createConnectorResponse.Msg)
+		assert.Equal(t, "Connector "+connectorName+" created", *createConnectorResponse.Msg)
 		//Check that the response contains the resource name
 		assert.NotEmpty(t, createConnectorResponse.Data.ResourceName)
 		assert.Equal(t, connectorName, createConnectorResponse.Data.ResourceName)
@@ -638,14 +654,14 @@ func TestNewClient(t *testing.T) {
 			ArmClientSecret:   sggosdk.String("1"),
 		})
 		updateConnectorRequest := sggosdk.PatchedIntegration{
-			ResourceName: sggosdk.String(connectorName),
-			Description:  sggosdk.String("updated description"),
-			Settings: &sggosdk.Settings{
+			ResourceName: sggosdk.Optional(connectorName),
+			Description:  sggosdk.Optional("updated description"),
+			Settings: sggosdk.Optional(sggosdk.Settings{
 				Kind:   sggosdk.SettingsKindEnumAzureStatic,
 				Config: settingsConfigArray,
-			},
+			}),
 		}
-		updateConnectorResponse, err := c.Connectors.UpdateConnector(context.Background(), *updateConnectorRequest.ResourceName, SG_ORG, &updateConnectorRequest)
+		updateConnectorResponse, err := c.Connectors.UpdateConnector(context.Background(), connectorName, SG_ORG, &updateConnectorRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, updateConnectorResponse.Msg)
 		assert.Equal(t, "Integration "+connectorName+" updated", *updateConnectorResponse.Msg)
@@ -672,7 +688,6 @@ func TestNewClient(t *testing.T) {
 		createWorkflowGroupRequest := sggosdk.WorkflowGroup{
 			ResourceName: sggosdk.String(workflowGroupName),
 			Description:  sggosdk.String("test-workflowGroup description"),
-			IsActive:     sggosdk.IsArchiveEnumZero.Ptr(),
 		}
 		createWorkflowGroupResponse, err := c.WorkflowGroups.CreateWorkflowGroup(context.Background(), SG_ORG, &createWorkflowGroupRequest)
 		assert.Empty(t, err)
@@ -692,11 +707,10 @@ func TestNewClient(t *testing.T) {
 		)
 		workflowGroupName := "go-sdk-test-wfg"
 		updateWorkflowGroupRequest := sggosdk.PatchedWorkflowGroup{
-			ResourceName: sggosdk.String(workflowGroupName),
-			Description:  sggosdk.String("updated description"),
-			IsActive:     sggosdk.IsArchiveEnumZero.Ptr(),
+			ResourceName: sggosdk.Optional(workflowGroupName),
+			Description:  sggosdk.Optional("updated description"),
 		}
-		updateWorkflowGroupResponse, err := c.WorkflowGroups.UpdateWorkflowGroup(context.Background(), SG_ORG, *updateWorkflowGroupRequest.ResourceName, &updateWorkflowGroupRequest)
+		updateWorkflowGroupResponse, err := c.WorkflowGroups.UpdateWorkflowGroup(context.Background(), SG_ORG, workflowGroupName, &updateWorkflowGroupRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, updateWorkflowGroupResponse.Msg)
 		assert.Equal(t, "Workflow Group "+workflowGroupName+" updated", *updateWorkflowGroupResponse.Msg)
@@ -711,8 +725,7 @@ func TestNewClient(t *testing.T) {
 		workflowGroupName := "sg-sdk-go-test/1bger5ydab697a4jxe2gu"
 		updateWorkflowGroupRequest := sggosdk.PatchedWorkflowGroup{
 			// ResourceName: sggosdk.String(workflowGroupName),
-			Description: sggosdk.String("updated description"),
-			IsActive:    sggosdk.IsArchiveEnumZero.Ptr(),
+			Description: sggosdk.Optional("updated description"),
 		}
 		updateWorkflowGroupResponse, err := c.WorkflowGroups.UpdateWorkflowGroup(context.Background(), SG_ORG, workflowGroupName, &updateWorkflowGroupRequest)
 		assert.Empty(t, err)
@@ -776,7 +789,6 @@ func TestNewClient(t *testing.T) {
 		parentWorkflowGroupName := "sg-sdk-go-test"
 		createWorkflowGroupRequest := sggosdk.WorkflowGroup{
 			Description: sggosdk.String("child workflowGroup description"),
-			IsActive:    sggosdk.IsArchiveEnumZero.Ptr(),
 		}
 		createChildWorkflowGroupResponse, err := c.WorkflowGroups.CreateChildWorkflowGroup(
 			context.Background(),
@@ -804,7 +816,6 @@ func TestNewClient(t *testing.T) {
 		parentWorkflowGroupName := "sg-sdk-go-test/1bger5ydab697a4jxe2gu"
 		createWorkflowGroupRequest := sggosdk.WorkflowGroup{
 			Description: sggosdk.String("child workflowGroup description"),
-			IsActive:    sggosdk.IsArchiveEnumZero.Ptr(),
 		}
 		createChildWorkflowGroupResponse, err := c.WorkflowGroups.CreateChildWorkflowGroup(
 			context.Background(),
@@ -825,76 +836,82 @@ func TestNewClient(t *testing.T) {
 	})
 
 	//Roles
-	// t.Run("create_and_delete_roles", func(t *testing.T) {
-	// 	c := NewClient(
-	// 		option.WithApiKey(API_KEY),
-	// 		option.WithBaseURL(SG_BASE_URL),
-	// 	)
-	// 	roleName := "Go-SDK-Test-Role"
-	// 	createRoleRequest := sggosdk.Role{
-	// 		ResourceName: roleName,
-	// 		Description:  sggosdk.String("role description"),
-	// 		AllowedPermissions: map[string]interface{}{
-	// 			"GET/api/v1/orgs/demo-org/policies/<policy>/": "",
-	// 		},
-	// 		Actions: []string{"demo-org"},
-	// 	}
-	// 	createRoleResponse, err := c.UsersRoles.CreateRole(context.Background(), SG_ORG, &createRoleRequest)
-	// 	assert.Empty(t, err)
-	// 	assert.NotEmpty(t, createRoleResponse)
-	// 	assert.Equal(t, "Role "+createRoleResponse.Data.ResourceName+" created", *createRoleResponse.Msg)
+	t.Run("create_and_delete_roles", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		roleName := "Go-SDK-Test-Role"
+		allowedPermissions := &sggosdk.AllowedPermissions{
+			Name: "GET/api/v1/orgs/demo-org/policies/<policy>/",
+			Paths: map[string][]string{
+				"<wfGrps>": {"test"},
+			},
+		}
+		createRoleRequest := sggosdk.Role{
+			ResourceName: roleName,
+			Description:  sggosdk.Optional("role description"),
+			AllowedPermissions: sggosdk.Optional[map[string]*sggosdk.AllowedPermissions](map[string]*sggosdk.AllowedPermissions{
+				"GET/api/v1/orgs/demo-org/policies/<policy>/": allowedPermissions,
+			}),
+		}
+		createRoleResponse, err := c.UsersRoles.CreateRole(context.Background(), SG_ORG, &createRoleRequest)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, createRoleResponse)
+		assert.Equal(t, "Role "+createRoleResponse.Data.ResourceName+" created", *createRoleResponse.Msg)
 
-	// 	deleteRoleResponse, err := c.UsersRoles.DeleteRole(context.Background(), SG_ORG, roleName)
-	// 	assert.Empty(t, err)
-	// 	assert.NotEmpty(t, deleteRoleResponse.Msg)
-	// 	assert.Equal(t, "Role "+roleName+" deleted", *deleteRoleResponse.Msg)
-	// })
+		err = c.UsersRoles.DeleteRole(context.Background(), SG_ORG, roleName)
+		assert.Empty(t, err)
+	})
 
-	// t.Run("update_role", func(t *testing.T) {
-	// 	c := NewClient(
-	// 		option.WithApiKey(API_KEY),
-	// 		option.WithBaseURL(SG_BASE_URL),
-	// 	)
-	// 	roleName := "SDK-Test-Role"
-	// 	updateRoleRequest := sggosdk.PatchedRole{
-	// 		ResourceName: sggosdk.String(roleName),
-	// 		Description:  sggosdk.String("updated description"),
-	// 		AllowedPermissions: map[string]interface{}{
-	// 			"GET/api/v1/orgs/demo-org/policies/<policy>/": "",
-	// 		},
-	// 		Actions: []string{"demo-org"},
-	// 	}
-	// 	updateRoleResponse, err := c.UsersRoles.UpdateRole(context.Background(), SG_ORG, *updateRoleRequest.ResourceName, &updateRoleRequest)
-	// 	assert.Empty(t, err)
-	// 	assert.NotEmpty(t, updateRoleResponse.Msg)
-	// 	assert.Equal(t, "Role /roles/"+roleName+" updated", *updateRoleResponse.Msg)
-	// 	assert.Equal(t, "updated description", *updateRoleResponse.Data.Description)
-	// })
+	t.Run("update_role", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		roleName := "SDK-Test-Role"
+		allowedPermissions := &sggosdk.AllowedPermissions{
+			Name: "GET/api/v1/orgs/demo-org/policies/<policy>/",
+			Paths: map[string][]string{
+				"<wfGrps>": {"test"},
+			},
+		}
+		updateRoleRequest := sggosdk.PatchedRole{
+			ResourceName: sggosdk.Optional(roleName),
+			Description:  sggosdk.Optional("updated description"),
+			AllowedPermissions: sggosdk.Optional[map[string]*sggosdk.AllowedPermissions](map[string]*sggosdk.AllowedPermissions{
+				"GET/api/v1/orgs/demo-org/policies/<policy>/": allowedPermissions,
+			}),
+		}
+		updateRoleResponse, err := c.UsersRoles.UpdateRole(context.Background(), SG_ORG, roleName, &updateRoleRequest)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, updateRoleResponse.Msg)
+		assert.Equal(t, "Role /roles/"+roleName+" updated", *updateRoleResponse.Msg)
+		assert.Equal(t, "updated description", *updateRoleResponse.Data.Description)
+	})
 
-	// t.Run("read_role", func(t *testing.T) {
-	// 	c := NewClient(
-	// 		option.WithApiKey(API_KEY),
-	// 		option.WithBaseURL(SG_BASE_URL),
-	// 	)
-	// 	roleName := "SDK-Test-Role"
-	// 	readRoleResponse, err := c.UsersRoles.ReadRole(context.Background(), SG_ORG, roleName)
-	// 	assert.Empty(t, err)
-	// 	assert.NotEmpty(t, readRoleResponse.Msg)
-	// 	assert.Equal(t, roleName, readRoleResponse.Msg.ResourceName)
-	// })
+	t.Run("read_role", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		roleName := "SDK-Test-Role"
+		readRoleResponse, err := c.UsersRoles.ReadRole(context.Background(), SG_ORG, roleName)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, readRoleResponse.Msg)
+		assert.Equal(t, roleName, readRoleResponse.Msg.ResourceName)
+	})
 
-	// t.Run("listall_role", func(t *testing.T) {
-	// 	c := NewClient(
-	// 		option.WithApiKey(API_KEY),
-	// 		option.WithBaseURL(SG_BASE_URL),
-	// 	)
-	// 	listAllRoleResponse, err := c.UsersRoles.ListAllRoles(context.Background(), SG_ORG)
-	// 	assert.Empty(t, err)
-	// 	assert.NotEmpty(t, listAllRoleResponse.Msg)
-	// 	assert.GreaterOrEqual(t, len(listAllRoleResponse.Msg), 1)
-	// })
+	t.Run("listall_role", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		err := c.UsersRoles.ListAllRoles(context.Background(), SG_ORG)
+		assert.Empty(t, err)
+	})
 
-	// Users
+	// Users/Role assignment
 	t.Run("add_and_remove_users", func(t *testing.T) {
 		c := NewClient(
 			option.WithApiKey(API_KEY),
@@ -919,49 +936,94 @@ func TestNewClient(t *testing.T) {
 		assert.Equal(t, userName+" removed from /orgs/demo-org", *deleteUserResponse.Msg)
 	})
 
-	// t.Run("read_users", func(t *testing.T) {
-	// 	principalHeader := http.Header{}
-	// 	principalHeader.Add("PrincipalId", "test")
-	// 	c := NewClient(
-	// 		option.WithApiKey(API_KEY),
-	// 		option.WithBaseURL("http://localhost:8000"),
-	// 		option.WithHTTPHeader(principalHeader),
-	// 	)
-	// 	// c := NewClient(
-	// 	// 	option.WithApiKey(API_KEY),
-	// 	// 	option.WithBaseURL(SG_BASE_URL),
-	// 	// )
-	// 	userName := "test@dummy.com"
+	t.Run("read_users", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		userName := "test@dummy.com"
 
-	// 	removeUserRequest := sggosdk.GetorRemoveUserFromOrganization{
-	// 		UserId: userName,
-	// 	}
-	// 	getUserResponse, err := c.UsersRoles.GetUser(context.Background(), SG_ORG, &removeUserRequest)
-	// 	assert.Empty(t, err)
-	// 	assert.NotEmpty(t, getUserResponse.Msg)
-	// })
+		removeUserRequest := sggosdk.GetorRemoveUserFromOrganization{
+			UserId: userName,
+		}
+		getUserResponse, err := c.UsersRoles.GetUser(context.Background(), SG_ORG, &removeUserRequest)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, getUserResponse.Msg)
+	})
 
-	// t.Run("update_users", func(t *testing.T) {
-	// 	principalHeader := http.Header{}
-	// 	principalHeader.Add("PrincipalId", "test")
-	// 	c := NewClient(
-	// 		option.WithApiKey(API_KEY),
-	// 		option.WithBaseURL("http://localhost:8000"),
-	// 		option.WithHTTPHeader(principalHeader),
-	// 	)
-	// 	// c := NewClient(
-	// 	// 	option.WithApiKey(API_KEY),
-	// 	// 	option.WithBaseURL(SG_BASE_URL),
-	// 	// )
-	// 	userName := "test@dummy.com"
+	t.Run("update_users", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		userName := "test@dummy.com"
 
-	// 	updateUserRequest := sggosdk.AddUserToOrganization{
-	// 		Role:   "SDK-Test-Role",
-	// 		UserId: userName,
-	// 	}
-	// 	updateUserResponse, err := c.UsersRoles.UpdateUser(context.Background(), SG_ORG, &updateUserRequest)
-	// 	assert.Empty(t, err)
-	// 	assert.NotEmpty(t, updateUserResponse.Msg)
-	// })
+		updateUserRequest := sggosdk.AddUserToOrganization{
+			Role:   "SDK-Test-Role",
+			UserId: userName,
+		}
+		updateUserResponse, err := c.UsersRoles.UpdateUser(context.Background(), SG_ORG, &updateUserRequest)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, updateUserResponse.Msg)
+	})
+
+	t.Run("create_and_delete_policy", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		createPolicyRequest := sggosdk.Policy{
+			ResourceName:              sggosdk.String("GoSDKTestPolicyCreate"),
+			Description:               sggosdk.String("SDK Test Policy Description"),
+			NumberOfApprovalsRequired: sggosdk.Int(1),
+		}
+		createPolicyResponse, err := c.Policies.CreatePolicy(context.Background(), SG_ORG, &createPolicyRequest)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, createPolicyResponse.Msg)
+		assert.Equal(t, "Policy "+*createPolicyRequest.ResourceName+" created", *createPolicyResponse.Msg)
+
+		//TODO: Add response
+		err = c.Policies.DeletePolicy(context.Background(), SG_ORG, *createPolicyRequest.ResourceName)
+		assert.Empty(t, err)
+	})
+
+	t.Run("read_policies", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		policyName := "SDKTestPolicyForUpdate"
+		readPolicyResponse, err := c.Policies.ReadPolicy(context.Background(), SG_ORG, policyName)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, readPolicyResponse.Msg)
+		assert.Equal(t, policyName, *readPolicyResponse.Msg.ResourceName)
+	})
+
+	t.Run("listAll_policies", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		//TODO: Add response
+		err := c.Policies.ListAllPolicies(context.Background(), SG_ORG)
+		assert.Empty(t, err)
+	})
+
+	t.Run("update_policy", func(t *testing.T) {
+		c := NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		policyName := "SDKTestPolicyForUpdate"
+		updatePolicyRequest := sggosdk.PatchedPolicy{
+			ResourceName:              sggosdk.Optional(policyName),
+			Description:               sggosdk.Optional("Updated SDK Test Policy Description"),
+			NumberOfApprovalsRequired: sggosdk.Optional(3),
+		}
+		createPolicyResponse, err := c.Policies.UpdatePolicy(context.Background(), SG_ORG, policyName, &updatePolicyRequest)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, createPolicyResponse.Msg)
+		assert.Equal(t, "Policy "+policyName+" updated", *createPolicyResponse.Msg)
+	})
 
 }

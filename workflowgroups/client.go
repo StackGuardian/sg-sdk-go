@@ -56,13 +56,15 @@ func (c *Client) CreateWorkflowGroup(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:         endpointURL,
-			Method:      http.MethodPost,
-			MaxAttempts: options.MaxAttempts,
-			Headers:     headers,
-			Client:      options.HTTPClient,
-			Request:     request,
-			Response:    &response,
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
 		},
 	); err != nil {
 		return nil, err
@@ -87,7 +89,7 @@ func (c *Client) ReadWorkflowGroup(
 		baseURL = options.BaseURL
 	}
 
-	//If wfGrp contains "/" then it might be a nested workflow group
+	//DO NOT REVERT - If wfGrp contains "/" then it might be a nested workflow group
 	//In this case we need to pass through the / without encoding it
 	var endpointURL string
 	if strings.Contains(wfGrp, "/") {
@@ -110,12 +112,14 @@ func (c *Client) ReadWorkflowGroup(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:         endpointURL,
-			Method:      http.MethodGet,
-			MaxAttempts: options.MaxAttempts,
-			Headers:     headers,
-			Client:      options.HTTPClient,
-			Response:    &response,
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
 		},
 	); err != nil {
 		return nil, err
@@ -140,7 +144,7 @@ func (c *Client) DeleteWorkflowGroup(
 		baseURL = options.BaseURL
 	}
 
-	//If wfGrp contains "/" then it might be a nested workflow group
+	//DO NOT REVERT - If wfGrp contains "/" then it might be a nested workflow group
 	//In this case we need to pass through the / without encoding it
 	var endpointURL string
 	if strings.Contains(wfGrp, "/") {
@@ -163,12 +167,14 @@ func (c *Client) DeleteWorkflowGroup(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:         endpointURL,
-			Method:      http.MethodDelete,
-			MaxAttempts: options.MaxAttempts,
-			Headers:     headers,
-			Client:      options.HTTPClient,
-			Response:    &response,
+			URL:             endpointURL,
+			Method:          http.MethodDelete,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
 		},
 	); err != nil {
 		return nil, err
@@ -194,7 +200,7 @@ func (c *Client) UpdateWorkflowGroup(
 		baseURL = options.BaseURL
 	}
 
-	//If wfGrp contains "/" then it might be a nested workflow group
+	//DO NOT REVERT - If wfGrp contains "/" then it might be a nested workflow group
 	//In this case we need to pass through the / without encoding it
 	var endpointURL string
 	if strings.Contains(wfGrp, "/") {
@@ -217,13 +223,15 @@ func (c *Client) UpdateWorkflowGroup(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:         endpointURL,
-			Method:      http.MethodPatch,
-			MaxAttempts: options.MaxAttempts,
-			Headers:     headers,
-			Client:      options.HTTPClient,
-			Request:     request,
-			Response:    &response,
+			URL:             endpointURL,
+			Method:          http.MethodPatch,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
 		},
 	); err != nil {
 		return nil, err
@@ -249,7 +257,7 @@ func (c *Client) CreateChildWorkflowGroup(
 		baseURL = options.BaseURL
 	}
 
-	//If wfGrp contains "/" then it might be a nested workflow group
+	//DO NOT REVERT - If wfGrp contains "/" then it might be a nested workflow group
 	//In this case we need to pass through the / without encoding it
 	var endpointURL string
 	if strings.Contains(wfGrp, "/") {
@@ -272,13 +280,15 @@ func (c *Client) CreateChildWorkflowGroup(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:         endpointURL,
-			Method:      http.MethodPost,
-			MaxAttempts: options.MaxAttempts,
-			Headers:     headers,
-			Client:      options.HTTPClient,
-			Request:     request,
-			Response:    &response,
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
 		},
 	); err != nil {
 		return nil, err
@@ -314,12 +324,14 @@ func (c *Client) ListAllChildWorkflowGroups(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:         endpointURL,
-			Method:      http.MethodGet,
-			MaxAttempts: options.MaxAttempts,
-			Headers:     headers,
-			Client:      options.HTTPClient,
-			Response:    &response,
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
 		},
 	); err != nil {
 		return nil, err
@@ -350,12 +362,14 @@ func (c *Client) ListAllWorkflowGroups(
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
-			URL:         endpointURL,
-			Method:      http.MethodGet,
-			MaxAttempts: options.MaxAttempts,
-			Headers:     headers,
-			Client:      options.HTTPClient,
-			Response:    &response,
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			MaxAttempts:     options.MaxAttempts,
+			Headers:         headers,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
 		},
 	); err != nil {
 		return nil, err

@@ -2,7 +2,11 @@
 
 package api
 
+import (
+	core "github.com/StackGuardian/sg-sdk-go/core"
+)
+
 type StackAction struct {
-	ResourceName *string        `json:"ResourceName,omitempty" url:"-"`
-	ActionType   ActionTypeEnum `json:"ActionType" url:"-"`
+	ResourceName *core.Optional[string] `json:"ResourceName,omitempty" url:"-"`
+	ActionType   ActionTypeEnum         `json:"ActionType" url:"-"`
 }

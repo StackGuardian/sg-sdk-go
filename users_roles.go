@@ -2,13 +2,20 @@
 
 package api
 
+import (
+	core "github.com/StackGuardian/sg-sdk-go/core"
+)
+
+type Role struct {
+	ResourceName       string                                         `json:"ResourceName" url:"-"`
+	Description        *core.Optional[string]                         `json:"Description,omitempty" url:"-"`
+	Tags               *core.Optional[[]string]                       `json:"Tags,omitempty" url:"-"`
+	AllowedPermissions *core.Optional[map[string]*AllowedPermissions] `json:"AllowedPermissions,omitempty" url:"-"`
+}
+
 type PatchedRole struct {
-	ResourceName       *string                        `json:"ResourceName,omitempty" url:"-"`
-	ParentId           *string                        `json:"ParentId,omitempty" url:"-"`
-	ResourceId         *string                        `json:"ResourceId,omitempty" url:"-"`
-	ResourceType       *string                        `json:"ResourceType,omitempty" url:"-"`
-	Authors            []interface{}                  `json:"Authors,omitempty" url:"-"`
-	Description        *string                        `json:"Description,omitempty" url:"-"`
-	Tags               []string                       `json:"Tags,omitempty" url:"-"`
-	AllowedPermissions map[string]*AllowedPermissions `json:"AllowedPermissions,omitempty" url:"-"`
+	ResourceName       *core.Optional[string]                         `json:"ResourceName,omitempty" url:"-"`
+	Description        *core.Optional[string]                         `json:"Description,omitempty" url:"-"`
+	Tags               *core.Optional[[]string]                       `json:"Tags,omitempty" url:"-"`
+	AllowedPermissions *core.Optional[map[string]*AllowedPermissions] `json:"AllowedPermissions,omitempty" url:"-"`
 }

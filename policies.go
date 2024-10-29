@@ -6,6 +6,23 @@ import (
 	core "github.com/StackGuardian/sg-sdk-go/core"
 )
 
+type Policy struct {
+	// Name of the policy
+	ResourceName *core.Optional[string] `json:"ResourceName,omitempty" url:"-"`
+	// Description of the policy
+	Description *core.Optional[string] `json:"Description,omitempty" url:"-"`
+	// List of IDs of the approvers for the policy
+	Approvers *core.Optional[[]string] `json:"Approvers,omitempty" url:"-"`
+	// Number of approvals required for the policy to be enforced
+	NumberOfApprovalsRequired *core.Optional[int] `json:"NumberOfApprovalsRequired,omitempty" url:"-"`
+	// Tags for the policy
+	Tags *core.Optional[[]string] `json:"Tags,omitempty" url:"-"`
+	// What the policy will be enforced on.
+	EnforcedOn *core.Optional[[]string] `json:"EnforcedOn,omitempty" url:"-"`
+	// Policies Config for the policy
+	PoliciesConfig *core.Optional[[]*PoliciesConfig] `json:"PoliciesConfig,omitempty" url:"-"`
+}
+
 type PatchedPolicy struct {
 	// Name of the policy
 	ResourceName *core.Optional[string] `json:"ResourceName,omitempty" url:"-"`
@@ -17,11 +34,6 @@ type PatchedPolicy struct {
 	NumberOfApprovalsRequired *core.Optional[int] `json:"NumberOfApprovalsRequired,omitempty" url:"-"`
 	// Tags for the policy
 	Tags *core.Optional[[]string] `json:"Tags,omitempty" url:"-"`
-	// Should the policy be active?, choices are 0 or 1
-	//
-	// * `0` - 0
-	// * `1` - 1
-	IsActive *core.Optional[IsArchiveEnum] `json:"IsActive,omitempty" url:"-"`
 	// What the policy will be enforced on.
 	EnforcedOn *core.Optional[[]string] `json:"EnforcedOn,omitempty" url:"-"`
 	// Policies Config for the policy

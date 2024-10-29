@@ -7,33 +7,18 @@ import (
 )
 
 type Workflow struct {
-	ResourceName         *core.Optional[string]           `json:"ResourceName,omitempty" url:"-"`
-	Description          *core.Optional[string]           `json:"Description,omitempty" url:"-"`
-	Tags                 *core.Optional[[]string]         `json:"Tags,omitempty" url:"-"`
-	IsActive             *core.Optional[IsArchiveEnum]    `json:"IsActive,omitempty" url:"-"`
-	WfStepsConfig        *core.Optional[[]*WfStepsConfig] `json:"WfStepsConfig,omitempty" url:"-"`
-	WfType               *core.Optional[WfTypeEnum]       `json:"WfType,omitempty" url:"-"`
-	TerraformConfig      *core.Optional[TerraformConfig]  `json:"TerraformConfig,omitempty" url:"-"`
-	EnvironmentVariables *core.Optional[[]*EnvVars]       `json:"EnvironmentVariables,omitempty" url:"-"`
-	EnforcedPolicies     []interface{}                    `json:"EnforcedPolicies,omitempty" url:"-"`
-	Authors              []interface{}                    `json:"Authors,omitempty" url:"-"`
-	SubResourceId        string                           `json:"SubResourceId" url:"-"`
-	OrgId                string                           `json:"OrgId" url:"-"`
-	IsArchive            IsArchiveEnum                    `json:"IsArchive" url:"-"`
-	ResourceId           string                           `json:"ResourceId" url:"-"`
-	// Time in milliseconds as a string
-	CreatedAt string `json:"CreatedAt" url:"-"`
-	// Time in milliseconds as a string
-	ModifiedAt                  string                                      `json:"ModifiedAt" url:"-"`
-	ParentId                    string                                      `json:"ParentId" url:"-"`
-	ResourceType                string                                      `json:"ResourceType" url:"-"`
-	LatestWfrunStatus           LatestWfrunStatusEnum                       `json:"LatestWfrunStatus" url:"-"`
-	DocVersion                  string                                      `json:"DocVersion" url:"-"`
+	ResourceName                *core.Optional[string]                      `json:"ResourceName,omitempty" url:"-"`
+	Description                 *core.Optional[string]                      `json:"Description,omitempty" url:"-"`
+	Tags                        *core.Optional[[]string]                    `json:"Tags,omitempty" url:"-"`
+	IsActive                    *core.Optional[IsArchiveEnum]               `json:"IsActive,omitempty" url:"-"`
+	WfStepsConfig               *core.Optional[[]*WfStepsConfig]            `json:"WfStepsConfig,omitempty" url:"-"`
+	WfType                      *core.Optional[WfTypeEnum]                  `json:"WfType,omitempty" url:"-"`
+	TerraformConfig             *core.Optional[TerraformConfig]             `json:"TerraformConfig,omitempty" url:"-"`
+	EnvironmentVariables        *core.Optional[[]*EnvVars]                  `json:"EnvironmentVariables,omitempty" url:"-"`
 	DeploymentPlatformConfig    *core.Optional[[]*DeploymentPlatformConfig] `json:"DeploymentPlatformConfig,omitempty" url:"-"`
 	VcsConfig                   *core.Optional[VcsConfig]                   `json:"VCSConfig,omitempty" url:"-"`
 	UserSchedules               *core.Optional[[]*UserSchedules]            `json:"UserSchedules,omitempty" url:"-"`
 	GitHubComSync               *core.Optional[map[string]interface{}]      `json:"GitHubComSync,omitempty" url:"-"`
-	VcsTriggers                 *VcsTriggers                                `json:"VCSTriggers,omitempty" url:"-"`
 	MiniSteps                   *core.Optional[MiniStepsSchema]             `json:"MiniSteps,omitempty" url:"-"`
 	Approvers                   *core.Optional[[]string]                    `json:"Approvers,omitempty" url:"-"`
 	NumberOfApprovalsRequired   *core.Optional[int]                         `json:"NumberOfApprovalsRequired,omitempty" url:"-"`

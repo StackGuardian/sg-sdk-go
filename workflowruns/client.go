@@ -182,7 +182,7 @@ func (c *Client) CancelWorkflowRun(
 	wfGrp string,
 	wfRun string,
 	opts ...option.RequestOption,
-) error {
+) (*sgsdkgo.WorkflowRunsCancelResponse, error) {
 	options := core.NewRequestOptions(opts...)
 
 	baseURL := "https://api.app.stackguardian.io"
@@ -202,6 +202,7 @@ func (c *Client) CancelWorkflowRun(
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
 
+	var response *sgsdkgo.WorkflowRunsCancelResponse
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
@@ -212,11 +213,12 @@ func (c *Client) CancelWorkflowRun(
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
+			Response:        &response,
 		},
 	); err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return response, nil
 }
 
 // Read execution logs for a Workflow Run inside a workflow
@@ -275,7 +277,7 @@ func (c *Client) ApproveWorkflowRun(
 	wfRun string,
 	request *sgsdkgo.WorkflowRunApproval,
 	opts ...option.RequestOption,
-) error {
+) (*sgsdkgo.WorkflowRunApprovalResponse, error) {
 	options := core.NewRequestOptions(opts...)
 
 	baseURL := "https://api.app.stackguardian.io"
@@ -295,6 +297,7 @@ func (c *Client) ApproveWorkflowRun(
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
 
+	var response *sgsdkgo.WorkflowRunApprovalResponse
 	if err := c.caller.Call(
 		ctx,
 		&core.CallParams{
@@ -306,11 +309,12 @@ func (c *Client) ApproveWorkflowRun(
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
 			Request:         request,
+			Response:        &response,
 		},
 	); err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return response, nil
 }
 
 // List all Workflow Runs in a Workflow

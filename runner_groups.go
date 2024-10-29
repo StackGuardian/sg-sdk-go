@@ -14,17 +14,17 @@ type RunnerGroup struct {
 	StorageBackendConfig map[string]interface{}        `json:"StorageBackendConfig,omitempty" url:"-"`
 	IsActive             *core.Optional[IsArchiveEnum] `json:"IsActive,omitempty" url:"-"`
 	// Time in milliseconds as a string
-	CreatedAt string `json:"CreatedAt" url:"-"`
+	CreatedAt *core.Optional[string] `json:"CreatedAt,omitempty" url:"-"`
 	// Time in milliseconds as a string
-	ModifiedAt            string                   `json:"ModifiedAt" url:"-"`
-	ParentId              string                   `json:"ParentId" url:"-"`
-	ResourceType          string                   `json:"ResourceType" url:"-"`
-	RunnerToken           *core.Optional[string]   `json:"RunnerToken,omitempty" url:"-"`
-	ContainerInstances    []map[string]interface{} `json:"ContainerInstances,omitempty" url:"-"`
-	ActiveWorkflows       map[string]interface{}   `json:"ActiveWorkflows,omitempty" url:"-"`
-	QueuedWorkflowsCount  int                      `json:"QueuedWorkflowsCount" url:"-"`
-	PendingWorkflowsCount int                      `json:"PendingWorkflowsCount" url:"-"`
-	RunningWorkflowsCount int                      `json:"RunningWorkflowsCount" url:"-"`
+	ModifiedAt            *core.Optional[string]                   `json:"ModifiedAt,omitempty" url:"-"`
+	ParentId              *core.Optional[string]                   `json:"ParentId,omitempty" url:"-"`
+	ResourceType          *core.Optional[string]                   `json:"ResourceType,omitempty" url:"-"`
+	RunnerToken           *core.Optional[string]                   `json:"RunnerToken,omitempty" url:"-"`
+	ContainerInstances    *core.Optional[[]map[string]interface{}] `json:"ContainerInstances,omitempty" url:"-"`
+	ActiveWorkflows       *core.Optional[map[string]interface{}]   `json:"ActiveWorkflows,omitempty" url:"-"`
+	QueuedWorkflowsCount  *core.Optional[int]                      `json:"QueuedWorkflowsCount,omitempty" url:"-"`
+	PendingWorkflowsCount *core.Optional[int]                      `json:"PendingWorkflowsCount,omitempty" url:"-"`
+	RunningWorkflowsCount *core.Optional[int]                      `json:"RunningWorkflowsCount,omitempty" url:"-"`
 }
 
 type RunnerDeregister struct {

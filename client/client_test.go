@@ -174,7 +174,7 @@ func TestNewClient(t *testing.T) {
 		response, err := c.Workflows.Outputs(context.Background(), SG_ORG, "CUSTOM-7OeX", "test-terragrunt")
 		assert.Empty(t, err)
 		assert.Equal(t, "Outputs retrived", response.Msg)
-		assert.Equal(t, "stackguardian-proper-escargot", response.Data.Outputs["id"]["value"].(string))
+		assert.Equal(t, "stackguardian-proper-escargot", response.Data.Outputs["id"].(map[string]interface{})["value"].(string))
 	})
 
 	t.Run("Update stack workflow", func(t *testing.T) {
@@ -245,7 +245,7 @@ func TestNewClient(t *testing.T) {
 			"refeed2-null-resource-tf-JuNs", "refeed-test-nested-stackrunbug")
 		assert.Empty(t, err)
 		assert.Equal(t, "Outputs retrieved", response.Msg)
-		assert.Equal(t, 654,
+		assert.Equal(t, 817,
 			response.Data.Artifacts["orgs/demo-org/wfgrps/refeed-test-nested-stackrunbug/stacks/stack1/wfs/refeed2-null-resource-tf-JuNs/artifacts/tfstate.json"].Size)
 	})
 
@@ -257,7 +257,8 @@ func TestNewClient(t *testing.T) {
 		response, err := c.StackWorkflows.StackWorkflowOutputs(context.Background(), SG_ORG, "stack1",
 			"refeed2-null-resource-tf-JuNs", "refeed-test-nested-stackrunbug")
 		assert.Empty(t, err)
-		assert.Equal(t, float64(13), response.Data.Outputs["message_length"]["value"].(float64))
+		assert.Equal(t, "Outputs retrived", response.Msg)
+		assert.Equal(t, float64(13), response.Data.Outputs["message_lengths"].(map[string]interface{})["value"].([]interface{})[0])
 	})
 
 	// Workflow Runs
@@ -329,7 +330,7 @@ func TestNewClient(t *testing.T) {
 		response, err := c.WorkflowRuns.CreateWorkflowRun(context.Background(),
 			SG_ORG, SG_WF, SG_WF_GROUP, &createWorkflowRunRequest)
 		assert.Empty(t, err)
-		newWfRunName := response.Data.GetExtraProperties()["ResourceName"].(string)
+		newWfRunName := response.Data.ResourceName
 		assert.NotEmpty(t, newWfRunName)
 
 	})
@@ -340,10 +341,11 @@ func TestNewClient(t *testing.T) {
 			option.WithBaseURL(SG_BASE_URL),
 		)
 		approveWfRunRequest := sggosdk.WorkflowRunApproval{
-			Approve: true,
-			Message: sggosdk.String("Approved"),
+			Approve:                   true,
+			Message:                   sggosdk.String("Approved"),
+			ReasonForApprovalRequired: "Approval reason",
 		}
-		err := c.WorkflowRuns.ApproveWorkflowRun(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, SG_WF_RUN,
+		_, err := c.WorkflowRuns.ApproveWorkflowRun(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, SG_WF_RUN,
 			&approveWfRunRequest)
 		// We expect an error since the workflow run doesnt have any approvals pending
 		assert.Contains(t, err.Error(), "No approval pending")
@@ -356,8 +358,9 @@ func TestNewClient(t *testing.T) {
 			option.WithBaseURL(SG_BASE_URL),
 		)
 		approveWfRunRequest := sggosdk.WorkflowRunApproval{
-			Approve: true,
-			Message: sggosdk.String("Approved"),
+			Approve:                   true,
+			Message:                   sggosdk.String("Approved"),
+			ReasonForApprovalRequired: "Approval reason",
 		}
 		err := c.StackWorkflowRuns.ApproveStackWorkflowRun(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP, SG_STACK_WF_RUN,
 			&approveWfRunRequest)
@@ -394,7 +397,7 @@ func TestNewClient(t *testing.T) {
 			option.WithBaseURL(SG_BASE_URL),
 		)
 
-		err := c.WorkflowRuns.CancelWorkflowRun(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, SG_WF_RUN)
+		_, err := c.WorkflowRuns.CancelWorkflowRun(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, SG_WF_RUN)
 		// We expect an error since the workflow run is already failed
 		if err != nil {
 			assert.Contains(t, err.Error(), "Error cancelling Workflow Run "+SG_WF_RUN)
@@ -722,7 +725,7 @@ func TestNewClient(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		workflowGroupName := "sg-sdk-go-test/1bger5ydab697a4jxe2gu"
+		workflowGroupName := SG_WF_GROUP + "/1bger5ydab697a4jxe2gu"
 		updateWorkflowGroupRequest := sggosdk.PatchedWorkflowGroup{
 			// ResourceName: sggosdk.String(workflowGroupName),
 			Description: sggosdk.Optional("updated description"),
@@ -739,7 +742,7 @@ func TestNewClient(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		workflowGroupName := "sg-sdk-go-test"
+		workflowGroupName := SG_WF_GROUP
 		readWorkflowGroupResponse, err := c.WorkflowGroups.ReadWorkflowGroup(context.Background(), SG_ORG, workflowGroupName)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, readWorkflowGroupResponse.Msg)
@@ -751,7 +754,7 @@ func TestNewClient(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		workflowGroupName := "sg-sdk-go-test/1bger5ydab697a4jxe2gu"
+		workflowGroupName := SG_WF_GROUP + "/1bger5ydab697a4jxe2gu"
 		readWorkflowGroupResponse, err := c.WorkflowGroups.ReadWorkflowGroup(context.Background(), SG_ORG, workflowGroupName)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, readWorkflowGroupResponse.Msg)
@@ -775,7 +778,7 @@ func TestNewClient(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		listAllWorkflowGroupResponse, err := c.WorkflowGroups.ListAllChildWorkflowGroups(context.Background(), SG_ORG, "sg-sdk-go-test")
+		listAllWorkflowGroupResponse, err := c.WorkflowGroups.ListAllChildWorkflowGroups(context.Background(), SG_ORG, SG_WF_GROUP)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, listAllWorkflowGroupResponse.Msg)
 		assert.GreaterOrEqual(t, len(listAllWorkflowGroupResponse.Msg), 1)
@@ -786,7 +789,7 @@ func TestNewClient(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		parentWorkflowGroupName := "sg-sdk-go-test"
+		parentWorkflowGroupName := SG_WF_GROUP
 		createWorkflowGroupRequest := sggosdk.WorkflowGroup{
 			Description: sggosdk.String("child workflowGroup description"),
 		}
@@ -813,7 +816,7 @@ func TestNewClient(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		parentWorkflowGroupName := "sg-sdk-go-test/1bger5ydab697a4jxe2gu"
+		parentWorkflowGroupName := SG_WF_GROUP + "/1bger5ydab697a4jxe2gu"
 		createWorkflowGroupRequest := sggosdk.WorkflowGroup{
 			Description: sggosdk.String("child workflowGroup description"),
 		}
@@ -973,17 +976,17 @@ func TestNewClient(t *testing.T) {
 			option.WithBaseURL(SG_BASE_URL),
 		)
 		createPolicyRequest := sggosdk.Policy{
-			ResourceName:              sggosdk.String("GoSDKTestPolicyCreate"),
-			Description:               sggosdk.String("SDK Test Policy Description"),
-			NumberOfApprovalsRequired: sggosdk.Int(1),
+			ResourceName:              sggosdk.Optional("GoSDKTestPolicyCreate"),
+			Description:               sggosdk.Optional("SDK Test Policy Description"),
+			NumberOfApprovalsRequired: sggosdk.Optional(1),
 		}
 		createPolicyResponse, err := c.Policies.CreatePolicy(context.Background(), SG_ORG, &createPolicyRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, createPolicyResponse.Msg)
-		assert.Equal(t, "Policy "+*createPolicyRequest.ResourceName+" created", *createPolicyResponse.Msg)
+		assert.Equal(t, "Policy "+createPolicyRequest.ResourceName.Value+" created", *createPolicyResponse.Msg)
 
 		//TODO: Add response
-		err = c.Policies.DeletePolicy(context.Background(), SG_ORG, *createPolicyRequest.ResourceName)
+		err = c.Policies.DeletePolicy(context.Background(), SG_ORG, createPolicyRequest.ResourceName.Value)
 		assert.Empty(t, err)
 	})
 

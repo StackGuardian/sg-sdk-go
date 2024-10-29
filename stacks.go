@@ -8,32 +8,32 @@ import (
 
 type Stack struct {
 	// Triggers immediate stack creation process if true.
-	RunOnCreate              *bool                                       `json:"-" url:"runOnCreate,omitempty"`
-	ResourceName             *core.Optional[string]                      `json:"ResourceName,omitempty" url:"-"`
-	Description              *core.Optional[string]                      `json:"Description,omitempty" url:"-"`
-	Tags                     *core.Optional[[]string]                    `json:"Tags,omitempty" url:"-"`
-	EnvironmentVariables     *core.Optional[[]*EnvVars]                  `json:"EnvironmentVariables,omitempty" url:"-"`
+	RunOnCreate  *bool                    `json:"-" url:"runOnCreate,omitempty"`
+	ResourceName *core.Optional[string]   `json:"ResourceName,omitempty" url:"-"`
+	Description  *core.Optional[string]   `json:"Description,omitempty" url:"-"`
+	Tags         *core.Optional[[]string] `json:"Tags,omitempty" url:"-"`
+	// Used when one or all templates specified in the IAC Group are not supplied in TemplatesConfig.
+	EnvironmentVariables *core.Optional[[]*EnvVars] `json:"EnvironmentVariables,omitempty" url:"-"`
+	// Used when one or all templates specified in the IAC Group are not supplied in TemplatesConfig.
 	DeploymentPlatformConfig *core.Optional[[]*DeploymentPlatformConfig] `json:"DeploymentPlatformConfig,omitempty" url:"-"`
 	Actions                  *core.Optional[map[string]*Actions]         `json:"Actions,omitempty" url:"-"`
-	WorkflowRelationsMap     *core.Optional[map[string]interface{}]      `json:"WorkflowRelationsMap,omitempty" url:"-"`
-	IsActive                 *core.Optional[IsArchiveEnum]               `json:"IsActive,omitempty" url:"-"`
-	Approvers                *core.Optional[[]string]                    `json:"Approvers,omitempty" url:"-"`
 	TemplatesConfig          *core.Optional[TemplatesConfig]             `json:"TemplatesConfig,omitempty" url:"-"`
 	UserSchedules            *core.Optional[[]*UserSchedules]            `json:"UserSchedules,omitempty" url:"-"`
-	Operations               *core.Optional[map[string]interface{}]      `json:"Operations,omitempty" url:"-"`
+	// Used only when upgrading Stack.
+	Operations *core.Optional[map[string]interface{}] `json:"Operations,omitempty" url:"-"`
 }
 
 type PatchedStack struct {
-	ResourceName             *core.Optional[string]                      `json:"ResourceName,omitempty" url:"-"`
-	Description              *core.Optional[string]                      `json:"Description,omitempty" url:"-"`
-	Tags                     *core.Optional[[]string]                    `json:"Tags,omitempty" url:"-"`
-	EnvironmentVariables     *core.Optional[[]*EnvVars]                  `json:"EnvironmentVariables,omitempty" url:"-"`
+	ResourceName *core.Optional[string]   `json:"ResourceName,omitempty" url:"-"`
+	Description  *core.Optional[string]   `json:"Description,omitempty" url:"-"`
+	Tags         *core.Optional[[]string] `json:"Tags,omitempty" url:"-"`
+	// Used when one or all templates specified in the IAC Group are not supplied in TemplatesConfig.
+	EnvironmentVariables *core.Optional[[]*EnvVars] `json:"EnvironmentVariables,omitempty" url:"-"`
+	// Used when one or all templates specified in the IAC Group are not supplied in TemplatesConfig.
 	DeploymentPlatformConfig *core.Optional[[]*DeploymentPlatformConfig] `json:"DeploymentPlatformConfig,omitempty" url:"-"`
 	Actions                  *core.Optional[map[string]*Actions]         `json:"Actions,omitempty" url:"-"`
-	WorkflowRelationsMap     *core.Optional[map[string]interface{}]      `json:"WorkflowRelationsMap,omitempty" url:"-"`
-	IsActive                 *core.Optional[IsArchiveEnum]               `json:"IsActive,omitempty" url:"-"`
-	Approvers                *core.Optional[[]string]                    `json:"Approvers,omitempty" url:"-"`
 	TemplatesConfig          *core.Optional[TemplatesConfig]             `json:"TemplatesConfig,omitempty" url:"-"`
 	UserSchedules            *core.Optional[[]*UserSchedules]            `json:"UserSchedules,omitempty" url:"-"`
-	Operations               *core.Optional[map[string]interface{}]      `json:"Operations,omitempty" url:"-"`
+	// Used only when upgrading Stack.
+	Operations *core.Optional[map[string]interface{}] `json:"Operations,omitempty" url:"-"`
 }

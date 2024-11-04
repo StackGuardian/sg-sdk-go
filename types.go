@@ -1951,6 +1951,7 @@ type GeneratedMsgTerraformconfig struct {
 	ApprovalPreApply       int                                                  `json:"approvalPreApply" url:"approvalPreApply"`
 	ManagedTerraformState  int                                                  `json:"managedTerraformState" url:"managedTerraformState"`
 	TerraformPlanOptions   string                                               `json:"terraformPlanOptions" url:"terraformPlanOptions"`
+	TerraformInitOptions   string                                               `json:"terraformInitOptions" url:"terraformInitOptions"`
 	DriftCheck             int                                                  `json:"driftCheck" url:"driftCheck"`
 	PostApplyWfStepsConfig []*GeneratedMsgTerraformconfigPostapplywfstepsconfig `json:"postApplyWfStepsConfig,omitempty" url:"postApplyWfStepsConfig,omitempty"`
 
@@ -6184,6 +6185,7 @@ type GeneratedWorkflowRunListAllMsgRuntimeparametersTerraformconfig struct {
 	ApprovalPreApply       bool                                                                                    `json:"approvalPreApply" url:"approvalPreApply"`
 	ManagedTerraformState  bool                                                                                    `json:"managedTerraformState" url:"managedTerraformState"`
 	TerraformPlanOptions   string                                                                                  `json:"terraformPlanOptions" url:"terraformPlanOptions"`
+	TerraformInitOptions   string                                                                                  `json:"terraformInitOptions" url:"terraformInitOptions"`
 	DriftCheck             bool                                                                                    `json:"driftCheck" url:"driftCheck"`
 	PostApplyWfStepsConfig []*GeneratedWorkflowRunListAllMsgRuntimeparametersTerraformconfigPostapplywfstepsconfig `json:"postApplyWfStepsConfig,omitempty" url:"postApplyWfStepsConfig,omitempty"`
 
@@ -8170,6 +8172,7 @@ type GeneratedWorkflowRunStackGetMsgRuntimeparametersWfstepsconfigWfstepinputdat
 	TerraformVersion      string                                                       `json:"terraformVersion" url:"terraformVersion"`
 	ManagedTerraformState bool                                                         `json:"managedTerraformState" url:"managedTerraformState"`
 	TerraformPlanOptions  string                                                       `json:"terraformPlanOptions" url:"terraformPlanOptions"`
+	TerraformInitOptions  string                                                       `json:"terraformInitOptions" url:"terraformInitOptions"`
 	TerraformAction       string                                                       `json:"terraformAction" url:"terraformAction"`
 	ApplyPolicy           bool                                                         `json:"applyPolicy" url:"applyPolicy"`
 	CacheConfig           *GeneratedWorkflowRunStackGetMsgRuntimeparametersCacheconfig `json:"cacheConfig,omitempty" url:"cacheConfig,omitempty"`
@@ -11266,6 +11269,7 @@ type TerraformConfig struct {
 	ManagedTerraformState   *bool            `json:"managedTerraformState,omitempty" url:"managedTerraformState,omitempty"`
 	ApprovalPreApply        *bool            `json:"approvalPreApply,omitempty" url:"approvalPreApply,omitempty"`
 	TerraformPlanOptions    *string          `json:"terraformPlanOptions,omitempty" url:"terraformPlanOptions,omitempty"`
+	TerraformInitOptions    *string          `json:"terraformInitOptions,omitempty" url:"terraformInitOptions,omitempty"`
 	TerraformBinPath        []*MountPoint    `json:"terraformBinPath,omitempty" url:"terraformBinPath,omitempty"`
 	Timeout                 *int             `json:"timeout,omitempty" url:"timeout,omitempty"`
 	PostApplyWfStepsConfig  []*WfStepsConfig `json:"postApplyWfStepsConfig,omitempty" url:"postApplyWfStepsConfig,omitempty"`

@@ -91,20 +91,7 @@ func (c *Client) ReadWorkflowGroup(
 
 	//DO NOT REVERT - If wfGrp contains "/" then it might be a nested workflow group
 	//In this case we need to pass through the / without encoding it
-	var endpointURL string
-	if strings.Contains(wfGrp, "/") {
-		endpointURL = core.EncodeURL(
-			baseURL+"/api/v1/orgs/%v/wfgrps/",
-			org,
-		)
-		endpointURL += wfGrp
-	} else {
-		endpointURL = core.EncodeURL(
-			baseURL+"/api/v1/orgs/%v/wfgrps/%v",
-			org,
-			wfGrp,
-		)
-	}
+	endpointURL := escapeSlashesForNestedWorkflowGroup(baseURL, org, wfGrp)
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
 
@@ -146,20 +133,7 @@ func (c *Client) DeleteWorkflowGroup(
 
 	//DO NOT REVERT - If wfGrp contains "/" then it might be a nested workflow group
 	//In this case we need to pass through the / without encoding it
-	var endpointURL string
-	if strings.Contains(wfGrp, "/") {
-		endpointURL = core.EncodeURL(
-			baseURL+"/api/v1/orgs/%v/wfgrps/",
-			org,
-		)
-		endpointURL += wfGrp
-	} else {
-		endpointURL = core.EncodeURL(
-			baseURL+"/api/v1/orgs/%v/wfgrps/%v",
-			org,
-			wfGrp,
-		)
-	}
+	endpointURL := escapeSlashesForNestedWorkflowGroup(baseURL, org, wfGrp)
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
 
@@ -202,20 +176,7 @@ func (c *Client) UpdateWorkflowGroup(
 
 	//DO NOT REVERT - If wfGrp contains "/" then it might be a nested workflow group
 	//In this case we need to pass through the / without encoding it
-	var endpointURL string
-	if strings.Contains(wfGrp, "/") {
-		endpointURL = core.EncodeURL(
-			baseURL+"/api/v1/orgs/%v/wfgrps/",
-			org,
-		)
-		endpointURL += wfGrp
-	} else {
-		endpointURL = core.EncodeURL(
-			baseURL+"/api/v1/orgs/%v/wfgrps/%v",
-			org,
-			wfGrp,
-		)
-	}
+	endpointURL := escapeSlashesForNestedWorkflowGroup(baseURL, org, wfGrp)
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
 
@@ -257,22 +218,7 @@ func (c *Client) CreateChildWorkflowGroup(
 		baseURL = options.BaseURL
 	}
 
-	//DO NOT REVERT - If wfGrp contains "/" then it might be a nested workflow group
-	//In this case we need to pass through the / without encoding it
-	var endpointURL string
-	if strings.Contains(wfGrp, "/") {
-		endpointURL = core.EncodeURL(
-			baseURL+"/api/v1/orgs/%v/wfgrps/",
-			org,
-		)
-		endpointURL += wfGrp + "/wfgrps/"
-	} else {
-		endpointURL = core.EncodeURL(
-			baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfgrps/",
-			org,
-			wfGrp,
-		)
-	}
+	endpointURL := escapeSlashesForNestedWorkflowGroup(baseURL, org, wfGrp) + "/wfgrps/"
 
 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
 
@@ -375,4 +321,24 @@ func (c *Client) ListAllWorkflowGroups(
 		return nil, err
 	}
 	return response, nil
+}
+
+// If wfGrp contains "/" then it might be a nested workflow group
+// In this case we need to pass through the / without encoding it
+func escapeSlashesForNestedWorkflowGroup(baseURL, org, wfGrp string) string {
+	var endpointURL string
+	if strings.Contains(wfGrp, "/") {
+		endpointURL = core.EncodeURL(
+			baseURL+"/api/v1/orgs/%v/wfgrps/",
+			org,
+		)
+		endpointURL += wfGrp
+	} else {
+		endpointURL = core.EncodeURL(
+			baseURL+"/api/v1/orgs/%v/wfgrps/%v",
+			org,
+			wfGrp,
+		)
+	}
+	return endpointURL
 }

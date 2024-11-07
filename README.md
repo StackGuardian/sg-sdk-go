@@ -5,8 +5,6 @@
 # StackGuardian SDK For Go (sg-sdk-go)
 `sg-sdk-go` is the StackGuardian SDK for the Go Programming language.
 
-_**DISCLAIMER:** The StackGuardian SDK for Go is currently in pre-release mode and is intended to be used with StackGuardian test servers and not in production environments_.
-
 The SG SDK requires a minimum version of `Go 1.19`.
 
 Check out the notes in the release for information about the latest bug fixes, updates and features added to the SDK.
@@ -22,7 +20,7 @@ SG_API_TOKEN
 Install the SDK:
 To get started working with the SDK, setup your project for Go modules and retrieve the SDK dependencies using `go get`.
 ```
-go get github.com/StackGuardian/sg-sdk-go@v1.0.0-beta-2
+go get github.com/StackGuardian/sg-sdk-go@v1.0.0
 ```
 
 ### Sample Usage

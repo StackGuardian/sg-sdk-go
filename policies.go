@@ -3,39 +3,1803 @@
 package api
 
 import (
-	core "github.com/StackGuardian/sg-sdk-go/core"
+	json "encoding/json"
+	fmt "fmt"
+
+	internal "github.com/StackGuardian/sg-sdk-go/internal"
 )
 
-type Policy struct {
-	// Name of the policy
-	ResourceName *core.Optional[string] `json:"ResourceName,omitempty" url:"-"`
-	// Description of the policy
-	Description *core.Optional[string] `json:"Description,omitempty" url:"-"`
-	// List of IDs of the approvers for the policy
-	Approvers *core.Optional[[]string] `json:"Approvers,omitempty" url:"-"`
-	// Number of approvals required for the policy to be enforced
-	NumberOfApprovalsRequired *core.Optional[int] `json:"NumberOfApprovalsRequired,omitempty" url:"-"`
-	// Tags for the policy
-	Tags *core.Optional[[]string] `json:"Tags,omitempty" url:"-"`
-	// What the policy will be enforced on.
-	EnforcedOn *core.Optional[[]string] `json:"EnforcedOn,omitempty" url:"-"`
-	// Policies Config for the policy
-	PoliciesConfig *core.Optional[[]*PoliciesConfig] `json:"PoliciesConfig,omitempty" url:"-"`
+type ListAllPoliciesRequest struct {
+	// Pagination token to retrieve the next set of results
+	Lastevaluatedkey *string `json:"-" url:"lastevaluatedkey,omitempty"`
 }
 
-type PatchedPolicy struct {
+type CustomSourcePolicy struct {
+	SourceConfigDestKind CustomSourcePolicySourceConfigDestKindEnum `json:"sourceConfigDestKind" url:"sourceConfigDestKind"`
+	Config               *CustomSourcePolicyConfig                  `json:"config,omitempty" url:"config,omitempty"`
+	SourceConfigKind     SourceConfigKindEnum                       `json:"sourceConfigKind" url:"sourceConfigKind"`
+	AdditionalConfig     map[string]interface{}                     `json:"additionalConfig,omitempty" url:"additionalConfig,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CustomSourcePolicy) GetSourceConfigDestKind() CustomSourcePolicySourceConfigDestKindEnum {
+	if c == nil {
+		return ""
+	}
+	return c.SourceConfigDestKind
+}
+
+func (c *CustomSourcePolicy) GetConfig() *CustomSourcePolicyConfig {
+	if c == nil {
+		return nil
+	}
+	return c.Config
+}
+
+func (c *CustomSourcePolicy) GetSourceConfigKind() SourceConfigKindEnum {
+	if c == nil {
+		return ""
+	}
+	return c.SourceConfigKind
+}
+
+func (c *CustomSourcePolicy) GetAdditionalConfig() map[string]interface{} {
+	if c == nil {
+		return nil
+	}
+	return c.AdditionalConfig
+}
+
+func (c *CustomSourcePolicy) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CustomSourcePolicy) UnmarshalJSON(data []byte) error {
+	type unmarshaler CustomSourcePolicy
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CustomSourcePolicy(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CustomSourcePolicy) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+type CustomSourcePolicyConfig struct {
+	IsPrivate               *bool   `json:"isPrivate,omitempty" url:"isPrivate,omitempty"`
+	Auth                    *string `json:"auth,omitempty" url:"auth,omitempty"`
+	WorkingDir              *string `json:"workingDir,omitempty" url:"workingDir,omitempty"`
+	Ref                     *string `json:"ref,omitempty" url:"ref,omitempty"`
+	Repo                    *string `json:"repo,omitempty" url:"repo,omitempty"`
+	IncludeSubModule        *bool   `json:"includeSubModule,omitempty" url:"includeSubModule,omitempty"`
+	GitSparseCheckoutConfig *string `json:"gitSparseCheckoutConfig,omitempty" url:"gitSparseCheckoutConfig,omitempty"`
+	GitCoreAutoCrlf         *bool   `json:"gitCoreAutoCRLF,omitempty" url:"gitCoreAutoCRLF,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (c *CustomSourcePolicyConfig) GetIsPrivate() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.IsPrivate
+}
+
+func (c *CustomSourcePolicyConfig) GetAuth() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Auth
+}
+
+func (c *CustomSourcePolicyConfig) GetWorkingDir() *string {
+	if c == nil {
+		return nil
+	}
+	return c.WorkingDir
+}
+
+func (c *CustomSourcePolicyConfig) GetRef() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Ref
+}
+
+func (c *CustomSourcePolicyConfig) GetRepo() *string {
+	if c == nil {
+		return nil
+	}
+	return c.Repo
+}
+
+func (c *CustomSourcePolicyConfig) GetIncludeSubModule() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.IncludeSubModule
+}
+
+func (c *CustomSourcePolicyConfig) GetGitSparseCheckoutConfig() *string {
+	if c == nil {
+		return nil
+	}
+	return c.GitSparseCheckoutConfig
+}
+
+func (c *CustomSourcePolicyConfig) GetGitCoreAutoCrlf() *bool {
+	if c == nil {
+		return nil
+	}
+	return c.GitCoreAutoCrlf
+}
+
+func (c *CustomSourcePolicyConfig) GetExtraProperties() map[string]interface{} {
+	return c.extraProperties
+}
+
+func (c *CustomSourcePolicyConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler CustomSourcePolicyConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*c = CustomSourcePolicyConfig(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *c)
+	if err != nil {
+		return err
+	}
+	c.extraProperties = extraProperties
+	c.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (c *CustomSourcePolicyConfig) String() string {
+	if len(c.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(c); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", c)
+}
+
+// * `GITHUB_COM` - GITHUB_COM
+// * `GITHUB_APP_CUSTOM` - GITHUB_APP_CUSTOM
+// * `GIT_OTHER` - GIT_OTHER
+// * `INLINE` - INLINE
+// * `BITBUCKET_ORG` - BITBUCKET_ORG
+// * `GITLAB_COM` - GITLAB_COM
+// * `AZURE_DEVOPS` - AZURE_DEVOPS
+type CustomSourcePolicySourceConfigDestKindEnum string
+
+const (
+	CustomSourcePolicySourceConfigDestKindEnumGithubCom       CustomSourcePolicySourceConfigDestKindEnum = "GITHUB_COM"
+	CustomSourcePolicySourceConfigDestKindEnumGithubAppCustom CustomSourcePolicySourceConfigDestKindEnum = "GITHUB_APP_CUSTOM"
+	CustomSourcePolicySourceConfigDestKindEnumGitOther        CustomSourcePolicySourceConfigDestKindEnum = "GIT_OTHER"
+	CustomSourcePolicySourceConfigDestKindEnumInline          CustomSourcePolicySourceConfigDestKindEnum = "INLINE"
+	CustomSourcePolicySourceConfigDestKindEnumBitbucketOrg    CustomSourcePolicySourceConfigDestKindEnum = "BITBUCKET_ORG"
+	CustomSourcePolicySourceConfigDestKindEnumGitlabCom       CustomSourcePolicySourceConfigDestKindEnum = "GITLAB_COM"
+	CustomSourcePolicySourceConfigDestKindEnumAzureDevops     CustomSourcePolicySourceConfigDestKindEnum = "AZURE_DEVOPS"
+)
+
+func NewCustomSourcePolicySourceConfigDestKindEnumFromString(s string) (CustomSourcePolicySourceConfigDestKindEnum, error) {
+	switch s {
+	case "GITHUB_COM":
+		return CustomSourcePolicySourceConfigDestKindEnumGithubCom, nil
+	case "GITHUB_APP_CUSTOM":
+		return CustomSourcePolicySourceConfigDestKindEnumGithubAppCustom, nil
+	case "GIT_OTHER":
+		return CustomSourcePolicySourceConfigDestKindEnumGitOther, nil
+	case "INLINE":
+		return CustomSourcePolicySourceConfigDestKindEnumInline, nil
+	case "BITBUCKET_ORG":
+		return CustomSourcePolicySourceConfigDestKindEnumBitbucketOrg, nil
+	case "GITLAB_COM":
+		return CustomSourcePolicySourceConfigDestKindEnumGitlabCom, nil
+	case "AZURE_DEVOPS":
+		return CustomSourcePolicySourceConfigDestKindEnumAzureDevops, nil
+	}
+	var t CustomSourcePolicySourceConfigDestKindEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (c CustomSourcePolicySourceConfigDestKindEnum) Ptr() *CustomSourcePolicySourceConfigDestKindEnum {
+	return &c
+}
+
+type InputData struct {
+	SchemaType    InputDataSchemaTypeEnum `json:"schemaType" url:"schemaType"`
+	SchemaVersion *string                 `json:"schemaVersion,omitempty" url:"schemaVersion,omitempty"`
+	Data          map[string]interface{}  `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (i *InputData) GetSchemaType() InputDataSchemaTypeEnum {
+	if i == nil {
+		return ""
+	}
+	return i.SchemaType
+}
+
+func (i *InputData) GetSchemaVersion() *string {
+	if i == nil {
+		return nil
+	}
+	return i.SchemaVersion
+}
+
+func (i *InputData) GetData() map[string]interface{} {
+	if i == nil {
+		return nil
+	}
+	return i.Data
+}
+
+func (i *InputData) GetExtraProperties() map[string]interface{} {
+	return i.extraProperties
+}
+
+func (i *InputData) UnmarshalJSON(data []byte) error {
+	type unmarshaler InputData
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*i = InputData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *i)
+	if err != nil {
+		return err
+	}
+	i.extraProperties = extraProperties
+	i.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (i *InputData) String() string {
+	if len(i.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(i); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", i)
+}
+
+// * `FORM_JSONSCHEMA` - FORM_JSONSCHEMA
+// * `RAW_JSON` - RAW_JSON
+// * `TIRITH_JSON` - TIRITH_JSON
+// * `NONE` - NONE
+type InputDataSchemaTypeEnum string
+
+const (
+	InputDataSchemaTypeEnumFormJsonschema InputDataSchemaTypeEnum = "FORM_JSONSCHEMA"
+	InputDataSchemaTypeEnumRawJson        InputDataSchemaTypeEnum = "RAW_JSON"
+	InputDataSchemaTypeEnumTirithJson     InputDataSchemaTypeEnum = "TIRITH_JSON"
+	InputDataSchemaTypeEnumNone           InputDataSchemaTypeEnum = "NONE"
+)
+
+func NewInputDataSchemaTypeEnumFromString(s string) (InputDataSchemaTypeEnum, error) {
+	switch s {
+	case "FORM_JSONSCHEMA":
+		return InputDataSchemaTypeEnumFormJsonschema, nil
+	case "RAW_JSON":
+		return InputDataSchemaTypeEnumRawJson, nil
+	case "TIRITH_JSON":
+		return InputDataSchemaTypeEnumTirithJson, nil
+	case "NONE":
+		return InputDataSchemaTypeEnumNone, nil
+	}
+	var t InputDataSchemaTypeEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (i InputDataSchemaTypeEnum) Ptr() *InputDataSchemaTypeEnum {
+	return &i
+}
+
+// * `FAIL` - FAIL
+// * `WARN` - WARN
+// * `PASS` - PASS
+// * `APPROVAL_REQUIRED` - APPROVAL_REQUIRED
+type OnFailEnum string
+
+const (
+	OnFailEnumFail             OnFailEnum = "FAIL"
+	OnFailEnumWarn             OnFailEnum = "WARN"
+	OnFailEnumPass             OnFailEnum = "PASS"
+	OnFailEnumApprovalRequired OnFailEnum = "APPROVAL_REQUIRED"
+)
+
+func NewOnFailEnumFromString(s string) (OnFailEnum, error) {
+	switch s {
+	case "FAIL":
+		return OnFailEnumFail, nil
+	case "WARN":
+		return OnFailEnumWarn, nil
+	case "PASS":
+		return OnFailEnumPass, nil
+	case "APPROVAL_REQUIRED":
+		return OnFailEnumApprovalRequired, nil
+	}
+	var t OnFailEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (o OnFailEnum) Ptr() *OnFailEnum {
+	return &o
+}
+
+// * `FAIL` - FAIL
+// * `WARN` - WARN
+// * `PASS` - PASS
+// * `APPROVAL_REQUIRED` - APPROVAL_REQUIRED
+type OnPassEnum string
+
+const (
+	OnPassEnumFail             OnPassEnum = "FAIL"
+	OnPassEnumWarn             OnPassEnum = "WARN"
+	OnPassEnumPass             OnPassEnum = "PASS"
+	OnPassEnumApprovalRequired OnPassEnum = "APPROVAL_REQUIRED"
+)
+
+func NewOnPassEnumFromString(s string) (OnPassEnum, error) {
+	switch s {
+	case "FAIL":
+		return OnPassEnumFail, nil
+	case "WARN":
+		return OnPassEnumWarn, nil
+	case "PASS":
+		return OnPassEnumPass, nil
+	case "APPROVAL_REQUIRED":
+		return OnPassEnumApprovalRequired, nil
+	}
+	var t OnPassEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (o OnPassEnum) Ptr() *OnPassEnum {
+	return &o
+}
+
+type PatchedPolicyFilterInsight struct {
 	// Name of the policy
-	ResourceName *core.Optional[string] `json:"ResourceName,omitempty" url:"-"`
+	ResourceName *string `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
 	// Description of the policy
-	Description *core.Optional[string] `json:"Description,omitempty" url:"-"`
-	// List of IDs of the approvers for the policy
-	Approvers *core.Optional[[]string] `json:"Approvers,omitempty" url:"-"`
-	// Number of approvals required for the policy to be enforced
-	NumberOfApprovalsRequired *core.Optional[int] `json:"NumberOfApprovalsRequired,omitempty" url:"-"`
-	// Tags for the policy
-	Tags *core.Optional[[]string] `json:"Tags,omitempty" url:"-"`
-	// What the policy will be enforced on.
-	EnforcedOn *core.Optional[[]string] `json:"EnforcedOn,omitempty" url:"-"`
+	Description *string `json:"Description,omitempty" url:"Description,omitempty"`
 	// Policies Config for the policy
-	PoliciesConfig *core.Optional[[]*PoliciesConfig] `json:"PoliciesConfig,omitempty" url:"-"`
+	PoliciesConfig []*PoliciesFilterInsightConfig `json:"PoliciesConfig,omitempty" url:"PoliciesConfig,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PatchedPolicyFilterInsight) GetResourceName() *string {
+	if p == nil {
+		return nil
+	}
+	return p.ResourceName
+}
+
+func (p *PatchedPolicyFilterInsight) GetDescription() *string {
+	if p == nil {
+		return nil
+	}
+	return p.Description
+}
+
+func (p *PatchedPolicyFilterInsight) GetPoliciesConfig() []*PoliciesFilterInsightConfig {
+	if p == nil {
+		return nil
+	}
+	return p.PoliciesConfig
+}
+
+func (p *PatchedPolicyFilterInsight) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PatchedPolicyFilterInsight) UnmarshalJSON(data []byte) error {
+	type unmarshaler PatchedPolicyFilterInsight
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PatchedPolicyFilterInsight(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PatchedPolicyFilterInsight) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+type PatchedPolicyGeneral struct {
+	// Name of the policy
+	ResourceName *string `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	// Description of the policy
+	Description *string `json:"Description,omitempty" url:"Description,omitempty"`
+	// List of IDs of the approvers for the policy
+	Approvers []string `json:"Approvers,omitempty" url:"Approvers,omitempty"`
+	// Number of approvals required for the policy to be enforced
+	NumberOfApprovalsRequired *int `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
+	// Tags for the policy
+	Tags []string `json:"Tags,omitempty" url:"Tags,omitempty"`
+	// Contextual tags to give context to your tags
+	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	// What the policy will be enforced on.
+	EnforcedOn []string `json:"EnforcedOn,omitempty" url:"EnforcedOn,omitempty"`
+	// Policies Config for the policy
+	PoliciesConfig []*PoliciesConfig `json:"PoliciesConfig,omitempty" url:"PoliciesConfig,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PatchedPolicyGeneral) GetResourceName() *string {
+	if p == nil {
+		return nil
+	}
+	return p.ResourceName
+}
+
+func (p *PatchedPolicyGeneral) GetDescription() *string {
+	if p == nil {
+		return nil
+	}
+	return p.Description
+}
+
+func (p *PatchedPolicyGeneral) GetApprovers() []string {
+	if p == nil {
+		return nil
+	}
+	return p.Approvers
+}
+
+func (p *PatchedPolicyGeneral) GetNumberOfApprovalsRequired() *int {
+	if p == nil {
+		return nil
+	}
+	return p.NumberOfApprovalsRequired
+}
+
+func (p *PatchedPolicyGeneral) GetTags() []string {
+	if p == nil {
+		return nil
+	}
+	return p.Tags
+}
+
+func (p *PatchedPolicyGeneral) GetContextTags() map[string]*string {
+	if p == nil {
+		return nil
+	}
+	return p.ContextTags
+}
+
+func (p *PatchedPolicyGeneral) GetEnforcedOn() []string {
+	if p == nil {
+		return nil
+	}
+	return p.EnforcedOn
+}
+
+func (p *PatchedPolicyGeneral) GetPoliciesConfig() []*PoliciesConfig {
+	if p == nil {
+		return nil
+	}
+	return p.PoliciesConfig
+}
+
+func (p *PatchedPolicyGeneral) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PatchedPolicyGeneral) UnmarshalJSON(data []byte) error {
+	type unmarshaler PatchedPolicyGeneral
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PatchedPolicyGeneral(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PatchedPolicyGeneral) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+type PatchedPolymorphicPolicy struct {
+	PolicyType    string
+	General       *PatchedPolicyGeneral
+	FilterInsight *PatchedPolicyFilterInsight
+}
+
+func NewPatchedPolymorphicPolicyFromGeneral(value *PatchedPolicyGeneral) *PatchedPolymorphicPolicy {
+	return &PatchedPolymorphicPolicy{PolicyType: "GENERAL", General: value}
+}
+
+func NewPatchedPolymorphicPolicyFromFilterInsight(value *PatchedPolicyFilterInsight) *PatchedPolymorphicPolicy {
+	return &PatchedPolymorphicPolicy{PolicyType: "FILTER.INSIGHT", FilterInsight: value}
+}
+
+func (p *PatchedPolymorphicPolicy) GetPolicyType() string {
+	if p == nil {
+		return ""
+	}
+	return p.PolicyType
+}
+
+func (p *PatchedPolymorphicPolicy) GetGeneral() *PatchedPolicyGeneral {
+	if p == nil {
+		return nil
+	}
+	return p.General
+}
+
+func (p *PatchedPolymorphicPolicy) GetFilterInsight() *PatchedPolicyFilterInsight {
+	if p == nil {
+		return nil
+	}
+	return p.FilterInsight
+}
+
+func (p *PatchedPolymorphicPolicy) UnmarshalJSON(data []byte) error {
+	var unmarshaler struct {
+		PolicyType string `json:"PolicyType"`
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	p.PolicyType = unmarshaler.PolicyType
+	if unmarshaler.PolicyType == "" {
+		return fmt.Errorf("%T did not include discriminant PolicyType", p)
+	}
+	switch unmarshaler.PolicyType {
+	case "GENERAL":
+		value := new(PatchedPolicyGeneral)
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		p.General = value
+	case "FILTER.INSIGHT":
+		value := new(PatchedPolicyFilterInsight)
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		p.FilterInsight = value
+	}
+	return nil
+}
+
+func (p PatchedPolymorphicPolicy) MarshalJSON() ([]byte, error) {
+	if err := p.validate(); err != nil {
+		return nil, err
+	}
+	switch p.PolicyType {
+	default:
+		return nil, fmt.Errorf("invalid type %s in %T", p.PolicyType, p)
+	case "GENERAL":
+		return internal.MarshalJSONWithExtraProperty(p.General, "PolicyType", "GENERAL")
+	case "FILTER.INSIGHT":
+		return internal.MarshalJSONWithExtraProperty(p.FilterInsight, "PolicyType", "FILTER.INSIGHT")
+	}
+}
+
+type PatchedPolymorphicPolicyVisitor interface {
+	VisitGeneral(*PatchedPolicyGeneral) error
+	VisitFilterInsight(*PatchedPolicyFilterInsight) error
+}
+
+func (p *PatchedPolymorphicPolicy) Accept(visitor PatchedPolymorphicPolicyVisitor) error {
+	switch p.PolicyType {
+	default:
+		return fmt.Errorf("invalid type %s in %T", p.PolicyType, p)
+	case "GENERAL":
+		return visitor.VisitGeneral(p.General)
+	case "FILTER.INSIGHT":
+		return visitor.VisitFilterInsight(p.FilterInsight)
+	}
+}
+
+func (p *PatchedPolymorphicPolicy) validate() error {
+	if p == nil {
+		return fmt.Errorf("type %T is nil", p)
+	}
+	var fields []string
+	if p.General != nil {
+		fields = append(fields, "GENERAL")
+	}
+	if p.FilterInsight != nil {
+		fields = append(fields, "FILTER.INSIGHT")
+	}
+	if len(fields) == 0 {
+		if p.PolicyType != "" {
+			return fmt.Errorf("type %T defines a discriminant set to %q but the field is not set", p, p.PolicyType)
+		}
+		return fmt.Errorf("type %T is empty", p)
+	}
+	if len(fields) > 1 {
+		return fmt.Errorf("type %T defines values for %s, but only one value is allowed", p, fields)
+	}
+	if p.PolicyType != "" {
+		field := fields[0]
+		if p.PolicyType != field {
+			return fmt.Errorf(
+				"type %T defines a discriminant set to %q, but it does not match the %T field; either remove or update the discriminant to match",
+				p,
+				p.PolicyType,
+				p,
+			)
+		}
+	}
+	return nil
+}
+
+type PoliciesConfig struct {
+	Name            string           `json:"name" url:"name"`
+	PolicyVcsConfig *PolicyVcsConfig `json:"policyVCSConfig,omitempty" url:"policyVCSConfig,omitempty"`
+	Skip            *bool            `json:"skip,omitempty" url:"skip,omitempty"`
+	OnFail          OnFailEnum       `json:"onFail" url:"onFail"`
+	OnPass          OnPassEnum       `json:"onPass" url:"onPass"`
+	PolicyInputData *InputData       `json:"policyInputData,omitempty" url:"policyInputData,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PoliciesConfig) GetName() string {
+	if p == nil {
+		return ""
+	}
+	return p.Name
+}
+
+func (p *PoliciesConfig) GetPolicyVcsConfig() *PolicyVcsConfig {
+	if p == nil {
+		return nil
+	}
+	return p.PolicyVcsConfig
+}
+
+func (p *PoliciesConfig) GetSkip() *bool {
+	if p == nil {
+		return nil
+	}
+	return p.Skip
+}
+
+func (p *PoliciesConfig) GetOnFail() OnFailEnum {
+	if p == nil {
+		return ""
+	}
+	return p.OnFail
+}
+
+func (p *PoliciesConfig) GetOnPass() OnPassEnum {
+	if p == nil {
+		return ""
+	}
+	return p.OnPass
+}
+
+func (p *PoliciesConfig) GetPolicyInputData() *InputData {
+	if p == nil {
+		return nil
+	}
+	return p.PolicyInputData
+}
+
+func (p *PoliciesConfig) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PoliciesConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler PoliciesConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PoliciesConfig(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PoliciesConfig) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+type PoliciesFilterInsightConfig struct {
+	Name            string           `json:"name" url:"name"`
+	PolicyVcsConfig *PolicyVcsConfig `json:"policyVCSConfig,omitempty" url:"policyVCSConfig,omitempty"`
+	PolicyInputData *InputData       `json:"policyInputData,omitempty" url:"policyInputData,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PoliciesFilterInsightConfig) GetName() string {
+	if p == nil {
+		return ""
+	}
+	return p.Name
+}
+
+func (p *PoliciesFilterInsightConfig) GetPolicyVcsConfig() *PolicyVcsConfig {
+	if p == nil {
+		return nil
+	}
+	return p.PolicyVcsConfig
+}
+
+func (p *PoliciesFilterInsightConfig) GetPolicyInputData() *InputData {
+	if p == nil {
+		return nil
+	}
+	return p.PolicyInputData
+}
+
+func (p *PoliciesFilterInsightConfig) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PoliciesFilterInsightConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler PoliciesFilterInsightConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PoliciesFilterInsightConfig(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PoliciesFilterInsightConfig) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+type PolicyCreateUpdateResponse struct {
+	Data *PolymorphicPolicy `json:"data,omitempty" url:"data,omitempty"`
+	Msg  *string            `json:"msg,omitempty" url:"msg,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PolicyCreateUpdateResponse) GetData() *PolymorphicPolicy {
+	if p == nil {
+		return nil
+	}
+	return p.Data
+}
+
+func (p *PolicyCreateUpdateResponse) GetMsg() *string {
+	if p == nil {
+		return nil
+	}
+	return p.Msg
+}
+
+func (p *PolicyCreateUpdateResponse) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PolicyCreateUpdateResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler PolicyCreateUpdateResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PolicyCreateUpdateResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PolicyCreateUpdateResponse) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+type PolicyFilterInsight struct {
+	// Name of the policy
+	ResourceName *string `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	// Description of the policy
+	Description *string `json:"Description,omitempty" url:"Description,omitempty"`
+	// Policies Config for the policy
+	PoliciesConfig []*PoliciesFilterInsightConfig `json:"PoliciesConfig,omitempty" url:"PoliciesConfig,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PolicyFilterInsight) GetResourceName() *string {
+	if p == nil {
+		return nil
+	}
+	return p.ResourceName
+}
+
+func (p *PolicyFilterInsight) GetDescription() *string {
+	if p == nil {
+		return nil
+	}
+	return p.Description
+}
+
+func (p *PolicyFilterInsight) GetPoliciesConfig() []*PoliciesFilterInsightConfig {
+	if p == nil {
+		return nil
+	}
+	return p.PoliciesConfig
+}
+
+func (p *PolicyFilterInsight) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PolicyFilterInsight) UnmarshalJSON(data []byte) error {
+	type unmarshaler PolicyFilterInsight
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PolicyFilterInsight(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PolicyFilterInsight) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+type PolicyFilterInsightResponse struct {
+	// Name of the policy
+	ResourceName *string `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	// Description of the policy
+	Description *string `json:"Description,omitempty" url:"Description,omitempty"`
+	// Policies Config for the policy
+	PoliciesConfig      []*PoliciesFilterInsightConfig `json:"PoliciesConfig,omitempty" url:"PoliciesConfig,omitempty"`
+	IsArchive           string                         `json:"IsArchive" url:"IsArchive"`
+	IsActive            string                         `json:"IsActive" url:"IsActive"`
+	ResourceId          string                         `json:"ResourceId" url:"ResourceId"`
+	ModifiedAt          float64                        `json:"ModifiedAt" url:"ModifiedAt"`
+	ParentId            string                         `json:"ParentId" url:"ParentId"`
+	ResourceType        string                         `json:"ResourceType" url:"ResourceType"`
+	Tags                []string                       `json:"Tags,omitempty" url:"Tags,omitempty"`
+	DocVersion          string                         `json:"DocVersion" url:"DocVersion"`
+	Authors             []string                       `json:"Authors,omitempty" url:"Authors,omitempty"`
+	ActivitySubscribers []string                       `json:"ActivitySubscribers,omitempty" url:"ActivitySubscribers,omitempty"`
+	SubResourceId       string                         `json:"SubResourceId" url:"SubResourceId"`
+	OrgId               string                         `json:"OrgId" url:"OrgId"`
+	CreatedAt           float64                        `json:"CreatedAt" url:"CreatedAt"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PolicyFilterInsightResponse) GetResourceName() *string {
+	if p == nil {
+		return nil
+	}
+	return p.ResourceName
+}
+
+func (p *PolicyFilterInsightResponse) GetDescription() *string {
+	if p == nil {
+		return nil
+	}
+	return p.Description
+}
+
+func (p *PolicyFilterInsightResponse) GetPoliciesConfig() []*PoliciesFilterInsightConfig {
+	if p == nil {
+		return nil
+	}
+	return p.PoliciesConfig
+}
+
+func (p *PolicyFilterInsightResponse) GetIsArchive() string {
+	if p == nil {
+		return ""
+	}
+	return p.IsArchive
+}
+
+func (p *PolicyFilterInsightResponse) GetIsActive() string {
+	if p == nil {
+		return ""
+	}
+	return p.IsActive
+}
+
+func (p *PolicyFilterInsightResponse) GetResourceId() string {
+	if p == nil {
+		return ""
+	}
+	return p.ResourceId
+}
+
+func (p *PolicyFilterInsightResponse) GetModifiedAt() float64 {
+	if p == nil {
+		return 0
+	}
+	return p.ModifiedAt
+}
+
+func (p *PolicyFilterInsightResponse) GetParentId() string {
+	if p == nil {
+		return ""
+	}
+	return p.ParentId
+}
+
+func (p *PolicyFilterInsightResponse) GetResourceType() string {
+	if p == nil {
+		return ""
+	}
+	return p.ResourceType
+}
+
+func (p *PolicyFilterInsightResponse) GetTags() []string {
+	if p == nil {
+		return nil
+	}
+	return p.Tags
+}
+
+func (p *PolicyFilterInsightResponse) GetDocVersion() string {
+	if p == nil {
+		return ""
+	}
+	return p.DocVersion
+}
+
+func (p *PolicyFilterInsightResponse) GetAuthors() []string {
+	if p == nil {
+		return nil
+	}
+	return p.Authors
+}
+
+func (p *PolicyFilterInsightResponse) GetActivitySubscribers() []string {
+	if p == nil {
+		return nil
+	}
+	return p.ActivitySubscribers
+}
+
+func (p *PolicyFilterInsightResponse) GetSubResourceId() string {
+	if p == nil {
+		return ""
+	}
+	return p.SubResourceId
+}
+
+func (p *PolicyFilterInsightResponse) GetOrgId() string {
+	if p == nil {
+		return ""
+	}
+	return p.OrgId
+}
+
+func (p *PolicyFilterInsightResponse) GetCreatedAt() float64 {
+	if p == nil {
+		return 0
+	}
+	return p.CreatedAt
+}
+
+func (p *PolicyFilterInsightResponse) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PolicyFilterInsightResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler PolicyFilterInsightResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PolicyFilterInsightResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PolicyFilterInsightResponse) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+type PolicyGeneral struct {
+	// Name of the policy
+	ResourceName *string `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	// Description of the policy
+	Description *string `json:"Description,omitempty" url:"Description,omitempty"`
+	// List of IDs of the approvers for the policy
+	Approvers []string `json:"Approvers,omitempty" url:"Approvers,omitempty"`
+	// Number of approvals required for the policy to be enforced
+	NumberOfApprovalsRequired *int `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
+	// Tags for the policy
+	Tags []string `json:"Tags,omitempty" url:"Tags,omitempty"`
+	// Contextual tags to give context to your tags
+	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	// What the policy will be enforced on.
+	EnforcedOn []string `json:"EnforcedOn,omitempty" url:"EnforcedOn,omitempty"`
+	// Policies Config for the policy
+	PoliciesConfig []*PoliciesConfig `json:"PoliciesConfig,omitempty" url:"PoliciesConfig,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PolicyGeneral) GetResourceName() *string {
+	if p == nil {
+		return nil
+	}
+	return p.ResourceName
+}
+
+func (p *PolicyGeneral) GetDescription() *string {
+	if p == nil {
+		return nil
+	}
+	return p.Description
+}
+
+func (p *PolicyGeneral) GetApprovers() []string {
+	if p == nil {
+		return nil
+	}
+	return p.Approvers
+}
+
+func (p *PolicyGeneral) GetNumberOfApprovalsRequired() *int {
+	if p == nil {
+		return nil
+	}
+	return p.NumberOfApprovalsRequired
+}
+
+func (p *PolicyGeneral) GetTags() []string {
+	if p == nil {
+		return nil
+	}
+	return p.Tags
+}
+
+func (p *PolicyGeneral) GetContextTags() map[string]*string {
+	if p == nil {
+		return nil
+	}
+	return p.ContextTags
+}
+
+func (p *PolicyGeneral) GetEnforcedOn() []string {
+	if p == nil {
+		return nil
+	}
+	return p.EnforcedOn
+}
+
+func (p *PolicyGeneral) GetPoliciesConfig() []*PoliciesConfig {
+	if p == nil {
+		return nil
+	}
+	return p.PoliciesConfig
+}
+
+func (p *PolicyGeneral) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PolicyGeneral) UnmarshalJSON(data []byte) error {
+	type unmarshaler PolicyGeneral
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PolicyGeneral(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PolicyGeneral) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+type PolicyGeneralResponse struct {
+	// Name of the policy
+	ResourceName *string `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	// Description of the policy
+	Description *string `json:"Description,omitempty" url:"Description,omitempty"`
+	// List of IDs of the approvers for the policy
+	Approvers []string `json:"Approvers,omitempty" url:"Approvers,omitempty"`
+	// Number of approvals required for the policy to be enforced
+	NumberOfApprovalsRequired *int `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
+	// Tags for the policy
+	Tags []string `json:"Tags,omitempty" url:"Tags,omitempty"`
+	// Contextual tags to give context to your tags
+	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	// What the policy will be enforced on.
+	EnforcedOn []string `json:"EnforcedOn,omitempty" url:"EnforcedOn,omitempty"`
+	// Policies Config for the policy
+	PoliciesConfig      []*PoliciesConfig `json:"PoliciesConfig,omitempty" url:"PoliciesConfig,omitempty"`
+	IsArchive           string            `json:"IsArchive" url:"IsArchive"`
+	IsActive            string            `json:"IsActive" url:"IsActive"`
+	ResourceId          string            `json:"ResourceId" url:"ResourceId"`
+	ModifiedAt          float64           `json:"ModifiedAt" url:"ModifiedAt"`
+	ParentId            string            `json:"ParentId" url:"ParentId"`
+	ResourceType        string            `json:"ResourceType" url:"ResourceType"`
+	DocVersion          string            `json:"DocVersion" url:"DocVersion"`
+	Authors             []string          `json:"Authors,omitempty" url:"Authors,omitempty"`
+	ActivitySubscribers []string          `json:"ActivitySubscribers,omitempty" url:"ActivitySubscribers,omitempty"`
+	SubResourceId       string            `json:"SubResourceId" url:"SubResourceId"`
+	OrgId               string            `json:"OrgId" url:"OrgId"`
+	CreatedAt           float64           `json:"CreatedAt" url:"CreatedAt"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PolicyGeneralResponse) GetResourceName() *string {
+	if p == nil {
+		return nil
+	}
+	return p.ResourceName
+}
+
+func (p *PolicyGeneralResponse) GetDescription() *string {
+	if p == nil {
+		return nil
+	}
+	return p.Description
+}
+
+func (p *PolicyGeneralResponse) GetApprovers() []string {
+	if p == nil {
+		return nil
+	}
+	return p.Approvers
+}
+
+func (p *PolicyGeneralResponse) GetNumberOfApprovalsRequired() *int {
+	if p == nil {
+		return nil
+	}
+	return p.NumberOfApprovalsRequired
+}
+
+func (p *PolicyGeneralResponse) GetTags() []string {
+	if p == nil {
+		return nil
+	}
+	return p.Tags
+}
+
+func (p *PolicyGeneralResponse) GetContextTags() map[string]*string {
+	if p == nil {
+		return nil
+	}
+	return p.ContextTags
+}
+
+func (p *PolicyGeneralResponse) GetEnforcedOn() []string {
+	if p == nil {
+		return nil
+	}
+	return p.EnforcedOn
+}
+
+func (p *PolicyGeneralResponse) GetPoliciesConfig() []*PoliciesConfig {
+	if p == nil {
+		return nil
+	}
+	return p.PoliciesConfig
+}
+
+func (p *PolicyGeneralResponse) GetIsArchive() string {
+	if p == nil {
+		return ""
+	}
+	return p.IsArchive
+}
+
+func (p *PolicyGeneralResponse) GetIsActive() string {
+	if p == nil {
+		return ""
+	}
+	return p.IsActive
+}
+
+func (p *PolicyGeneralResponse) GetResourceId() string {
+	if p == nil {
+		return ""
+	}
+	return p.ResourceId
+}
+
+func (p *PolicyGeneralResponse) GetModifiedAt() float64 {
+	if p == nil {
+		return 0
+	}
+	return p.ModifiedAt
+}
+
+func (p *PolicyGeneralResponse) GetParentId() string {
+	if p == nil {
+		return ""
+	}
+	return p.ParentId
+}
+
+func (p *PolicyGeneralResponse) GetResourceType() string {
+	if p == nil {
+		return ""
+	}
+	return p.ResourceType
+}
+
+func (p *PolicyGeneralResponse) GetDocVersion() string {
+	if p == nil {
+		return ""
+	}
+	return p.DocVersion
+}
+
+func (p *PolicyGeneralResponse) GetAuthors() []string {
+	if p == nil {
+		return nil
+	}
+	return p.Authors
+}
+
+func (p *PolicyGeneralResponse) GetActivitySubscribers() []string {
+	if p == nil {
+		return nil
+	}
+	return p.ActivitySubscribers
+}
+
+func (p *PolicyGeneralResponse) GetSubResourceId() string {
+	if p == nil {
+		return ""
+	}
+	return p.SubResourceId
+}
+
+func (p *PolicyGeneralResponse) GetOrgId() string {
+	if p == nil {
+		return ""
+	}
+	return p.OrgId
+}
+
+func (p *PolicyGeneralResponse) GetCreatedAt() float64 {
+	if p == nil {
+		return 0
+	}
+	return p.CreatedAt
+}
+
+func (p *PolicyGeneralResponse) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PolicyGeneralResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler PolicyGeneralResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PolicyGeneralResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PolicyGeneralResponse) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+type PolicyGetResponse struct {
+	Msg *PolymorphicPolicyGetResponse `json:"msg,omitempty" url:"msg,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PolicyGetResponse) GetMsg() *PolymorphicPolicyGetResponse {
+	if p == nil {
+		return nil
+	}
+	return p.Msg
+}
+
+func (p *PolicyGetResponse) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PolicyGetResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler PolicyGetResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PolicyGetResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PolicyGetResponse) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+type PolicyVcsConfig struct {
+	UseMarketplaceTemplate bool                `json:"useMarketplaceTemplate" url:"useMarketplaceTemplate"`
+	PolicyTemplateId       *string             `json:"policyTemplateId,omitempty" url:"policyTemplateId,omitempty"`
+	CustomSource           *CustomSourcePolicy `json:"customSource,omitempty" url:"customSource,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PolicyVcsConfig) GetUseMarketplaceTemplate() bool {
+	if p == nil {
+		return false
+	}
+	return p.UseMarketplaceTemplate
+}
+
+func (p *PolicyVcsConfig) GetPolicyTemplateId() *string {
+	if p == nil {
+		return nil
+	}
+	return p.PolicyTemplateId
+}
+
+func (p *PolicyVcsConfig) GetCustomSource() *CustomSourcePolicy {
+	if p == nil {
+		return nil
+	}
+	return p.CustomSource
+}
+
+func (p *PolicyVcsConfig) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PolicyVcsConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler PolicyVcsConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PolicyVcsConfig(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PolicyVcsConfig) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+type PolymorphicPolicy struct {
+	PolicyType    string
+	General       *PolicyGeneral
+	FilterInsight *PolicyFilterInsight
+}
+
+func NewPolymorphicPolicyFromGeneral(value *PolicyGeneral) *PolymorphicPolicy {
+	return &PolymorphicPolicy{PolicyType: "GENERAL", General: value}
+}
+
+func NewPolymorphicPolicyFromFilterInsight(value *PolicyFilterInsight) *PolymorphicPolicy {
+	return &PolymorphicPolicy{PolicyType: "FILTER.INSIGHT", FilterInsight: value}
+}
+
+func (p *PolymorphicPolicy) GetPolicyType() string {
+	if p == nil {
+		return ""
+	}
+	return p.PolicyType
+}
+
+func (p *PolymorphicPolicy) GetGeneral() *PolicyGeneral {
+	if p == nil {
+		return nil
+	}
+	return p.General
+}
+
+func (p *PolymorphicPolicy) GetFilterInsight() *PolicyFilterInsight {
+	if p == nil {
+		return nil
+	}
+	return p.FilterInsight
+}
+
+func (p *PolymorphicPolicy) UnmarshalJSON(data []byte) error {
+	var unmarshaler struct {
+		PolicyType string `json:"PolicyType"`
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	p.PolicyType = unmarshaler.PolicyType
+	if unmarshaler.PolicyType == "" {
+		return fmt.Errorf("%T did not include discriminant PolicyType", p)
+	}
+	switch unmarshaler.PolicyType {
+	case "GENERAL":
+		value := new(PolicyGeneral)
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		p.General = value
+	case "FILTER.INSIGHT":
+		value := new(PolicyFilterInsight)
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		p.FilterInsight = value
+	}
+	return nil
+}
+
+func (p PolymorphicPolicy) MarshalJSON() ([]byte, error) {
+	if err := p.validate(); err != nil {
+		return nil, err
+	}
+	switch p.PolicyType {
+	default:
+		return nil, fmt.Errorf("invalid type %s in %T", p.PolicyType, p)
+	case "GENERAL":
+		return internal.MarshalJSONWithExtraProperty(p.General, "PolicyType", "GENERAL")
+	case "FILTER.INSIGHT":
+		return internal.MarshalJSONWithExtraProperty(p.FilterInsight, "PolicyType", "FILTER.INSIGHT")
+	}
+}
+
+type PolymorphicPolicyVisitor interface {
+	VisitGeneral(*PolicyGeneral) error
+	VisitFilterInsight(*PolicyFilterInsight) error
+}
+
+func (p *PolymorphicPolicy) Accept(visitor PolymorphicPolicyVisitor) error {
+	switch p.PolicyType {
+	default:
+		return fmt.Errorf("invalid type %s in %T", p.PolicyType, p)
+	case "GENERAL":
+		return visitor.VisitGeneral(p.General)
+	case "FILTER.INSIGHT":
+		return visitor.VisitFilterInsight(p.FilterInsight)
+	}
+}
+
+func (p *PolymorphicPolicy) validate() error {
+	if p == nil {
+		return fmt.Errorf("type %T is nil", p)
+	}
+	var fields []string
+	if p.General != nil {
+		fields = append(fields, "GENERAL")
+	}
+	if p.FilterInsight != nil {
+		fields = append(fields, "FILTER.INSIGHT")
+	}
+	if len(fields) == 0 {
+		if p.PolicyType != "" {
+			return fmt.Errorf("type %T defines a discriminant set to %q but the field is not set", p, p.PolicyType)
+		}
+		return fmt.Errorf("type %T is empty", p)
+	}
+	if len(fields) > 1 {
+		return fmt.Errorf("type %T defines values for %s, but only one value is allowed", p, fields)
+	}
+	if p.PolicyType != "" {
+		field := fields[0]
+		if p.PolicyType != field {
+			return fmt.Errorf(
+				"type %T defines a discriminant set to %q, but it does not match the %T field; either remove or update the discriminant to match",
+				p,
+				p.PolicyType,
+				p,
+			)
+		}
+	}
+	return nil
+}
+
+type PolymorphicPolicyGetResponse struct {
+	PolicyType    string
+	General       *PolicyGeneralResponse
+	FilterInsight *PolicyFilterInsightResponse
+}
+
+func NewPolymorphicPolicyGetResponseFromGeneral(value *PolicyGeneralResponse) *PolymorphicPolicyGetResponse {
+	return &PolymorphicPolicyGetResponse{PolicyType: "GENERAL", General: value}
+}
+
+func NewPolymorphicPolicyGetResponseFromFilterInsight(value *PolicyFilterInsightResponse) *PolymorphicPolicyGetResponse {
+	return &PolymorphicPolicyGetResponse{PolicyType: "FILTER.INSIGHT", FilterInsight: value}
+}
+
+func (p *PolymorphicPolicyGetResponse) GetPolicyType() string {
+	if p == nil {
+		return ""
+	}
+	return p.PolicyType
+}
+
+func (p *PolymorphicPolicyGetResponse) GetGeneral() *PolicyGeneralResponse {
+	if p == nil {
+		return nil
+	}
+	return p.General
+}
+
+func (p *PolymorphicPolicyGetResponse) GetFilterInsight() *PolicyFilterInsightResponse {
+	if p == nil {
+		return nil
+	}
+	return p.FilterInsight
+}
+
+func (p *PolymorphicPolicyGetResponse) UnmarshalJSON(data []byte) error {
+	var unmarshaler struct {
+		PolicyType string `json:"PolicyType"`
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	p.PolicyType = unmarshaler.PolicyType
+	if unmarshaler.PolicyType == "" {
+		return fmt.Errorf("%T did not include discriminant PolicyType", p)
+	}
+	switch unmarshaler.PolicyType {
+	case "GENERAL":
+		value := new(PolicyGeneralResponse)
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		p.General = value
+	case "FILTER.INSIGHT":
+		value := new(PolicyFilterInsightResponse)
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		p.FilterInsight = value
+	}
+	return nil
+}
+
+func (p PolymorphicPolicyGetResponse) MarshalJSON() ([]byte, error) {
+	if err := p.validate(); err != nil {
+		return nil, err
+	}
+	switch p.PolicyType {
+	default:
+		return nil, fmt.Errorf("invalid type %s in %T", p.PolicyType, p)
+	case "GENERAL":
+		return internal.MarshalJSONWithExtraProperty(p.General, "PolicyType", "GENERAL")
+	case "FILTER.INSIGHT":
+		return internal.MarshalJSONWithExtraProperty(p.FilterInsight, "PolicyType", "FILTER.INSIGHT")
+	}
+}
+
+type PolymorphicPolicyGetResponseVisitor interface {
+	VisitGeneral(*PolicyGeneralResponse) error
+	VisitFilterInsight(*PolicyFilterInsightResponse) error
+}
+
+func (p *PolymorphicPolicyGetResponse) Accept(visitor PolymorphicPolicyGetResponseVisitor) error {
+	switch p.PolicyType {
+	default:
+		return fmt.Errorf("invalid type %s in %T", p.PolicyType, p)
+	case "GENERAL":
+		return visitor.VisitGeneral(p.General)
+	case "FILTER.INSIGHT":
+		return visitor.VisitFilterInsight(p.FilterInsight)
+	}
+}
+
+func (p *PolymorphicPolicyGetResponse) validate() error {
+	if p == nil {
+		return fmt.Errorf("type %T is nil", p)
+	}
+	var fields []string
+	if p.General != nil {
+		fields = append(fields, "GENERAL")
+	}
+	if p.FilterInsight != nil {
+		fields = append(fields, "FILTER.INSIGHT")
+	}
+	if len(fields) == 0 {
+		if p.PolicyType != "" {
+			return fmt.Errorf("type %T defines a discriminant set to %q but the field is not set", p, p.PolicyType)
+		}
+		return fmt.Errorf("type %T is empty", p)
+	}
+	if len(fields) > 1 {
+		return fmt.Errorf("type %T defines values for %s, but only one value is allowed", p, fields)
+	}
+	if p.PolicyType != "" {
+		field := fields[0]
+		if p.PolicyType != field {
+			return fmt.Errorf(
+				"type %T defines a discriminant set to %q, but it does not match the %T field; either remove or update the discriminant to match",
+				p,
+				p.PolicyType,
+				p,
+			)
+		}
+	}
+	return nil
 }

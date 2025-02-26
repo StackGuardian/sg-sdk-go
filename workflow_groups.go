@@ -3,11 +3,525 @@
 package api
 
 import (
+	json "encoding/json"
+	fmt "fmt"
+
 	core "github.com/StackGuardian/sg-sdk-go/core"
+	internal "github.com/StackGuardian/sg-sdk-go/internal"
 )
 
 type PatchedWorkflowGroup struct {
 	ResourceName *core.Optional[string]   `json:"ResourceName,omitempty" url:"-"`
 	Description  *core.Optional[string]   `json:"Description,omitempty" url:"-"`
 	Tags         *core.Optional[[]string] `json:"Tags,omitempty" url:"-"`
+	// Contextual tags to give context to your tags
+	ContextTags *core.Optional[map[string]*string] `json:"ContextTags,omitempty" url:"-"`
+}
+
+type WorkflowGroup struct {
+	ResourceName *string  `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	Description  *string  `json:"Description,omitempty" url:"Description,omitempty"`
+	Tags         []string `json:"Tags,omitempty" url:"Tags,omitempty"`
+	// Contextual tags to give context to your tags
+	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WorkflowGroup) GetResourceName() *string {
+	if w == nil {
+		return nil
+	}
+	return w.ResourceName
+}
+
+func (w *WorkflowGroup) GetDescription() *string {
+	if w == nil {
+		return nil
+	}
+	return w.Description
+}
+
+func (w *WorkflowGroup) GetTags() []string {
+	if w == nil {
+		return nil
+	}
+	return w.Tags
+}
+
+func (w *WorkflowGroup) GetContextTags() map[string]*string {
+	if w == nil {
+		return nil
+	}
+	return w.ContextTags
+}
+
+func (w *WorkflowGroup) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WorkflowGroup) UnmarshalJSON(data []byte) error {
+	type unmarshaler WorkflowGroup
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WorkflowGroup(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WorkflowGroup) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WorkflowGroupCreateResponse struct {
+	Msg  *string                    `json:"msg,omitempty" url:"msg,omitempty"`
+	Data *WorkflowGroupDataResponse `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WorkflowGroupCreateResponse) GetMsg() *string {
+	if w == nil {
+		return nil
+	}
+	return w.Msg
+}
+
+func (w *WorkflowGroupCreateResponse) GetData() *WorkflowGroupDataResponse {
+	if w == nil {
+		return nil
+	}
+	return w.Data
+}
+
+func (w *WorkflowGroupCreateResponse) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WorkflowGroupCreateResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler WorkflowGroupCreateResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WorkflowGroupCreateResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WorkflowGroupCreateResponse) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WorkflowGroupDataResponse struct {
+	ResourceName *string  `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	Description  *string  `json:"Description,omitempty" url:"Description,omitempty"`
+	Tags         []string `json:"Tags,omitempty" url:"Tags,omitempty"`
+	// Contextual tags to give context to your tags
+	ContextTags   map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	IsArchive     *string            `json:"IsArchive,omitempty" url:"IsArchive,omitempty"`
+	ResourceType  *string            `json:"ResourceType,omitempty" url:"ResourceType,omitempty"`
+	DocVersion    *string            `json:"DocVersion,omitempty" url:"DocVersion,omitempty"`
+	CreatorEnv    *string            `json:"CreatorEnv,omitempty" url:"CreatorEnv,omitempty"`
+	SgOwned       *bool              `json:"SGOwned,omitempty" url:"SGOwned,omitempty"`
+	ParentId      *string            `json:"ParentId,omitempty" url:"ParentId,omitempty"`
+	ResourceId    *string            `json:"ResourceId,omitempty" url:"ResourceId,omitempty"`
+	WfGrpParentId *string            `json:"WfGrpParentId,omitempty" url:"WfGrpParentId,omitempty"`
+	WfGrpFullId   *string            `json:"WfGrpFullId,omitempty" url:"WfGrpFullId,omitempty"`
+	OrgId         *string            `json:"OrgId,omitempty" url:"OrgId,omitempty"`
+	SubResourceId *string            `json:"SubResourceId,omitempty" url:"SubResourceId,omitempty"`
+	WfgrpIndexId  *string            `json:"WfgrpIndexId,omitempty" url:"WfgrpIndexId,omitempty"`
+	Authors       []string           `json:"Authors,omitempty" url:"Authors,omitempty"`
+	IsActive      *IsArchiveEnum     `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WorkflowGroupDataResponse) GetResourceName() *string {
+	if w == nil {
+		return nil
+	}
+	return w.ResourceName
+}
+
+func (w *WorkflowGroupDataResponse) GetDescription() *string {
+	if w == nil {
+		return nil
+	}
+	return w.Description
+}
+
+func (w *WorkflowGroupDataResponse) GetTags() []string {
+	if w == nil {
+		return nil
+	}
+	return w.Tags
+}
+
+func (w *WorkflowGroupDataResponse) GetContextTags() map[string]*string {
+	if w == nil {
+		return nil
+	}
+	return w.ContextTags
+}
+
+func (w *WorkflowGroupDataResponse) GetIsArchive() *string {
+	if w == nil {
+		return nil
+	}
+	return w.IsArchive
+}
+
+func (w *WorkflowGroupDataResponse) GetResourceType() *string {
+	if w == nil {
+		return nil
+	}
+	return w.ResourceType
+}
+
+func (w *WorkflowGroupDataResponse) GetDocVersion() *string {
+	if w == nil {
+		return nil
+	}
+	return w.DocVersion
+}
+
+func (w *WorkflowGroupDataResponse) GetCreatorEnv() *string {
+	if w == nil {
+		return nil
+	}
+	return w.CreatorEnv
+}
+
+func (w *WorkflowGroupDataResponse) GetSgOwned() *bool {
+	if w == nil {
+		return nil
+	}
+	return w.SgOwned
+}
+
+func (w *WorkflowGroupDataResponse) GetParentId() *string {
+	if w == nil {
+		return nil
+	}
+	return w.ParentId
+}
+
+func (w *WorkflowGroupDataResponse) GetResourceId() *string {
+	if w == nil {
+		return nil
+	}
+	return w.ResourceId
+}
+
+func (w *WorkflowGroupDataResponse) GetWfGrpParentId() *string {
+	if w == nil {
+		return nil
+	}
+	return w.WfGrpParentId
+}
+
+func (w *WorkflowGroupDataResponse) GetWfGrpFullId() *string {
+	if w == nil {
+		return nil
+	}
+	return w.WfGrpFullId
+}
+
+func (w *WorkflowGroupDataResponse) GetOrgId() *string {
+	if w == nil {
+		return nil
+	}
+	return w.OrgId
+}
+
+func (w *WorkflowGroupDataResponse) GetSubResourceId() *string {
+	if w == nil {
+		return nil
+	}
+	return w.SubResourceId
+}
+
+func (w *WorkflowGroupDataResponse) GetWfgrpIndexId() *string {
+	if w == nil {
+		return nil
+	}
+	return w.WfgrpIndexId
+}
+
+func (w *WorkflowGroupDataResponse) GetAuthors() []string {
+	if w == nil {
+		return nil
+	}
+	return w.Authors
+}
+
+func (w *WorkflowGroupDataResponse) GetIsActive() *IsArchiveEnum {
+	if w == nil {
+		return nil
+	}
+	return w.IsActive
+}
+
+func (w *WorkflowGroupDataResponse) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WorkflowGroupDataResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler WorkflowGroupDataResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WorkflowGroupDataResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WorkflowGroupDataResponse) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WorkflowGroupDeleteResponse struct {
+	Msg *string `json:"msg,omitempty" url:"msg,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WorkflowGroupDeleteResponse) GetMsg() *string {
+	if w == nil {
+		return nil
+	}
+	return w.Msg
+}
+
+func (w *WorkflowGroupDeleteResponse) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WorkflowGroupDeleteResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler WorkflowGroupDeleteResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WorkflowGroupDeleteResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WorkflowGroupDeleteResponse) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WorkflowGroupGetResponse struct {
+	Msg *WorkflowGroupDataResponse `json:"msg,omitempty" url:"msg,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WorkflowGroupGetResponse) GetMsg() *WorkflowGroupDataResponse {
+	if w == nil {
+		return nil
+	}
+	return w.Msg
+}
+
+func (w *WorkflowGroupGetResponse) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WorkflowGroupGetResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler WorkflowGroupGetResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WorkflowGroupGetResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WorkflowGroupGetResponse) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WorkflowGroupListAllResponse struct {
+	Msg              []*WorkflowGroupDataResponse `json:"msg,omitempty" url:"msg,omitempty"`
+	Lastevaluatedkey *string                      `json:"lastevaluatedkey,omitempty" url:"lastevaluatedkey,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WorkflowGroupListAllResponse) GetMsg() []*WorkflowGroupDataResponse {
+	if w == nil {
+		return nil
+	}
+	return w.Msg
+}
+
+func (w *WorkflowGroupListAllResponse) GetLastevaluatedkey() *string {
+	if w == nil {
+		return nil
+	}
+	return w.Lastevaluatedkey
+}
+
+func (w *WorkflowGroupListAllResponse) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WorkflowGroupListAllResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler WorkflowGroupListAllResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WorkflowGroupListAllResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WorkflowGroupListAllResponse) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WorkflowGroupPatch struct {
+	Msg  *string                    `json:"msg,omitempty" url:"msg,omitempty"`
+	Data *WorkflowGroupDataResponse `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WorkflowGroupPatch) GetMsg() *string {
+	if w == nil {
+		return nil
+	}
+	return w.Msg
+}
+
+func (w *WorkflowGroupPatch) GetData() *WorkflowGroupDataResponse {
+	if w == nil {
+		return nil
+	}
+	return w.Data
+}
+
+func (w *WorkflowGroupPatch) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WorkflowGroupPatch) UnmarshalJSON(data []byte) error {
+	type unmarshaler WorkflowGroupPatch
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WorkflowGroupPatch(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WorkflowGroupPatch) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
 }

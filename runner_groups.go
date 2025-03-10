@@ -3,12 +3,23 @@
 package api
 
 import (
-	json "encoding/json"
 	fmt "fmt"
 
 	core "github.com/StackGuardian/sg-sdk-go/core"
-	internal "github.com/StackGuardian/sg-sdk-go/internal"
 )
+
+type RunnerGroup struct {
+	ResourceName               *core.Optional[string]                 `json:"ResourceName,omitempty" url:"-"`
+	Tags                       *core.Optional[[]string]               `json:"Tags,omitempty" url:"-"`
+	Description                *core.Optional[string]                 `json:"Description,omitempty" url:"-"`
+	MaxNumberOfRunners         *core.Optional[int]                    `json:"MaxNumberOfRunners,omitempty" url:"-"`
+	StorageBackendConfig       map[string]interface{}                 `json:"StorageBackendConfig,omitempty" url:"-"`
+	IsActive                   *core.Optional[IsArchiveEnum]          `json:"IsActive,omitempty" url:"-"`
+	RunControllerRuntimeSource *core.Optional[RuntimeSource]          `json:"RunControllerRuntimeSource,omitempty" url:"-"`
+	RunnerToken                *core.Optional[string]                 `json:"RunnerToken,omitempty" url:"-"`
+	ApprovalConfig             *core.Optional[map[string]interface{}] `json:"ApprovalConfig,omitempty" url:"-"`
+	RunnerRegistrationErrors   *core.Optional[map[string]interface{}] `json:"RunnerRegistrationErrors,omitempty" url:"-"`
+}
 
 type RunnerDeregister struct {
 	RunnerId             *core.Optional[string]   `json:"RunnerId,omitempty" url:"-"`
@@ -21,322 +32,10 @@ type ReadRunnerGroupRequest struct {
 	GetActiveWorkflowsDetails *bool `json:"-" url:"getActiveWorkflowsDetails,omitempty"`
 }
 
-type PatchedRunnerGroup struct {
-	ResourceName               *core.Optional[string]                   `json:"ResourceName,omitempty" url:"-"`
-	Tags                       *core.Optional[[]string]                 `json:"Tags,omitempty" url:"-"`
-	Description                *core.Optional[string]                   `json:"Description,omitempty" url:"-"`
-	MaxNumberOfRunners         *core.Optional[int]                      `json:"MaxNumberOfRunners,omitempty" url:"-"`
-	StorageBackendConfig       *core.Optional[map[string]interface{}]   `json:"StorageBackendConfig,omitempty" url:"-"`
-	IsActive                   *core.Optional[IsArchiveEnum]            `json:"IsActive,omitempty" url:"-"`
-	RunControllerRuntimeSource *core.Optional[RuntimeSource]            `json:"RunControllerRuntimeSource,omitempty" url:"-"`
-	CreatedAt                  *core.Optional[int]                      `json:"CreatedAt,omitempty" url:"-"`
-	ModifiedAt                 *core.Optional[int]                      `json:"ModifiedAt,omitempty" url:"-"`
-	ParentId                   *core.Optional[string]                   `json:"ParentId,omitempty" url:"-"`
-	ResourceType               *core.Optional[string]                   `json:"ResourceType,omitempty" url:"-"`
-	RunnerToken                *core.Optional[string]                   `json:"RunnerToken,omitempty" url:"-"`
-	ApprovalConfig             *core.Optional[map[string]interface{}]   `json:"ApprovalConfig,omitempty" url:"-"`
-	ContainerInstances         *core.Optional[[]map[string]interface{}] `json:"ContainerInstances,omitempty" url:"-"`
-	ActiveWorkflows            *core.Optional[map[string]interface{}]   `json:"ActiveWorkflows,omitempty" url:"-"`
-	QueuedWorkflowsCount       *core.Optional[int]                      `json:"QueuedWorkflowsCount,omitempty" url:"-"`
-	PendingWorkflowsCount      *core.Optional[int]                      `json:"PendingWorkflowsCount,omitempty" url:"-"`
-	RunningWorkflowsCount      *core.Optional[int]                      `json:"RunningWorkflowsCount,omitempty" url:"-"`
-	RunnerRegistrationErrors   *core.Optional[map[string]interface{}]   `json:"RunnerRegistrationErrors,omitempty" url:"-"`
-}
-
 type RunnerStatus struct {
 	RunnerId             *core.Optional[string]   `json:"RunnerId,omitempty" url:"-"`
 	ContainerInstanceIds *core.Optional[[]string] `json:"ContainerInstanceIds,omitempty" url:"-"`
 	Status               StatusEnum               `json:"Status" url:"-"`
-}
-
-type RunnerGroup struct {
-	ResourceName               *string                  `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
-	Tags                       []string                 `json:"Tags,omitempty" url:"Tags,omitempty"`
-	Description                *string                  `json:"Description,omitempty" url:"Description,omitempty"`
-	MaxNumberOfRunners         *int                     `json:"MaxNumberOfRunners,omitempty" url:"MaxNumberOfRunners,omitempty"`
-	StorageBackendConfig       map[string]interface{}   `json:"StorageBackendConfig,omitempty" url:"StorageBackendConfig,omitempty"`
-	IsActive                   *IsArchiveEnum           `json:"IsActive,omitempty" url:"IsActive,omitempty"`
-	RunControllerRuntimeSource *RuntimeSource           `json:"RunControllerRuntimeSource,omitempty" url:"RunControllerRuntimeSource,omitempty"`
-	CreatedAt                  *int                     `json:"CreatedAt,omitempty" url:"CreatedAt,omitempty"`
-	ModifiedAt                 *int                     `json:"ModifiedAt,omitempty" url:"ModifiedAt,omitempty"`
-	ParentId                   *string                  `json:"ParentId,omitempty" url:"ParentId,omitempty"`
-	ResourceType               *string                  `json:"ResourceType,omitempty" url:"ResourceType,omitempty"`
-	RunnerToken                *string                  `json:"RunnerToken,omitempty" url:"RunnerToken,omitempty"`
-	ApprovalConfig             map[string]interface{}   `json:"ApprovalConfig,omitempty" url:"ApprovalConfig,omitempty"`
-	ContainerInstances         []map[string]interface{} `json:"ContainerInstances,omitempty" url:"ContainerInstances,omitempty"`
-	ActiveWorkflows            map[string]interface{}   `json:"ActiveWorkflows,omitempty" url:"ActiveWorkflows,omitempty"`
-	QueuedWorkflowsCount       *int                     `json:"QueuedWorkflowsCount,omitempty" url:"QueuedWorkflowsCount,omitempty"`
-	PendingWorkflowsCount      *int                     `json:"PendingWorkflowsCount,omitempty" url:"PendingWorkflowsCount,omitempty"`
-	RunningWorkflowsCount      *int                     `json:"RunningWorkflowsCount,omitempty" url:"RunningWorkflowsCount,omitempty"`
-	RunnerRegistrationErrors   map[string]interface{}   `json:"RunnerRegistrationErrors,omitempty" url:"RunnerRegistrationErrors,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (r *RunnerGroup) GetResourceName() *string {
-	if r == nil {
-		return nil
-	}
-	return r.ResourceName
-}
-
-func (r *RunnerGroup) GetTags() []string {
-	if r == nil {
-		return nil
-	}
-	return r.Tags
-}
-
-func (r *RunnerGroup) GetDescription() *string {
-	if r == nil {
-		return nil
-	}
-	return r.Description
-}
-
-func (r *RunnerGroup) GetMaxNumberOfRunners() *int {
-	if r == nil {
-		return nil
-	}
-	return r.MaxNumberOfRunners
-}
-
-func (r *RunnerGroup) GetStorageBackendConfig() map[string]interface{} {
-	if r == nil {
-		return nil
-	}
-	return r.StorageBackendConfig
-}
-
-func (r *RunnerGroup) GetIsActive() *IsArchiveEnum {
-	if r == nil {
-		return nil
-	}
-	return r.IsActive
-}
-
-func (r *RunnerGroup) GetRunControllerRuntimeSource() *RuntimeSource {
-	if r == nil {
-		return nil
-	}
-	return r.RunControllerRuntimeSource
-}
-
-func (r *RunnerGroup) GetCreatedAt() *int {
-	if r == nil {
-		return nil
-	}
-	return r.CreatedAt
-}
-
-func (r *RunnerGroup) GetModifiedAt() *int {
-	if r == nil {
-		return nil
-	}
-	return r.ModifiedAt
-}
-
-func (r *RunnerGroup) GetParentId() *string {
-	if r == nil {
-		return nil
-	}
-	return r.ParentId
-}
-
-func (r *RunnerGroup) GetResourceType() *string {
-	if r == nil {
-		return nil
-	}
-	return r.ResourceType
-}
-
-func (r *RunnerGroup) GetRunnerToken() *string {
-	if r == nil {
-		return nil
-	}
-	return r.RunnerToken
-}
-
-func (r *RunnerGroup) GetApprovalConfig() map[string]interface{} {
-	if r == nil {
-		return nil
-	}
-	return r.ApprovalConfig
-}
-
-func (r *RunnerGroup) GetContainerInstances() []map[string]interface{} {
-	if r == nil {
-		return nil
-	}
-	return r.ContainerInstances
-}
-
-func (r *RunnerGroup) GetActiveWorkflows() map[string]interface{} {
-	if r == nil {
-		return nil
-	}
-	return r.ActiveWorkflows
-}
-
-func (r *RunnerGroup) GetQueuedWorkflowsCount() *int {
-	if r == nil {
-		return nil
-	}
-	return r.QueuedWorkflowsCount
-}
-
-func (r *RunnerGroup) GetPendingWorkflowsCount() *int {
-	if r == nil {
-		return nil
-	}
-	return r.PendingWorkflowsCount
-}
-
-func (r *RunnerGroup) GetRunningWorkflowsCount() *int {
-	if r == nil {
-		return nil
-	}
-	return r.RunningWorkflowsCount
-}
-
-func (r *RunnerGroup) GetRunnerRegistrationErrors() map[string]interface{} {
-	if r == nil {
-		return nil
-	}
-	return r.RunnerRegistrationErrors
-}
-
-func (r *RunnerGroup) GetExtraProperties() map[string]interface{} {
-	return r.extraProperties
-}
-
-func (r *RunnerGroup) UnmarshalJSON(data []byte) error {
-	type unmarshaler RunnerGroup
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*r = RunnerGroup(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *r)
-	if err != nil {
-		return err
-	}
-	r.extraProperties = extraProperties
-	r.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (r *RunnerGroup) String() string {
-	if len(r.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(r); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", r)
-}
-
-type RunnerGroupCreateResponse struct {
-	Msg  *string      `json:"msg,omitempty" url:"msg,omitempty"`
-	Data *RunnerGroup `json:"data,omitempty" url:"data,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (r *RunnerGroupCreateResponse) GetMsg() *string {
-	if r == nil {
-		return nil
-	}
-	return r.Msg
-}
-
-func (r *RunnerGroupCreateResponse) GetData() *RunnerGroup {
-	if r == nil {
-		return nil
-	}
-	return r.Data
-}
-
-func (r *RunnerGroupCreateResponse) GetExtraProperties() map[string]interface{} {
-	return r.extraProperties
-}
-
-func (r *RunnerGroupCreateResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler RunnerGroupCreateResponse
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*r = RunnerGroupCreateResponse(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *r)
-	if err != nil {
-		return err
-	}
-	r.extraProperties = extraProperties
-	r.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (r *RunnerGroupCreateResponse) String() string {
-	if len(r.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(r); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", r)
-}
-
-type RunnerGroupDeleteResponse struct {
-	Msg *string `json:"msg,omitempty" url:"msg,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (r *RunnerGroupDeleteResponse) GetMsg() *string {
-	if r == nil {
-		return nil
-	}
-	return r.Msg
-}
-
-func (r *RunnerGroupDeleteResponse) GetExtraProperties() map[string]interface{} {
-	return r.extraProperties
-}
-
-func (r *RunnerGroupDeleteResponse) UnmarshalJSON(data []byte) error {
-	type unmarshaler RunnerGroupDeleteResponse
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*r = RunnerGroupDeleteResponse(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *r)
-	if err != nil {
-		return err
-	}
-	r.extraProperties = extraProperties
-	r.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (r *RunnerGroupDeleteResponse) String() string {
-	if len(r.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(r); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", r)
 }
 
 // * `ACTIVE` - ACTIVE

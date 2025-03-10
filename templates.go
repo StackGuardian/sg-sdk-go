@@ -67,6 +67,7 @@ type ReadTemplateRevisionRequest struct {
 type PatchedTemplateUpdate struct {
 	// Current organization name of the user, e.g. my-sg-org
 	SgOrgid               string                                 `json:"-" url:"-"`
+	TemplateName          *core.Optional[string]                 `json:"TemplateName,omitempty" url:"-"`
 	IsPublic              *core.Optional[IsArchiveEnum]          `json:"IsPublic,omitempty" url:"-"`
 	LongDescription       *core.Optional[string]                 `json:"LongDescription,omitempty" url:"-"`
 	ShortDescription      *core.Optional[string]                 `json:"ShortDescription,omitempty" url:"-"`

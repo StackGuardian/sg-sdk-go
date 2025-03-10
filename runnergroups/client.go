@@ -38,7 +38,7 @@ func (c *Client) CreateNewRunnerGroup(
 	org string,
 	request *sgsdkgo.RunnerGroup,
 	opts ...option.RequestOption,
-) error {
+) (*sgsdkgo.RunnerGroupCreateResponse, error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -55,6 +55,7 @@ func (c *Client) CreateNewRunnerGroup(
 	)
 	headers.Set("Content-Type", "application/json")
 
+	var response *sgsdkgo.RunnerGroupCreateResponse
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{
@@ -66,11 +67,12 @@ func (c *Client) CreateNewRunnerGroup(
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
 			Request:         request,
+			Response:        &response,
 		},
 	); err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return response, nil
 }
 
 // Read Runner Group
@@ -115,6 +117,93 @@ func (c *Client) ReadRunnerGroup(
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Delete Runner Group
+func (c *Client) DeleteRunnerGroup(
+	ctx context.Context,
+	org string,
+	runnerGroup string,
+	opts ...option.RequestOption,
+) (*sgsdkgo.RunnerGroupDeleteResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/runnergroups/%v/",
+		org,
+		runnerGroup,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *sgsdkgo.RunnerGroupDeleteResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodDelete,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Update Runner Group
+func (c *Client) UpdateRunnerGroup(
+	ctx context.Context,
+	org string,
+	runnerGroup string,
+	request *sgsdkgo.PatchedRunnerGroup,
+	opts ...option.RequestOption,
+) (*sgsdkgo.RunnerGroupCreateResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/runnergroups/%v/",
+		org,
+		runnerGroup,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+
+	var response *sgsdkgo.RunnerGroupCreateResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPatch,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
 			Response:        &response,
 		},
 	); err != nil {

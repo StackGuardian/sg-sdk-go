@@ -1071,12 +1071,12 @@ func TestSDK(t *testing.T) {
 		createRunnerGroupRequest := sggosdk.RunnerGroup{
 			ResourceName: sggosdk.String(runnerGroupName),
 			Description:  sggosdk.String("SDK Test Runner Group Description"),
-			StorageBackendConfig: map[string]interface{}{
-				"type":         "s3",
-				"aws_region":   "eu-central-1",
-				"s3BucketName": "test-bucket",
-				"auth": map[string]interface{}{
-					"integrationId": "/integrations/test_test",
+			StorageBackendConfig: &sggosdk.StorageBackendConfig{
+				Type:         sggosdk.StorageBackendConfigTypeEnumAwsS3,
+				AwsRegion:    sggosdk.String("eu-central-1"),
+				S3BucketName: sggosdk.String("test-bucket"),
+				Auth: &sggosdk.StorageBackendConfigAuth{
+					IntegrationId: "/integrations/test_test",
 				},
 			},
 		}

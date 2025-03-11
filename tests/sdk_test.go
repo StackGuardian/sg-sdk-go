@@ -992,6 +992,25 @@ func TestSDK(t *testing.T) {
 		assert.Empty(t, err)
 	})
 
+	t.Run("update_policy_insights", func(t *testing.T) {
+		c := client.NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		policyName := "Exclusion-policy-n9kv2"
+		updatePolicyRequest := sggosdk.PatchedPolymorphicPolicy{
+			PolicyType: "FILTER.INSIGHT",
+			FilterInsight: &sggosdk.PatchedPolicyFilterInsight{
+				ResourceName:   sggosdk.Optional(policyName),
+				Description:    sggosdk.Null[string](),
+				PoliciesConfig: sggosdk.Optional([]*sggosdk.PoliciesFilterInsightConfig{}),
+			},
+		}
+		createPolicyResponse, err := c.Policies.UpdatePolicy(context.Background(), SG_ORG, policyName, &updatePolicyRequest)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, createPolicyResponse.Msg)
+		assert.Equal(t, "Policy "+policyName+" updated", *createPolicyResponse.Msg)
+	})
 	t.Run("update_policy", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
@@ -1001,9 +1020,11 @@ func TestSDK(t *testing.T) {
 		updatePolicyRequest := sggosdk.PatchedPolymorphicPolicy{
 			PolicyType: "GENERAL",
 			General: &sggosdk.PatchedPolicyGeneral{
-				ResourceName:              sggosdk.String("GoSDKTestPolicyCreate"),
-				Description:               sggosdk.String("SDK Test Policy Description"),
-				NumberOfApprovalsRequired: sggosdk.Int(1),
+				ResourceName:              sggosdk.Optional("test-to-delete"),
+				Description:               sggosdk.Optional("SDK Test Policy Description"),
+				NumberOfApprovalsRequired: sggosdk.Optional(1),
+				Tags:                      sggosdk.Optional([]string{}),
+				PoliciesConfig:            sggosdk.Optional([]*sggosdk.PoliciesConfig{}),
 			},
 		}
 		createPolicyResponse, err := c.Policies.UpdatePolicy(context.Background(), SG_ORG, policyName, &updatePolicyRequest)

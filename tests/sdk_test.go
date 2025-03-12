@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"os"
+	"strings"
 	testing "testing"
 
 	sggosdk "github.com/StackGuardian/sg-sdk-go"
@@ -26,7 +27,7 @@ func TestSDK(t *testing.T) {
 
 	// Workflows
 
-	t.Run("Create and delete workflow", func(t *testing.T) {
+	t.Run("Create_and_delete_workflow", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -68,7 +69,7 @@ func TestSDK(t *testing.T) {
 		assert.Empty(t, err)
 	})
 
-	t.Run("Update workflow", func(t *testing.T) {
+	t.Run("Update_workflow", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -106,7 +107,7 @@ func TestSDK(t *testing.T) {
 		assert.Equal(t, "Workflow "+SG_WF+" updated", updateWorkflowResponse.Msg)
 	})
 
-	t.Run("get workflow", func(t *testing.T) {
+	t.Run("get_workflow", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -116,7 +117,7 @@ func TestSDK(t *testing.T) {
 		assert.Equal(t, SG_WF, response.Msg.ResourceName)
 	})
 
-	t.Run("ListAll workflow", func(t *testing.T) {
+	t.Run("ListAll_workflow", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -127,7 +128,7 @@ func TestSDK(t *testing.T) {
 		assert.Empty(t, err)
 	})
 
-	t.Run("List all artifacts (workflow)", func(t *testing.T) {
+	t.Run("List_all_artifacts_(workflow)", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -137,7 +138,7 @@ func TestSDK(t *testing.T) {
 		assert.Equal(t, 15055, response.Data.Artifacts["orgs/demo-org/wfgrps/test-terragrunt/wfs/CUSTOM-7OeX/artifacts/tfstate.json"].Size)
 	})
 
-	t.Run("workflow output", func(t *testing.T) {
+	t.Run("workflow_output", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -148,7 +149,7 @@ func TestSDK(t *testing.T) {
 		assert.Equal(t, "stackguardian-proper-escargot", response.Data.Outputs["id"].(map[string]interface{})["value"].(string))
 	})
 
-	t.Run("Update stack workflow", func(t *testing.T) {
+	t.Run("Update_stack_workflow", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -186,7 +187,7 @@ func TestSDK(t *testing.T) {
 		assert.Equal(t, "Workflow "+SG_STACK_WF+" updated", updateWorkflowResponse.Msg)
 	})
 
-	t.Run("get stackworkflow", func(t *testing.T) {
+	t.Run("get_stackworkflow", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -197,7 +198,7 @@ func TestSDK(t *testing.T) {
 
 	})
 
-	t.Run("ListAll stack workflow", func(t *testing.T) {
+	t.Run("ListAll_stack_workflow", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -208,7 +209,7 @@ func TestSDK(t *testing.T) {
 		assert.GreaterOrEqual(t, len(response.Msg), 1)
 	})
 
-	t.Run("List all artifacts (stack workflow)", func(t *testing.T) {
+	t.Run("List_all_artifacts_(stack_workflow)", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -221,7 +222,7 @@ func TestSDK(t *testing.T) {
 			response.Data.Artifacts["orgs/demo-org/wfgrps/refeed-test-nested-stackrunbug/stacks/stack1/wfs/refeed2-null-resource-tf-JuNs/artifacts/tfstate.json"].Size)
 	})
 
-	t.Run("stack workflow output", func(t *testing.T) {
+	t.Run("stack_workflow_output", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -234,7 +235,7 @@ func TestSDK(t *testing.T) {
 	})
 
 	// Workflow Runs
-	t.Run("ListAll workflow runs", func(t *testing.T) {
+	t.Run("ListAll_workflow_runs", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -245,7 +246,7 @@ func TestSDK(t *testing.T) {
 		assert.GreaterOrEqual(t, len(response.Msg), 1)
 	})
 
-	t.Run("Get workflow runs stack", func(t *testing.T) {
+	t.Run("Get_workflow_runs_stack", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -256,7 +257,7 @@ func TestSDK(t *testing.T) {
 
 	})
 
-	t.Run("Get workflow runs", func(t *testing.T) {
+	t.Run("Get_workflow_runs", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -267,7 +268,7 @@ func TestSDK(t *testing.T) {
 
 	})
 
-	t.Run("Create workflow runs", func(t *testing.T) {
+	t.Run("Create_workflow_runs", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -308,7 +309,7 @@ func TestSDK(t *testing.T) {
 
 	})
 
-	t.Run("Approve workflow runs", func(t *testing.T) {
+	t.Run("Approve_workflow_runs", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -325,7 +326,7 @@ func TestSDK(t *testing.T) {
 
 	})
 
-	t.Run("Approve workflow runs (stack)", func(t *testing.T) {
+	t.Run("Approve_workflow_runs_(stack)", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -342,7 +343,7 @@ func TestSDK(t *testing.T) {
 
 	})
 
-	t.Run("Get workflow runs logs", func(t *testing.T) {
+	t.Run("Get_workflow_runs_logs", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -353,7 +354,7 @@ func TestSDK(t *testing.T) {
 		assert.GreaterOrEqual(t, len(logs.Msg), 1)
 	})
 
-	t.Run("Get workflow runs logs (stack)", func(t *testing.T) {
+	t.Run("Get_workflow_runs_logs_(stack)", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -364,7 +365,7 @@ func TestSDK(t *testing.T) {
 		assert.GreaterOrEqual(t, len(logs.Msg), 1)
 	})
 
-	t.Run("Cancel workflow runs", func(t *testing.T) {
+	t.Run("Cancel_workflow_runs", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -377,7 +378,7 @@ func TestSDK(t *testing.T) {
 		}
 	})
 
-	t.Run("Update workflow runs", func(t *testing.T) {
+	t.Run("Update_workflow_runs", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -416,7 +417,7 @@ func TestSDK(t *testing.T) {
 	})
 
 	// Stacks
-	t.Run("Create and delete stack", func(t *testing.T) {
+	t.Run("Create_and_delete_stack", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -442,9 +443,8 @@ func TestSDK(t *testing.T) {
 			}),
 
 			Description: sggosdk.Optional("Dummy Stack for GoSDK"),
-			TemplatesConfig: sggosdk.Optional(sggosdk.TemplatesConfig{
-				TemplateGroupId: sggosdk.String("/demo-org/ansible:4"),
-				Templates: []*sggosdk.TemplateWorkflow{
+			WorkflowsConfig: sggosdk.Optional(sggosdk.WorkflowsConfig{
+				Workflows: []*sggosdk.WorkflowsConfigWorkflow{
 					{
 						NumberOfApprovalsRequired: sggosdk.Int(0),
 						Description:               sggosdk.String("Dummy Workflow for GoSDK"),
@@ -464,7 +464,7 @@ func TestSDK(t *testing.T) {
 		assert.Equal(t, "Stack "+*createStackResponse.Data.Stack.ResourceName+" created", createStackResponse.Msg)
 
 		err = c.StackWorkflows.DeleteStackWorkflow(context.Background(), SG_ORG, *createStackResponse.Data.Stack.ResourceName,
-			createStackResponse.Data.Workflows[0].ResourceName, SG_WF_GROUP)
+			strings.Split(createStackResponse.Data.Workflows[0].ResourceId, "/")[2], SG_WF_GROUP)
 		assert.Empty(t, err)
 		deleteResponse, err := c.Stacks.DeleteStack(context.Background(), SG_ORG, *createStackResponse.Data.Stack.ResourceName, SG_WF_GROUP)
 		assert.Empty(t, err)
@@ -472,7 +472,7 @@ func TestSDK(t *testing.T) {
 		assert.Empty(t, err)
 	})
 
-	t.Run("Read stack", func(t *testing.T) {
+	t.Run("Read_stack", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -482,7 +482,7 @@ func TestSDK(t *testing.T) {
 		assert.Equal(t, SG_STACK, *response.Msg.ResourceName)
 	})
 
-	t.Run("Run stack", func(t *testing.T) {
+	t.Run("Run_stack", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -495,7 +495,7 @@ func TestSDK(t *testing.T) {
 		assert.Equal(t, "Stack run scheduled", response.Msg)
 	})
 
-	t.Run("ListAll stacks", func(t *testing.T) {
+	t.Run("ListAll_stacks", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -506,7 +506,7 @@ func TestSDK(t *testing.T) {
 		assert.GreaterOrEqual(t, len(response.Msg), 1)
 	})
 
-	t.Run("Get stack outputs", func(t *testing.T) {
+	t.Run("Get_stack_outputs", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -516,7 +516,7 @@ func TestSDK(t *testing.T) {
 		assert.GreaterOrEqual(t, len(response.Msg), 1)
 	})
 
-	t.Run("update stack", func(t *testing.T) {
+	t.Run("update_stack", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -547,7 +547,7 @@ func TestSDK(t *testing.T) {
 		assert.Equal(t, "Stack "+SG_STACK+" updated", updateStackResponse.Msg)
 	})
 
-	t.Run("list all stack runs", func(t *testing.T) {
+	t.Run("list_all_stack_runs", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -558,7 +558,7 @@ func TestSDK(t *testing.T) {
 		assert.GreaterOrEqual(t, len(listResponse.Msg), 1)
 	})
 
-	t.Run("get stack runs", func(t *testing.T) {
+	t.Run("get_stack_runs", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
@@ -1033,6 +1033,59 @@ func TestSDK(t *testing.T) {
 		assert.Equal(t, "Policy "+policyName+" updated", *createPolicyResponse.Msg)
 	})
 
+	t.Run("patch_policy_with_nil", func(t *testing.T) {
+		c := client.NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		policyName := "SDKTestPolicyForPatch"
+		createPolicyRequest := sggosdk.PolymorphicPolicy{
+			PolicyType: "GENERAL",
+			General: &sggosdk.PolicyGeneral{
+				ResourceName:              sggosdk.String(policyName),
+				Description:               sggosdk.String("SDK Test Policy Description"),
+				NumberOfApprovalsRequired: sggosdk.Int(1),
+				PoliciesConfig: []*sggosdk.PoliciesConfig{
+					{
+						Name:   "PolicyConfig-1",
+						OnFail: sggosdk.OnFailEnumFail,
+						OnPass: sggosdk.OnPassEnumPass,
+						PolicyVcsConfig: &sggosdk.PolicyVcsConfig{
+							PolicyTemplateId:       sggosdk.String("/demo-org/sg_workflow_check_userschedules-Copy:1"),
+							UseMarketplaceTemplate: true,
+						},
+					},
+				},
+			},
+		}
+		createPolicyResponse, err := c.Policies.CreatePolicy(context.Background(), SG_ORG, &createPolicyRequest)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, createPolicyResponse.Msg)
+		assert.Equal(t, "Policy "+*createPolicyRequest.General.ResourceName+" created", *createPolicyResponse.Msg)
+
+		// now lets update the policy to unset the policiesConfig and description
+		updatePolicyRequest := sggosdk.PatchedPolymorphicPolicy{
+			PolicyType: "GENERAL",
+			General: &sggosdk.PatchedPolicyGeneral{
+				ResourceName:              sggosdk.Optional(policyName),
+				Description:               sggosdk.Null[string](),
+				NumberOfApprovalsRequired: sggosdk.Optional(1),
+				PoliciesConfig:            sggosdk.Null[[]*sggosdk.PoliciesConfig](),
+			},
+		}
+		updatePolicyResponse, err := c.Policies.UpdatePolicy(context.Background(), SG_ORG, policyName, &updatePolicyRequest)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, updatePolicyResponse.Msg)
+		// make sure the description and policiesConfig are unset
+		assert.Equal(t, "", *updatePolicyResponse.Data.General.Description)
+		assert.Equal(t, 0, len(updatePolicyResponse.Data.General.PoliciesConfig))
+		assert.Equal(t, "Policy "+policyName+" updated", *updatePolicyResponse.Msg)
+
+		// now lets delete the policy
+		err = c.Policies.DeletePolicy(context.Background(), SG_ORG, *createPolicyRequest.General.ResourceName)
+		assert.Empty(t, err)
+	})
+
 	t.Run("umarshal_create_workflow", func(t *testing.T) {
 		c := client.NewClient(
 			option.WithApiKey(API_KEY),
@@ -1075,7 +1128,7 @@ func TestSDK(t *testing.T) {
 		assert.Equal(t, "Stack "+*createStackResponse.Data.Stack.ResourceName+" created", createStackResponse.Msg)
 
 		err = c.StackWorkflows.DeleteStackWorkflow(context.Background(), SG_ORG, *createStackResponse.Data.Stack.ResourceName,
-			createStackResponse.Data.Workflows[0].ResourceName, SG_WF_GROUP)
+			strings.Split(createStackResponse.Data.Workflows[0].ResourceId, "/")[2], SG_WF_GROUP)
 		assert.Empty(t, err)
 		deleteResponse, err := c.Stacks.DeleteStack(context.Background(), SG_ORG, *createStackResponse.Data.Stack.ResourceName, SG_WF_GROUP)
 		assert.Empty(t, err)

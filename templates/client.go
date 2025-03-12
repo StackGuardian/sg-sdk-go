@@ -85,9 +85,9 @@ func (c *Client) ReadSubscription(
 // Create Template and its first revision if the template does not exist, otherwise create a new revision of the template
 func (c *Client) CreateTemplateRevision(
 	ctx context.Context,
-	request *sgsdkgo.CreateTemplateRevisionRequest,
+	request *sgsdkgo.CreateTemplateRequest,
 	opts ...option.RequestOption,
-) (*sgsdkgo.TemplateCreatePatchResponse, error) {
+) (*sgsdkgo.CreateTemplateResponse, error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -99,10 +99,9 @@ func (c *Client) CreateTemplateRevision(
 		c.header.Clone(),
 		options.ToHeader(),
 	)
-	headers.Add("x-sg-orgid", fmt.Sprintf("%v", request.SgOrgid))
-	headers.Set("Content-Type", "application/json")
+	headers.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	var response *sgsdkgo.TemplateCreatePatchResponse
+	var response *sgsdkgo.CreateTemplateResponse
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{

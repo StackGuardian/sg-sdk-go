@@ -1719,3 +1719,27 @@ func (p *PolymorphicPolicyGetResponse) validate() error {
 	}
 	return nil
 }
+
+// * `OPA_REGO` - OPA_REGO
+// * `SG_POLICY_FRAMEWORK` - SG_POLICY_FRAMEWORK
+type SourceConfigKindEnum string
+
+const (
+	SourceConfigKindEnumOpaRego           SourceConfigKindEnum = "OPA_REGO"
+	SourceConfigKindEnumSgPolicyFramework SourceConfigKindEnum = "SG_POLICY_FRAMEWORK"
+)
+
+func NewSourceConfigKindEnumFromString(s string) (SourceConfigKindEnum, error) {
+	switch s {
+	case "OPA_REGO":
+		return SourceConfigKindEnumOpaRego, nil
+	case "SG_POLICY_FRAMEWORK":
+		return SourceConfigKindEnumSgPolicyFramework, nil
+	}
+	var t SourceConfigKindEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (s SourceConfigKindEnum) Ptr() *SourceConfigKindEnum {
+	return &s
+}

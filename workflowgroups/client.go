@@ -9,12 +9,13 @@ import (
 
 	sgsdkgo "github.com/StackGuardian/sg-sdk-go"
 	core "github.com/StackGuardian/sg-sdk-go/core"
+	internal "github.com/StackGuardian/sg-sdk-go/internal"
 	option "github.com/StackGuardian/sg-sdk-go/option"
 )
 
 type Client struct {
 	baseURL string
-	caller  *core.Caller
+	caller  *internal.Caller
 	header  http.Header
 }
 
@@ -22,8 +23,8 @@ func NewClient(opts ...option.RequestOption) *Client {
 	options := core.NewRequestOptions(opts...)
 	return &Client{
 		baseURL: options.BaseURL,
-		caller: core.NewCaller(
-			&core.CallerParams{
+		caller: internal.NewCaller(
+			&internal.CallerParams{
 				Client:      options.HTTPClient,
 				MaxAttempts: options.MaxAttempts,
 			},
@@ -40,26 +41,29 @@ func (c *Client) CreateWorkflowGroup(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.WorkflowGroupCreateResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(baseURL+"/api/v1/orgs/%v/wfgrps/", org)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/",
+		org,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
 
 	var response *sgsdkgo.WorkflowGroupCreateResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodPost,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -80,29 +84,26 @@ func (c *Client) ReadWorkflowGroup(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.WorkflowGroupGetResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
 	//DO NOT REVERT - If wfGrp contains "/" then it might be a nested workflow group
 	//In this case we need to pass through the / without encoding it
 	endpointURL := escapeSlashesForNestedWorkflowGroup(baseURL, org, wfGrp)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
 	var response *sgsdkgo.WorkflowGroupGetResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodGet,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -122,29 +123,26 @@ func (c *Client) DeleteWorkflowGroup(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.WorkflowGroupDeleteResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
 	//DO NOT REVERT - If wfGrp contains "/" then it might be a nested workflow group
 	//In this case we need to pass through the / without encoding it
 	endpointURL := escapeSlashesForNestedWorkflowGroup(baseURL, org, wfGrp)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
 	var response *sgsdkgo.WorkflowGroupDeleteResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodDelete,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -165,29 +163,28 @@ func (c *Client) UpdateWorkflowGroup(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.WorkflowGroupPatch, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
 	//DO NOT REVERT - If wfGrp contains "/" then it might be a nested workflow group
 	//In this case we need to pass through the / without encoding it
 	endpointURL := escapeSlashesForNestedWorkflowGroup(baseURL, org, wfGrp)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
 
 	var response *sgsdkgo.WorkflowGroupPatch
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodPatch,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -209,27 +206,26 @@ func (c *Client) CreateChildWorkflowGroup(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.WorkflowGroupCreateResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
 	endpointURL := escapeSlashesForNestedWorkflowGroup(baseURL, org, wfGrp) + "/wfgrps/"
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
 
 	var response *sgsdkgo.WorkflowGroupCreateResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodPost,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -250,30 +246,29 @@ func (c *Client) ListAllChildWorkflowGroups(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.WorkflowGroupListAllResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfgrps/listall/",
 		org,
 		wfGrp,
 	)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
 
 	var response *sgsdkgo.WorkflowGroupListAllResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodGet,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -292,26 +287,28 @@ func (c *Client) ListAllWorkflowGroups(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.WorkflowGroupListAllResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(baseURL+"/api/v1/orgs/%v/wfgrps/listall/", org)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/listall/",
+		org,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
 
 	var response *sgsdkgo.WorkflowGroupListAllResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodGet,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -328,13 +325,13 @@ func (c *Client) ListAllWorkflowGroups(
 func escapeSlashesForNestedWorkflowGroup(baseURL, org, wfGrp string) string {
 	var endpointURL string
 	if strings.Contains(wfGrp, "/") {
-		endpointURL = core.EncodeURL(
+		endpointURL = internal.EncodeURL(
 			baseURL+"/api/v1/orgs/%v/wfgrps/",
 			org,
 		)
 		endpointURL += wfGrp
 	} else {
-		endpointURL = core.EncodeURL(
+		endpointURL = internal.EncodeURL(
 			baseURL+"/api/v1/orgs/%v/wfgrps/%v",
 			org,
 			wfGrp,

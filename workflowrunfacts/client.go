@@ -7,12 +7,13 @@ import (
 	http "net/http"
 
 	core "github.com/StackGuardian/sg-sdk-go/core"
+	internal "github.com/StackGuardian/sg-sdk-go/internal"
 	option "github.com/StackGuardian/sg-sdk-go/option"
 )
 
 type Client struct {
 	baseURL string
-	caller  *core.Caller
+	caller  *internal.Caller
 	header  http.Header
 }
 
@@ -20,8 +21,8 @@ func NewClient(opts ...option.RequestOption) *Client {
 	options := core.NewRequestOptions(opts...)
 	return &Client{
 		baseURL: options.BaseURL,
-		caller: core.NewCaller(
-			&core.CallerParams{
+		caller: internal.NewCaller(
+			&internal.CallerParams{
 				Client:      options.HTTPClient,
 				MaxAttempts: options.MaxAttempts,
 			},
@@ -30,7 +31,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
-// Get workflow run facts details inside a workflow
+// Get workflow run facts details inside a workflow. For more information, see this [WorkflowRunFact Discussion](https://github.com/StackGuardian/feedback/discussions/109).
 func (c *Client) ReadWorkflowRunFacts(
 	ctx context.Context,
 	org string,
@@ -39,17 +40,14 @@ func (c *Client) ReadWorkflowRunFacts(
 	wfRun string,
 	wfRunFacts string,
 	opts ...option.RequestOption,
-) error {
+) (map[string]interface{}, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/wfruns/%v/wfrunfacts/%v/",
 		org,
 		wfGrp,
@@ -57,22 +55,26 @@ func (c *Client) ReadWorkflowRunFacts(
 		wfRun,
 		wfRunFacts,
 	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
 
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
-
+	var response map[string]interface{}
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodGet,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
+			Response:        &response,
 		},
 	); err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return response, nil
 }

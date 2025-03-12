@@ -7,26 +7,8 @@ import (
 	fmt "fmt"
 
 	core "github.com/StackGuardian/sg-sdk-go/core"
+	internal "github.com/StackGuardian/sg-sdk-go/internal"
 )
-
-type CreateTemplateRevisionRequest struct {
-	// Current organization name of the user, e.g. my-sg-org
-	SgOrgid string    `json:"-" url:"-"`
-	Body    *Template `json:"-" url:"-"`
-}
-
-func (c *CreateTemplateRevisionRequest) UnmarshalJSON(data []byte) error {
-	body := new(Template)
-	if err := json.Unmarshal(data, &body); err != nil {
-		return err
-	}
-	c.Body = body
-	return nil
-}
-
-func (c *CreateTemplateRevisionRequest) MarshalJSON() ([]byte, error) {
-	return json.Marshal(c.Body)
-}
 
 type DeleteTemplateRevisionRequest struct {
 	// Current organization name of the user, e.g. my-sg-org
@@ -44,6 +26,13 @@ type ListAllTemplatesRequest struct {
 	SearchQuery *string `json:"-" url:"SearchQuery,omitempty"`
 	// Parent Template Id to list all revisions
 	TemplateId *string `json:"-" url:"TemplateId,omitempty"`
+	// Pagination token to retrieve the next set of results
+	Lastevaluatedkey *string `json:"-" url:"lastevaluatedkey,omitempty"`
+}
+
+type ReadIacGroupsIacTemplateRequest struct {
+	// Current organization name of the user, e.g. my-sg-org
+	SgOrgid string `json:"-" url:"-"`
 }
 
 type ReadSubscriptionRequest struct {
@@ -58,20 +47,2115 @@ type ReadTemplateRevisionRequest struct {
 
 type PatchedTemplateUpdate struct {
 	// Current organization name of the user, e.g. my-sg-org
-	SgOrgid               string                                 `json:"-" url:"-"`
-	IsPublic              *core.Optional[IsArchiveEnum]          `json:"IsPublic,omitempty" url:"-"`
-	LongDescription       *core.Optional[string]                 `json:"LongDescription,omitempty" url:"-"`
-	ShortDescription      *core.Optional[string]                 `json:"ShortDescription,omitempty" url:"-"`
-	Deprecation           *core.Optional[Deprecation]            `json:"Deprecation,omitempty" url:"-"`
-	SharedOrgsList        *core.Optional[[]string]               `json:"SharedOrgsList,omitempty" url:"-"`
-	InputSchemas          *core.Optional[[]*InputSchemas]        `json:"InputSchemas,omitempty" url:"-"`
-	Templates             *core.Optional[[]*Templates]           `json:"Templates,omitempty" url:"-"`
-	Tags                  *core.Optional[[]string]               `json:"Tags,omitempty" url:"-"`
-	GitHubComSync         *core.Optional[map[string]interface{}] `json:"GitHubComSync,omitempty" url:"-"`
-	VcsTriggers           *core.Optional[VcsTriggers]            `json:"VCSTriggers,omitempty" url:"-"`
+	SgOrgid          string                                 `json:"-" url:"-"`
+	TemplateName     *core.Optional[string]                 `json:"TemplateName,omitempty" url:"-"`
+	IsPublic         *core.Optional[IsArchiveEnum]          `json:"IsPublic,omitempty" url:"-"`
+	LongDescription  *core.Optional[string]                 `json:"LongDescription,omitempty" url:"-"`
+	ShortDescription *core.Optional[string]                 `json:"ShortDescription,omitempty" url:"-"`
+	Deprecation      *core.Optional[Deprecation]            `json:"Deprecation,omitempty" url:"-"`
+	SharedOrgsList   *core.Optional[[]string]               `json:"SharedOrgsList,omitempty" url:"-"`
+	InputSchemas     *core.Optional[[]*InputSchemas]        `json:"InputSchemas,omitempty" url:"-"`
+	Templates        *core.Optional[[]*TemplateWorkflow]    `json:"Templates,omitempty" url:"-"`
+	Tags             *core.Optional[[]string]               `json:"Tags,omitempty" url:"-"`
+	GitHubComSync    *core.Optional[map[string]interface{}] `json:"GitHubComSync,omitempty" url:"-"`
+	VcsTriggers      *core.Optional[VcsTriggers]            `json:"VCSTriggers,omitempty" url:"-"`
+	// Contextual tags to give context to your tags
+	ContextTags           *core.Optional[map[string]*string]     `json:"ContextTags,omitempty" url:"-"`
 	TerraformIntelligence *core.Optional[map[string]interface{}] `json:"TerraformIntelligence,omitempty" url:"-"`
 	DefaultSchema         *core.Optional[string]                 `json:"DefaultSchema,omitempty" url:"-"`
 	RuntimeSource         *core.Optional[RuntimeSource]          `json:"RuntimeSource,omitempty" url:"-"`
+}
+
+type CreateTemplateRequest struct {
+	TemplateType string
+	IacGroup     *StackTemplate
+	Iac          *WorkflowTemplate
+	IacPolicy    *Template
+}
+
+func NewCreateTemplateRequestFromIacGroup(value *StackTemplate) *CreateTemplateRequest {
+	return &CreateTemplateRequest{TemplateType: "IAC_GROUP", IacGroup: value}
+}
+
+func NewCreateTemplateRequestFromIac(value *WorkflowTemplate) *CreateTemplateRequest {
+	return &CreateTemplateRequest{TemplateType: "IAC", Iac: value}
+}
+
+func NewCreateTemplateRequestFromIacPolicy(value *Template) *CreateTemplateRequest {
+	return &CreateTemplateRequest{TemplateType: "IAC_POLICY", IacPolicy: value}
+}
+
+func (c *CreateTemplateRequest) GetTemplateType() string {
+	if c == nil {
+		return ""
+	}
+	return c.TemplateType
+}
+
+func (c *CreateTemplateRequest) GetIacGroup() *StackTemplate {
+	if c == nil {
+		return nil
+	}
+	return c.IacGroup
+}
+
+func (c *CreateTemplateRequest) GetIac() *WorkflowTemplate {
+	if c == nil {
+		return nil
+	}
+	return c.Iac
+}
+
+func (c *CreateTemplateRequest) GetIacPolicy() *Template {
+	if c == nil {
+		return nil
+	}
+	return c.IacPolicy
+}
+
+func (c *CreateTemplateRequest) UnmarshalJSON(data []byte) error {
+	var unmarshaler struct {
+		TemplateType string `json:"TemplateType"`
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	c.TemplateType = unmarshaler.TemplateType
+	if unmarshaler.TemplateType == "" {
+		return fmt.Errorf("%T did not include discriminant TemplateType", c)
+	}
+	switch unmarshaler.TemplateType {
+	case "IAC_GROUP":
+		value := new(StackTemplate)
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		c.IacGroup = value
+	case "IAC":
+		value := new(WorkflowTemplate)
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		c.Iac = value
+	case "IAC_POLICY":
+		value := new(Template)
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		c.IacPolicy = value
+	}
+	return nil
+}
+
+func (c CreateTemplateRequest) MarshalJSON() ([]byte, error) {
+	if err := c.validate(); err != nil {
+		return nil, err
+	}
+	switch c.TemplateType {
+	default:
+		return nil, fmt.Errorf("invalid type %s in %T", c.TemplateType, c)
+	case "IAC_GROUP":
+		return internal.MarshalJSONWithExtraProperty(c.IacGroup, "TemplateType", "IAC_GROUP")
+	case "IAC":
+		return internal.MarshalJSONWithExtraProperty(c.Iac, "TemplateType", "IAC")
+	case "IAC_POLICY":
+		return internal.MarshalJSONWithExtraProperty(c.IacPolicy, "TemplateType", "IAC_POLICY")
+	}
+}
+
+type CreateTemplateRequestVisitor interface {
+	VisitIacGroup(*StackTemplate) error
+	VisitIac(*WorkflowTemplate) error
+	VisitIacPolicy(*Template) error
+}
+
+func (c *CreateTemplateRequest) Accept(visitor CreateTemplateRequestVisitor) error {
+	switch c.TemplateType {
+	default:
+		return fmt.Errorf("invalid type %s in %T", c.TemplateType, c)
+	case "IAC_GROUP":
+		return visitor.VisitIacGroup(c.IacGroup)
+	case "IAC":
+		return visitor.VisitIac(c.Iac)
+	case "IAC_POLICY":
+		return visitor.VisitIacPolicy(c.IacPolicy)
+	}
+}
+
+func (c *CreateTemplateRequest) validate() error {
+	if c == nil {
+		return fmt.Errorf("type %T is nil", c)
+	}
+	var fields []string
+	if c.IacGroup != nil {
+		fields = append(fields, "IAC_GROUP")
+	}
+	if c.Iac != nil {
+		fields = append(fields, "IAC")
+	}
+	if c.IacPolicy != nil {
+		fields = append(fields, "IAC_POLICY")
+	}
+	if len(fields) == 0 {
+		if c.TemplateType != "" {
+			return fmt.Errorf("type %T defines a discriminant set to %q but the field is not set", c, c.TemplateType)
+		}
+		return fmt.Errorf("type %T is empty", c)
+	}
+	if len(fields) > 1 {
+		return fmt.Errorf("type %T defines values for %s, but only one value is allowed", c, fields)
+	}
+	if c.TemplateType != "" {
+		field := fields[0]
+		if c.TemplateType != field {
+			return fmt.Errorf(
+				"type %T defines a discriminant set to %q, but it does not match the %T field; either remove or update the discriminant to match",
+				c,
+				c.TemplateType,
+				c,
+			)
+		}
+	}
+	return nil
+}
+
+type CreateTemplateResponse struct {
+	TemplateType string
+	IacGroup     *StackCreatePatchResponse
+	IacPolicy    *TemplateCreatePatchResponse
+}
+
+func NewCreateTemplateResponseFromIacGroup(value *StackCreatePatchResponse) *CreateTemplateResponse {
+	return &CreateTemplateResponse{TemplateType: "IAC_GROUP", IacGroup: value}
+}
+
+func NewCreateTemplateResponseFromIacPolicy(value *TemplateCreatePatchResponse) *CreateTemplateResponse {
+	return &CreateTemplateResponse{TemplateType: "IAC_POLICY", IacPolicy: value}
+}
+
+func (c *CreateTemplateResponse) GetTemplateType() string {
+	if c == nil {
+		return ""
+	}
+	return c.TemplateType
+}
+
+func (c *CreateTemplateResponse) GetIacGroup() *StackCreatePatchResponse {
+	if c == nil {
+		return nil
+	}
+	return c.IacGroup
+}
+
+func (c *CreateTemplateResponse) GetIacPolicy() *TemplateCreatePatchResponse {
+	if c == nil {
+		return nil
+	}
+	return c.IacPolicy
+}
+
+func (c *CreateTemplateResponse) UnmarshalJSON(data []byte) error {
+	var unmarshaler struct {
+		TemplateType string `json:"TemplateType"`
+	}
+	if err := json.Unmarshal(data, &unmarshaler); err != nil {
+		return err
+	}
+	c.TemplateType = unmarshaler.TemplateType
+	if unmarshaler.TemplateType == "" {
+		return fmt.Errorf("%T did not include discriminant TemplateType", c)
+	}
+	switch unmarshaler.TemplateType {
+	case "IAC_GROUP":
+		value := new(StackCreatePatchResponse)
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		c.IacGroup = value
+	case "IAC_POLICY":
+		value := new(TemplateCreatePatchResponse)
+		if err := json.Unmarshal(data, &value); err != nil {
+			return err
+		}
+		c.IacPolicy = value
+	}
+	return nil
+}
+
+func (c CreateTemplateResponse) MarshalJSON() ([]byte, error) {
+	if err := c.validate(); err != nil {
+		return nil, err
+	}
+	switch c.TemplateType {
+	default:
+		return nil, fmt.Errorf("invalid type %s in %T", c.TemplateType, c)
+	case "IAC_GROUP":
+		return internal.MarshalJSONWithExtraProperty(c.IacGroup, "TemplateType", "IAC_GROUP")
+	case "IAC_POLICY":
+		return internal.MarshalJSONWithExtraProperty(c.IacPolicy, "TemplateType", "IAC_POLICY")
+	}
+}
+
+type CreateTemplateResponseVisitor interface {
+	VisitIacGroup(*StackCreatePatchResponse) error
+	VisitIacPolicy(*TemplateCreatePatchResponse) error
+}
+
+func (c *CreateTemplateResponse) Accept(visitor CreateTemplateResponseVisitor) error {
+	switch c.TemplateType {
+	default:
+		return fmt.Errorf("invalid type %s in %T", c.TemplateType, c)
+	case "IAC_GROUP":
+		return visitor.VisitIacGroup(c.IacGroup)
+	case "IAC_POLICY":
+		return visitor.VisitIacPolicy(c.IacPolicy)
+	}
+}
+
+func (c *CreateTemplateResponse) validate() error {
+	if c == nil {
+		return fmt.Errorf("type %T is nil", c)
+	}
+	var fields []string
+	if c.IacGroup != nil {
+		fields = append(fields, "IAC_GROUP")
+	}
+	if c.IacPolicy != nil {
+		fields = append(fields, "IAC_POLICY")
+	}
+	if len(fields) == 0 {
+		if c.TemplateType != "" {
+			return fmt.Errorf("type %T defines a discriminant set to %q but the field is not set", c, c.TemplateType)
+		}
+		return fmt.Errorf("type %T is empty", c)
+	}
+	if len(fields) > 1 {
+		return fmt.Errorf("type %T defines values for %s, but only one value is allowed", c, fields)
+	}
+	if c.TemplateType != "" {
+		field := fields[0]
+		if c.TemplateType != field {
+			return fmt.Errorf(
+				"type %T defines a discriminant set to %q, but it does not match the %T field; either remove or update the discriminant to match",
+				c,
+				c.TemplateType,
+				c,
+			)
+		}
+	}
+	return nil
+}
+
+type Deprecation struct {
+	Message       *string `json:"message,omitempty" url:"message,omitempty"`
+	EffectiveDate *string `json:"effectiveDate,omitempty" url:"effectiveDate,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *Deprecation) GetMessage() *string {
+	if d == nil {
+		return nil
+	}
+	return d.Message
+}
+
+func (d *Deprecation) GetEffectiveDate() *string {
+	if d == nil {
+		return nil
+	}
+	return d.EffectiveDate
+}
+
+func (d *Deprecation) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *Deprecation) UnmarshalJSON(data []byte) error {
+	type unmarshaler Deprecation
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = Deprecation(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *Deprecation) String() string {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+type GetSubscriptionResponse struct {
+	Lastevaluatedkey string        `json:"lastevaluatedkey" url:"lastevaluatedkey"`
+	Msg              *Subscription `json:"msg,omitempty" url:"msg,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GetSubscriptionResponse) GetLastevaluatedkey() string {
+	if g == nil {
+		return ""
+	}
+	return g.Lastevaluatedkey
+}
+
+func (g *GetSubscriptionResponse) GetMsg() *Subscription {
+	if g == nil {
+		return nil
+	}
+	return g.Msg
+}
+
+func (g *GetSubscriptionResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GetSubscriptionResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GetSubscriptionResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GetSubscriptionResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GetSubscriptionResponse) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type ListallTemplatesResponse struct {
+	Lastevaluatedkey string      `json:"lastevaluatedkey" url:"lastevaluatedkey"`
+	Msg              []*Template `json:"msg,omitempty" url:"msg,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListallTemplatesResponse) GetLastevaluatedkey() string {
+	if l == nil {
+		return ""
+	}
+	return l.Lastevaluatedkey
+}
+
+func (l *ListallTemplatesResponse) GetMsg() []*Template {
+	if l == nil {
+		return nil
+	}
+	return l.Msg
+}
+
+func (l *ListallTemplatesResponse) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListallTemplatesResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListallTemplatesResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListallTemplatesResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListallTemplatesResponse) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+type StackCreatePatchResponse struct {
+	Msg  *string            `json:"msg,omitempty" url:"msg,omitempty"`
+	Data *StackDataResponse `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *StackCreatePatchResponse) GetMsg() *string {
+	if s == nil {
+		return nil
+	}
+	return s.Msg
+}
+
+func (s *StackCreatePatchResponse) GetData() *StackDataResponse {
+	if s == nil {
+		return nil
+	}
+	return s.Data
+}
+
+func (s *StackCreatePatchResponse) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
+}
+
+func (s *StackCreatePatchResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler StackCreatePatchResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = StackCreatePatchResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *StackCreatePatchResponse) String() string {
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
+type StackDataResponse struct {
+	ResourceName *string  `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	Description  *string  `json:"Description,omitempty" url:"Description,omitempty"`
+	Tags         []string `json:"Tags,omitempty" url:"Tags,omitempty"`
+	// Used when one or all templates specified in the IAC Group are not supplied in TemplatesConfig.
+	EnvironmentVariables []*EnvVars `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
+	// Defines the default deployment config when the workflows in WorkflowConfig do not set this key.
+	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	Actions                  map[string]*Actions         `json:"Actions,omitempty" url:"Actions,omitempty"`
+	// The ID of the template group that this Stack is mapped to. Null if the Stack is not mapped to any template group.
+	TemplateGroupId *string               `json:"TemplateGroupId,omitempty" url:"TemplateGroupId,omitempty"`
+	WorkflowsConfig *WorkflowsConfig      `json:"WorkflowsConfig,omitempty" url:"WorkflowsConfig,omitempty"`
+	TemplatesConfig *TemplatesConfig      `json:"TemplatesConfig,omitempty" url:"TemplatesConfig,omitempty"`
+	UserSchedules   []*StackUserSchedules `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
+	// Used only when upgrading Stack.
+	Operations map[string]interface{} `json:"Operations,omitempty" url:"Operations,omitempty"`
+	// Contextual tags to give meanings to your tags
+	ContextTags          map[string]*string     `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	MiniSteps            *MiniStepsSchema       `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	WorkflowRelationsMap map[string]interface{} `json:"WorkflowRelationsMap,omitempty" url:"WorkflowRelationsMap,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *StackDataResponse) GetResourceName() *string {
+	if s == nil {
+		return nil
+	}
+	return s.ResourceName
+}
+
+func (s *StackDataResponse) GetDescription() *string {
+	if s == nil {
+		return nil
+	}
+	return s.Description
+}
+
+func (s *StackDataResponse) GetTags() []string {
+	if s == nil {
+		return nil
+	}
+	return s.Tags
+}
+
+func (s *StackDataResponse) GetEnvironmentVariables() []*EnvVars {
+	if s == nil {
+		return nil
+	}
+	return s.EnvironmentVariables
+}
+
+func (s *StackDataResponse) GetDeploymentPlatformConfig() []*DeploymentPlatformConfig {
+	if s == nil {
+		return nil
+	}
+	return s.DeploymentPlatformConfig
+}
+
+func (s *StackDataResponse) GetActions() map[string]*Actions {
+	if s == nil {
+		return nil
+	}
+	return s.Actions
+}
+
+func (s *StackDataResponse) GetTemplateGroupId() *string {
+	if s == nil {
+		return nil
+	}
+	return s.TemplateGroupId
+}
+
+func (s *StackDataResponse) GetWorkflowsConfig() *WorkflowsConfig {
+	if s == nil {
+		return nil
+	}
+	return s.WorkflowsConfig
+}
+
+func (s *StackDataResponse) GetTemplatesConfig() *TemplatesConfig {
+	if s == nil {
+		return nil
+	}
+	return s.TemplatesConfig
+}
+
+func (s *StackDataResponse) GetUserSchedules() []*StackUserSchedules {
+	if s == nil {
+		return nil
+	}
+	return s.UserSchedules
+}
+
+func (s *StackDataResponse) GetOperations() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.Operations
+}
+
+func (s *StackDataResponse) GetContextTags() map[string]*string {
+	if s == nil {
+		return nil
+	}
+	return s.ContextTags
+}
+
+func (s *StackDataResponse) GetMiniSteps() *MiniStepsSchema {
+	if s == nil {
+		return nil
+	}
+	return s.MiniSteps
+}
+
+func (s *StackDataResponse) GetWorkflowRelationsMap() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.WorkflowRelationsMap
+}
+
+func (s *StackDataResponse) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
+}
+
+func (s *StackDataResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler StackDataResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = StackDataResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *StackDataResponse) String() string {
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
+type StackTemplate struct {
+	ResourceName *string  `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	Description  *string  `json:"Description,omitempty" url:"Description,omitempty"`
+	Tags         []string `json:"Tags,omitempty" url:"Tags,omitempty"`
+	// Used when one or all templates specified in the IAC Group are not supplied in TemplatesConfig.
+	EnvironmentVariables []*EnvVars `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
+	// Defines the default deployment config when the workflows in WorkflowConfig do not set this key.
+	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	Actions                  map[string]*Actions         `json:"Actions,omitempty" url:"Actions,omitempty"`
+	// The ID of the template group that this Stack is mapped to. Null if the Stack is not mapped to any template group.
+	TemplateGroupId *string               `json:"TemplateGroupId,omitempty" url:"TemplateGroupId,omitempty"`
+	WorkflowsConfig *WorkflowsConfig      `json:"WorkflowsConfig,omitempty" url:"WorkflowsConfig,omitempty"`
+	TemplatesConfig *TemplatesConfig      `json:"TemplatesConfig,omitempty" url:"TemplatesConfig,omitempty"`
+	UserSchedules   []*StackUserSchedules `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
+	// Used only when upgrading Stack.
+	Operations map[string]interface{} `json:"Operations,omitempty" url:"Operations,omitempty"`
+	// Contextual tags to give meanings to your tags
+	ContextTags           map[string]*string                `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	MiniSteps             *MiniStepsSchema                  `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	TemplateName          string                            `json:"TemplateName" url:"TemplateName"`
+	OwnerOrg              string                            `json:"OwnerOrg" url:"OwnerOrg"`
+	SharedOrgsList        []string                          `json:"SharedOrgsList,omitempty" url:"SharedOrgsList,omitempty"`
+	ShortDescription      *string                           `json:"ShortDescription,omitempty" url:"ShortDescription,omitempty"`
+	LongDescription       *string                           `json:"LongDescription,omitempty" url:"LongDescription,omitempty"`
+	Deprecation           *Deprecation                      `json:"Deprecation,omitempty" url:"Deprecation,omitempty"`
+	InputSchemas          []*InputSchemas                   `json:"InputSchemas,omitempty" url:"InputSchemas,omitempty"`
+	RuntimeSource         *RuntimeSource                    `json:"RuntimeSource,omitempty" url:"RuntimeSource,omitempty"`
+	GitHubComSync         map[string]interface{}            `json:"GitHubComSync,omitempty" url:"GitHubComSync,omitempty"`
+	VcsTriggers           *VcsTriggers                      `json:"VCSTriggers,omitempty" url:"VCSTriggers,omitempty"`
+	IsPublic              *IsArchiveEnum                    `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
+	TerraformIntelligence map[string]interface{}            `json:"TerraformIntelligence,omitempty" url:"TerraformIntelligence,omitempty"`
+	Templates             []*TemplateWorkflow               `json:"Templates,omitempty" url:"Templates,omitempty"`
+	SourceConfigKind      StackTemplateSourceConfigKindEnum `json:"SourceConfigKind,omitempty" url:"SourceConfigKind,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *StackTemplate) GetResourceName() *string {
+	if s == nil {
+		return nil
+	}
+	return s.ResourceName
+}
+
+func (s *StackTemplate) GetDescription() *string {
+	if s == nil {
+		return nil
+	}
+	return s.Description
+}
+
+func (s *StackTemplate) GetTags() []string {
+	if s == nil {
+		return nil
+	}
+	return s.Tags
+}
+
+func (s *StackTemplate) GetEnvironmentVariables() []*EnvVars {
+	if s == nil {
+		return nil
+	}
+	return s.EnvironmentVariables
+}
+
+func (s *StackTemplate) GetDeploymentPlatformConfig() []*DeploymentPlatformConfig {
+	if s == nil {
+		return nil
+	}
+	return s.DeploymentPlatformConfig
+}
+
+func (s *StackTemplate) GetActions() map[string]*Actions {
+	if s == nil {
+		return nil
+	}
+	return s.Actions
+}
+
+func (s *StackTemplate) GetTemplateGroupId() *string {
+	if s == nil {
+		return nil
+	}
+	return s.TemplateGroupId
+}
+
+func (s *StackTemplate) GetWorkflowsConfig() *WorkflowsConfig {
+	if s == nil {
+		return nil
+	}
+	return s.WorkflowsConfig
+}
+
+func (s *StackTemplate) GetTemplatesConfig() *TemplatesConfig {
+	if s == nil {
+		return nil
+	}
+	return s.TemplatesConfig
+}
+
+func (s *StackTemplate) GetUserSchedules() []*StackUserSchedules {
+	if s == nil {
+		return nil
+	}
+	return s.UserSchedules
+}
+
+func (s *StackTemplate) GetOperations() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.Operations
+}
+
+func (s *StackTemplate) GetContextTags() map[string]*string {
+	if s == nil {
+		return nil
+	}
+	return s.ContextTags
+}
+
+func (s *StackTemplate) GetMiniSteps() *MiniStepsSchema {
+	if s == nil {
+		return nil
+	}
+	return s.MiniSteps
+}
+
+func (s *StackTemplate) GetTemplateName() string {
+	if s == nil {
+		return ""
+	}
+	return s.TemplateName
+}
+
+func (s *StackTemplate) GetOwnerOrg() string {
+	if s == nil {
+		return ""
+	}
+	return s.OwnerOrg
+}
+
+func (s *StackTemplate) GetSharedOrgsList() []string {
+	if s == nil {
+		return nil
+	}
+	return s.SharedOrgsList
+}
+
+func (s *StackTemplate) GetShortDescription() *string {
+	if s == nil {
+		return nil
+	}
+	return s.ShortDescription
+}
+
+func (s *StackTemplate) GetLongDescription() *string {
+	if s == nil {
+		return nil
+	}
+	return s.LongDescription
+}
+
+func (s *StackTemplate) GetDeprecation() *Deprecation {
+	if s == nil {
+		return nil
+	}
+	return s.Deprecation
+}
+
+func (s *StackTemplate) GetInputSchemas() []*InputSchemas {
+	if s == nil {
+		return nil
+	}
+	return s.InputSchemas
+}
+
+func (s *StackTemplate) GetRuntimeSource() *RuntimeSource {
+	if s == nil {
+		return nil
+	}
+	return s.RuntimeSource
+}
+
+func (s *StackTemplate) GetGitHubComSync() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.GitHubComSync
+}
+
+func (s *StackTemplate) GetVcsTriggers() *VcsTriggers {
+	if s == nil {
+		return nil
+	}
+	return s.VcsTriggers
+}
+
+func (s *StackTemplate) GetIsPublic() *IsArchiveEnum {
+	if s == nil {
+		return nil
+	}
+	return s.IsPublic
+}
+
+func (s *StackTemplate) GetTerraformIntelligence() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.TerraformIntelligence
+}
+
+func (s *StackTemplate) GetTemplates() []*TemplateWorkflow {
+	if s == nil {
+		return nil
+	}
+	return s.Templates
+}
+
+func (s *StackTemplate) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
+}
+
+func (s *StackTemplate) UnmarshalJSON(data []byte) error {
+	type unmarshaler StackTemplate
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = StackTemplate(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *StackTemplate) String() string {
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
+// * `MIXED` - MIXED
+type StackTemplateSourceConfigKindEnum = string
+
+type Subscription struct {
+	ResourceName          *string                           `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	IacSubscriptions      map[string]map[string]interface{} `json:"IACSubscriptions,omitempty" url:"IACSubscriptions,omitempty"`
+	WfStepSubscriptions   map[string]map[string]interface{} `json:"WfStepSubscriptions,omitempty" url:"WfStepSubscriptions,omitempty"`
+	PolicySubscriptions   map[string]map[string]interface{} `json:"PolicySubscriptions,omitempty" url:"PolicySubscriptions,omitempty"`
+	IacGroupSubscriptions map[string]map[string]interface{} `json:"IACGroupSubscriptions,omitempty" url:"IACGroupSubscriptions,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *Subscription) GetResourceName() *string {
+	if s == nil {
+		return nil
+	}
+	return s.ResourceName
+}
+
+func (s *Subscription) GetIacSubscriptions() map[string]map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.IacSubscriptions
+}
+
+func (s *Subscription) GetWfStepSubscriptions() map[string]map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.WfStepSubscriptions
+}
+
+func (s *Subscription) GetPolicySubscriptions() map[string]map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.PolicySubscriptions
+}
+
+func (s *Subscription) GetIacGroupSubscriptions() map[string]map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.IacGroupSubscriptions
+}
+
+func (s *Subscription) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
+}
+
+func (s *Subscription) UnmarshalJSON(data []byte) error {
+	type unmarshaler Subscription
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = Subscription(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *Subscription) String() string {
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
+type Template struct {
+	TemplateName     string                       `json:"TemplateName" url:"TemplateName"`
+	TemplateId       *string                      `json:"TemplateId,omitempty" url:"TemplateId,omitempty"`
+	OwnerOrg         string                       `json:"OwnerOrg" url:"OwnerOrg"`
+	SharedOrgsList   []string                     `json:"SharedOrgsList,omitempty" url:"SharedOrgsList,omitempty"`
+	Templates        []*TemplateWorkflow          `json:"Templates,omitempty" url:"Templates,omitempty"`
+	Actions          map[string]*Actions          `json:"Actions,omitempty" url:"Actions,omitempty"`
+	ShortDescription *string                      `json:"ShortDescription,omitempty" url:"ShortDescription,omitempty"`
+	LongDescription  *string                      `json:"LongDescription,omitempty" url:"LongDescription,omitempty"`
+	Deprecation      *Deprecation                 `json:"Deprecation,omitempty" url:"Deprecation,omitempty"`
+	SourceConfigKind TemplateSourceConfigKindEnum `json:"SourceConfigKind" url:"SourceConfigKind"`
+	InputSchemas     []*InputSchemas              `json:"InputSchemas,omitempty" url:"InputSchemas,omitempty"`
+	RuntimeSource    *RuntimeSource               `json:"RuntimeSource,omitempty" url:"RuntimeSource,omitempty"`
+	GitHubComSync    map[string]interface{}       `json:"GitHubComSync,omitempty" url:"GitHubComSync,omitempty"`
+	VcsTriggers      *VcsTriggers                 `json:"VCSTriggers,omitempty" url:"VCSTriggers,omitempty"`
+	Tags             []string                     `json:"Tags,omitempty" url:"Tags,omitempty"`
+	// Contextual tags to give context to your tags
+	ContextTags           map[string]*string     `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	IsActive              *IsArchiveEnum         `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	IsPublic              *IsArchiveEnum         `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
+	TerraformIntelligence map[string]interface{} `json:"TerraformIntelligence,omitempty" url:"TerraformIntelligence,omitempty"`
+	DefaultSchema         *string                `json:"DefaultSchema,omitempty" url:"DefaultSchema,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (t *Template) GetTemplateName() string {
+	if t == nil {
+		return ""
+	}
+	return t.TemplateName
+}
+
+func (t *Template) GetTemplateId() *string {
+	if t == nil {
+		return nil
+	}
+	return t.TemplateId
+}
+
+func (t *Template) GetOwnerOrg() string {
+	if t == nil {
+		return ""
+	}
+	return t.OwnerOrg
+}
+
+func (t *Template) GetSharedOrgsList() []string {
+	if t == nil {
+		return nil
+	}
+	return t.SharedOrgsList
+}
+
+func (t *Template) GetTemplates() []*TemplateWorkflow {
+	if t == nil {
+		return nil
+	}
+	return t.Templates
+}
+
+func (t *Template) GetActions() map[string]*Actions {
+	if t == nil {
+		return nil
+	}
+	return t.Actions
+}
+
+func (t *Template) GetShortDescription() *string {
+	if t == nil {
+		return nil
+	}
+	return t.ShortDescription
+}
+
+func (t *Template) GetLongDescription() *string {
+	if t == nil {
+		return nil
+	}
+	return t.LongDescription
+}
+
+func (t *Template) GetDeprecation() *Deprecation {
+	if t == nil {
+		return nil
+	}
+	return t.Deprecation
+}
+
+func (t *Template) GetSourceConfigKind() TemplateSourceConfigKindEnum {
+	if t == nil {
+		return ""
+	}
+	return t.SourceConfigKind
+}
+
+func (t *Template) GetInputSchemas() []*InputSchemas {
+	if t == nil {
+		return nil
+	}
+	return t.InputSchemas
+}
+
+func (t *Template) GetRuntimeSource() *RuntimeSource {
+	if t == nil {
+		return nil
+	}
+	return t.RuntimeSource
+}
+
+func (t *Template) GetGitHubComSync() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.GitHubComSync
+}
+
+func (t *Template) GetVcsTriggers() *VcsTriggers {
+	if t == nil {
+		return nil
+	}
+	return t.VcsTriggers
+}
+
+func (t *Template) GetTags() []string {
+	if t == nil {
+		return nil
+	}
+	return t.Tags
+}
+
+func (t *Template) GetContextTags() map[string]*string {
+	if t == nil {
+		return nil
+	}
+	return t.ContextTags
+}
+
+func (t *Template) GetIsActive() *IsArchiveEnum {
+	if t == nil {
+		return nil
+	}
+	return t.IsActive
+}
+
+func (t *Template) GetIsPublic() *IsArchiveEnum {
+	if t == nil {
+		return nil
+	}
+	return t.IsPublic
+}
+
+func (t *Template) GetTerraformIntelligence() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.TerraformIntelligence
+}
+
+func (t *Template) GetDefaultSchema() *string {
+	if t == nil {
+		return nil
+	}
+	return t.DefaultSchema
+}
+
+func (t *Template) GetExtraProperties() map[string]interface{} {
+	return t.extraProperties
+}
+
+func (t *Template) UnmarshalJSON(data []byte) error {
+	type unmarshaler Template
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*t = Template(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *t)
+	if err != nil {
+		return err
+	}
+	t.extraProperties = extraProperties
+	t.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (t *Template) String() string {
+	if len(t.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(t.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(t); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", t)
+}
+
+type TemplateCreatePatchResponse struct {
+	Msg  *string   `json:"msg,omitempty" url:"msg,omitempty"`
+	Data *Template `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (t *TemplateCreatePatchResponse) GetMsg() *string {
+	if t == nil {
+		return nil
+	}
+	return t.Msg
+}
+
+func (t *TemplateCreatePatchResponse) GetData() *Template {
+	if t == nil {
+		return nil
+	}
+	return t.Data
+}
+
+func (t *TemplateCreatePatchResponse) GetExtraProperties() map[string]interface{} {
+	return t.extraProperties
+}
+
+func (t *TemplateCreatePatchResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler TemplateCreatePatchResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*t = TemplateCreatePatchResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *t)
+	if err != nil {
+		return err
+	}
+	t.extraProperties = extraProperties
+	t.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (t *TemplateCreatePatchResponse) String() string {
+	if len(t.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(t.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(t); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", t)
+}
+
+type TemplateGetResponse struct {
+	Msg *Template `json:"msg,omitempty" url:"msg,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (t *TemplateGetResponse) GetMsg() *Template {
+	if t == nil {
+		return nil
+	}
+	return t.Msg
+}
+
+func (t *TemplateGetResponse) GetExtraProperties() map[string]interface{} {
+	return t.extraProperties
+}
+
+func (t *TemplateGetResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler TemplateGetResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*t = TemplateGetResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *t)
+	if err != nil {
+		return err
+	}
+	t.extraProperties = extraProperties
+	t.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (t *TemplateGetResponse) String() string {
+	if len(t.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(t.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(t); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", t)
+}
+
+// * `TERRAFORM` - TERRAFORM
+// * `OPENTOFU` - OPENTOFU
+// * `ANSIBLE_PLAYBOOK` - ANSIBLE_PLAYBOOK
+// * `HELM` - HELM
+// * `KUBECTL` - KUBECTL
+// * `CLOUDFORMATION` - CLOUDFORMATION
+// * `DOCKER_IMAGE` - DOCKER_IMAGE
+// * `OPA_REGO` - OPA_REGO
+// * `SG_POLICY_FRAMEWORK` - SG_POLICY_FRAMEWORK
+// * `SG_INTERNAL_P1` - SG_INTERNAL_P1
+// * `SG_INTERNAL_P2` - SG_INTERNAL_P2
+// * `CHECKOV` - CHECKOV
+// * `STEAMPIPE` - STEAMPIPE
+// * `MIXED` - MIXED
+// * `CUSTOM` - CUSTOM
+type TemplateSourceConfigKindEnum string
+
+const (
+	TemplateSourceConfigKindEnumTerraform         TemplateSourceConfigKindEnum = "TERRAFORM"
+	TemplateSourceConfigKindEnumOpentofu          TemplateSourceConfigKindEnum = "OPENTOFU"
+	TemplateSourceConfigKindEnumAnsiblePlaybook   TemplateSourceConfigKindEnum = "ANSIBLE_PLAYBOOK"
+	TemplateSourceConfigKindEnumHelm              TemplateSourceConfigKindEnum = "HELM"
+	TemplateSourceConfigKindEnumKubectl           TemplateSourceConfigKindEnum = "KUBECTL"
+	TemplateSourceConfigKindEnumCloudformation    TemplateSourceConfigKindEnum = "CLOUDFORMATION"
+	TemplateSourceConfigKindEnumDockerImage       TemplateSourceConfigKindEnum = "DOCKER_IMAGE"
+	TemplateSourceConfigKindEnumOpaRego           TemplateSourceConfigKindEnum = "OPA_REGO"
+	TemplateSourceConfigKindEnumSgPolicyFramework TemplateSourceConfigKindEnum = "SG_POLICY_FRAMEWORK"
+	TemplateSourceConfigKindEnumSgInternalP1      TemplateSourceConfigKindEnum = "SG_INTERNAL_P1"
+	TemplateSourceConfigKindEnumSgInternalP2      TemplateSourceConfigKindEnum = "SG_INTERNAL_P2"
+	TemplateSourceConfigKindEnumCheckov           TemplateSourceConfigKindEnum = "CHECKOV"
+	TemplateSourceConfigKindEnumSteampipe         TemplateSourceConfigKindEnum = "STEAMPIPE"
+	TemplateSourceConfigKindEnumMixed             TemplateSourceConfigKindEnum = "MIXED"
+	TemplateSourceConfigKindEnumCustom            TemplateSourceConfigKindEnum = "CUSTOM"
+)
+
+func NewTemplateSourceConfigKindEnumFromString(s string) (TemplateSourceConfigKindEnum, error) {
+	switch s {
+	case "TERRAFORM":
+		return TemplateSourceConfigKindEnumTerraform, nil
+	case "OPENTOFU":
+		return TemplateSourceConfigKindEnumOpentofu, nil
+	case "ANSIBLE_PLAYBOOK":
+		return TemplateSourceConfigKindEnumAnsiblePlaybook, nil
+	case "HELM":
+		return TemplateSourceConfigKindEnumHelm, nil
+	case "KUBECTL":
+		return TemplateSourceConfigKindEnumKubectl, nil
+	case "CLOUDFORMATION":
+		return TemplateSourceConfigKindEnumCloudformation, nil
+	case "DOCKER_IMAGE":
+		return TemplateSourceConfigKindEnumDockerImage, nil
+	case "OPA_REGO":
+		return TemplateSourceConfigKindEnumOpaRego, nil
+	case "SG_POLICY_FRAMEWORK":
+		return TemplateSourceConfigKindEnumSgPolicyFramework, nil
+	case "SG_INTERNAL_P1":
+		return TemplateSourceConfigKindEnumSgInternalP1, nil
+	case "SG_INTERNAL_P2":
+		return TemplateSourceConfigKindEnumSgInternalP2, nil
+	case "CHECKOV":
+		return TemplateSourceConfigKindEnumCheckov, nil
+	case "STEAMPIPE":
+		return TemplateSourceConfigKindEnumSteampipe, nil
+	case "MIXED":
+		return TemplateSourceConfigKindEnumMixed, nil
+	case "CUSTOM":
+		return TemplateSourceConfigKindEnumCustom, nil
+	}
+	var t TemplateSourceConfigKindEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (t TemplateSourceConfigKindEnum) Ptr() *TemplateSourceConfigKindEnum {
+	return &t
+}
+
+type VcsTriggers struct {
+	Type                    VcsTriggersTypeEnum        `json:"type" url:"type"`
+	GlHookId                *string                    `json:"gl_hook_id,omitempty" url:"gl_hook_id,omitempty"`
+	GhWebhookUrl            *string                    `json:"gh_webhook_url,omitempty" url:"gh_webhook_url,omitempty"`
+	GithubAppInstallationId *int                       `json:"github_app_installation_id,omitempty" url:"github_app_installation_id,omitempty"`
+	TrackedBranch           *string                    `json:"tracked_branch,omitempty" url:"tracked_branch,omitempty"`
+	PostComments            *bool                      `json:"post_comments,omitempty" url:"post_comments,omitempty"`
+	ApprovalPreApply        *bool                      `json:"approval_pre_apply,omitempty" url:"approval_pre_apply,omitempty"`
+	GhCheck                 *bool                      `json:"gh_check,omitempty" url:"gh_check,omitempty"`
+	GlPipeline              *bool                      `json:"gl_pipeline,omitempty" url:"gl_pipeline,omitempty"`
+	PlanOnly                *bool                      `json:"plan_only,omitempty" url:"plan_only,omitempty"`
+	FileTriggersEnabled     *bool                      `json:"file_triggers_enabled,omitempty" url:"file_triggers_enabled,omitempty"`
+	FileTriggerPatterns     []string                   `json:"file_trigger_patterns,omitempty" url:"file_trigger_patterns,omitempty"`
+	FileTriggerPrefixes     []string                   `json:"file_trigger_prefixes,omitempty" url:"file_trigger_prefixes,omitempty"`
+	TagsRegex               *string                    `json:"tags_regex,omitempty" url:"tags_regex,omitempty"`
+	GenerateNoCodeSchema    *bool                      `json:"generate_no_code_schema,omitempty" url:"generate_no_code_schema,omitempty"`
+	AllPullRequests         map[string]map[string]bool `json:"all_pull_requests,omitempty" url:"all_pull_requests,omitempty"`
+	PullRequestOpened       map[string]map[string]bool `json:"pull_request_opened,omitempty" url:"pull_request_opened,omitempty"`
+	PullRequestModified     map[string]map[string]bool `json:"pull_request_modified,omitempty" url:"pull_request_modified,omitempty"`
+	CreateTag               map[string]map[string]bool `json:"create_tag,omitempty" url:"create_tag,omitempty"`
+	Push                    map[string]map[string]bool `json:"push,omitempty" url:"push,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (v *VcsTriggers) GetType() VcsTriggersTypeEnum {
+	if v == nil {
+		return ""
+	}
+	return v.Type
+}
+
+func (v *VcsTriggers) GetGlHookId() *string {
+	if v == nil {
+		return nil
+	}
+	return v.GlHookId
+}
+
+func (v *VcsTriggers) GetGhWebhookUrl() *string {
+	if v == nil {
+		return nil
+	}
+	return v.GhWebhookUrl
+}
+
+func (v *VcsTriggers) GetGithubAppInstallationId() *int {
+	if v == nil {
+		return nil
+	}
+	return v.GithubAppInstallationId
+}
+
+func (v *VcsTriggers) GetTrackedBranch() *string {
+	if v == nil {
+		return nil
+	}
+	return v.TrackedBranch
+}
+
+func (v *VcsTriggers) GetPostComments() *bool {
+	if v == nil {
+		return nil
+	}
+	return v.PostComments
+}
+
+func (v *VcsTriggers) GetApprovalPreApply() *bool {
+	if v == nil {
+		return nil
+	}
+	return v.ApprovalPreApply
+}
+
+func (v *VcsTriggers) GetGhCheck() *bool {
+	if v == nil {
+		return nil
+	}
+	return v.GhCheck
+}
+
+func (v *VcsTriggers) GetGlPipeline() *bool {
+	if v == nil {
+		return nil
+	}
+	return v.GlPipeline
+}
+
+func (v *VcsTriggers) GetPlanOnly() *bool {
+	if v == nil {
+		return nil
+	}
+	return v.PlanOnly
+}
+
+func (v *VcsTriggers) GetFileTriggersEnabled() *bool {
+	if v == nil {
+		return nil
+	}
+	return v.FileTriggersEnabled
+}
+
+func (v *VcsTriggers) GetFileTriggerPatterns() []string {
+	if v == nil {
+		return nil
+	}
+	return v.FileTriggerPatterns
+}
+
+func (v *VcsTriggers) GetFileTriggerPrefixes() []string {
+	if v == nil {
+		return nil
+	}
+	return v.FileTriggerPrefixes
+}
+
+func (v *VcsTriggers) GetTagsRegex() *string {
+	if v == nil {
+		return nil
+	}
+	return v.TagsRegex
+}
+
+func (v *VcsTriggers) GetGenerateNoCodeSchema() *bool {
+	if v == nil {
+		return nil
+	}
+	return v.GenerateNoCodeSchema
+}
+
+func (v *VcsTriggers) GetAllPullRequests() map[string]map[string]bool {
+	if v == nil {
+		return nil
+	}
+	return v.AllPullRequests
+}
+
+func (v *VcsTriggers) GetPullRequestOpened() map[string]map[string]bool {
+	if v == nil {
+		return nil
+	}
+	return v.PullRequestOpened
+}
+
+func (v *VcsTriggers) GetPullRequestModified() map[string]map[string]bool {
+	if v == nil {
+		return nil
+	}
+	return v.PullRequestModified
+}
+
+func (v *VcsTriggers) GetCreateTag() map[string]map[string]bool {
+	if v == nil {
+		return nil
+	}
+	return v.CreateTag
+}
+
+func (v *VcsTriggers) GetPush() map[string]map[string]bool {
+	if v == nil {
+		return nil
+	}
+	return v.Push
+}
+
+func (v *VcsTriggers) GetExtraProperties() map[string]interface{} {
+	return v.extraProperties
+}
+
+func (v *VcsTriggers) UnmarshalJSON(data []byte) error {
+	type unmarshaler VcsTriggers
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*v = VcsTriggers(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *v)
+	if err != nil {
+		return err
+	}
+	v.extraProperties = extraProperties
+	v.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (v *VcsTriggers) String() string {
+	if len(v.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(v.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(v); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", v)
+}
+
+// * `GITHUB_COM` - GITHUB_COM
+// * `GITHUB_APP_CUSTOM` - GITHUB_APP_CUSTOM
+// * `GITLAB_OAUTH_SSH` - GITLAB_OAUTH_SSH
+// * `BITBUCKET_ORG` - BITBUCKET_ORG
+// * `GITLAB_COM` - GITLAB_COM
+// * `AZURE_DEVOPS` - AZURE_DEVOPS
+type VcsTriggersTypeEnum string
+
+const (
+	VcsTriggersTypeEnumGithubCom       VcsTriggersTypeEnum = "GITHUB_COM"
+	VcsTriggersTypeEnumGithubAppCustom VcsTriggersTypeEnum = "GITHUB_APP_CUSTOM"
+	VcsTriggersTypeEnumGitlabOauthSsh  VcsTriggersTypeEnum = "GITLAB_OAUTH_SSH"
+	VcsTriggersTypeEnumBitbucketOrg    VcsTriggersTypeEnum = "BITBUCKET_ORG"
+	VcsTriggersTypeEnumGitlabCom       VcsTriggersTypeEnum = "GITLAB_COM"
+	VcsTriggersTypeEnumAzureDevops     VcsTriggersTypeEnum = "AZURE_DEVOPS"
+)
+
+func NewVcsTriggersTypeEnumFromString(s string) (VcsTriggersTypeEnum, error) {
+	switch s {
+	case "GITHUB_COM":
+		return VcsTriggersTypeEnumGithubCom, nil
+	case "GITHUB_APP_CUSTOM":
+		return VcsTriggersTypeEnumGithubAppCustom, nil
+	case "GITLAB_OAUTH_SSH":
+		return VcsTriggersTypeEnumGitlabOauthSsh, nil
+	case "BITBUCKET_ORG":
+		return VcsTriggersTypeEnumBitbucketOrg, nil
+	case "GITLAB_COM":
+		return VcsTriggersTypeEnumGitlabCom, nil
+	case "AZURE_DEVOPS":
+		return VcsTriggersTypeEnumAzureDevops, nil
+	}
+	var t VcsTriggersTypeEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (v VcsTriggersTypeEnum) Ptr() *VcsTriggersTypeEnum {
+	return &v
+}
+
+type WorkflowTemplate struct {
+	ResourceName                *string                     `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	Description                 *string                     `json:"Description,omitempty" url:"Description,omitempty"`
+	Tags                        []string                    `json:"Tags,omitempty" url:"Tags,omitempty"`
+	IsActive                    *IsArchiveEnum              `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	WfStepsConfig               []*WfStepsConfig            `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
+	WfType                      *WfTypeEnum                 `json:"WfType,omitempty" url:"WfType,omitempty"`
+	TerraformConfig             *TerraformConfig            `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
+	EnvironmentVariables        []*EnvVars                  `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
+	DeploymentPlatformConfig    []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	VcsConfig                   *VcsConfig                  `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
+	UserSchedules               []*UserSchedules            `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
+	GitHubComSync               map[string]interface{}      `json:"GitHubComSync,omitempty" url:"GitHubComSync,omitempty"`
+	MiniSteps                   *MiniStepsSchema            `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	Approvers                   []string                    `json:"Approvers,omitempty" url:"Approvers,omitempty"`
+	NumberOfApprovalsRequired   *int                        `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
+	RunnerConstraints           *RunnerConstraints          `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
+	UserJobCpu                  *int                        `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
+	UserJobMemory               *int                        `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
+	CacheConfig                 *CacheConfig                `json:"CacheConfig,omitempty" url:"CacheConfig,omitempty"`
+	TfStateCleaned              map[string]interface{}      `json:"TfStateCleaned,omitempty" url:"TfStateCleaned,omitempty"`
+	InfracostBreakdown          map[string]interface{}      `json:"InfracostBreakdown,omitempty" url:"InfracostBreakdown,omitempty"`
+	PolicyEvalResults           map[string]interface{}      `json:"PolicyEvalResults,omitempty" url:"PolicyEvalResults,omitempty"`
+	InfracostBreakdownPreApply  map[string]interface{}      `json:"InfracostBreakdownPreApply,omitempty" url:"InfracostBreakdownPreApply,omitempty"`
+	InfracostBreakdownPostApply map[string]interface{}      `json:"InfracostBreakdownPostApply,omitempty" url:"InfracostBreakdownPostApply,omitempty"`
+	TfDrift                     map[string]interface{}      `json:"TfDrift,omitempty" url:"TfDrift,omitempty"`
+	CfStateCleaned              map[string]interface{}      `json:"CfStateCleaned,omitempty" url:"CfStateCleaned,omitempty"`
+	CfStackPlan                 map[string]interface{}      `json:"CfStackPlan,omitempty" url:"CfStackPlan,omitempty"`
+	CfDrift                     map[string]interface{}      `json:"CfDrift,omitempty" url:"CfDrift,omitempty"`
+	K8SResources                map[string]interface{}      `json:"K8sResources,omitempty" url:"K8sResources,omitempty"`
+	K8SDrift                    map[string]interface{}      `json:"K8sDrift,omitempty" url:"K8sDrift,omitempty"`
+	TerragruntDrift             map[string]interface{}      `json:"TerragruntDrift,omitempty" url:"TerragruntDrift,omitempty"`
+	AnsibleOutputs              map[string]interface{}      `json:"AnsibleOutputs,omitempty" url:"AnsibleOutputs,omitempty"`
+	AnsiblePlan                 map[string]interface{}      `json:"AnsiblePlan,omitempty" url:"AnsiblePlan,omitempty"`
+	AnsibleDrift                map[string]interface{}      `json:"AnsibleDrift,omitempty" url:"AnsibleDrift,omitempty"`
+	SgCustomWorkflowRunFacts    map[string]interface{}      `json:"SGCustomWorkflowRunFacts,omitempty" url:"SGCustomWorkflowRunFacts,omitempty"`
+	// Contextual tags to give context to your tags
+	ContextTags           map[string]*string                   `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	TemplateName          string                               `json:"TemplateName" url:"TemplateName"`
+	OwnerOrg              string                               `json:"OwnerOrg" url:"OwnerOrg"`
+	SharedOrgsList        []string                             `json:"SharedOrgsList,omitempty" url:"SharedOrgsList,omitempty"`
+	ShortDescription      *string                              `json:"ShortDescription,omitempty" url:"ShortDescription,omitempty"`
+	LongDescription       *string                              `json:"LongDescription,omitempty" url:"LongDescription,omitempty"`
+	Deprecation           *Deprecation                         `json:"Deprecation,omitempty" url:"Deprecation,omitempty"`
+	SourceConfigKind      WorkflowTemplateSourceConfigKindEnum `json:"SourceConfigKind" url:"SourceConfigKind"`
+	InputSchemas          []*InputSchemas                      `json:"InputSchemas,omitempty" url:"InputSchemas,omitempty"`
+	RuntimeSource         *RuntimeSource                       `json:"RuntimeSource,omitempty" url:"RuntimeSource,omitempty"`
+	VcsTriggers           *VcsTriggers                         `json:"VCSTriggers,omitempty" url:"VCSTriggers,omitempty"`
+	IsPublic              *IsArchiveEnum                       `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
+	TerraformIntelligence map[string]interface{}               `json:"TerraformIntelligence,omitempty" url:"TerraformIntelligence,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WorkflowTemplate) GetResourceName() *string {
+	if w == nil {
+		return nil
+	}
+	return w.ResourceName
+}
+
+func (w *WorkflowTemplate) GetDescription() *string {
+	if w == nil {
+		return nil
+	}
+	return w.Description
+}
+
+func (w *WorkflowTemplate) GetTags() []string {
+	if w == nil {
+		return nil
+	}
+	return w.Tags
+}
+
+func (w *WorkflowTemplate) GetIsActive() *IsArchiveEnum {
+	if w == nil {
+		return nil
+	}
+	return w.IsActive
+}
+
+func (w *WorkflowTemplate) GetWfStepsConfig() []*WfStepsConfig {
+	if w == nil {
+		return nil
+	}
+	return w.WfStepsConfig
+}
+
+func (w *WorkflowTemplate) GetWfType() *WfTypeEnum {
+	if w == nil {
+		return nil
+	}
+	return w.WfType
+}
+
+func (w *WorkflowTemplate) GetTerraformConfig() *TerraformConfig {
+	if w == nil {
+		return nil
+	}
+	return w.TerraformConfig
+}
+
+func (w *WorkflowTemplate) GetEnvironmentVariables() []*EnvVars {
+	if w == nil {
+		return nil
+	}
+	return w.EnvironmentVariables
+}
+
+func (w *WorkflowTemplate) GetDeploymentPlatformConfig() []*DeploymentPlatformConfig {
+	if w == nil {
+		return nil
+	}
+	return w.DeploymentPlatformConfig
+}
+
+func (w *WorkflowTemplate) GetVcsConfig() *VcsConfig {
+	if w == nil {
+		return nil
+	}
+	return w.VcsConfig
+}
+
+func (w *WorkflowTemplate) GetUserSchedules() []*UserSchedules {
+	if w == nil {
+		return nil
+	}
+	return w.UserSchedules
+}
+
+func (w *WorkflowTemplate) GetGitHubComSync() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.GitHubComSync
+}
+
+func (w *WorkflowTemplate) GetMiniSteps() *MiniStepsSchema {
+	if w == nil {
+		return nil
+	}
+	return w.MiniSteps
+}
+
+func (w *WorkflowTemplate) GetApprovers() []string {
+	if w == nil {
+		return nil
+	}
+	return w.Approvers
+}
+
+func (w *WorkflowTemplate) GetNumberOfApprovalsRequired() *int {
+	if w == nil {
+		return nil
+	}
+	return w.NumberOfApprovalsRequired
+}
+
+func (w *WorkflowTemplate) GetRunnerConstraints() *RunnerConstraints {
+	if w == nil {
+		return nil
+	}
+	return w.RunnerConstraints
+}
+
+func (w *WorkflowTemplate) GetUserJobCpu() *int {
+	if w == nil {
+		return nil
+	}
+	return w.UserJobCpu
+}
+
+func (w *WorkflowTemplate) GetUserJobMemory() *int {
+	if w == nil {
+		return nil
+	}
+	return w.UserJobMemory
+}
+
+func (w *WorkflowTemplate) GetCacheConfig() *CacheConfig {
+	if w == nil {
+		return nil
+	}
+	return w.CacheConfig
+}
+
+func (w *WorkflowTemplate) GetTfStateCleaned() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.TfStateCleaned
+}
+
+func (w *WorkflowTemplate) GetInfracostBreakdown() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.InfracostBreakdown
+}
+
+func (w *WorkflowTemplate) GetPolicyEvalResults() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.PolicyEvalResults
+}
+
+func (w *WorkflowTemplate) GetInfracostBreakdownPreApply() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.InfracostBreakdownPreApply
+}
+
+func (w *WorkflowTemplate) GetInfracostBreakdownPostApply() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.InfracostBreakdownPostApply
+}
+
+func (w *WorkflowTemplate) GetTfDrift() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.TfDrift
+}
+
+func (w *WorkflowTemplate) GetCfStateCleaned() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.CfStateCleaned
+}
+
+func (w *WorkflowTemplate) GetCfStackPlan() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.CfStackPlan
+}
+
+func (w *WorkflowTemplate) GetCfDrift() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.CfDrift
+}
+
+func (w *WorkflowTemplate) GetK8SResources() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.K8SResources
+}
+
+func (w *WorkflowTemplate) GetK8SDrift() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.K8SDrift
+}
+
+func (w *WorkflowTemplate) GetTerragruntDrift() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.TerragruntDrift
+}
+
+func (w *WorkflowTemplate) GetAnsibleOutputs() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.AnsibleOutputs
+}
+
+func (w *WorkflowTemplate) GetAnsiblePlan() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.AnsiblePlan
+}
+
+func (w *WorkflowTemplate) GetAnsibleDrift() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.AnsibleDrift
+}
+
+func (w *WorkflowTemplate) GetSgCustomWorkflowRunFacts() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.SgCustomWorkflowRunFacts
+}
+
+func (w *WorkflowTemplate) GetContextTags() map[string]*string {
+	if w == nil {
+		return nil
+	}
+	return w.ContextTags
+}
+
+func (w *WorkflowTemplate) GetTemplateName() string {
+	if w == nil {
+		return ""
+	}
+	return w.TemplateName
+}
+
+func (w *WorkflowTemplate) GetOwnerOrg() string {
+	if w == nil {
+		return ""
+	}
+	return w.OwnerOrg
+}
+
+func (w *WorkflowTemplate) GetSharedOrgsList() []string {
+	if w == nil {
+		return nil
+	}
+	return w.SharedOrgsList
+}
+
+func (w *WorkflowTemplate) GetShortDescription() *string {
+	if w == nil {
+		return nil
+	}
+	return w.ShortDescription
+}
+
+func (w *WorkflowTemplate) GetLongDescription() *string {
+	if w == nil {
+		return nil
+	}
+	return w.LongDescription
+}
+
+func (w *WorkflowTemplate) GetDeprecation() *Deprecation {
+	if w == nil {
+		return nil
+	}
+	return w.Deprecation
+}
+
+func (w *WorkflowTemplate) GetSourceConfigKind() WorkflowTemplateSourceConfigKindEnum {
+	if w == nil {
+		return ""
+	}
+	return w.SourceConfigKind
+}
+
+func (w *WorkflowTemplate) GetInputSchemas() []*InputSchemas {
+	if w == nil {
+		return nil
+	}
+	return w.InputSchemas
+}
+
+func (w *WorkflowTemplate) GetRuntimeSource() *RuntimeSource {
+	if w == nil {
+		return nil
+	}
+	return w.RuntimeSource
+}
+
+func (w *WorkflowTemplate) GetVcsTriggers() *VcsTriggers {
+	if w == nil {
+		return nil
+	}
+	return w.VcsTriggers
+}
+
+func (w *WorkflowTemplate) GetIsPublic() *IsArchiveEnum {
+	if w == nil {
+		return nil
+	}
+	return w.IsPublic
+}
+
+func (w *WorkflowTemplate) GetTerraformIntelligence() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.TerraformIntelligence
+}
+
+func (w *WorkflowTemplate) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WorkflowTemplate) UnmarshalJSON(data []byte) error {
+	type unmarshaler WorkflowTemplate
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WorkflowTemplate(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WorkflowTemplate) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+// * `TERRAFORM` - TERRAFORM
+// * `ANSIBLE_PLAYBOOK` - ANSIBLE_PLAYBOOK
+// * `HELM` - HELM
+// * `KUBECTL` - KUBECTL
+// * `CLOUDFORMATION` - CLOUDFORMATION
+// * `DOCKER_IMAGE` - DOCKER_IMAGE
+// * `OPA_REGO` - OPA_REGO
+// * `SG_POLICY_FRAMEWORK` - SG_POLICY_FRAMEWORK
+// * `SG_INTERNAL_P1` - SG_INTERNAL_P1
+// * `SG_INTERNAL_P2` - SG_INTERNAL_P2
+// * `CHECKOV` - CHECKOV
+// * `STEAMPIPE` - STEAMPIPE
+// * `MIXED` - MIXED
+// * `CUSTOM` - CUSTOM
+type WorkflowTemplateSourceConfigKindEnum string
+
+const (
+	WorkflowTemplateSourceConfigKindEnumTerraform         WorkflowTemplateSourceConfigKindEnum = "TERRAFORM"
+	WorkflowTemplateSourceConfigKindEnumAnsiblePlaybook   WorkflowTemplateSourceConfigKindEnum = "ANSIBLE_PLAYBOOK"
+	WorkflowTemplateSourceConfigKindEnumHelm              WorkflowTemplateSourceConfigKindEnum = "HELM"
+	WorkflowTemplateSourceConfigKindEnumKubectl           WorkflowTemplateSourceConfigKindEnum = "KUBECTL"
+	WorkflowTemplateSourceConfigKindEnumCloudformation    WorkflowTemplateSourceConfigKindEnum = "CLOUDFORMATION"
+	WorkflowTemplateSourceConfigKindEnumDockerImage       WorkflowTemplateSourceConfigKindEnum = "DOCKER_IMAGE"
+	WorkflowTemplateSourceConfigKindEnumOpaRego           WorkflowTemplateSourceConfigKindEnum = "OPA_REGO"
+	WorkflowTemplateSourceConfigKindEnumSgPolicyFramework WorkflowTemplateSourceConfigKindEnum = "SG_POLICY_FRAMEWORK"
+	WorkflowTemplateSourceConfigKindEnumSgInternalP1      WorkflowTemplateSourceConfigKindEnum = "SG_INTERNAL_P1"
+	WorkflowTemplateSourceConfigKindEnumSgInternalP2      WorkflowTemplateSourceConfigKindEnum = "SG_INTERNAL_P2"
+	WorkflowTemplateSourceConfigKindEnumCheckov           WorkflowTemplateSourceConfigKindEnum = "CHECKOV"
+	WorkflowTemplateSourceConfigKindEnumSteampipe         WorkflowTemplateSourceConfigKindEnum = "STEAMPIPE"
+	WorkflowTemplateSourceConfigKindEnumMixed             WorkflowTemplateSourceConfigKindEnum = "MIXED"
+	WorkflowTemplateSourceConfigKindEnumCustom            WorkflowTemplateSourceConfigKindEnum = "CUSTOM"
+)
+
+func NewWorkflowTemplateSourceConfigKindEnumFromString(s string) (WorkflowTemplateSourceConfigKindEnum, error) {
+	switch s {
+	case "TERRAFORM":
+		return WorkflowTemplateSourceConfigKindEnumTerraform, nil
+	case "ANSIBLE_PLAYBOOK":
+		return WorkflowTemplateSourceConfigKindEnumAnsiblePlaybook, nil
+	case "HELM":
+		return WorkflowTemplateSourceConfigKindEnumHelm, nil
+	case "KUBECTL":
+		return WorkflowTemplateSourceConfigKindEnumKubectl, nil
+	case "CLOUDFORMATION":
+		return WorkflowTemplateSourceConfigKindEnumCloudformation, nil
+	case "DOCKER_IMAGE":
+		return WorkflowTemplateSourceConfigKindEnumDockerImage, nil
+	case "OPA_REGO":
+		return WorkflowTemplateSourceConfigKindEnumOpaRego, nil
+	case "SG_POLICY_FRAMEWORK":
+		return WorkflowTemplateSourceConfigKindEnumSgPolicyFramework, nil
+	case "SG_INTERNAL_P1":
+		return WorkflowTemplateSourceConfigKindEnumSgInternalP1, nil
+	case "SG_INTERNAL_P2":
+		return WorkflowTemplateSourceConfigKindEnumSgInternalP2, nil
+	case "CHECKOV":
+		return WorkflowTemplateSourceConfigKindEnumCheckov, nil
+	case "STEAMPIPE":
+		return WorkflowTemplateSourceConfigKindEnumSteampipe, nil
+	case "MIXED":
+		return WorkflowTemplateSourceConfigKindEnumMixed, nil
+	case "CUSTOM":
+		return WorkflowTemplateSourceConfigKindEnumCustom, nil
+	}
+	var t WorkflowTemplateSourceConfigKindEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (w WorkflowTemplateSourceConfigKindEnum) Ptr() *WorkflowTemplateSourceConfigKindEnum {
+	return &w
 }
 
 type ListAllTemplatesRequestTemplateType string

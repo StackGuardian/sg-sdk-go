@@ -8,12 +8,13 @@ import (
 
 	sgsdkgo "github.com/StackGuardian/sg-sdk-go"
 	core "github.com/StackGuardian/sg-sdk-go/core"
+	internal "github.com/StackGuardian/sg-sdk-go/internal"
 	option "github.com/StackGuardian/sg-sdk-go/option"
 )
 
 type Client struct {
 	baseURL string
-	caller  *core.Caller
+	caller  *internal.Caller
 	header  http.Header
 }
 
@@ -21,8 +22,8 @@ func NewClient(opts ...option.RequestOption) *Client {
 	options := core.NewRequestOptions(opts...)
 	return &Client{
 		baseURL: options.BaseURL,
-		caller: core.NewCaller(
-			&core.CallerParams{
+		caller: internal.NewCaller(
+			&internal.CallerParams{
 				Client:      options.HTTPClient,
 				MaxAttempts: options.MaxAttempts,
 			},
@@ -39,26 +40,29 @@ func (c *Client) CreateConnector(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.IntegrationCreateResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(baseURL+"/api/v1/orgs/%v/integrations/", org)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/integrations/",
+		org,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
 
 	var response *sgsdkgo.IntegrationCreateResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodPost,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -79,30 +83,29 @@ func (c *Client) ReadConnector(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.GeneratedConnectorReadResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/integrations/%v/",
 		org,
 		integration,
 	)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
 
 	var response *sgsdkgo.GeneratedConnectorReadResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodGet,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -122,30 +125,29 @@ func (c *Client) DeleteConnector(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.GeneratedConnectorDeleteResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/integrations/%v/",
 		org,
 		integration,
 	)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
 
 	var response *sgsdkgo.GeneratedConnectorDeleteResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodDelete,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -157,7 +159,7 @@ func (c *Client) DeleteConnector(
 	return response, nil
 }
 
-// Update Connector
+// Update Connector. To create a custom benchmark via API, please refer to [this discussion](https://github.com/StackGuardian/feedback/discussions/148).
 func (c *Client) UpdateConnector(
 	ctx context.Context,
 	integration string,
@@ -166,30 +168,30 @@ func (c *Client) UpdateConnector(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.IntegrationUpdateResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/integrations/%v/",
 		org,
 		integration,
 	)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
 
 	var response *sgsdkgo.IntegrationUpdateResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodPatch,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -206,29 +208,39 @@ func (c *Client) UpdateConnector(
 func (c *Client) ListAllConnector(
 	ctx context.Context,
 	org string,
+	request *sgsdkgo.ListAllConnectorRequest,
 	opts ...option.RequestOption,
 ) (*sgsdkgo.GeneratedConnectorListAllResponseMsg, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/integrations/listall/",
+		org,
+	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
 	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
 	}
-	endpointURL := core.EncodeURL(baseURL+"/api/v1/orgs/%v/integrations/listall/", org)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
 
 	var response *sgsdkgo.GeneratedConnectorListAllResponseMsg
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodGet,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,

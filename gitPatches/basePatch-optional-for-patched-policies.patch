@@ -1,0 +1,152 @@
+diff --git a/policies.go b/policies.go
+index 822010b..3557021 100644
+--- a/policies.go
++++ b/policies.go
+@@ -6,6 +6,7 @@ import (
+ 	json "encoding/json"
+ 	fmt "fmt"
+ 
++	core "github.com/StackGuardian/sg-sdk-go/core"
+ 	internal "github.com/StackGuardian/sg-sdk-go/internal"
+ )
+ 
+@@ -390,41 +391,16 @@ func (o OnPassEnum) Ptr() *OnPassEnum {
+ 
+ type PatchedPolicyFilterInsight struct {
+ 	// Name of the policy
+-	ResourceName *string `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
++	ResourceName *core.Optional[string] `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+ 	// Description of the policy
+-	Description *string `json:"Description,omitempty" url:"Description,omitempty"`
++	Description *core.Optional[string] `json:"Description,omitempty" url:"Description,omitempty"`
+ 	// Policies Config for the policy
+-	PoliciesConfig []*PoliciesFilterInsightConfig `json:"PoliciesConfig,omitempty" url:"PoliciesConfig,omitempty"`
++	PoliciesConfig *core.Optional[[]*PoliciesFilterInsightConfig] `json:"PoliciesConfig,omitempty" url:"PoliciesConfig,omitempty"`
+ 
+ 	extraProperties map[string]interface{}
+ 	rawJSON         json.RawMessage
+ }
+ 
+-func (p *PatchedPolicyFilterInsight) GetResourceName() *string {
+-	if p == nil {
+-		return nil
+-	}
+-	return p.ResourceName
+-}
+-
+-func (p *PatchedPolicyFilterInsight) GetDescription() *string {
+-	if p == nil {
+-		return nil
+-	}
+-	return p.Description
+-}
+-
+-func (p *PatchedPolicyFilterInsight) GetPoliciesConfig() []*PoliciesFilterInsightConfig {
+-	if p == nil {
+-		return nil
+-	}
+-	return p.PoliciesConfig
+-}
+-
+-func (p *PatchedPolicyFilterInsight) GetExtraProperties() map[string]interface{} {
+-	return p.extraProperties
+-}
+-
+ func (p *PatchedPolicyFilterInsight) UnmarshalJSON(data []byte) error {
+ 	type unmarshaler PatchedPolicyFilterInsight
+ 	var value unmarshaler
+@@ -455,86 +431,26 @@ func (p *PatchedPolicyFilterInsight) String() string {
+ 
+ type PatchedPolicyGeneral struct {
+ 	// Name of the policy
+-	ResourceName *string `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
++	ResourceName *core.Optional[string] `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+ 	// Description of the policy
+-	Description *string `json:"Description,omitempty" url:"Description,omitempty"`
++	Description *core.Optional[string] `json:"Description,omitempty" url:"Description,omitempty"`
+ 	// List of IDs of the approvers for the policy
+-	Approvers []string `json:"Approvers,omitempty" url:"Approvers,omitempty"`
++	Approvers *core.Optional[[]string] `json:"Approvers,omitempty" url:"Approvers,omitempty"`
+ 	// Number of approvals required for the policy to be enforced
+-	NumberOfApprovalsRequired *int `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
++	NumberOfApprovalsRequired *core.Optional[int] `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
+ 	// Tags for the policy
+-	Tags []string `json:"Tags,omitempty" url:"Tags,omitempty"`
++	Tags *core.Optional[[]string] `json:"Tags,omitempty" url:"Tags,omitempty"`
+ 	// Contextual tags to give context to your tags
+-	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
++	ContextTags *core.Optional[map[string]*string] `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+ 	// What the policy will be enforced on.
+-	EnforcedOn []string `json:"EnforcedOn,omitempty" url:"EnforcedOn,omitempty"`
++	EnforcedOn *core.Optional[[]string] `json:"EnforcedOn,omitempty" url:"EnforcedOn,omitempty"`
+ 	// Policies Config for the policy
+-	PoliciesConfig []*PoliciesConfig `json:"PoliciesConfig,omitempty" url:"PoliciesConfig,omitempty"`
++	PoliciesConfig *core.Optional[[]*PoliciesConfig] `json:"PoliciesConfig,omitempty" url:"PoliciesConfig,omitempty"`
+ 
+ 	extraProperties map[string]interface{}
+ 	rawJSON         json.RawMessage
+ }
+ 
+-func (p *PatchedPolicyGeneral) GetResourceName() *string {
+-	if p == nil {
+-		return nil
+-	}
+-	return p.ResourceName
+-}
+-
+-func (p *PatchedPolicyGeneral) GetDescription() *string {
+-	if p == nil {
+-		return nil
+-	}
+-	return p.Description
+-}
+-
+-func (p *PatchedPolicyGeneral) GetApprovers() []string {
+-	if p == nil {
+-		return nil
+-	}
+-	return p.Approvers
+-}
+-
+-func (p *PatchedPolicyGeneral) GetNumberOfApprovalsRequired() *int {
+-	if p == nil {
+-		return nil
+-	}
+-	return p.NumberOfApprovalsRequired
+-}
+-
+-func (p *PatchedPolicyGeneral) GetTags() []string {
+-	if p == nil {
+-		return nil
+-	}
+-	return p.Tags
+-}
+-
+-func (p *PatchedPolicyGeneral) GetContextTags() map[string]*string {
+-	if p == nil {
+-		return nil
+-	}
+-	return p.ContextTags
+-}
+-
+-func (p *PatchedPolicyGeneral) GetEnforcedOn() []string {
+-	if p == nil {
+-		return nil
+-	}
+-	return p.EnforcedOn
+-}
+-
+-func (p *PatchedPolicyGeneral) GetPoliciesConfig() []*PoliciesConfig {
+-	if p == nil {
+-		return nil
+-	}
+-	return p.PoliciesConfig
+-}
+-
+-func (p *PatchedPolicyGeneral) GetExtraProperties() map[string]interface{} {
+-	return p.extraProperties
+-}
+-
+ func (p *PatchedPolicyGeneral) UnmarshalJSON(data []byte) error {
+ 	type unmarshaler PatchedPolicyGeneral
+ 	var value unmarshaler

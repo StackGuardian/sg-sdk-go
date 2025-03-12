@@ -8,12 +8,13 @@ import (
 
 	sgsdkgo "github.com/StackGuardian/sg-sdk-go"
 	core "github.com/StackGuardian/sg-sdk-go/core"
+	internal "github.com/StackGuardian/sg-sdk-go/internal"
 	option "github.com/StackGuardian/sg-sdk-go/option"
 )
 
 type Client struct {
 	baseURL string
-	caller  *core.Caller
+	caller  *internal.Caller
 	header  http.Header
 }
 
@@ -21,8 +22,8 @@ func NewClient(opts ...option.RequestOption) *Client {
 	options := core.NewRequestOptions(opts...)
 	return &Client{
 		baseURL: options.BaseURL,
-		caller: core.NewCaller(
-			&core.CallerParams{
+		caller: internal.NewCaller(
+			&internal.CallerParams{
 				Client:      options.HTTPClient,
 				MaxAttempts: options.MaxAttempts,
 			},
@@ -31,34 +32,37 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
-// Create Policy
+// Create Policy. For Creating Insight Filter Policy, please have a look to [this discussion](https://github.com/StackGuardian/feedback/discussions/147).
 func (c *Client) CreatePolicy(
 	ctx context.Context,
 	org string,
-	request *sgsdkgo.Policy,
+	request *sgsdkgo.PolymorphicPolicy,
 	opts ...option.RequestOption,
 ) (*sgsdkgo.PolicyCreateUpdateResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(baseURL+"/api/v1/orgs/%v/policies/", org)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/policies/",
+		org,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
 
 	var response *sgsdkgo.PolicyCreateUpdateResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodPost,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -79,30 +83,29 @@ func (c *Client) ReadPolicy(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.PolicyGetResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/policies/%v/",
 		org,
 		policy,
 	)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
 
 	var response *sgsdkgo.PolicyGetResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodGet,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -122,29 +125,28 @@ func (c *Client) DeletePolicy(
 	opts ...option.RequestOption,
 ) error {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/policies/%v/",
 		org,
 		policy,
 	)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
 
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodDelete,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -160,34 +162,34 @@ func (c *Client) UpdatePolicy(
 	ctx context.Context,
 	org string,
 	policy string,
-	request *sgsdkgo.PatchedPolicy,
+	request *sgsdkgo.PatchedPolymorphicPolicy,
 	opts ...option.RequestOption,
 ) (*sgsdkgo.PolicyCreateUpdateResponse, error) {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
-	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
-	}
-	endpointURL := core.EncodeURL(
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/policies/%v/",
 		org,
 		policy,
 	)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
 
 	var response *sgsdkgo.PolicyCreateUpdateResponse
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodPatch,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
@@ -204,28 +206,38 @@ func (c *Client) UpdatePolicy(
 func (c *Client) ListAllPolicies(
 	ctx context.Context,
 	org string,
+	request *sgsdkgo.ListAllPoliciesRequest,
 	opts ...option.RequestOption,
 ) error {
 	options := core.NewRequestOptions(opts...)
-
-	baseURL := "https://api.app.stackguardian.io"
-	if c.baseURL != "" {
-		baseURL = c.baseURL
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/policies/listall/",
+		org,
+	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return err
 	}
-	if options.BaseURL != "" {
-		baseURL = options.BaseURL
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
 	}
-	endpointURL := core.EncodeURL(baseURL+"/api/v1/orgs/%v/policies/listall/", org)
-
-	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
 
 	if err := c.caller.Call(
 		ctx,
-		&core.CallParams{
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodGet,
-			MaxAttempts:     options.MaxAttempts,
 			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,

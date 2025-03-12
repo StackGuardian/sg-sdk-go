@@ -5,8 +5,10 @@ package client
 import (
 	http "net/http"
 
+	benchmarkreports "github.com/StackGuardian/sg-sdk-go/benchmarkreports"
 	connectors "github.com/StackGuardian/sg-sdk-go/connectors"
 	core "github.com/StackGuardian/sg-sdk-go/core"
+	internal "github.com/StackGuardian/sg-sdk-go/internal"
 	option "github.com/StackGuardian/sg-sdk-go/option"
 	organizations "github.com/StackGuardian/sg-sdk-go/organizations"
 	policies "github.com/StackGuardian/sg-sdk-go/policies"
@@ -25,13 +27,14 @@ import (
 
 type Client struct {
 	baseURL string
-	caller  *core.Caller
+	caller  *internal.Caller
 	header  http.Header
 
 	Organizations         *organizations.Client
 	UsersRoles            *usersroles.Client
 	Connectors            *connectors.Client
 	Policies              *policies.Client
+	BenchmarkReports      *benchmarkreports.Client
 	RunnerGroups          *runnergroups.Client
 	Templates             *templates.Client
 	WorkflowGroups        *workflowgroups.Client
@@ -48,8 +51,8 @@ func NewClient(opts ...option.RequestOption) *Client {
 	options := core.NewRequestOptions(opts...)
 	return &Client{
 		baseURL: options.BaseURL,
-		caller: core.NewCaller(
-			&core.CallerParams{
+		caller: internal.NewCaller(
+			&internal.CallerParams{
 				Client:      options.HTTPClient,
 				MaxAttempts: options.MaxAttempts,
 			},
@@ -59,6 +62,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 		UsersRoles:            usersroles.NewClient(opts...),
 		Connectors:            connectors.NewClient(opts...),
 		Policies:              policies.NewClient(opts...),
+		BenchmarkReports:      benchmarkreports.NewClient(opts...),
 		RunnerGroups:          runnergroups.NewClient(opts...),
 		Templates:             templates.NewClient(opts...),
 		WorkflowGroups:        workflowgroups.NewClient(opts...),

@@ -1,5 +1,5 @@
 diff --git a/workflowgroups/client.go b/workflowgroups/client.go
-index 6eefb4c..3cd2db9 100644
+index b1b905c..078a3a5 100644
 --- a/workflowgroups/client.go
 +++ b/workflowgroups/client.go
 @@ -5,6 +5,7 @@ package workflowgroups
@@ -10,69 +10,75 @@ index 6eefb4c..3cd2db9 100644
  
  	sgsdkgo "github.com/StackGuardian/sg-sdk-go"
  	core "github.com/StackGuardian/sg-sdk-go/core"
-@@ -87,11 +88,10 @@ func (c *Client) ReadWorkflowGroup(
- 	if options.BaseURL != "" {
- 		baseURL = options.BaseURL
- 	}
--	endpointURL := core.EncodeURL(
+@@ -88,16 +89,13 @@ func (c *Client) ReadWorkflowGroup(
+ 		c.baseURL,
+ 		"https://api.app.stackguardian.io",
+ 	)
+-	endpointURL := internal.EncodeURL(
 -		baseURL+"/api/v1/orgs/%v/wfgrps/%v",
 -		org,
 -		wfGrp,
 -	)
-+
 +	//DO NOT REVERT - If wfGrp contains "/" then it might be a nested workflow group
 +	//In this case we need to pass through the / without encoding it
 +	endpointURL := escapeSlashesForNestedWorkflowGroup(baseURL, org, wfGrp)
- 
- 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
- 
-@@ -130,11 +130,10 @@ func (c *Client) DeleteWorkflowGroup(
- 	if options.BaseURL != "" {
- 		baseURL = options.BaseURL
- 	}
--	endpointURL := core.EncodeURL(
+ 	headers := internal.MergeHeaders(
+ 		c.header.Clone(),
+ 		options.ToHeader(),
+ 	)
+-
+ 	var response *sgsdkgo.WorkflowGroupGetResponse
+ 	if err := c.caller.Call(
+ 		ctx,
+@@ -130,16 +128,13 @@ func (c *Client) DeleteWorkflowGroup(
+ 		c.baseURL,
+ 		"https://api.app.stackguardian.io",
+ 	)
+-	endpointURL := internal.EncodeURL(
 -		baseURL+"/api/v1/orgs/%v/wfgrps/%v",
 -		org,
 -		wfGrp,
 -	)
-+
 +	//DO NOT REVERT - If wfGrp contains "/" then it might be a nested workflow group
 +	//In this case we need to pass through the / without encoding it
 +	endpointURL := escapeSlashesForNestedWorkflowGroup(baseURL, org, wfGrp)
- 
- 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
- 
-@@ -174,11 +173,10 @@ func (c *Client) UpdateWorkflowGroup(
- 	if options.BaseURL != "" {
- 		baseURL = options.BaseURL
- 	}
--	endpointURL := core.EncodeURL(
+ 	headers := internal.MergeHeaders(
+ 		c.header.Clone(),
+ 		options.ToHeader(),
+ 	)
+-
+ 	var response *sgsdkgo.WorkflowGroupDeleteResponse
+ 	if err := c.caller.Call(
+ 		ctx,
+@@ -173,11 +168,9 @@ func (c *Client) UpdateWorkflowGroup(
+ 		c.baseURL,
+ 		"https://api.app.stackguardian.io",
+ 	)
+-	endpointURL := internal.EncodeURL(
 -		baseURL+"/api/v1/orgs/%v/wfgrps/%v",
 -		org,
 -		wfGrp,
 -	)
-+
 +	//DO NOT REVERT - If wfGrp contains "/" then it might be a nested workflow group
 +	//In this case we need to pass through the / without encoding it
 +	endpointURL := escapeSlashesForNestedWorkflowGroup(baseURL, org, wfGrp)
- 
- 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
- 
-@@ -219,11 +217,8 @@ func (c *Client) CreateChildWorkflowGroup(
- 	if options.BaseURL != "" {
- 		baseURL = options.BaseURL
- 	}
--	endpointURL := core.EncodeURL(
+ 	headers := internal.MergeHeaders(
+ 		c.header.Clone(),
+ 		options.ToHeader(),
+@@ -218,11 +211,7 @@ func (c *Client) CreateChildWorkflowGroup(
+ 		c.baseURL,
+ 		"https://api.app.stackguardian.io",
+ 	)
+-	endpointURL := internal.EncodeURL(
 -		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfgrps/",
 -		org,
 -		wfGrp,
 -	)
-+
 +	endpointURL := escapeSlashesForNestedWorkflowGroup(baseURL, org, wfGrp) + "/wfgrps/"
- 
- 	headers := core.MergeHeaders(c.header.Clone(), options.ToHeader())
- 
-@@ -327,3 +322,23 @@ func (c *Client) ListAllWorkflowGroups(
+ 	headers := internal.MergeHeaders(
+ 		c.header.Clone(),
+ 		options.ToHeader(),
+@@ -330,3 +319,23 @@ func (c *Client) ListAllWorkflowGroups(
  	}
  	return response, nil
  }
@@ -82,13 +88,13 @@ index 6eefb4c..3cd2db9 100644
 +func escapeSlashesForNestedWorkflowGroup(baseURL, org, wfGrp string) string {
 +	var endpointURL string
 +	if strings.Contains(wfGrp, "/") {
-+		endpointURL = core.EncodeURL(
++		endpointURL = internal.EncodeURL(
 +			baseURL+"/api/v1/orgs/%v/wfgrps/",
 +			org,
 +		)
 +		endpointURL += wfGrp
 +	} else {
-+		endpointURL = core.EncodeURL(
++		endpointURL = internal.EncodeURL(
 +			baseURL+"/api/v1/orgs/%v/wfgrps/%v",
 +			org,
 +			wfGrp,

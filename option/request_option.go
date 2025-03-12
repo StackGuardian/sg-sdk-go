@@ -9,7 +9,7 @@ import (
 	core "github.com/StackGuardian/sg-sdk-go/core"
 )
 
-// RequestOption adapts the behavior of an indivdual request.
+// RequestOption adapts the behavior of an individual request.
 type RequestOption = core.RequestOption
 
 // WithBaseURL sets the base URL, overriding the default

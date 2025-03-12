@@ -10,9 +10,9 @@
             "kind": "AWS_RBAC"
         }
     ],
-    "TemplatesConfig": {
-        "templateGroupId": "/demo-org/ansible:4",
-        "templates": [
+    "TemplateGroupId": "/demo-org/ansible:4",
+    "WorkflowsConfig": {
+        "workflows": [
             {
                 "NumberOfApprovalsRequired": 0,
                 "DeploymentPlatformConfig": [],

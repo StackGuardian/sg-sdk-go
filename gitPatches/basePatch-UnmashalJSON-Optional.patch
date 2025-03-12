@@ -1,0 +1,20 @@
+diff --git a/core/optional.go b/core/optional.go
+index 85ab541..5a0be2d 100644
+--- a/core/optional.go
++++ b/core/optional.go
+@@ -34,3 +34,15 @@ func (o *Optional[T]) MarshalJSON() ([]byte, error) {
+ 	}
+ 	return json.Marshal(&o.Value)
+ }
++
++func (o *Optional[T]) UnmarshalJSON(data []byte) error {
++	if string(data) == "null" {
++		o.Null = true
++		return nil
++	}
++	if err := json.Unmarshal(data, &o.Value); err != nil {
++		return err
++	}
++	o.Null = false
++	return nil
++}

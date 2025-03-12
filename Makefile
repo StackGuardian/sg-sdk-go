@@ -10,5 +10,6 @@ format:
 apply-patch:
 	git apply gitPatches/basePatch-workflowGroups.patch
 	git apply gitPatches/basePatch-UnmashalJSON-Optional.patch
+	git apply gitPatches/basePatch-optional-for-patched-policies.patch
 # Build target to format and apply patches in sequence
 build: format apply-patch

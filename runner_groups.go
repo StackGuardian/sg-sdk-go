@@ -339,6 +339,52 @@ func (r *RunnerGroupDeleteResponse) String() string {
 	return fmt.Sprintf("%#v", r)
 }
 
+type RunnerGroupSerializerResponse struct {
+	Msg *RunnerGroup `json:"msg,omitempty" url:"msg,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *RunnerGroupSerializerResponse) GetMsg() *RunnerGroup {
+	if r == nil {
+		return nil
+	}
+	return r.Msg
+}
+
+func (r *RunnerGroupSerializerResponse) GetExtraProperties() map[string]interface{} {
+	return r.extraProperties
+}
+
+func (r *RunnerGroupSerializerResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler RunnerGroupSerializerResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = RunnerGroupSerializerResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *RunnerGroupSerializerResponse) String() string {
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
+}
+
 // * `ACTIVE` - ACTIVE
 // * `DRAINING` - DRAINING
 type StatusEnum string

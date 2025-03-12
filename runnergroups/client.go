@@ -82,7 +82,7 @@ func (c *Client) ReadRunnerGroup(
 	runnerGroup string,
 	request *sgsdkgo.ReadRunnerGroupRequest,
 	opts ...option.RequestOption,
-) (map[string]interface{}, error) {
+) (*sgsdkgo.RunnerGroupSerializerResponse, error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -106,7 +106,7 @@ func (c *Client) ReadRunnerGroup(
 		options.ToHeader(),
 	)
 
-	var response map[string]interface{}
+	var response *sgsdkgo.RunnerGroupSerializerResponse
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{

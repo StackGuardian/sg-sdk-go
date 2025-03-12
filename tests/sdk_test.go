@@ -1174,7 +1174,7 @@ func TestSDK(t *testing.T) {
 		readRunnerGroupRequest := sggosdk.ReadRunnerGroupRequest{}
 		readPolicyResponse, err := c.RunnerGroups.ReadRunnerGroup(context.Background(), SG_ORG, policyName, &readRunnerGroupRequest)
 		assert.Empty(t, err)
-		assert.Equal(t, policyName, readPolicyResponse["msg"].(map[string]interface{})["ResourceName"])
+		assert.Equal(t, policyName, *readPolicyResponse.Msg.ResourceName)
 	})
 
 	t.Run("update_runnergroups", func(t *testing.T) {

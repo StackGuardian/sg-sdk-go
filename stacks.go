@@ -421,8 +421,6 @@ func (g *GeneratedStackCreateResponseDataStack) String() string {
 type GeneratedStackCreateResponseDataWorkflows struct {
 	OrgId                     string                                                      `json:"OrgId" url:"OrgId"`
 	SubResourceId             string                                                      `json:"SubResourceId" url:"SubResourceId"`
-	ResourceId                string                                                      `json:"ResourceId" url:"ResourceId"`
-	ContextTags               map[string]string                                           `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
 	CreatedAt                 int                                                         `json:"CreatedAt" url:"CreatedAt"`
 	ResourceName              string                                                      `json:"ResourceName" url:"ResourceName"`
 	EnforcedPolicies          string                                                      `json:"EnforcedPolicies" url:"EnforcedPolicies"`
@@ -463,20 +461,6 @@ func (g *GeneratedStackCreateResponseDataWorkflows) GetSubResourceId() string {
 		return ""
 	}
 	return g.SubResourceId
-}
-
-func (g *GeneratedStackCreateResponseDataWorkflows) GetResourceId() string {
-	if g == nil {
-		return ""
-	}
-	return g.ResourceId
-}
-
-func (g *GeneratedStackCreateResponseDataWorkflows) GetContextTags() map[string]string {
-	if g == nil {
-		return nil
-	}
-	return g.ContextTags
 }
 
 func (g *GeneratedStackCreateResponseDataWorkflows) GetCreatedAt() int {
@@ -1519,4 +1503,860 @@ func (s *StackDeleteResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", s)
+}
+
+type StackUserSchedules struct {
+	Name   *string      `json:"name,omitempty" url:"name,omitempty"`
+	Desc   *string      `json:"desc,omitempty" url:"desc,omitempty"`
+	Cron   string       `json:"cron" url:"cron"`
+	State  StateEnum    `json:"state" url:"state"`
+	Inputs *StackAction `json:"inputs,omitempty" url:"inputs,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *StackUserSchedules) GetName() *string {
+	if s == nil {
+		return nil
+	}
+	return s.Name
+}
+
+func (s *StackUserSchedules) GetDesc() *string {
+	if s == nil {
+		return nil
+	}
+	return s.Desc
+}
+
+func (s *StackUserSchedules) GetCron() string {
+	if s == nil {
+		return ""
+	}
+	return s.Cron
+}
+
+func (s *StackUserSchedules) GetState() StateEnum {
+	if s == nil {
+		return ""
+	}
+	return s.State
+}
+
+func (s *StackUserSchedules) GetInputs() *StackAction {
+	if s == nil {
+		return nil
+	}
+	return s.Inputs
+}
+
+func (s *StackUserSchedules) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
+}
+
+func (s *StackUserSchedules) UnmarshalJSON(data []byte) error {
+	type unmarshaler StackUserSchedules
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = StackUserSchedules(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *StackUserSchedules) String() string {
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
+type TemplateWorkflow struct {
+	ResourceName                *string                     `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	Description                 *string                     `json:"Description,omitempty" url:"Description,omitempty"`
+	Tags                        []string                    `json:"Tags,omitempty" url:"Tags,omitempty"`
+	IsActive                    *IsArchiveEnum              `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	WfStepsConfig               []*WfStepsConfig            `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
+	WfType                      *WfTypeEnum                 `json:"WfType,omitempty" url:"WfType,omitempty"`
+	TerraformConfig             *TerraformConfig            `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
+	EnvironmentVariables        []*EnvVars                  `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
+	DeploymentPlatformConfig    []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	VcsConfig                   *VcsConfig                  `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
+	UserSchedules               []*UserSchedules            `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
+	GitHubComSync               map[string]interface{}      `json:"GitHubComSync,omitempty" url:"GitHubComSync,omitempty"`
+	MiniSteps                   *MiniStepsSchema            `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	Approvers                   []string                    `json:"Approvers,omitempty" url:"Approvers,omitempty"`
+	NumberOfApprovalsRequired   *int                        `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
+	RunnerConstraints           *RunnerConstraints          `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
+	UserJobCpu                  *int                        `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
+	UserJobMemory               *int                        `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
+	CacheConfig                 *CacheConfig                `json:"CacheConfig,omitempty" url:"CacheConfig,omitempty"`
+	TfStateCleaned              map[string]interface{}      `json:"TfStateCleaned,omitempty" url:"TfStateCleaned,omitempty"`
+	InfracostBreakdown          map[string]interface{}      `json:"InfracostBreakdown,omitempty" url:"InfracostBreakdown,omitempty"`
+	PolicyEvalResults           map[string]interface{}      `json:"PolicyEvalResults,omitempty" url:"PolicyEvalResults,omitempty"`
+	InfracostBreakdownPreApply  map[string]interface{}      `json:"InfracostBreakdownPreApply,omitempty" url:"InfracostBreakdownPreApply,omitempty"`
+	InfracostBreakdownPostApply map[string]interface{}      `json:"InfracostBreakdownPostApply,omitempty" url:"InfracostBreakdownPostApply,omitempty"`
+	TfDrift                     map[string]interface{}      `json:"TfDrift,omitempty" url:"TfDrift,omitempty"`
+	CfStateCleaned              map[string]interface{}      `json:"CfStateCleaned,omitempty" url:"CfStateCleaned,omitempty"`
+	CfStackPlan                 map[string]interface{}      `json:"CfStackPlan,omitempty" url:"CfStackPlan,omitempty"`
+	CfDrift                     map[string]interface{}      `json:"CfDrift,omitempty" url:"CfDrift,omitempty"`
+	K8SResources                map[string]interface{}      `json:"K8sResources,omitempty" url:"K8sResources,omitempty"`
+	K8SDrift                    map[string]interface{}      `json:"K8sDrift,omitempty" url:"K8sDrift,omitempty"`
+	TerragruntDrift             map[string]interface{}      `json:"TerragruntDrift,omitempty" url:"TerragruntDrift,omitempty"`
+	AnsibleOutputs              map[string]interface{}      `json:"AnsibleOutputs,omitempty" url:"AnsibleOutputs,omitempty"`
+	AnsiblePlan                 map[string]interface{}      `json:"AnsiblePlan,omitempty" url:"AnsiblePlan,omitempty"`
+	AnsibleDrift                map[string]interface{}      `json:"AnsibleDrift,omitempty" url:"AnsibleDrift,omitempty"`
+	SgCustomWorkflowRunFacts    map[string]interface{}      `json:"SGCustomWorkflowRunFacts,omitempty" url:"SGCustomWorkflowRunFacts,omitempty"`
+	// Contextual tags to give context to your tags
+	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	Id          *string            `json:"id,omitempty" url:"id,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (t *TemplateWorkflow) GetResourceName() *string {
+	if t == nil {
+		return nil
+	}
+	return t.ResourceName
+}
+
+func (t *TemplateWorkflow) GetDescription() *string {
+	if t == nil {
+		return nil
+	}
+	return t.Description
+}
+
+func (t *TemplateWorkflow) GetTags() []string {
+	if t == nil {
+		return nil
+	}
+	return t.Tags
+}
+
+func (t *TemplateWorkflow) GetIsActive() *IsArchiveEnum {
+	if t == nil {
+		return nil
+	}
+	return t.IsActive
+}
+
+func (t *TemplateWorkflow) GetWfStepsConfig() []*WfStepsConfig {
+	if t == nil {
+		return nil
+	}
+	return t.WfStepsConfig
+}
+
+func (t *TemplateWorkflow) GetWfType() *WfTypeEnum {
+	if t == nil {
+		return nil
+	}
+	return t.WfType
+}
+
+func (t *TemplateWorkflow) GetTerraformConfig() *TerraformConfig {
+	if t == nil {
+		return nil
+	}
+	return t.TerraformConfig
+}
+
+func (t *TemplateWorkflow) GetEnvironmentVariables() []*EnvVars {
+	if t == nil {
+		return nil
+	}
+	return t.EnvironmentVariables
+}
+
+func (t *TemplateWorkflow) GetDeploymentPlatformConfig() []*DeploymentPlatformConfig {
+	if t == nil {
+		return nil
+	}
+	return t.DeploymentPlatformConfig
+}
+
+func (t *TemplateWorkflow) GetVcsConfig() *VcsConfig {
+	if t == nil {
+		return nil
+	}
+	return t.VcsConfig
+}
+
+func (t *TemplateWorkflow) GetUserSchedules() []*UserSchedules {
+	if t == nil {
+		return nil
+	}
+	return t.UserSchedules
+}
+
+func (t *TemplateWorkflow) GetGitHubComSync() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.GitHubComSync
+}
+
+func (t *TemplateWorkflow) GetMiniSteps() *MiniStepsSchema {
+	if t == nil {
+		return nil
+	}
+	return t.MiniSteps
+}
+
+func (t *TemplateWorkflow) GetApprovers() []string {
+	if t == nil {
+		return nil
+	}
+	return t.Approvers
+}
+
+func (t *TemplateWorkflow) GetNumberOfApprovalsRequired() *int {
+	if t == nil {
+		return nil
+	}
+	return t.NumberOfApprovalsRequired
+}
+
+func (t *TemplateWorkflow) GetRunnerConstraints() *RunnerConstraints {
+	if t == nil {
+		return nil
+	}
+	return t.RunnerConstraints
+}
+
+func (t *TemplateWorkflow) GetUserJobCpu() *int {
+	if t == nil {
+		return nil
+	}
+	return t.UserJobCpu
+}
+
+func (t *TemplateWorkflow) GetUserJobMemory() *int {
+	if t == nil {
+		return nil
+	}
+	return t.UserJobMemory
+}
+
+func (t *TemplateWorkflow) GetCacheConfig() *CacheConfig {
+	if t == nil {
+		return nil
+	}
+	return t.CacheConfig
+}
+
+func (t *TemplateWorkflow) GetTfStateCleaned() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.TfStateCleaned
+}
+
+func (t *TemplateWorkflow) GetInfracostBreakdown() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.InfracostBreakdown
+}
+
+func (t *TemplateWorkflow) GetPolicyEvalResults() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.PolicyEvalResults
+}
+
+func (t *TemplateWorkflow) GetInfracostBreakdownPreApply() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.InfracostBreakdownPreApply
+}
+
+func (t *TemplateWorkflow) GetInfracostBreakdownPostApply() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.InfracostBreakdownPostApply
+}
+
+func (t *TemplateWorkflow) GetTfDrift() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.TfDrift
+}
+
+func (t *TemplateWorkflow) GetCfStateCleaned() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.CfStateCleaned
+}
+
+func (t *TemplateWorkflow) GetCfStackPlan() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.CfStackPlan
+}
+
+func (t *TemplateWorkflow) GetCfDrift() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.CfDrift
+}
+
+func (t *TemplateWorkflow) GetK8SResources() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.K8SResources
+}
+
+func (t *TemplateWorkflow) GetK8SDrift() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.K8SDrift
+}
+
+func (t *TemplateWorkflow) GetTerragruntDrift() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.TerragruntDrift
+}
+
+func (t *TemplateWorkflow) GetAnsibleOutputs() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.AnsibleOutputs
+}
+
+func (t *TemplateWorkflow) GetAnsiblePlan() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.AnsiblePlan
+}
+
+func (t *TemplateWorkflow) GetAnsibleDrift() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.AnsibleDrift
+}
+
+func (t *TemplateWorkflow) GetSgCustomWorkflowRunFacts() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.SgCustomWorkflowRunFacts
+}
+
+func (t *TemplateWorkflow) GetContextTags() map[string]*string {
+	if t == nil {
+		return nil
+	}
+	return t.ContextTags
+}
+
+func (t *TemplateWorkflow) GetId() *string {
+	if t == nil {
+		return nil
+	}
+	return t.Id
+}
+
+func (t *TemplateWorkflow) GetExtraProperties() map[string]interface{} {
+	return t.extraProperties
+}
+
+func (t *TemplateWorkflow) UnmarshalJSON(data []byte) error {
+	type unmarshaler TemplateWorkflow
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*t = TemplateWorkflow(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *t)
+	if err != nil {
+		return err
+	}
+	t.extraProperties = extraProperties
+	t.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (t *TemplateWorkflow) String() string {
+	if len(t.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(t.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(t); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", t)
+}
+
+type TemplatesConfig struct {
+	Actions         map[string]interface{} `json:"actions,omitempty" url:"actions,omitempty"`
+	Templates       []*TemplateWorkflow    `json:"templates,omitempty" url:"templates,omitempty"`
+	TemplateGroupId *string                `json:"templateGroupId,omitempty" url:"templateGroupId,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (t *TemplatesConfig) GetActions() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.Actions
+}
+
+func (t *TemplatesConfig) GetTemplates() []*TemplateWorkflow {
+	if t == nil {
+		return nil
+	}
+	return t.Templates
+}
+
+func (t *TemplatesConfig) GetTemplateGroupId() *string {
+	if t == nil {
+		return nil
+	}
+	return t.TemplateGroupId
+}
+
+func (t *TemplatesConfig) GetExtraProperties() map[string]interface{} {
+	return t.extraProperties
+}
+
+func (t *TemplatesConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler TemplatesConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*t = TemplatesConfig(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *t)
+	if err != nil {
+		return err
+	}
+	t.extraProperties = extraProperties
+	t.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (t *TemplatesConfig) String() string {
+	if len(t.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(t.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(t); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", t)
+}
+
+type WorkflowsConfig struct {
+	Workflows []*WorkflowsConfigWorkflow `json:"workflows,omitempty" url:"workflows,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WorkflowsConfig) GetWorkflows() []*WorkflowsConfigWorkflow {
+	if w == nil {
+		return nil
+	}
+	return w.Workflows
+}
+
+func (w *WorkflowsConfig) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WorkflowsConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler WorkflowsConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WorkflowsConfig(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WorkflowsConfig) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type WorkflowsConfigWorkflow struct {
+	ResourceName                *string                     `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	Description                 *string                     `json:"Description,omitempty" url:"Description,omitempty"`
+	Tags                        []string                    `json:"Tags,omitempty" url:"Tags,omitempty"`
+	IsActive                    *IsArchiveEnum              `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	WfStepsConfig               []*WfStepsConfig            `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
+	WfType                      *WfTypeEnum                 `json:"WfType,omitempty" url:"WfType,omitempty"`
+	TerraformConfig             *TerraformConfig            `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
+	EnvironmentVariables        []*EnvVars                  `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
+	DeploymentPlatformConfig    []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	VcsConfig                   *VcsConfig                  `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
+	UserSchedules               []*UserSchedules            `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
+	GitHubComSync               map[string]interface{}      `json:"GitHubComSync,omitempty" url:"GitHubComSync,omitempty"`
+	MiniSteps                   *MiniStepsSchema            `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	Approvers                   []string                    `json:"Approvers,omitempty" url:"Approvers,omitempty"`
+	NumberOfApprovalsRequired   *int                        `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
+	RunnerConstraints           *RunnerConstraints          `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
+	UserJobCpu                  *int                        `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
+	UserJobMemory               *int                        `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
+	CacheConfig                 *CacheConfig                `json:"CacheConfig,omitempty" url:"CacheConfig,omitempty"`
+	TfStateCleaned              map[string]interface{}      `json:"TfStateCleaned,omitempty" url:"TfStateCleaned,omitempty"`
+	InfracostBreakdown          map[string]interface{}      `json:"InfracostBreakdown,omitempty" url:"InfracostBreakdown,omitempty"`
+	PolicyEvalResults           map[string]interface{}      `json:"PolicyEvalResults,omitempty" url:"PolicyEvalResults,omitempty"`
+	InfracostBreakdownPreApply  map[string]interface{}      `json:"InfracostBreakdownPreApply,omitempty" url:"InfracostBreakdownPreApply,omitempty"`
+	InfracostBreakdownPostApply map[string]interface{}      `json:"InfracostBreakdownPostApply,omitempty" url:"InfracostBreakdownPostApply,omitempty"`
+	TfDrift                     map[string]interface{}      `json:"TfDrift,omitempty" url:"TfDrift,omitempty"`
+	CfStateCleaned              map[string]interface{}      `json:"CfStateCleaned,omitempty" url:"CfStateCleaned,omitempty"`
+	CfStackPlan                 map[string]interface{}      `json:"CfStackPlan,omitempty" url:"CfStackPlan,omitempty"`
+	CfDrift                     map[string]interface{}      `json:"CfDrift,omitempty" url:"CfDrift,omitempty"`
+	K8SResources                map[string]interface{}      `json:"K8sResources,omitempty" url:"K8sResources,omitempty"`
+	K8SDrift                    map[string]interface{}      `json:"K8sDrift,omitempty" url:"K8sDrift,omitempty"`
+	TerragruntDrift             map[string]interface{}      `json:"TerragruntDrift,omitempty" url:"TerragruntDrift,omitempty"`
+	AnsibleOutputs              map[string]interface{}      `json:"AnsibleOutputs,omitempty" url:"AnsibleOutputs,omitempty"`
+	AnsiblePlan                 map[string]interface{}      `json:"AnsiblePlan,omitempty" url:"AnsiblePlan,omitempty"`
+	AnsibleDrift                map[string]interface{}      `json:"AnsibleDrift,omitempty" url:"AnsibleDrift,omitempty"`
+	SgCustomWorkflowRunFacts    map[string]interface{}      `json:"SGCustomWorkflowRunFacts,omitempty" url:"SGCustomWorkflowRunFacts,omitempty"`
+	// Contextual tags to give context to your tags
+	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	Id          *string            `json:"id,omitempty" url:"id,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *WorkflowsConfigWorkflow) GetResourceName() *string {
+	if w == nil {
+		return nil
+	}
+	return w.ResourceName
+}
+
+func (w *WorkflowsConfigWorkflow) GetDescription() *string {
+	if w == nil {
+		return nil
+	}
+	return w.Description
+}
+
+func (w *WorkflowsConfigWorkflow) GetTags() []string {
+	if w == nil {
+		return nil
+	}
+	return w.Tags
+}
+
+func (w *WorkflowsConfigWorkflow) GetIsActive() *IsArchiveEnum {
+	if w == nil {
+		return nil
+	}
+	return w.IsActive
+}
+
+func (w *WorkflowsConfigWorkflow) GetWfStepsConfig() []*WfStepsConfig {
+	if w == nil {
+		return nil
+	}
+	return w.WfStepsConfig
+}
+
+func (w *WorkflowsConfigWorkflow) GetWfType() *WfTypeEnum {
+	if w == nil {
+		return nil
+	}
+	return w.WfType
+}
+
+func (w *WorkflowsConfigWorkflow) GetTerraformConfig() *TerraformConfig {
+	if w == nil {
+		return nil
+	}
+	return w.TerraformConfig
+}
+
+func (w *WorkflowsConfigWorkflow) GetEnvironmentVariables() []*EnvVars {
+	if w == nil {
+		return nil
+	}
+	return w.EnvironmentVariables
+}
+
+func (w *WorkflowsConfigWorkflow) GetDeploymentPlatformConfig() []*DeploymentPlatformConfig {
+	if w == nil {
+		return nil
+	}
+	return w.DeploymentPlatformConfig
+}
+
+func (w *WorkflowsConfigWorkflow) GetVcsConfig() *VcsConfig {
+	if w == nil {
+		return nil
+	}
+	return w.VcsConfig
+}
+
+func (w *WorkflowsConfigWorkflow) GetUserSchedules() []*UserSchedules {
+	if w == nil {
+		return nil
+	}
+	return w.UserSchedules
+}
+
+func (w *WorkflowsConfigWorkflow) GetGitHubComSync() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.GitHubComSync
+}
+
+func (w *WorkflowsConfigWorkflow) GetMiniSteps() *MiniStepsSchema {
+	if w == nil {
+		return nil
+	}
+	return w.MiniSteps
+}
+
+func (w *WorkflowsConfigWorkflow) GetApprovers() []string {
+	if w == nil {
+		return nil
+	}
+	return w.Approvers
+}
+
+func (w *WorkflowsConfigWorkflow) GetNumberOfApprovalsRequired() *int {
+	if w == nil {
+		return nil
+	}
+	return w.NumberOfApprovalsRequired
+}
+
+func (w *WorkflowsConfigWorkflow) GetRunnerConstraints() *RunnerConstraints {
+	if w == nil {
+		return nil
+	}
+	return w.RunnerConstraints
+}
+
+func (w *WorkflowsConfigWorkflow) GetUserJobCpu() *int {
+	if w == nil {
+		return nil
+	}
+	return w.UserJobCpu
+}
+
+func (w *WorkflowsConfigWorkflow) GetUserJobMemory() *int {
+	if w == nil {
+		return nil
+	}
+	return w.UserJobMemory
+}
+
+func (w *WorkflowsConfigWorkflow) GetCacheConfig() *CacheConfig {
+	if w == nil {
+		return nil
+	}
+	return w.CacheConfig
+}
+
+func (w *WorkflowsConfigWorkflow) GetTfStateCleaned() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.TfStateCleaned
+}
+
+func (w *WorkflowsConfigWorkflow) GetInfracostBreakdown() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.InfracostBreakdown
+}
+
+func (w *WorkflowsConfigWorkflow) GetPolicyEvalResults() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.PolicyEvalResults
+}
+
+func (w *WorkflowsConfigWorkflow) GetInfracostBreakdownPreApply() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.InfracostBreakdownPreApply
+}
+
+func (w *WorkflowsConfigWorkflow) GetInfracostBreakdownPostApply() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.InfracostBreakdownPostApply
+}
+
+func (w *WorkflowsConfigWorkflow) GetTfDrift() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.TfDrift
+}
+
+func (w *WorkflowsConfigWorkflow) GetCfStateCleaned() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.CfStateCleaned
+}
+
+func (w *WorkflowsConfigWorkflow) GetCfStackPlan() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.CfStackPlan
+}
+
+func (w *WorkflowsConfigWorkflow) GetCfDrift() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.CfDrift
+}
+
+func (w *WorkflowsConfigWorkflow) GetK8SResources() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.K8SResources
+}
+
+func (w *WorkflowsConfigWorkflow) GetK8SDrift() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.K8SDrift
+}
+
+func (w *WorkflowsConfigWorkflow) GetTerragruntDrift() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.TerragruntDrift
+}
+
+func (w *WorkflowsConfigWorkflow) GetAnsibleOutputs() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.AnsibleOutputs
+}
+
+func (w *WorkflowsConfigWorkflow) GetAnsiblePlan() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.AnsiblePlan
+}
+
+func (w *WorkflowsConfigWorkflow) GetAnsibleDrift() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.AnsibleDrift
+}
+
+func (w *WorkflowsConfigWorkflow) GetSgCustomWorkflowRunFacts() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.SgCustomWorkflowRunFacts
+}
+
+func (w *WorkflowsConfigWorkflow) GetContextTags() map[string]*string {
+	if w == nil {
+		return nil
+	}
+	return w.ContextTags
+}
+
+func (w *WorkflowsConfigWorkflow) GetId() *string {
+	if w == nil {
+		return nil
+	}
+	return w.Id
+}
+
+func (w *WorkflowsConfigWorkflow) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *WorkflowsConfigWorkflow) UnmarshalJSON(data []byte) error {
+	type unmarshaler WorkflowsConfigWorkflow
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = WorkflowsConfigWorkflow(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *WorkflowsConfigWorkflow) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
 }

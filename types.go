@@ -2792,17 +2792,17 @@ func (g *GeneratedWorkflowOutputsResponse) String() string {
 }
 
 type GeneratedWorkflowOutputsResponseData struct {
-	Outputs map[string]interface{} `json:"outputs,omitempty" url:"outputs,omitempty"`
+	OutputsSignedUrl string `json:"outputs_signed_url" url:"outputs_signed_url"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (g *GeneratedWorkflowOutputsResponseData) GetOutputs() map[string]interface{} {
+func (g *GeneratedWorkflowOutputsResponseData) GetOutputsSignedUrl() string {
 	if g == nil {
-		return nil
+		return ""
 	}
-	return g.Outputs
+	return g.OutputsSignedUrl
 }
 
 func (g *GeneratedWorkflowOutputsResponseData) GetExtraProperties() map[string]interface{} {
@@ -2884,49 +2884,17 @@ func (g *GeneratedWorkflowRunLogs) String() string {
 }
 
 type GeneratedWorkflowRunLogsMsg struct {
-	LogStreamName string `json:"logStreamName" url:"logStreamName"`
-	Timestamp     int    `json:"timestamp" url:"timestamp"`
-	Message       string `json:"message" url:"message"`
-	IngestionTime int    `json:"ingestionTime" url:"ingestionTime"`
-	EventId       string `json:"eventId" url:"eventId"`
+	LogUrl string `json:"logURL" url:"logURL"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (g *GeneratedWorkflowRunLogsMsg) GetLogStreamName() string {
+func (g *GeneratedWorkflowRunLogsMsg) GetLogUrl() string {
 	if g == nil {
 		return ""
 	}
-	return g.LogStreamName
-}
-
-func (g *GeneratedWorkflowRunLogsMsg) GetTimestamp() int {
-	if g == nil {
-		return 0
-	}
-	return g.Timestamp
-}
-
-func (g *GeneratedWorkflowRunLogsMsg) GetMessage() string {
-	if g == nil {
-		return ""
-	}
-	return g.Message
-}
-
-func (g *GeneratedWorkflowRunLogsMsg) GetIngestionTime() int {
-	if g == nil {
-		return 0
-	}
-	return g.IngestionTime
-}
-
-func (g *GeneratedWorkflowRunLogsMsg) GetEventId() string {
-	if g == nil {
-		return ""
-	}
-	return g.EventId
+	return g.LogUrl
 }
 
 func (g *GeneratedWorkflowRunLogsMsg) GetExtraProperties() map[string]interface{} {
@@ -4340,6 +4308,7 @@ type PatchedWorkflow struct {
 	AnsibleOutputs              map[string]interface{}      `json:"AnsibleOutputs,omitempty" url:"AnsibleOutputs,omitempty"`
 	AnsiblePlan                 map[string]interface{}      `json:"AnsiblePlan,omitempty" url:"AnsiblePlan,omitempty"`
 	AnsibleDrift                map[string]interface{}      `json:"AnsibleDrift,omitempty" url:"AnsibleDrift,omitempty"`
+	BicepResources              map[string]interface{}      `json:"BicepResources,omitempty" url:"BicepResources,omitempty"`
 	SgCustomWorkflowRunFacts    map[string]interface{}      `json:"SGCustomWorkflowRunFacts,omitempty" url:"SGCustomWorkflowRunFacts,omitempty"`
 	// Contextual tags to give context to your tags
 	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
@@ -4584,6 +4553,13 @@ func (p *PatchedWorkflow) GetAnsibleDrift() map[string]interface{} {
 		return nil
 	}
 	return p.AnsibleDrift
+}
+
+func (p *PatchedWorkflow) GetBicepResources() map[string]interface{} {
+	if p == nil {
+		return nil
+	}
+	return p.BicepResources
 }
 
 func (p *PatchedWorkflow) GetSgCustomWorkflowRunFacts() map[string]interface{} {
@@ -5169,6 +5145,7 @@ type TemplateWorkflow struct {
 	AnsibleOutputs              map[string]interface{}      `json:"AnsibleOutputs,omitempty" url:"AnsibleOutputs,omitempty"`
 	AnsiblePlan                 map[string]interface{}      `json:"AnsiblePlan,omitempty" url:"AnsiblePlan,omitempty"`
 	AnsibleDrift                map[string]interface{}      `json:"AnsibleDrift,omitempty" url:"AnsibleDrift,omitempty"`
+	BicepResources              map[string]interface{}      `json:"BicepResources,omitempty" url:"BicepResources,omitempty"`
 	SgCustomWorkflowRunFacts    map[string]interface{}      `json:"SGCustomWorkflowRunFacts,omitempty" url:"SGCustomWorkflowRunFacts,omitempty"`
 	// Contextual tags to give context to your tags
 	ContextTags  map[string]*string     `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
@@ -5417,6 +5394,13 @@ func (t *TemplateWorkflow) GetAnsibleDrift() map[string]interface{} {
 		return nil
 	}
 	return t.AnsibleDrift
+}
+
+func (t *TemplateWorkflow) GetBicepResources() map[string]interface{} {
+	if t == nil {
+		return nil
+	}
+	return t.BicepResources
 }
 
 func (t *TemplateWorkflow) GetSgCustomWorkflowRunFacts() map[string]interface{} {
@@ -6660,6 +6644,7 @@ type WorkflowsConfigWorkflow struct {
 	AnsibleOutputs              map[string]interface{}      `json:"AnsibleOutputs,omitempty" url:"AnsibleOutputs,omitempty"`
 	AnsiblePlan                 map[string]interface{}      `json:"AnsiblePlan,omitempty" url:"AnsiblePlan,omitempty"`
 	AnsibleDrift                map[string]interface{}      `json:"AnsibleDrift,omitempty" url:"AnsibleDrift,omitempty"`
+	BicepResources              map[string]interface{}      `json:"BicepResources,omitempty" url:"BicepResources,omitempty"`
 	SgCustomWorkflowRunFacts    map[string]interface{}      `json:"SGCustomWorkflowRunFacts,omitempty" url:"SGCustomWorkflowRunFacts,omitempty"`
 	// Contextual tags to give context to your tags
 	ContextTags  map[string]*string     `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
@@ -6908,6 +6893,13 @@ func (w *WorkflowsConfigWorkflow) GetAnsibleDrift() map[string]interface{} {
 		return nil
 	}
 	return w.AnsibleDrift
+}
+
+func (w *WorkflowsConfigWorkflow) GetBicepResources() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.BicepResources
 }
 
 func (w *WorkflowsConfigWorkflow) GetSgCustomWorkflowRunFacts() map[string]interface{} {

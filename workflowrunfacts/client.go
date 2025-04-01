@@ -31,7 +31,11 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
-// Get workflow run facts details inside a workflow. For more information, see this [WorkflowRunFact Discussion](https://github.com/StackGuardian/feedback/discussions/109).
+// Get workflow run facts details inside a workflow.
+//
+// This endpoint returns a signed URL which can be used to get the full contents of the workflow run facts. This signed URL is valid for 60 minutes. After expiration, you can request a new signed URL by calling this endpoint again.
+//
+// For more information, please refer to [this discussion](https://github.com/StackGuardian/feedback/discussions/109).
 func (c *Client) ReadWorkflowRunFacts(
 	ctx context.Context,
 	org string,

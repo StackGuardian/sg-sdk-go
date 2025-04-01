@@ -33,7 +33,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
-// Read all subscribed templates by an organization
+// Read all the templates that are subscribed by an organization.
 func (c *Client) ReadSubscription(
 	ctx context.Context,
 	org string,
@@ -82,7 +82,7 @@ func (c *Client) ReadSubscription(
 	return response, nil
 }
 
-// Create Template and its first revision if the template does not exist, otherwise create a new revision of the template
+// Create a new revision of a template or create the initial template if it doesn't exist.
 func (c *Client) CreateTemplateRevision(
 	ctx context.Context,
 	request *sgsdkgo.CreateTemplateRequest,
@@ -99,7 +99,7 @@ func (c *Client) CreateTemplateRevision(
 		c.header.Clone(),
 		options.ToHeader(),
 	)
-	headers.Set("Content-Type", "application/x-www-form-urlencoded")
+	headers.Set("Content-Type", "application/json")
 
 	var response *sgsdkgo.CreateTemplateResponse
 	if err := c.caller.Call(
@@ -121,7 +121,7 @@ func (c *Client) CreateTemplateRevision(
 	return response, nil
 }
 
-// Read parent template or its revision
+// Retrieve a specific template revision or the parent template.
 func (c *Client) ReadTemplateRevision(
 	ctx context.Context,
 	org string,
@@ -167,7 +167,7 @@ func (c *Client) ReadTemplateRevision(
 	return response, nil
 }
 
-// Delete a template revision. A template parent is automatically deleted when all revisions are deleted.
+// Delete a specific template revision. If all revisions are deleted, the parent template is also removed.
 func (c *Client) DeleteTemplateRevision(
 	ctx context.Context,
 	org string,
@@ -211,7 +211,7 @@ func (c *Client) DeleteTemplateRevision(
 	return nil
 }
 
-// Update parent template or its revision
+// Update an existing parent template or its revision with new configuration.
 func (c *Client) UpdateTemplateRevision(
 	ctx context.Context,
 	org string,
@@ -259,7 +259,7 @@ func (c *Client) UpdateTemplateRevision(
 	return response, nil
 }
 
-// List all Templates and its revisions created or subscribed by the Organization
+// List all Templates and it's revisions created or subscribed by the Organization.
 func (c *Client) ListAllTemplates(
 	ctx context.Context,
 	// Type of the template
@@ -309,7 +309,7 @@ func (c *Client) ListAllTemplates(
 	return response, nil
 }
 
-// Read IAC Group's IAC Template
+// Retrieve an IAC Group's IAC Template configuration.
 func (c *Client) ReadIacGroupsIacTemplate(
 	ctx context.Context,
 	org string,

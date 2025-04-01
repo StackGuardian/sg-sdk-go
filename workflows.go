@@ -45,6 +45,7 @@ type Workflow struct {
 	AnsibleOutputs              *core.Optional[map[string]interface{}]      `json:"AnsibleOutputs,omitempty" url:"-"`
 	AnsiblePlan                 *core.Optional[map[string]interface{}]      `json:"AnsiblePlan,omitempty" url:"-"`
 	AnsibleDrift                *core.Optional[map[string]interface{}]      `json:"AnsibleDrift,omitempty" url:"-"`
+	BicepResources              *core.Optional[map[string]interface{}]      `json:"BicepResources,omitempty" url:"-"`
 	SgCustomWorkflowRunFacts    *core.Optional[map[string]interface{}]      `json:"SGCustomWorkflowRunFacts,omitempty" url:"-"`
 	// Contextual tags to give context to your tags
 	ContextTags *core.Optional[map[string]*string] `json:"ContextTags,omitempty" url:"-"`

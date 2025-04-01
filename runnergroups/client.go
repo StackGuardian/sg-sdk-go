@@ -32,7 +32,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
-// Create New Runner Group
+// Creates a new Runner Group in the specified organization.
 func (c *Client) CreateNewRunnerGroup(
 	ctx context.Context,
 	org string,
@@ -75,7 +75,7 @@ func (c *Client) CreateNewRunnerGroup(
 	return response, nil
 }
 
-// Read Runner Group
+// Retrieves details of an existing runner group.
 func (c *Client) ReadRunnerGroup(
 	ctx context.Context,
 	org string,
@@ -125,7 +125,7 @@ func (c *Client) ReadRunnerGroup(
 	return response, nil
 }
 
-// Delete Runner Group
+// Delete an existing Runner Group.
 func (c *Client) DeleteRunnerGroup(
 	ctx context.Context,
 	org string,
@@ -167,7 +167,7 @@ func (c *Client) DeleteRunnerGroup(
 	return response, nil
 }
 
-// Update Runner Group
+// Update an existing Runner Group.
 func (c *Client) UpdateRunnerGroup(
 	ctx context.Context,
 	org string,
@@ -212,7 +212,7 @@ func (c *Client) UpdateRunnerGroup(
 	return response, nil
 }
 
-// Deregister Runner
+// Deregisters the runner from the specified runner group.
 func (c *Client) DeregisterRunner(
 	ctx context.Context,
 	org string,
@@ -255,7 +255,7 @@ func (c *Client) DeregisterRunner(
 	return nil
 }
 
-// Update Runner State
+// Updates the state of a runner in the specified runner group.
 func (c *Client) UpdateRunnerState(
 	ctx context.Context,
 	org string,

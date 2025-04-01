@@ -508,6 +508,82 @@ func (l *ListallTemplatesResponse) String() string {
 	return fmt.Sprintf("%#v", l)
 }
 
+// * `TERRAFORM` - TERRAFORM
+// * `OPENTOFU` - OPENTOFU
+// * `ANSIBLE_PLAYBOOK` - ANSIBLE_PLAYBOOK
+// * `HELM` - HELM
+// * `KUBECTL` - KUBECTL
+// * `CLOUDFORMATION` - CLOUDFORMATION
+// * `DOCKER_IMAGE` - DOCKER_IMAGE
+// * `OPA_REGO` - OPA_REGO
+// * `SG_POLICY_FRAMEWORK` - SG_POLICY_FRAMEWORK
+// * `SG_INTERNAL_P1` - SG_INTERNAL_P1
+// * `SG_INTERNAL_P2` - SG_INTERNAL_P2
+// * `CHECKOV` - CHECKOV
+// * `STEAMPIPE` - STEAMPIPE
+// * `MIXED` - MIXED
+// * `CUSTOM` - CUSTOM
+type SourceConfigKind495Enum string
+
+const (
+	SourceConfigKind495EnumTerraform         SourceConfigKind495Enum = "TERRAFORM"
+	SourceConfigKind495EnumOpentofu          SourceConfigKind495Enum = "OPENTOFU"
+	SourceConfigKind495EnumAnsiblePlaybook   SourceConfigKind495Enum = "ANSIBLE_PLAYBOOK"
+	SourceConfigKind495EnumHelm              SourceConfigKind495Enum = "HELM"
+	SourceConfigKind495EnumKubectl           SourceConfigKind495Enum = "KUBECTL"
+	SourceConfigKind495EnumCloudformation    SourceConfigKind495Enum = "CLOUDFORMATION"
+	SourceConfigKind495EnumDockerImage       SourceConfigKind495Enum = "DOCKER_IMAGE"
+	SourceConfigKind495EnumOpaRego           SourceConfigKind495Enum = "OPA_REGO"
+	SourceConfigKind495EnumSgPolicyFramework SourceConfigKind495Enum = "SG_POLICY_FRAMEWORK"
+	SourceConfigKind495EnumSgInternalP1      SourceConfigKind495Enum = "SG_INTERNAL_P1"
+	SourceConfigKind495EnumSgInternalP2      SourceConfigKind495Enum = "SG_INTERNAL_P2"
+	SourceConfigKind495EnumCheckov           SourceConfigKind495Enum = "CHECKOV"
+	SourceConfigKind495EnumSteampipe         SourceConfigKind495Enum = "STEAMPIPE"
+	SourceConfigKind495EnumMixed             SourceConfigKind495Enum = "MIXED"
+	SourceConfigKind495EnumCustom            SourceConfigKind495Enum = "CUSTOM"
+)
+
+func NewSourceConfigKind495EnumFromString(s string) (SourceConfigKind495Enum, error) {
+	switch s {
+	case "TERRAFORM":
+		return SourceConfigKind495EnumTerraform, nil
+	case "OPENTOFU":
+		return SourceConfigKind495EnumOpentofu, nil
+	case "ANSIBLE_PLAYBOOK":
+		return SourceConfigKind495EnumAnsiblePlaybook, nil
+	case "HELM":
+		return SourceConfigKind495EnumHelm, nil
+	case "KUBECTL":
+		return SourceConfigKind495EnumKubectl, nil
+	case "CLOUDFORMATION":
+		return SourceConfigKind495EnumCloudformation, nil
+	case "DOCKER_IMAGE":
+		return SourceConfigKind495EnumDockerImage, nil
+	case "OPA_REGO":
+		return SourceConfigKind495EnumOpaRego, nil
+	case "SG_POLICY_FRAMEWORK":
+		return SourceConfigKind495EnumSgPolicyFramework, nil
+	case "SG_INTERNAL_P1":
+		return SourceConfigKind495EnumSgInternalP1, nil
+	case "SG_INTERNAL_P2":
+		return SourceConfigKind495EnumSgInternalP2, nil
+	case "CHECKOV":
+		return SourceConfigKind495EnumCheckov, nil
+	case "STEAMPIPE":
+		return SourceConfigKind495EnumSteampipe, nil
+	case "MIXED":
+		return SourceConfigKind495EnumMixed, nil
+	case "CUSTOM":
+		return SourceConfigKind495EnumCustom, nil
+	}
+	var t SourceConfigKind495Enum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (s SourceConfigKind495Enum) Ptr() *SourceConfigKind495Enum {
+	return &s
+}
+
 type StackCreatePatchResponse struct {
 	Msg  *string            `json:"msg,omitempty" url:"msg,omitempty"`
 	Data *StackDataResponse `json:"data,omitempty" url:"data,omitempty"`
@@ -1051,21 +1127,21 @@ func (s *Subscription) String() string {
 }
 
 type Template struct {
-	TemplateName     string                       `json:"TemplateName" url:"TemplateName"`
-	TemplateId       *string                      `json:"TemplateId,omitempty" url:"TemplateId,omitempty"`
-	OwnerOrg         string                       `json:"OwnerOrg" url:"OwnerOrg"`
-	SharedOrgsList   []string                     `json:"SharedOrgsList,omitempty" url:"SharedOrgsList,omitempty"`
-	Templates        []*TemplateWorkflow          `json:"Templates,omitempty" url:"Templates,omitempty"`
-	Actions          map[string]*Actions          `json:"Actions,omitempty" url:"Actions,omitempty"`
-	ShortDescription *string                      `json:"ShortDescription,omitempty" url:"ShortDescription,omitempty"`
-	LongDescription  *string                      `json:"LongDescription,omitempty" url:"LongDescription,omitempty"`
-	Deprecation      *Deprecation                 `json:"Deprecation,omitempty" url:"Deprecation,omitempty"`
-	SourceConfigKind TemplateSourceConfigKindEnum `json:"SourceConfigKind" url:"SourceConfigKind"`
-	InputSchemas     []*InputSchemas              `json:"InputSchemas,omitempty" url:"InputSchemas,omitempty"`
-	RuntimeSource    *RuntimeSource               `json:"RuntimeSource,omitempty" url:"RuntimeSource,omitempty"`
-	GitHubComSync    map[string]interface{}       `json:"GitHubComSync,omitempty" url:"GitHubComSync,omitempty"`
-	VcsTriggers      *VcsTriggers                 `json:"VCSTriggers,omitempty" url:"VCSTriggers,omitempty"`
-	Tags             []string                     `json:"Tags,omitempty" url:"Tags,omitempty"`
+	TemplateName     string                  `json:"TemplateName" url:"TemplateName"`
+	TemplateId       *string                 `json:"TemplateId,omitempty" url:"TemplateId,omitempty"`
+	OwnerOrg         string                  `json:"OwnerOrg" url:"OwnerOrg"`
+	SharedOrgsList   []string                `json:"SharedOrgsList,omitempty" url:"SharedOrgsList,omitempty"`
+	Templates        []*TemplateWorkflow     `json:"Templates,omitempty" url:"Templates,omitempty"`
+	Actions          map[string]*Actions     `json:"Actions,omitempty" url:"Actions,omitempty"`
+	ShortDescription *string                 `json:"ShortDescription,omitempty" url:"ShortDescription,omitempty"`
+	LongDescription  *string                 `json:"LongDescription,omitempty" url:"LongDescription,omitempty"`
+	Deprecation      *Deprecation            `json:"Deprecation,omitempty" url:"Deprecation,omitempty"`
+	SourceConfigKind SourceConfigKind495Enum `json:"SourceConfigKind" url:"SourceConfigKind"`
+	InputSchemas     []*InputSchemas         `json:"InputSchemas,omitempty" url:"InputSchemas,omitempty"`
+	RuntimeSource    *RuntimeSource          `json:"RuntimeSource,omitempty" url:"RuntimeSource,omitempty"`
+	GitHubComSync    map[string]interface{}  `json:"GitHubComSync,omitempty" url:"GitHubComSync,omitempty"`
+	VcsTriggers      *VcsTriggers            `json:"VCSTriggers,omitempty" url:"VCSTriggers,omitempty"`
+	Tags             []string                `json:"Tags,omitempty" url:"Tags,omitempty"`
 	// Contextual tags to give context to your tags
 	ContextTags           map[string]*string     `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
 	IsActive              *IsArchiveEnum         `json:"IsActive,omitempty" url:"IsActive,omitempty"`
@@ -1140,7 +1216,7 @@ func (t *Template) GetDeprecation() *Deprecation {
 	return t.Deprecation
 }
 
-func (t *Template) GetSourceConfigKind() TemplateSourceConfigKindEnum {
+func (t *Template) GetSourceConfigKind() SourceConfigKind495Enum {
 	if t == nil {
 		return ""
 	}
@@ -1349,103 +1425,27 @@ func (t *TemplateGetResponse) String() string {
 	return fmt.Sprintf("%#v", t)
 }
 
-// * `TERRAFORM` - TERRAFORM
-// * `OPENTOFU` - OPENTOFU
-// * `ANSIBLE_PLAYBOOK` - ANSIBLE_PLAYBOOK
-// * `HELM` - HELM
-// * `KUBECTL` - KUBECTL
-// * `CLOUDFORMATION` - CLOUDFORMATION
-// * `DOCKER_IMAGE` - DOCKER_IMAGE
-// * `OPA_REGO` - OPA_REGO
-// * `SG_POLICY_FRAMEWORK` - SG_POLICY_FRAMEWORK
-// * `SG_INTERNAL_P1` - SG_INTERNAL_P1
-// * `SG_INTERNAL_P2` - SG_INTERNAL_P2
-// * `CHECKOV` - CHECKOV
-// * `STEAMPIPE` - STEAMPIPE
-// * `MIXED` - MIXED
-// * `CUSTOM` - CUSTOM
-type TemplateSourceConfigKindEnum string
-
-const (
-	TemplateSourceConfigKindEnumTerraform         TemplateSourceConfigKindEnum = "TERRAFORM"
-	TemplateSourceConfigKindEnumOpentofu          TemplateSourceConfigKindEnum = "OPENTOFU"
-	TemplateSourceConfigKindEnumAnsiblePlaybook   TemplateSourceConfigKindEnum = "ANSIBLE_PLAYBOOK"
-	TemplateSourceConfigKindEnumHelm              TemplateSourceConfigKindEnum = "HELM"
-	TemplateSourceConfigKindEnumKubectl           TemplateSourceConfigKindEnum = "KUBECTL"
-	TemplateSourceConfigKindEnumCloudformation    TemplateSourceConfigKindEnum = "CLOUDFORMATION"
-	TemplateSourceConfigKindEnumDockerImage       TemplateSourceConfigKindEnum = "DOCKER_IMAGE"
-	TemplateSourceConfigKindEnumOpaRego           TemplateSourceConfigKindEnum = "OPA_REGO"
-	TemplateSourceConfigKindEnumSgPolicyFramework TemplateSourceConfigKindEnum = "SG_POLICY_FRAMEWORK"
-	TemplateSourceConfigKindEnumSgInternalP1      TemplateSourceConfigKindEnum = "SG_INTERNAL_P1"
-	TemplateSourceConfigKindEnumSgInternalP2      TemplateSourceConfigKindEnum = "SG_INTERNAL_P2"
-	TemplateSourceConfigKindEnumCheckov           TemplateSourceConfigKindEnum = "CHECKOV"
-	TemplateSourceConfigKindEnumSteampipe         TemplateSourceConfigKindEnum = "STEAMPIPE"
-	TemplateSourceConfigKindEnumMixed             TemplateSourceConfigKindEnum = "MIXED"
-	TemplateSourceConfigKindEnumCustom            TemplateSourceConfigKindEnum = "CUSTOM"
-)
-
-func NewTemplateSourceConfigKindEnumFromString(s string) (TemplateSourceConfigKindEnum, error) {
-	switch s {
-	case "TERRAFORM":
-		return TemplateSourceConfigKindEnumTerraform, nil
-	case "OPENTOFU":
-		return TemplateSourceConfigKindEnumOpentofu, nil
-	case "ANSIBLE_PLAYBOOK":
-		return TemplateSourceConfigKindEnumAnsiblePlaybook, nil
-	case "HELM":
-		return TemplateSourceConfigKindEnumHelm, nil
-	case "KUBECTL":
-		return TemplateSourceConfigKindEnumKubectl, nil
-	case "CLOUDFORMATION":
-		return TemplateSourceConfigKindEnumCloudformation, nil
-	case "DOCKER_IMAGE":
-		return TemplateSourceConfigKindEnumDockerImage, nil
-	case "OPA_REGO":
-		return TemplateSourceConfigKindEnumOpaRego, nil
-	case "SG_POLICY_FRAMEWORK":
-		return TemplateSourceConfigKindEnumSgPolicyFramework, nil
-	case "SG_INTERNAL_P1":
-		return TemplateSourceConfigKindEnumSgInternalP1, nil
-	case "SG_INTERNAL_P2":
-		return TemplateSourceConfigKindEnumSgInternalP2, nil
-	case "CHECKOV":
-		return TemplateSourceConfigKindEnumCheckov, nil
-	case "STEAMPIPE":
-		return TemplateSourceConfigKindEnumSteampipe, nil
-	case "MIXED":
-		return TemplateSourceConfigKindEnumMixed, nil
-	case "CUSTOM":
-		return TemplateSourceConfigKindEnumCustom, nil
-	}
-	var t TemplateSourceConfigKindEnum
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (t TemplateSourceConfigKindEnum) Ptr() *TemplateSourceConfigKindEnum {
-	return &t
-}
-
 type VcsTriggers struct {
-	Type                    VcsTriggersTypeEnum        `json:"type" url:"type"`
-	GlHookId                *string                    `json:"gl_hook_id,omitempty" url:"gl_hook_id,omitempty"`
-	GhWebhookUrl            *string                    `json:"gh_webhook_url,omitempty" url:"gh_webhook_url,omitempty"`
-	GithubAppInstallationId *int                       `json:"github_app_installation_id,omitempty" url:"github_app_installation_id,omitempty"`
-	TrackedBranch           *string                    `json:"tracked_branch,omitempty" url:"tracked_branch,omitempty"`
-	PostComments            *bool                      `json:"post_comments,omitempty" url:"post_comments,omitempty"`
-	ApprovalPreApply        *bool                      `json:"approval_pre_apply,omitempty" url:"approval_pre_apply,omitempty"`
-	GhCheck                 *bool                      `json:"gh_check,omitempty" url:"gh_check,omitempty"`
-	GlPipeline              *bool                      `json:"gl_pipeline,omitempty" url:"gl_pipeline,omitempty"`
-	PlanOnly                *bool                      `json:"plan_only,omitempty" url:"plan_only,omitempty"`
-	FileTriggersEnabled     *bool                      `json:"file_triggers_enabled,omitempty" url:"file_triggers_enabled,omitempty"`
-	FileTriggerPatterns     []string                   `json:"file_trigger_patterns,omitempty" url:"file_trigger_patterns,omitempty"`
-	FileTriggerPrefixes     []string                   `json:"file_trigger_prefixes,omitempty" url:"file_trigger_prefixes,omitempty"`
-	TagsRegex               *string                    `json:"tags_regex,omitempty" url:"tags_regex,omitempty"`
-	GenerateNoCodeSchema    *bool                      `json:"generate_no_code_schema,omitempty" url:"generate_no_code_schema,omitempty"`
-	AllPullRequests         map[string]map[string]bool `json:"all_pull_requests,omitempty" url:"all_pull_requests,omitempty"`
-	PullRequestOpened       map[string]map[string]bool `json:"pull_request_opened,omitempty" url:"pull_request_opened,omitempty"`
-	PullRequestModified     map[string]map[string]bool `json:"pull_request_modified,omitempty" url:"pull_request_modified,omitempty"`
-	CreateTag               map[string]map[string]bool `json:"create_tag,omitempty" url:"create_tag,omitempty"`
-	Push                    map[string]map[string]bool `json:"push,omitempty" url:"push,omitempty"`
+	Type                    VcsTriggersTypeEnum `json:"type" url:"type"`
+	GlHookId                *string             `json:"gl_hook_id,omitempty" url:"gl_hook_id,omitempty"`
+	GhWebhookUrl            *string             `json:"gh_webhook_url,omitempty" url:"gh_webhook_url,omitempty"`
+	GithubAppInstallationId *int                `json:"github_app_installation_id,omitempty" url:"github_app_installation_id,omitempty"`
+	TrackedBranch           *string             `json:"tracked_branch,omitempty" url:"tracked_branch,omitempty"`
+	PostComments            *bool               `json:"post_comments,omitempty" url:"post_comments,omitempty"`
+	ApprovalPreApply        *bool               `json:"approval_pre_apply,omitempty" url:"approval_pre_apply,omitempty"`
+	GhCheck                 *bool               `json:"gh_check,omitempty" url:"gh_check,omitempty"`
+	GlPipeline              *bool               `json:"gl_pipeline,omitempty" url:"gl_pipeline,omitempty"`
+	PlanOnly                *bool               `json:"plan_only,omitempty" url:"plan_only,omitempty"`
+	FileTriggersEnabled     *bool               `json:"file_triggers_enabled,omitempty" url:"file_triggers_enabled,omitempty"`
+	// For example: ["*.tf", "*.hcl"]
+	FileTriggerPatterns  []string                   `json:"file_trigger_patterns,omitempty" url:"file_trigger_patterns,omitempty"`
+	TagsRegex            *string                    `json:"tags_regex,omitempty" url:"tags_regex,omitempty"`
+	GenerateNoCodeSchema *bool                      `json:"generate_no_code_schema,omitempty" url:"generate_no_code_schema,omitempty"`
+	AllPullRequests      map[string]map[string]bool `json:"all_pull_requests,omitempty" url:"all_pull_requests,omitempty"`
+	PullRequestOpened    map[string]map[string]bool `json:"pull_request_opened,omitempty" url:"pull_request_opened,omitempty"`
+	PullRequestModified  map[string]map[string]bool `json:"pull_request_modified,omitempty" url:"pull_request_modified,omitempty"`
+	CreateTag            map[string]map[string]bool `json:"create_tag,omitempty" url:"create_tag,omitempty"`
+	Push                 map[string]map[string]bool `json:"push,omitempty" url:"push,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -1533,13 +1533,6 @@ func (v *VcsTriggers) GetFileTriggerPatterns() []string {
 		return nil
 	}
 	return v.FileTriggerPatterns
-}
-
-func (v *VcsTriggers) GetFileTriggerPrefixes() []string {
-	if v == nil {
-		return nil
-	}
-	return v.FileTriggerPrefixes
 }
 
 func (v *VcsTriggers) GetTagsRegex() *string {
@@ -1698,21 +1691,22 @@ type WorkflowTemplate struct {
 	AnsibleOutputs              map[string]interface{}      `json:"AnsibleOutputs,omitempty" url:"AnsibleOutputs,omitempty"`
 	AnsiblePlan                 map[string]interface{}      `json:"AnsiblePlan,omitempty" url:"AnsiblePlan,omitempty"`
 	AnsibleDrift                map[string]interface{}      `json:"AnsibleDrift,omitempty" url:"AnsibleDrift,omitempty"`
+	BicepResources              map[string]interface{}      `json:"BicepResources,omitempty" url:"BicepResources,omitempty"`
 	SgCustomWorkflowRunFacts    map[string]interface{}      `json:"SGCustomWorkflowRunFacts,omitempty" url:"SGCustomWorkflowRunFacts,omitempty"`
 	// Contextual tags to give context to your tags
-	ContextTags           map[string]*string                   `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
-	TemplateName          string                               `json:"TemplateName" url:"TemplateName"`
-	OwnerOrg              string                               `json:"OwnerOrg" url:"OwnerOrg"`
-	SharedOrgsList        []string                             `json:"SharedOrgsList,omitempty" url:"SharedOrgsList,omitempty"`
-	ShortDescription      *string                              `json:"ShortDescription,omitempty" url:"ShortDescription,omitempty"`
-	LongDescription       *string                              `json:"LongDescription,omitempty" url:"LongDescription,omitempty"`
-	Deprecation           *Deprecation                         `json:"Deprecation,omitempty" url:"Deprecation,omitempty"`
-	SourceConfigKind      WorkflowTemplateSourceConfigKindEnum `json:"SourceConfigKind" url:"SourceConfigKind"`
-	InputSchemas          []*InputSchemas                      `json:"InputSchemas,omitempty" url:"InputSchemas,omitempty"`
-	RuntimeSource         *RuntimeSource                       `json:"RuntimeSource,omitempty" url:"RuntimeSource,omitempty"`
-	VcsTriggers           *VcsTriggers                         `json:"VCSTriggers,omitempty" url:"VCSTriggers,omitempty"`
-	IsPublic              *IsArchiveEnum                       `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
-	TerraformIntelligence map[string]interface{}               `json:"TerraformIntelligence,omitempty" url:"TerraformIntelligence,omitempty"`
+	ContextTags           map[string]*string      `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	TemplateName          string                  `json:"TemplateName" url:"TemplateName"`
+	OwnerOrg              string                  `json:"OwnerOrg" url:"OwnerOrg"`
+	SharedOrgsList        []string                `json:"SharedOrgsList,omitempty" url:"SharedOrgsList,omitempty"`
+	ShortDescription      *string                 `json:"ShortDescription,omitempty" url:"ShortDescription,omitempty"`
+	LongDescription       *string                 `json:"LongDescription,omitempty" url:"LongDescription,omitempty"`
+	Deprecation           *Deprecation            `json:"Deprecation,omitempty" url:"Deprecation,omitempty"`
+	SourceConfigKind      SourceConfigKind495Enum `json:"SourceConfigKind" url:"SourceConfigKind"`
+	InputSchemas          []*InputSchemas         `json:"InputSchemas,omitempty" url:"InputSchemas,omitempty"`
+	RuntimeSource         *RuntimeSource          `json:"RuntimeSource,omitempty" url:"RuntimeSource,omitempty"`
+	VcsTriggers           *VcsTriggers            `json:"VCSTriggers,omitempty" url:"VCSTriggers,omitempty"`
+	IsPublic              *IsArchiveEnum          `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
+	TerraformIntelligence map[string]interface{}  `json:"TerraformIntelligence,omitempty" url:"TerraformIntelligence,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -1956,6 +1950,13 @@ func (w *WorkflowTemplate) GetAnsibleDrift() map[string]interface{} {
 	return w.AnsibleDrift
 }
 
+func (w *WorkflowTemplate) GetBicepResources() map[string]interface{} {
+	if w == nil {
+		return nil
+	}
+	return w.BicepResources
+}
+
 func (w *WorkflowTemplate) GetSgCustomWorkflowRunFacts() map[string]interface{} {
 	if w == nil {
 		return nil
@@ -2012,7 +2013,7 @@ func (w *WorkflowTemplate) GetDeprecation() *Deprecation {
 	return w.Deprecation
 }
 
-func (w *WorkflowTemplate) GetSourceConfigKind() WorkflowTemplateSourceConfigKindEnum {
+func (w *WorkflowTemplate) GetSourceConfigKind() SourceConfigKind495Enum {
 	if w == nil {
 		return ""
 	}
@@ -2084,78 +2085,6 @@ func (w *WorkflowTemplate) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", w)
-}
-
-// * `TERRAFORM` - TERRAFORM
-// * `ANSIBLE_PLAYBOOK` - ANSIBLE_PLAYBOOK
-// * `HELM` - HELM
-// * `KUBECTL` - KUBECTL
-// * `CLOUDFORMATION` - CLOUDFORMATION
-// * `DOCKER_IMAGE` - DOCKER_IMAGE
-// * `OPA_REGO` - OPA_REGO
-// * `SG_POLICY_FRAMEWORK` - SG_POLICY_FRAMEWORK
-// * `SG_INTERNAL_P1` - SG_INTERNAL_P1
-// * `SG_INTERNAL_P2` - SG_INTERNAL_P2
-// * `CHECKOV` - CHECKOV
-// * `STEAMPIPE` - STEAMPIPE
-// * `MIXED` - MIXED
-// * `CUSTOM` - CUSTOM
-type WorkflowTemplateSourceConfigKindEnum string
-
-const (
-	WorkflowTemplateSourceConfigKindEnumTerraform         WorkflowTemplateSourceConfigKindEnum = "TERRAFORM"
-	WorkflowTemplateSourceConfigKindEnumAnsiblePlaybook   WorkflowTemplateSourceConfigKindEnum = "ANSIBLE_PLAYBOOK"
-	WorkflowTemplateSourceConfigKindEnumHelm              WorkflowTemplateSourceConfigKindEnum = "HELM"
-	WorkflowTemplateSourceConfigKindEnumKubectl           WorkflowTemplateSourceConfigKindEnum = "KUBECTL"
-	WorkflowTemplateSourceConfigKindEnumCloudformation    WorkflowTemplateSourceConfigKindEnum = "CLOUDFORMATION"
-	WorkflowTemplateSourceConfigKindEnumDockerImage       WorkflowTemplateSourceConfigKindEnum = "DOCKER_IMAGE"
-	WorkflowTemplateSourceConfigKindEnumOpaRego           WorkflowTemplateSourceConfigKindEnum = "OPA_REGO"
-	WorkflowTemplateSourceConfigKindEnumSgPolicyFramework WorkflowTemplateSourceConfigKindEnum = "SG_POLICY_FRAMEWORK"
-	WorkflowTemplateSourceConfigKindEnumSgInternalP1      WorkflowTemplateSourceConfigKindEnum = "SG_INTERNAL_P1"
-	WorkflowTemplateSourceConfigKindEnumSgInternalP2      WorkflowTemplateSourceConfigKindEnum = "SG_INTERNAL_P2"
-	WorkflowTemplateSourceConfigKindEnumCheckov           WorkflowTemplateSourceConfigKindEnum = "CHECKOV"
-	WorkflowTemplateSourceConfigKindEnumSteampipe         WorkflowTemplateSourceConfigKindEnum = "STEAMPIPE"
-	WorkflowTemplateSourceConfigKindEnumMixed             WorkflowTemplateSourceConfigKindEnum = "MIXED"
-	WorkflowTemplateSourceConfigKindEnumCustom            WorkflowTemplateSourceConfigKindEnum = "CUSTOM"
-)
-
-func NewWorkflowTemplateSourceConfigKindEnumFromString(s string) (WorkflowTemplateSourceConfigKindEnum, error) {
-	switch s {
-	case "TERRAFORM":
-		return WorkflowTemplateSourceConfigKindEnumTerraform, nil
-	case "ANSIBLE_PLAYBOOK":
-		return WorkflowTemplateSourceConfigKindEnumAnsiblePlaybook, nil
-	case "HELM":
-		return WorkflowTemplateSourceConfigKindEnumHelm, nil
-	case "KUBECTL":
-		return WorkflowTemplateSourceConfigKindEnumKubectl, nil
-	case "CLOUDFORMATION":
-		return WorkflowTemplateSourceConfigKindEnumCloudformation, nil
-	case "DOCKER_IMAGE":
-		return WorkflowTemplateSourceConfigKindEnumDockerImage, nil
-	case "OPA_REGO":
-		return WorkflowTemplateSourceConfigKindEnumOpaRego, nil
-	case "SG_POLICY_FRAMEWORK":
-		return WorkflowTemplateSourceConfigKindEnumSgPolicyFramework, nil
-	case "SG_INTERNAL_P1":
-		return WorkflowTemplateSourceConfigKindEnumSgInternalP1, nil
-	case "SG_INTERNAL_P2":
-		return WorkflowTemplateSourceConfigKindEnumSgInternalP2, nil
-	case "CHECKOV":
-		return WorkflowTemplateSourceConfigKindEnumCheckov, nil
-	case "STEAMPIPE":
-		return WorkflowTemplateSourceConfigKindEnumSteampipe, nil
-	case "MIXED":
-		return WorkflowTemplateSourceConfigKindEnumMixed, nil
-	case "CUSTOM":
-		return WorkflowTemplateSourceConfigKindEnumCustom, nil
-	}
-	var t WorkflowTemplateSourceConfigKindEnum
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (w WorkflowTemplateSourceConfigKindEnum) Ptr() *WorkflowTemplateSourceConfigKindEnum {
-	return &w
 }
 
 type ListAllTemplatesRequestTemplateType string

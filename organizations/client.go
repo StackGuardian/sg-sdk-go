@@ -32,7 +32,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
-// Read Organization
+// Retrieve the details of the Organization.
 func (c *Client) ReadOrganization(
 	ctx context.Context,
 	org string,

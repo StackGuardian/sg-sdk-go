@@ -5,6 +5,7 @@ package client
 import (
 	http "net/http"
 
+	accessmanagement "github.com/StackGuardian/sg-sdk-go/accessmanagement"
 	benchmarkreports "github.com/StackGuardian/sg-sdk-go/benchmarkreports"
 	connectors "github.com/StackGuardian/sg-sdk-go/connectors"
 	core "github.com/StackGuardian/sg-sdk-go/core"
@@ -13,12 +14,13 @@ import (
 	organizations "github.com/StackGuardian/sg-sdk-go/organizations"
 	policies "github.com/StackGuardian/sg-sdk-go/policies"
 	runnergroups "github.com/StackGuardian/sg-sdk-go/runnergroups"
+	secrets "github.com/StackGuardian/sg-sdk-go/secrets"
+	stackruns "github.com/StackGuardian/sg-sdk-go/stackruns"
 	stacks "github.com/StackGuardian/sg-sdk-go/stacks"
 	stackworkflowrunfacts "github.com/StackGuardian/sg-sdk-go/stackworkflowrunfacts"
 	stackworkflowruns "github.com/StackGuardian/sg-sdk-go/stackworkflowruns"
 	stackworkflows "github.com/StackGuardian/sg-sdk-go/stackworkflows"
 	templates "github.com/StackGuardian/sg-sdk-go/templates"
-	usersroles "github.com/StackGuardian/sg-sdk-go/usersroles"
 	workflowgroups "github.com/StackGuardian/sg-sdk-go/workflowgroups"
 	workflowrunfacts "github.com/StackGuardian/sg-sdk-go/workflowrunfacts"
 	workflowruns "github.com/StackGuardian/sg-sdk-go/workflowruns"
@@ -31,16 +33,18 @@ type Client struct {
 	header  http.Header
 
 	Organizations         *organizations.Client
-	UsersRoles            *usersroles.Client
+	AccessManagement      *accessmanagement.Client
 	Connectors            *connectors.Client
 	Policies              *policies.Client
 	BenchmarkReports      *benchmarkreports.Client
 	RunnerGroups          *runnergroups.Client
+	Secrets               *secrets.Client
 	Templates             *templates.Client
 	WorkflowGroups        *workflowgroups.Client
 	Stacks                *stacks.Client
-	StackWorkflowRuns     *stackworkflowruns.Client
+	StackRuns             *stackruns.Client
 	StackWorkflows        *stackworkflows.Client
+	StackWorkflowRuns     *stackworkflowruns.Client
 	StackWorkflowRunFacts *stackworkflowrunfacts.Client
 	Workflows             *workflows.Client
 	WorkflowRuns          *workflowruns.Client
@@ -59,16 +63,18 @@ func NewClient(opts ...option.RequestOption) *Client {
 		),
 		header:                options.ToHeader(),
 		Organizations:         organizations.NewClient(opts...),
-		UsersRoles:            usersroles.NewClient(opts...),
+		AccessManagement:      accessmanagement.NewClient(opts...),
 		Connectors:            connectors.NewClient(opts...),
 		Policies:              policies.NewClient(opts...),
 		BenchmarkReports:      benchmarkreports.NewClient(opts...),
 		RunnerGroups:          runnergroups.NewClient(opts...),
+		Secrets:               secrets.NewClient(opts...),
 		Templates:             templates.NewClient(opts...),
 		WorkflowGroups:        workflowgroups.NewClient(opts...),
 		Stacks:                stacks.NewClient(opts...),
-		StackWorkflowRuns:     stackworkflowruns.NewClient(opts...),
+		StackRuns:             stackruns.NewClient(opts...),
 		StackWorkflows:        stackworkflows.NewClient(opts...),
+		StackWorkflowRuns:     stackworkflowruns.NewClient(opts...),
 		StackWorkflowRunFacts: stackworkflowrunfacts.NewClient(opts...),
 		Workflows:             workflows.NewClient(opts...),
 		WorkflowRuns:          workflowruns.NewClient(opts...),

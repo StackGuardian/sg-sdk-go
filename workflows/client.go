@@ -32,7 +32,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
-// Create Workflow
+// Create a new workflow.
 func (c *Client) CreateWorkflow(
 	ctx context.Context,
 	org string,
@@ -77,7 +77,7 @@ func (c *Client) CreateWorkflow(
 	return response, nil
 }
 
-// Read Workflow
+// Retrieve the details of an existing Workflow.
 func (c *Client) ReadWorkflow(
 	ctx context.Context,
 	org string,
@@ -121,7 +121,7 @@ func (c *Client) ReadWorkflow(
 	return response, nil
 }
 
-// Delete Workflow
+// Delete an existing workflow.
 func (c *Client) DeleteWorkflow(
 	ctx context.Context,
 	org string,
@@ -165,7 +165,7 @@ func (c *Client) DeleteWorkflow(
 	return response, nil
 }
 
-// Update Workflow
+// Update an existing workflow's configuration
 func (c *Client) UpdateWorkflow(
 	ctx context.Context,
 	org string,
@@ -212,7 +212,7 @@ func (c *Client) UpdateWorkflow(
 	return response, nil
 }
 
-// List all workflow artifacts
+// Retrieve a list of all artifacts for a workflow.
 func (c *Client) ListAllWorkflowArtifacts(
 	ctx context.Context,
 	org string,
@@ -256,7 +256,7 @@ func (c *Client) ListAllWorkflowArtifacts(
 	return response, nil
 }
 
-// Workflow Outputs
+// Retrieve the outputs for a workflow.
 func (c *Client) Outputs(
 	ctx context.Context,
 	org string,
@@ -300,7 +300,7 @@ func (c *Client) Outputs(
 	return response, nil
 }
 
-// List all Workflows
+// Retrieve a list of all workflows in a workflow group.
 func (c *Client) ListAllWorkflows(
 	ctx context.Context,
 	org string,

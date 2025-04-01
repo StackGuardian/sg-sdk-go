@@ -32,7 +32,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
-// Creates a Stack
+// Creates a new Stack.
 func (c *Client) CreateStack(
 	ctx context.Context,
 	org string,
@@ -84,7 +84,7 @@ func (c *Client) CreateStack(
 	return response, nil
 }
 
-// Get workflow details inside a workflow group
+// Retrieves details of an existing stack.
 func (c *Client) ReadStack(
 	ctx context.Context,
 	org string,
@@ -128,7 +128,7 @@ func (c *Client) ReadStack(
 	return response, nil
 }
 
-// Delete a Stack
+// Deletes an existing stack.
 func (c *Client) DeleteStack(
 	ctx context.Context,
 	org string,
@@ -172,7 +172,7 @@ func (c *Client) DeleteStack(
 	return response, nil
 }
 
-// Update workflow attributes
+// Updates an existing stack.
 func (c *Client) UpdateStack(
 	ctx context.Context,
 	org string,
@@ -219,7 +219,7 @@ func (c *Client) UpdateStack(
 	return response, nil
 }
 
-// Read outputs for a Stack
+// Read outputs of an existing Stack.
 func (c *Client) ReadStackOutputs(
 	ctx context.Context,
 	org string,
@@ -263,7 +263,7 @@ func (c *Client) ReadStackOutputs(
 	return response, nil
 }
 
-// List all Stacks in a Workflow Group
+// Lists all the Stacks inside a Workflow Group.
 func (c *Client) ListAllStacks(
 	ctx context.Context,
 	org string,

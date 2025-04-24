@@ -32,7 +32,9 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
-// Create Policy. For Creating Insight Filter Policy, please have a look to [this discussion](https://github.com/StackGuardian/feedback/discussions/147).
+// Create a new Policy inside an Organization.
+//
+// To create a new Insight Filter Policy, please have a look at [this discussion](https://github.com/StackGuardian/feedback/discussions/147).
 func (c *Client) CreatePolicy(
 	ctx context.Context,
 	org string,
@@ -75,7 +77,7 @@ func (c *Client) CreatePolicy(
 	return response, nil
 }
 
-// Read policy details in an organization
+// Read an existing policy's details.
 func (c *Client) ReadPolicy(
 	ctx context.Context,
 	org string,
@@ -117,7 +119,7 @@ func (c *Client) ReadPolicy(
 	return response, nil
 }
 
-// Delete Policy
+// Permanently removes an existing policy from the Organization.
 func (c *Client) DeletePolicy(
 	ctx context.Context,
 	org string,
@@ -157,7 +159,7 @@ func (c *Client) DeletePolicy(
 	return nil
 }
 
-// Update Policy
+// Update an existing policy's details.
 func (c *Client) UpdatePolicy(
 	ctx context.Context,
 	org string,
@@ -202,7 +204,7 @@ func (c *Client) UpdatePolicy(
 	return response, nil
 }
 
-// List All Policies
+// List all the policies inside an Organization.
 func (c *Client) ListAllPolicies(
 	ctx context.Context,
 	org string,

@@ -21,7 +21,7 @@ type Integration struct {
 	ContextTags *core.Optional[map[string]*string] `json:"ContextTags,omitempty" url:"-"`
 }
 
-type ListAllConnectorRequest struct {
+type ListAllConnectorsRequest struct {
 	// Pagination token to retrieve the next set of results
 	Lastevaluatedkey *string `json:"-" url:"lastevaluatedkey,omitempty"`
 }

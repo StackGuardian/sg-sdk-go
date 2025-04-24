@@ -146,7 +146,7 @@ func TestSDK(t *testing.T) {
 		response, err := c.Workflows.Outputs(context.Background(), SG_ORG, "CUSTOM-7OeX", "test-terragrunt")
 		assert.Empty(t, err)
 		assert.Equal(t, "Outputs retrived", response.Msg)
-		assert.Equal(t, "stackguardian-proper-escargot", response.Data.Outputs["id"].(map[string]interface{})["value"].(string))
+		assert.NotEmpty(t, response.Data.OutputsSignedUrl)
 	})
 
 	t.Run("Update_stack_workflow", func(t *testing.T) {
@@ -231,7 +231,7 @@ func TestSDK(t *testing.T) {
 			"refeed2-null-resource-tf-JuNs", "refeed-test-nested-stackrunbug")
 		assert.Empty(t, err)
 		assert.Equal(t, "Outputs retrived", response.Msg)
-		assert.Equal(t, float64(13), response.Data.Outputs["message_lengths"].(map[string]interface{})["value"].([]interface{})[0])
+		assert.NotEmpty(t, response.Data.OutputsSignedUrl)
 	})
 
 	// Workflow Runs
@@ -490,7 +490,7 @@ func TestSDK(t *testing.T) {
 		runStackRequest := sggosdk.StackAction{
 			ActionType: string(sggosdk.ActionEnumApply),
 		}
-		response, err := c.StackWorkflowRuns.CreateStackRun(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP, &runStackRequest)
+		response, err := c.StackRuns.CreateStackRun(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP, &runStackRequest)
 		assert.Empty(t, err)
 		assert.Equal(t, "Stack run scheduled", response.Msg)
 	})
@@ -553,7 +553,7 @@ func TestSDK(t *testing.T) {
 			option.WithBaseURL(SG_BASE_URL),
 		)
 		request := sggosdk.ListAllStackRunsRequest{}
-		listResponse, err := c.StackWorkflowRuns.ListAllStackRuns(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP, &request)
+		listResponse, err := c.StackRuns.ListAllStackRuns(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP, &request)
 		assert.Empty(t, err)
 		assert.GreaterOrEqual(t, len(listResponse.Msg), 1)
 	})
@@ -563,7 +563,7 @@ func TestSDK(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		getStackRunResponse, err := c.StackWorkflowRuns.ReadStackRun(context.Background(), SG_ORG, SG_STACK, "5srghvu1y7nn", SG_WF_GROUP)
+		getStackRunResponse, err := c.StackRuns.ReadStackRun(context.Background(), SG_ORG, SG_STACK, "5srghvu1y7nn", SG_WF_GROUP)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, getStackRunResponse.Msg.ResourceName)
 		assert.Equal(t, "/stackruns/5srghvu1y7nn", getStackRunResponse.Msg.ResourceName)
@@ -649,8 +649,8 @@ func TestSDK(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		request := sggosdk.ListAllConnectorRequest{}
-		listAllConnectorResponse, err := c.Connectors.ListAllConnector(context.Background(), SG_ORG, &request)
+		request := sggosdk.ListAllConnectorsRequest{}
+		listAllConnectorResponse, err := c.Connectors.ListAllConnectors(context.Background(), SG_ORG, &request)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, listAllConnectorResponse.Msg)
 		assert.GreaterOrEqual(t, len(listAllConnectorResponse.Msg), 1)
@@ -833,12 +833,12 @@ func TestSDK(t *testing.T) {
 				"GET/api/v1/orgs/demo-org/policies/<policy>/": allowedPermissions,
 			}),
 		}
-		createRoleResponse, err := c.UsersRoles.CreateRole(context.Background(), SG_ORG, &createRoleRequest)
+		createRoleResponse, err := c.AccessManagement.CreateRole(context.Background(), SG_ORG, &createRoleRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, createRoleResponse)
 		assert.Equal(t, "Role "+createRoleResponse.Data.ResourceName+" created", *createRoleResponse.Msg)
 
-		err = c.UsersRoles.DeleteRole(context.Background(), SG_ORG, roleName)
+		err = c.AccessManagement.DeleteRole(context.Background(), SG_ORG, roleName)
 		assert.Empty(t, err)
 	})
 
@@ -861,7 +861,7 @@ func TestSDK(t *testing.T) {
 				"GET/api/v1/orgs/demo-org/policies/<policy>/": allowedPermissions,
 			}),
 		}
-		updateRoleResponse, err := c.UsersRoles.UpdateRole(context.Background(), SG_ORG, roleName, &updateRoleRequest)
+		updateRoleResponse, err := c.AccessManagement.UpdateRole(context.Background(), SG_ORG, roleName, &updateRoleRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, updateRoleResponse.Msg)
 		assert.Equal(t, "Role /roles/"+roleName+" updated", *updateRoleResponse.Msg)
@@ -874,7 +874,7 @@ func TestSDK(t *testing.T) {
 			option.WithBaseURL(SG_BASE_URL),
 		)
 		roleName := "SDK-Test-Role"
-		readRoleResponse, err := c.UsersRoles.ReadRole(context.Background(), SG_ORG, roleName)
+		readRoleResponse, err := c.AccessManagement.ReadRole(context.Background(), SG_ORG, roleName)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, readRoleResponse.Msg)
 		assert.Equal(t, roleName, readRoleResponse.Msg.ResourceName)
@@ -885,7 +885,7 @@ func TestSDK(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		err := c.UsersRoles.ListAllRoles(context.Background(), SG_ORG)
+		err := c.AccessManagement.ListAllRoles(context.Background(), SG_ORG)
 		assert.Empty(t, err)
 	})
 
@@ -901,7 +901,7 @@ func TestSDK(t *testing.T) {
 			UserId:       userName,
 			ResendInvite: sggosdk.Bool(false),
 		}
-		createUserResponse, err := c.UsersRoles.AddUser(context.Background(), SG_ORG, &createUserRequest)
+		createUserResponse, err := c.AccessManagement.CreateUser(context.Background(), SG_ORG, &createUserRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, createUserResponse)
 		assert.Equal(t, userName+" invited.", *createUserResponse.Msg)
@@ -909,7 +909,7 @@ func TestSDK(t *testing.T) {
 		removeUserRequest := sggosdk.GetorRemoveUserFromOrganization{
 			UserId: "eu-central-1_C6bwuggLI/local/" + userName,
 		}
-		deleteUserResponse, err := c.UsersRoles.RemoveUser(context.Background(), SG_ORG, &removeUserRequest)
+		deleteUserResponse, err := c.AccessManagement.DeleteUser(context.Background(), SG_ORG, &removeUserRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, deleteUserResponse.Msg)
 		assert.Equal(t, userName+" removed from /orgs/demo-org", *deleteUserResponse.Msg)
@@ -925,7 +925,7 @@ func TestSDK(t *testing.T) {
 		removeUserRequest := sggosdk.GetorRemoveUserFromOrganization{
 			UserId: userName,
 		}
-		getUserResponse, err := c.UsersRoles.GetUser(context.Background(), SG_ORG, &removeUserRequest)
+		getUserResponse, err := c.AccessManagement.ReadUser(context.Background(), SG_ORG, &removeUserRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, getUserResponse.Msg)
 	})
@@ -941,7 +941,7 @@ func TestSDK(t *testing.T) {
 			Role:   sggosdk.String("SDK-Test-Role"),
 			UserId: userName,
 		}
-		updateUserResponse, err := c.UsersRoles.UpdateUser(context.Background(), SG_ORG, &updateUserRequest)
+		updateUserResponse, err := c.AccessManagement.UpdateUser(context.Background(), SG_ORG, &updateUserRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, updateUserResponse.Msg)
 	})

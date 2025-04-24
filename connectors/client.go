@@ -32,7 +32,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
-// Create Connector inside an Organization
+// Create a new Connector inside an Organization.
 func (c *Client) CreateConnector(
 	ctx context.Context,
 	org string,
@@ -75,7 +75,7 @@ func (c *Client) CreateConnector(
 	return response, nil
 }
 
-// Read Connector
+// Read an existing Connector inside an Organization.
 func (c *Client) ReadConnector(
 	ctx context.Context,
 	integration string,
@@ -117,7 +117,7 @@ func (c *Client) ReadConnector(
 	return response, nil
 }
 
-// Delete Connector
+// Delete an existing Connector inside an Organization.
 func (c *Client) DeleteConnector(
 	ctx context.Context,
 	integration string,
@@ -159,7 +159,7 @@ func (c *Client) DeleteConnector(
 	return response, nil
 }
 
-// Update Connector. To create a custom benchmark via API, please refer to [this discussion](https://github.com/StackGuardian/feedback/discussions/148).
+// Update an existing Connector inside an Organization.
 func (c *Client) UpdateConnector(
 	ctx context.Context,
 	integration string,
@@ -204,11 +204,11 @@ func (c *Client) UpdateConnector(
 	return response, nil
 }
 
-// List all Connector
-func (c *Client) ListAllConnector(
+// List all Connectors inside an Organization.
+func (c *Client) ListAllConnectors(
 	ctx context.Context,
 	org string,
-	request *sgsdkgo.ListAllConnectorRequest,
+	request *sgsdkgo.ListAllConnectorsRequest,
 	opts ...option.RequestOption,
 ) (*sgsdkgo.GeneratedConnectorListAllResponseMsg, error) {
 	options := core.NewRequestOptions(opts...)

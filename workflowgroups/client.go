@@ -33,7 +33,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
-// Create Workflow Group in an Organization
+// Create a new Workflow Group.
 func (c *Client) CreateWorkflowGroup(
 	ctx context.Context,
 	org string,
@@ -76,7 +76,7 @@ func (c *Client) CreateWorkflowGroup(
 	return response, nil
 }
 
-// Read Workflow Group
+// Read an existing Workflow Group.
 func (c *Client) ReadWorkflowGroup(
 	ctx context.Context,
 	org string,
@@ -115,7 +115,7 @@ func (c *Client) ReadWorkflowGroup(
 	return response, nil
 }
 
-// Delete Workflow Group
+// Delete an existing Workflow Group.
 func (c *Client) DeleteWorkflowGroup(
 	ctx context.Context,
 	org string,
@@ -154,7 +154,7 @@ func (c *Client) DeleteWorkflowGroup(
 	return response, nil
 }
 
-// Update Workflow Group
+// Update an existing Workflow Group.
 func (c *Client) UpdateWorkflowGroup(
 	ctx context.Context,
 	org string,
@@ -197,7 +197,7 @@ func (c *Client) UpdateWorkflowGroup(
 	return response, nil
 }
 
-// Create Child Workflow Group
+// Create a new Child Workflow Group within an existing Workflow Group.
 func (c *Client) CreateChildWorkflowGroup(
 	ctx context.Context,
 	org string,
@@ -238,7 +238,7 @@ func (c *Client) CreateChildWorkflowGroup(
 	return response, nil
 }
 
-// List all Child Workflow Groups
+// List all the Child Workflow Groups in an existing Workflow Group.
 func (c *Client) ListAllChildWorkflowGroups(
 	ctx context.Context,
 	org string,
@@ -280,7 +280,7 @@ func (c *Client) ListAllChildWorkflowGroups(
 	return response, nil
 }
 
-// List all Workflow Groups
+// List all the Workflow Groups in an Organization.
 func (c *Client) ListAllWorkflowGroups(
 	ctx context.Context,
 	org string,

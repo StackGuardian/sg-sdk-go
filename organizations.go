@@ -56,21 +56,39 @@ func (o *OrgGetResponse) String() string {
 }
 
 type Organization struct {
-	ResourceName             *string        `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
-	Admins                   []string       `json:"Admins,omitempty" url:"Admins,omitempty"`
-	MarketplaceSubscriptions []interface{}  `json:"MarketplaceSubscriptions,omitempty" url:"MarketplaceSubscriptions,omitempty"`
-	IsArchive                *string        `json:"IsArchive,omitempty" url:"IsArchive,omitempty"`
-	IsActive                 *IsArchiveEnum `json:"IsActive,omitempty" url:"IsActive,omitempty"`
-	ResourceId               *string        `json:"ResourceId,omitempty" url:"ResourceId,omitempty"`
-	ModifiedAt               *float64       `json:"ModifiedAt,omitempty" url:"ModifiedAt,omitempty"`
-	ParentId                 *string        `json:"ParentId,omitempty" url:"ParentId,omitempty"`
-	ResourceType             *string        `json:"ResourceType,omitempty" url:"ResourceType,omitempty"`
-	DocVersion               *string        `json:"DocVersion,omitempty" url:"DocVersion,omitempty"`
-	Authors                  []string       `json:"Authors,omitempty" url:"Authors,omitempty"`
-	ActivitySubscribers      []string       `json:"ActivitySubscribers,omitempty" url:"ActivitySubscribers,omitempty"`
-	SubResourceId            *string        `json:"SubResourceId,omitempty" url:"SubResourceId,omitempty"`
-	OrgId                    *string        `json:"OrgId,omitempty" url:"OrgId,omitempty"`
-	CreatedAt                *float64       `json:"CreatedAt,omitempty" url:"CreatedAt,omitempty"`
+	// The name of the organization.
+	ResourceName *string `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	// The administrators of the organization.
+	Admins []string `json:"Admins,omitempty" url:"Admins,omitempty"`
+	// Marketplace subscriptions
+	MarketplaceSubscriptions []interface{} `json:"MarketplaceSubscriptions,omitempty" url:"MarketplaceSubscriptions,omitempty"`
+	// Indicates whether the organization is archived.
+	IsArchive *string `json:"IsArchive,omitempty" url:"IsArchive,omitempty"`
+	// Indicates whether the organization is active.
+	//
+	// * `0` - 0
+	// * `1` - 1
+	IsActive *IsArchiveEnum `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	// The resource ID of the organization.
+	ResourceId *string `json:"ResourceId,omitempty" url:"ResourceId,omitempty"`
+	// The last modified timestamp of the organization.
+	ModifiedAt *float64 `json:"ModifiedAt,omitempty" url:"ModifiedAt,omitempty"`
+	// The parent organization ID.
+	ParentId *string `json:"ParentId,omitempty" url:"ParentId,omitempty"`
+	// The resource type.
+	ResourceType *string `json:"ResourceType,omitempty" url:"ResourceType,omitempty"`
+	// The document version.
+	DocVersion *string `json:"DocVersion,omitempty" url:"DocVersion,omitempty"`
+	// The authors of the organization.
+	Authors []string `json:"Authors,omitempty" url:"Authors,omitempty"`
+	// The activity subscribers of the organization
+	ActivitySubscribers []string `json:"ActivitySubscribers,omitempty" url:"ActivitySubscribers,omitempty"`
+	// The sub-resource ID of the organization.
+	SubResourceId *string `json:"SubResourceId,omitempty" url:"SubResourceId,omitempty"`
+	// The organization ID.
+	OrgId *string `json:"OrgId,omitempty" url:"OrgId,omitempty"`
+	// The creation timestamp of the organization
+	CreatedAt *float64 `json:"CreatedAt,omitempty" url:"CreatedAt,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage

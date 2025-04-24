@@ -34,7 +34,8 @@ type PatchedRunnerGroup struct {
 	ParentId                   *core.Optional[string]                   `json:"ParentId,omitempty" url:"-"`
 	ResourceType               *core.Optional[string]                   `json:"ResourceType,omitempty" url:"-"`
 	RunnerToken                *core.Optional[string]                   `json:"RunnerToken,omitempty" url:"-"`
-	ApprovalConfig             *core.Optional[map[string]interface{}]   `json:"ApprovalConfig,omitempty" url:"-"`
+	ApprovalConfig             *core.Optional[ApprovalConfig]           `json:"ApprovalConfig,omitempty" url:"-"`
+	Proxies                    *core.Optional[ProxiesConfig]            `json:"Proxies,omitempty" url:"-"`
 	ContainerInstances         *core.Optional[[]map[string]interface{}] `json:"ContainerInstances,omitempty" url:"-"`
 	ActiveWorkflows            *core.Optional[map[string]interface{}]   `json:"ActiveWorkflows,omitempty" url:"-"`
 	QueuedWorkflowsCount       *core.Optional[int]                      `json:"QueuedWorkflowsCount,omitempty" url:"-"`
@@ -47,6 +48,200 @@ type RunnerStatus struct {
 	RunnerId             *core.Optional[string]   `json:"RunnerId,omitempty" url:"-"`
 	ContainerInstanceIds *core.Optional[[]string] `json:"ContainerInstanceIds,omitempty" url:"-"`
 	Status               StatusEnum               `json:"Status" url:"-"`
+}
+
+type ApprovalConfig struct {
+	ApprovalType          ApprovalTypeEnum `json:"approvalType" url:"approvalType"`
+	ApprovalWebhookUrl    *string          `json:"approvalWebhookUrl,omitempty" url:"approvalWebhookUrl,omitempty"`
+	ApprovalWebhookSecret *string          `json:"approvalWebhookSecret,omitempty" url:"approvalWebhookSecret,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *ApprovalConfig) GetApprovalType() ApprovalTypeEnum {
+	if a == nil {
+		return ""
+	}
+	return a.ApprovalType
+}
+
+func (a *ApprovalConfig) GetApprovalWebhookUrl() *string {
+	if a == nil {
+		return nil
+	}
+	return a.ApprovalWebhookUrl
+}
+
+func (a *ApprovalConfig) GetApprovalWebhookSecret() *string {
+	if a == nil {
+		return nil
+	}
+	return a.ApprovalWebhookSecret
+}
+
+func (a *ApprovalConfig) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *ApprovalConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler ApprovalConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = ApprovalConfig(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *ApprovalConfig) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// * `PLATFORM` - PLATFORM
+// * `EXTERNAL` - EXTERNAL
+type ApprovalTypeEnum string
+
+const (
+	ApprovalTypeEnumPlatform ApprovalTypeEnum = "PLATFORM"
+	ApprovalTypeEnumExternal ApprovalTypeEnum = "EXTERNAL"
+)
+
+func NewApprovalTypeEnumFromString(s string) (ApprovalTypeEnum, error) {
+	switch s {
+	case "PLATFORM":
+		return ApprovalTypeEnumPlatform, nil
+	case "EXTERNAL":
+		return ApprovalTypeEnumExternal, nil
+	}
+	var t ApprovalTypeEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a ApprovalTypeEnum) Ptr() *ApprovalTypeEnum {
+	return &a
+}
+
+type ProxiesConfig struct {
+	Default *ProxiesConfigDefault `json:"default,omitempty" url:"default,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *ProxiesConfig) GetDefault() *ProxiesConfigDefault {
+	if p == nil {
+		return nil
+	}
+	return p.Default
+}
+
+func (p *ProxiesConfig) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *ProxiesConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler ProxiesConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = ProxiesConfig(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *ProxiesConfig) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
+type ProxiesConfigDefault struct {
+	HttpProxy  string `json:"httpProxy" url:"httpProxy"`
+	HttpsProxy string `json:"httpsProxy" url:"httpsProxy"`
+	NoProxy    string `json:"noProxy" url:"noProxy"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *ProxiesConfigDefault) GetHttpProxy() string {
+	if p == nil {
+		return ""
+	}
+	return p.HttpProxy
+}
+
+func (p *ProxiesConfigDefault) GetHttpsProxy() string {
+	if p == nil {
+		return ""
+	}
+	return p.HttpsProxy
+}
+
+func (p *ProxiesConfigDefault) GetNoProxy() string {
+	if p == nil {
+		return ""
+	}
+	return p.NoProxy
+}
+
+func (p *ProxiesConfigDefault) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *ProxiesConfigDefault) UnmarshalJSON(data []byte) error {
+	type unmarshaler ProxiesConfigDefault
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = ProxiesConfigDefault(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *ProxiesConfigDefault) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
 }
 
 type RunnerGroup struct {
@@ -62,7 +257,8 @@ type RunnerGroup struct {
 	ParentId                   *string                  `json:"ParentId,omitempty" url:"ParentId,omitempty"`
 	ResourceType               *string                  `json:"ResourceType,omitempty" url:"ResourceType,omitempty"`
 	RunnerToken                *string                  `json:"RunnerToken,omitempty" url:"RunnerToken,omitempty"`
-	ApprovalConfig             map[string]interface{}   `json:"ApprovalConfig,omitempty" url:"ApprovalConfig,omitempty"`
+	ApprovalConfig             *ApprovalConfig          `json:"ApprovalConfig,omitempty" url:"ApprovalConfig,omitempty"`
+	Proxies                    *ProxiesConfig           `json:"Proxies,omitempty" url:"Proxies,omitempty"`
 	ContainerInstances         []map[string]interface{} `json:"ContainerInstances,omitempty" url:"ContainerInstances,omitempty"`
 	ActiveWorkflows            map[string]interface{}   `json:"ActiveWorkflows,omitempty" url:"ActiveWorkflows,omitempty"`
 	QueuedWorkflowsCount       *int                     `json:"QueuedWorkflowsCount,omitempty" url:"QueuedWorkflowsCount,omitempty"`
@@ -158,11 +354,18 @@ func (r *RunnerGroup) GetRunnerToken() *string {
 	return r.RunnerToken
 }
 
-func (r *RunnerGroup) GetApprovalConfig() map[string]interface{} {
+func (r *RunnerGroup) GetApprovalConfig() *ApprovalConfig {
 	if r == nil {
 		return nil
 	}
 	return r.ApprovalConfig
+}
+
+func (r *RunnerGroup) GetProxies() *ProxiesConfig {
+	if r == nil {
+		return nil
+	}
+	return r.Proxies
 }
 
 func (r *RunnerGroup) GetContainerInstances() []map[string]interface{} {

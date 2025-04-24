@@ -32,7 +32,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
-// Run workflow
+// Initiate a new workflow run.
 func (c *Client) CreateWorkflowRun(
 	ctx context.Context,
 	org string,
@@ -79,7 +79,7 @@ func (c *Client) CreateWorkflowRun(
 	return response, nil
 }
 
-// Read workflow run details
+// Retrieve the details of an existing workflow run.
 func (c *Client) ReadWorkflowRun(
 	ctx context.Context,
 	org string,
@@ -125,7 +125,7 @@ func (c *Client) ReadWorkflowRun(
 	return response, nil
 }
 
-// Patch Workflow Run inside a workflow
+// Update the details of a workflow run.
 func (c *Client) UpdateWorkflowRun(
 	ctx context.Context,
 	org string,
@@ -174,7 +174,7 @@ func (c *Client) UpdateWorkflowRun(
 	return response, nil
 }
 
-// Patch Workflow Run inside a workflow
+// Cancel a running or queued workflow run.
 func (c *Client) CancelWorkflowRun(
 	ctx context.Context,
 	org string,
@@ -220,7 +220,9 @@ func (c *Client) CancelWorkflowRun(
 	return response, nil
 }
 
-// Read execution logs for a Workflow Run inside a workflow
+// Retrieve execution logs for a workflow run.
+//
+// This endpoint returns a signed URL that can be used to fetch the logs in `text/plain` format. This signed URL is valid for 60 minutes. After expiration, you can request a new signed URL by calling this endpoint again.
 func (c *Client) ReadWorkflowRunLogs(
 	ctx context.Context,
 	org string,
@@ -266,7 +268,7 @@ func (c *Client) ReadWorkflowRunLogs(
 	return response, nil
 }
 
-// Provide approval for a Workflow Run
+// Provide approval for a Workflow Run.
 func (c *Client) ApproveWorkflowRun(
 	ctx context.Context,
 	org string,
@@ -315,7 +317,7 @@ func (c *Client) ApproveWorkflowRun(
 	return response, nil
 }
 
-// List all Workflow Runs in a Workflow
+// Retrieve a list of all workflow runs.
 func (c *Client) ListAllWorkflowRuns(
 	ctx context.Context,
 	org string,

@@ -1276,8 +1276,8 @@ func (g *GeneratedStackListAllResponseMsg) String() string {
 }
 
 type GeneratedStackOutputsResponse struct {
-	Msg  string                                        `json:"msg" url:"msg"`
-	Data map[string]*GeneratedStackOutputsResponseData `json:"data,omitempty" url:"data,omitempty"`
+	Msg  string            `json:"msg" url:"msg"`
+	Data map[string]string `json:"data,omitempty" url:"data,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -1290,7 +1290,7 @@ func (g *GeneratedStackOutputsResponse) GetMsg() string {
 	return g.Msg
 }
 
-func (g *GeneratedStackOutputsResponse) GetData() map[string]*GeneratedStackOutputsResponseData {
+func (g *GeneratedStackOutputsResponse) GetData() map[string]string {
 	if g == nil {
 		return nil
 	}
@@ -1318,52 +1318,6 @@ func (g *GeneratedStackOutputsResponse) UnmarshalJSON(data []byte) error {
 }
 
 func (g *GeneratedStackOutputsResponse) String() string {
-	if len(g.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedStackOutputsResponseData struct {
-	Outputs map[string]interface{} `json:"outputs,omitempty" url:"outputs,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (g *GeneratedStackOutputsResponseData) GetOutputs() map[string]interface{} {
-	if g == nil {
-		return nil
-	}
-	return g.Outputs
-}
-
-func (g *GeneratedStackOutputsResponseData) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedStackOutputsResponseData) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedStackOutputsResponseData
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedStackOutputsResponseData(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-	g.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedStackOutputsResponseData) String() string {
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value

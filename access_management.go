@@ -10,6 +10,37 @@ import (
 	internal "github.com/StackGuardian/sg-sdk-go/internal"
 )
 
+type ApiAccess struct {
+	// Name of the API access.
+	ResourceName string `json:"ResourceName" url:"-"`
+	// Description of the API access
+	Description *core.Optional[string] `json:"Description,omitempty" url:"-"`
+	// Tags for organizing API accesses
+	Tags *core.Optional[[]string] `json:"Tags,omitempty" url:"-"`
+	// Contextual tags to give context to your tags
+	ContextTags *core.Optional[map[string]*string] `json:"ContextTags,omitempty" url:"-"`
+	// Type of access: APIKEY for API key authentication, OIDC for OpenID Connect
+	//
+	// * `APIKEY` - APIKEY
+	// * `OIDC` - OIDC
+	AccessType *core.Optional[AccessTypeEnum] `json:"AccessType,omitempty" url:"-"`
+	// List of role names assigned to this API access
+	Roles []string `json:"Roles,omitempty" url:"-"`
+	// Expiration timestamp in milliseconds. Null means no expiration.
+	ExpiresAt *core.Optional[int] `json:"ExpiresAt,omitempty" url:"-"`
+	// Whether the API access is active
+	//
+	// * `0` - 0
+	// * `1` - 1
+	IsActive *core.Optional[IsPublicEnum] `json:"IsActive,omitempty" url:"-"`
+	// OIDC Trust configuration. Required when AccessType is OIDC.
+	OidcTrust *core.Optional[OidcTrust] `json:"OIDCTrust,omitempty" url:"-"`
+	// Document version
+	//
+	// * `V1` - V1
+	DocVersion *core.Optional[DocVersionAadEnum] `json:"DocVersion,omitempty" url:"-"`
+}
+
 type Role struct {
 	ResourceName string                   `json:"ResourceName" url:"-"`
 	Description  *core.Optional[string]   `json:"Description,omitempty" url:"-"`
@@ -17,7 +48,85 @@ type Role struct {
 	// Contextual tags to give context to your tags
 	ContextTags        *core.Optional[map[string]*string]             `json:"ContextTags,omitempty" url:"-"`
 	AllowedPermissions *core.Optional[map[string]*AllowedPermissions] `json:"AllowedPermissions,omitempty" url:"-"`
-	DocVersion         *core.Optional[DocVersionEnum]                 `json:"DocVersion,omitempty" url:"-"`
+	// Select the document version. `V4` enforces equal path list lengths (one-to-one mapping) in AllowedPermissions. `V3.BETA` is there for legacy compatibility.
+	//
+	// * `V3.BETA` - V3.BETA
+	// * `V4` - V4
+	DocVersion *core.Optional[RoleDocVersionEnum] `json:"DocVersion,omitempty" url:"-"`
+}
+
+type ListAllUsersRequest struct {
+	// Filter users based on alias.
+	Alias *string `json:"-" url:"alias,omitempty"`
+	// Filter users based on entityType. This can be EMAIL or GROUP.
+	EntityType *string `json:"-" url:"entityType,omitempty"`
+	// Filter users based on loginMethod.
+	LoginMethod *string `json:"-" url:"loginMethod,omitempty"`
+	// Filter users based on roles. You can pass multiple roles separated by commas. Example: roles=ADMIN,USER will return users with both ADMIN and USER roles.
+	Roles *string `json:"-" url:"roles,omitempty"`
+	// Filter users based on userId.
+	UserId *string `json:"-" url:"userId,omitempty"`
+}
+
+type ListAllApiAccessesRequest struct {
+	// Filter by access type
+	AccessType *ListAllApiAccessesRequestAccessType `json:"-" url:"accessType,omitempty"`
+	// Base64 encoded pagination token from previous response
+	LastEvaluatedKey *string `json:"-" url:"lastEvaluatedKey,omitempty"`
+	// Maximum number of items to return (default: 50, max: 100)
+	Limit *int `json:"-" url:"limit,omitempty"`
+	// Filter by resource name (contains match)
+	ResourceName *string `json:"-" url:"resourceName,omitempty"`
+	// Filter by roles (comma-separated list)
+	Roles *string `json:"-" url:"roles,omitempty"`
+	// Filter by status (comma-separated: active, expired)
+	Status *string `json:"-" url:"status,omitempty"`
+}
+
+type ListAllRolesRequest struct {
+	// Boolean flag that, if set to `true`, includes predefined system roles in the response when the user has access to it. Default is `false`.
+	IncludePredefinedRoles *bool `json:"-" url:"includePredefinedRoles,omitempty"`
+}
+
+type ReadAuditLogsRequest struct {
+	// Filter logs by the effect of the action (e.g., 'Allow' or 'Deny').
+	Effect *string `json:"-" url:"effect,omitempty"`
+	// End time for filtering logs. Format: Unix timestamp in milliseconds.
+	EndTime *int `json:"-" url:"endTime,omitempty"`
+	// Last evaluated key for pagination. Use this to get the next set of results.
+	Lastevaluatedkey *string `json:"-" url:"lastevaluatedkey,omitempty"`
+	// Limit the number of results returned. Default is 50. Maximum is 500.
+	Limit *int `json:"-" url:"limit,omitempty"`
+	// Filter logs by the email of the principal (user or service account).
+	PrincipalEmail *string `json:"-" url:"principalEmail,omitempty"`
+	// Filter logs by the HTTP request method (e.g., 'GET', 'POST', etc.).
+	RequestMethod *string `json:"-" url:"request_method,omitempty"`
+	// Filter logs by the resource name. For example, use 'SG_SIGN_IN' for sign-in logs, and '/orgs/org-name/wfgrps/wfgrp-name/wfs/wf-name' for logs related to a specific workflow.
+	Resource *string `json:"-" url:"resource,omitempty"`
+	// Filter logs by the source IP address of the request.
+	SourceIp *string `json:"-" url:"sourceIp,omitempty"`
+	// Start time for filtering logs. Format: Unix timestamp in milliseconds.
+	StartTime *int `json:"-" url:"startTime,omitempty"`
+}
+
+type ApiAccessRegenerate struct {
+	// New expiration timestamp in milliseconds. Null means no expiration.
+	ExpiresAt *core.Optional[int] `json:"ExpiresAt,omitempty" url:"-"`
+}
+
+type PatchedApiAccessPatch struct {
+	// Name of the API access
+	ResourceName *core.Optional[string] `json:"ResourceName,omitempty" url:"-"`
+	// Description of the API access
+	Description *core.Optional[string] `json:"Description,omitempty" url:"-"`
+	// Tags for organizing API accesses
+	Tags *core.Optional[[]string] `json:"Tags,omitempty" url:"-"`
+	// Contextual tags to give context to your tags
+	ContextTags *core.Optional[map[string]*string] `json:"ContextTags,omitempty" url:"-"`
+	// List of role names assigned to this API access
+	Roles *core.Optional[[]string] `json:"Roles,omitempty" url:"-"`
+	// OIDC Trust configuration. Only updatable for OIDC access type.
+	OidcTrust *core.Optional[OidcTrust] `json:"OIDCTrust,omitempty" url:"-"`
 }
 
 type PatchedRole struct {
@@ -27,15 +136,45 @@ type PatchedRole struct {
 	// Contextual tags to give context to your tags
 	ContextTags        *core.Optional[map[string]*string]             `json:"ContextTags,omitempty" url:"-"`
 	AllowedPermissions *core.Optional[map[string]*AllowedPermissions] `json:"AllowedPermissions,omitempty" url:"-"`
-	DocVersion         *core.Optional[DocVersionEnum]                 `json:"DocVersion,omitempty" url:"-"`
+	// Select the document version. `V4` enforces equal path list lengths (one-to-one mapping) in AllowedPermissions. `V3.BETA` is there for legacy compatibility.
+	//
+	// * `V3.BETA` - V3.BETA
+	// * `V4` - V4
+	DocVersion *core.Optional[RoleDocVersionEnum] `json:"DocVersion,omitempty" url:"-"`
+}
+
+// * `APIKEY` - APIKEY
+// * `OIDC` - OIDC
+type AccessTypeEnum string
+
+const (
+	AccessTypeEnumApikey AccessTypeEnum = "APIKEY"
+	AccessTypeEnumOidc   AccessTypeEnum = "OIDC"
+)
+
+func NewAccessTypeEnumFromString(s string) (AccessTypeEnum, error) {
+	switch s {
+	case "APIKEY":
+		return AccessTypeEnumApikey, nil
+	case "OIDC":
+		return AccessTypeEnumOidc, nil
+	}
+	var t AccessTypeEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (a AccessTypeEnum) Ptr() *AccessTypeEnum {
+	return &a
 }
 
 type AddUserToOrganization struct {
-	UserId       string          `json:"userId" url:"userId"`
-	EntityType   *EntityTypeEnum `json:"entityType,omitempty" url:"entityType,omitempty"`
-	Role         *string         `json:"role,omitempty" url:"role,omitempty"`
-	Roles        []string        `json:"roles,omitempty" url:"roles,omitempty"`
-	ResendInvite *bool           `json:"resendInvite,omitempty" url:"resendInvite,omitempty"`
+	UserId     string          `json:"userId" url:"userId"`
+	EntityType *EntityTypeEnum `json:"entityType,omitempty" url:"entityType,omitempty"`
+	// Alias to easily identify SSO Groups. Alias is only applicable for GROUP entityType.
+	Alias        *string  `json:"alias,omitempty" url:"alias,omitempty"`
+	Role         *string  `json:"role,omitempty" url:"role,omitempty"`
+	Roles        []string `json:"roles,omitempty" url:"roles,omitempty"`
+	ResendInvite *bool    `json:"resendInvite,omitempty" url:"resendInvite,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -53,6 +192,13 @@ func (a *AddUserToOrganization) GetEntityType() *EntityTypeEnum {
 		return nil
 	}
 	return a.EntityType
+}
+
+func (a *AddUserToOrganization) GetAlias() *string {
+	if a == nil {
+		return nil
+	}
+	return a.Alias
 }
 
 func (a *AddUserToOrganization) GetRole() *string {
@@ -216,29 +362,647 @@ func (a *AllowedPermissions) String() string {
 	return fmt.Sprintf("%#v", a)
 }
 
-// * `V3.BETA` - V3.BETA
-// * `V4` - V4
-type DocVersionEnum string
+// Serializer for API Access creation response
+type ApiAccessCreateResponse struct {
+	// Success message describing the result of the creation operation
+	Msg string `json:"msg" url:"msg"`
+	// Details of the created API access
+	Data *ApiAccessDataResponse `json:"data,omitempty" url:"data,omitempty"`
 
-const (
-	DocVersionEnumV3Beta DocVersionEnum = "V3.BETA"
-	DocVersionEnumV4     DocVersionEnum = "V4"
-)
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
 
-func NewDocVersionEnumFromString(s string) (DocVersionEnum, error) {
-	switch s {
-	case "V3.BETA":
-		return DocVersionEnumV3Beta, nil
-	case "V4":
-		return DocVersionEnumV4, nil
+func (a *ApiAccessCreateResponse) GetMsg() string {
+	if a == nil {
+		return ""
 	}
-	var t DocVersionEnum
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
+	return a.Msg
 }
 
-func (d DocVersionEnum) Ptr() *DocVersionEnum {
-	return &d
+func (a *ApiAccessCreateResponse) GetData() *ApiAccessDataResponse {
+	if a == nil {
+		return nil
+	}
+	return a.Data
 }
+
+func (a *ApiAccessCreateResponse) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *ApiAccessCreateResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ApiAccessCreateResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = ApiAccessCreateResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *ApiAccessCreateResponse) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// Serializer for API Access data in responses
+type ApiAccessDataResponse struct {
+	// Name of the API access.
+	ResourceName string `json:"ResourceName" url:"ResourceName"`
+	// Description of the API access
+	Description *string `json:"Description,omitempty" url:"Description,omitempty"`
+	// Tags for organizing API accesses
+	Tags []string `json:"Tags,omitempty" url:"Tags,omitempty"`
+	// Contextual tags to give context to your tags
+	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	// Type of access: APIKEY for API key authentication, OIDC for OpenID Connect
+	//
+	// * `APIKEY` - APIKEY
+	// * `OIDC` - OIDC
+	AccessType *AccessTypeEnum `json:"AccessType,omitempty" url:"AccessType,omitempty"`
+	// List of role names assigned to this API access
+	Roles []string `json:"Roles,omitempty" url:"Roles,omitempty"`
+	// Expiration timestamp in milliseconds. Null means no expiration.
+	ExpiresAt *int `json:"ExpiresAt,omitempty" url:"ExpiresAt,omitempty"`
+	// Whether the API access is active
+	//
+	// * `0` - 0
+	// * `1` - 1
+	IsActive *IsPublicEnum `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	// OIDC Trust configuration. Required when AccessType is OIDC.
+	OidcTrust *OidcTrust `json:"OIDCTrust,omitempty" url:"OIDCTrust,omitempty"`
+	// Document version
+	//
+	// * `V1` - V1
+	DocVersion *DocVersionAadEnum `json:"DocVersion,omitempty" url:"DocVersion,omitempty"`
+	// Parent organization ID
+	ParentId string `json:"ParentId" url:"ParentId"`
+	// Resource ID of the API access
+	ResourceId string `json:"ResourceId" url:"ResourceId"`
+	// Resource type (API_ACCESS)
+	ResourceType string `json:"ResourceType" url:"ResourceType"`
+	// List of authors
+	Authors []string `json:"Authors,omitempty" url:"Authors,omitempty"`
+	// Creation timestamp in milliseconds
+	CreatedAt int `json:"CreatedAt" url:"CreatedAt"`
+	// Last modification timestamp in milliseconds
+	ModifiedAt int `json:"ModifiedAt" url:"ModifiedAt"`
+	// Last access timestamp in milliseconds
+	LastAccessAt int `json:"LastAccessAt" url:"LastAccessAt"`
+	// Organization ID
+	OrgId string `json:"OrgId" url:"OrgId"`
+	// Environment where the access was created
+	CreatorEnv string `json:"CreatorEnv" url:"CreatorEnv"`
+	// Whether the access is archived
+	//
+	// * `0` - 0
+	// * `1` - 1
+	IsArchive IsPublicEnum `json:"IsArchive" url:"IsArchive"`
+	// Email address associated with the API access
+	Email string `json:"Email" url:"Email"`
+	// Generated API key (only in create/regenerate responses)
+	ApiKey *string `json:"APIKey,omitempty" url:"APIKey,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *ApiAccessDataResponse) GetResourceName() string {
+	if a == nil {
+		return ""
+	}
+	return a.ResourceName
+}
+
+func (a *ApiAccessDataResponse) GetDescription() *string {
+	if a == nil {
+		return nil
+	}
+	return a.Description
+}
+
+func (a *ApiAccessDataResponse) GetTags() []string {
+	if a == nil {
+		return nil
+	}
+	return a.Tags
+}
+
+func (a *ApiAccessDataResponse) GetContextTags() map[string]*string {
+	if a == nil {
+		return nil
+	}
+	return a.ContextTags
+}
+
+func (a *ApiAccessDataResponse) GetAccessType() *AccessTypeEnum {
+	if a == nil {
+		return nil
+	}
+	return a.AccessType
+}
+
+func (a *ApiAccessDataResponse) GetRoles() []string {
+	if a == nil {
+		return nil
+	}
+	return a.Roles
+}
+
+func (a *ApiAccessDataResponse) GetExpiresAt() *int {
+	if a == nil {
+		return nil
+	}
+	return a.ExpiresAt
+}
+
+func (a *ApiAccessDataResponse) GetIsActive() *IsPublicEnum {
+	if a == nil {
+		return nil
+	}
+	return a.IsActive
+}
+
+func (a *ApiAccessDataResponse) GetOidcTrust() *OidcTrust {
+	if a == nil {
+		return nil
+	}
+	return a.OidcTrust
+}
+
+func (a *ApiAccessDataResponse) GetParentId() string {
+	if a == nil {
+		return ""
+	}
+	return a.ParentId
+}
+
+func (a *ApiAccessDataResponse) GetResourceId() string {
+	if a == nil {
+		return ""
+	}
+	return a.ResourceId
+}
+
+func (a *ApiAccessDataResponse) GetResourceType() string {
+	if a == nil {
+		return ""
+	}
+	return a.ResourceType
+}
+
+func (a *ApiAccessDataResponse) GetAuthors() []string {
+	if a == nil {
+		return nil
+	}
+	return a.Authors
+}
+
+func (a *ApiAccessDataResponse) GetCreatedAt() int {
+	if a == nil {
+		return 0
+	}
+	return a.CreatedAt
+}
+
+func (a *ApiAccessDataResponse) GetModifiedAt() int {
+	if a == nil {
+		return 0
+	}
+	return a.ModifiedAt
+}
+
+func (a *ApiAccessDataResponse) GetLastAccessAt() int {
+	if a == nil {
+		return 0
+	}
+	return a.LastAccessAt
+}
+
+func (a *ApiAccessDataResponse) GetOrgId() string {
+	if a == nil {
+		return ""
+	}
+	return a.OrgId
+}
+
+func (a *ApiAccessDataResponse) GetCreatorEnv() string {
+	if a == nil {
+		return ""
+	}
+	return a.CreatorEnv
+}
+
+func (a *ApiAccessDataResponse) GetIsArchive() IsPublicEnum {
+	if a == nil {
+		return ""
+	}
+	return a.IsArchive
+}
+
+func (a *ApiAccessDataResponse) GetEmail() string {
+	if a == nil {
+		return ""
+	}
+	return a.Email
+}
+
+func (a *ApiAccessDataResponse) GetApiKey() *string {
+	if a == nil {
+		return nil
+	}
+	return a.ApiKey
+}
+
+func (a *ApiAccessDataResponse) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *ApiAccessDataResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ApiAccessDataResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = ApiAccessDataResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *ApiAccessDataResponse) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// Serializer for API Access deletion response
+type ApiAccessDeleteResponse struct {
+	// Success message
+	Msg string `json:"msg" url:"msg"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *ApiAccessDeleteResponse) GetMsg() string {
+	if a == nil {
+		return ""
+	}
+	return a.Msg
+}
+
+func (a *ApiAccessDeleteResponse) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *ApiAccessDeleteResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ApiAccessDeleteResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = ApiAccessDeleteResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *ApiAccessDeleteResponse) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// Serializer for API Access get response
+type ApiAccessGetResponse struct {
+	// (Deprecated) Use 'data' field. Previously contained API access data.
+	Msg *ApiAccessDataResponse `json:"msg,omitempty" url:"msg,omitempty"`
+	// Details of the requested API access
+	Data *ApiAccessDataResponse `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *ApiAccessGetResponse) GetMsg() *ApiAccessDataResponse {
+	if a == nil {
+		return nil
+	}
+	return a.Msg
+}
+
+func (a *ApiAccessGetResponse) GetData() *ApiAccessDataResponse {
+	if a == nil {
+		return nil
+	}
+	return a.Data
+}
+
+func (a *ApiAccessGetResponse) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *ApiAccessGetResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ApiAccessGetResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = ApiAccessGetResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *ApiAccessGetResponse) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// Serializer for API Access list response
+type ApiAccessListResponse struct {
+	// List of API accesses
+	Msg []*ApiAccessDataResponse `json:"msg,omitempty" url:"msg,omitempty"`
+	// Base64 encoded pagination token for next page
+	Lastevaluatedkey *string `json:"lastevaluatedkey,omitempty" url:"lastevaluatedkey,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *ApiAccessListResponse) GetMsg() []*ApiAccessDataResponse {
+	if a == nil {
+		return nil
+	}
+	return a.Msg
+}
+
+func (a *ApiAccessListResponse) GetLastevaluatedkey() *string {
+	if a == nil {
+		return nil
+	}
+	return a.Lastevaluatedkey
+}
+
+func (a *ApiAccessListResponse) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *ApiAccessListResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ApiAccessListResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = ApiAccessListResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *ApiAccessListResponse) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// Serializer for API key regeneration response
+type ApiAccessRegenerateResponse struct {
+	// Success message
+	Msg string `json:"msg" url:"msg"`
+	// Contains the new API key
+	Data map[string]string `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *ApiAccessRegenerateResponse) GetMsg() string {
+	if a == nil {
+		return ""
+	}
+	return a.Msg
+}
+
+func (a *ApiAccessRegenerateResponse) GetData() map[string]string {
+	if a == nil {
+		return nil
+	}
+	return a.Data
+}
+
+func (a *ApiAccessRegenerateResponse) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *ApiAccessRegenerateResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ApiAccessRegenerateResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = ApiAccessRegenerateResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *ApiAccessRegenerateResponse) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// Serializer for API Access update response
+type ApiAccessUpdateResponse struct {
+	// Success message describing the result of the update operation
+	Msg string `json:"msg" url:"msg"`
+	// Details of the updated API access
+	Data *ApiAccessDataResponse `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *ApiAccessUpdateResponse) GetMsg() string {
+	if a == nil {
+		return ""
+	}
+	return a.Msg
+}
+
+func (a *ApiAccessUpdateResponse) GetData() *ApiAccessDataResponse {
+	if a == nil {
+		return nil
+	}
+	return a.Data
+}
+
+func (a *ApiAccessUpdateResponse) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *ApiAccessUpdateResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ApiAccessUpdateResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = ApiAccessUpdateResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *ApiAccessUpdateResponse) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+type AuditLogItem struct {
+	// The ingestion time of the audit log item.
+	IngestionTime *int `json:"ingestionTime,omitempty" url:"ingestionTime,omitempty"`
+	// The timestamp of the audit log item.
+	Timestamp *int `json:"timestamp,omitempty" url:"timestamp,omitempty"`
+	// The contents of the audit log item in JSON string format.
+	Message *string `json:"message,omitempty" url:"message,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AuditLogItem) GetIngestionTime() *int {
+	if a == nil {
+		return nil
+	}
+	return a.IngestionTime
+}
+
+func (a *AuditLogItem) GetTimestamp() *int {
+	if a == nil {
+		return nil
+	}
+	return a.Timestamp
+}
+
+func (a *AuditLogItem) GetMessage() *string {
+	if a == nil {
+		return nil
+	}
+	return a.Message
+}
+
+func (a *AuditLogItem) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AuditLogItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler AuditLogItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AuditLogItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AuditLogItem) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+// * `V1` - V1
+type DocVersionAadEnum = string
 
 // * `EMAIL` - EMAIL
 // * `GROUP` - GROUP
@@ -265,17 +1029,26 @@ func (e EntityTypeEnum) Ptr() *EntityTypeEnum {
 }
 
 type GetorRemoveUserFromOrganization struct {
-	UserId string `json:"userId" url:"userId"`
+	UserId *string `json:"userId,omitempty" url:"userId,omitempty"`
+	// Alias to easily identify SSO Groups. Alias is only applicable for GROUP entityType.
+	Alias *string `json:"alias,omitempty" url:"alias,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (g *GetorRemoveUserFromOrganization) GetUserId() string {
+func (g *GetorRemoveUserFromOrganization) GetUserId() *string {
 	if g == nil {
-		return ""
+		return nil
 	}
 	return g.UserId
+}
+
+func (g *GetorRemoveUserFromOrganization) GetAlias() *string {
+	if g == nil {
+		return nil
+	}
+	return g.Alias
 }
 
 func (g *GetorRemoveUserFromOrganization) GetExtraProperties() map[string]interface{} {
@@ -308,6 +1081,252 @@ func (g *GetorRemoveUserFromOrganization) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", g)
+}
+
+type ListAllUsersInOrganizationResponse struct {
+	Msg  string          `json:"msg" url:"msg"`
+	Data []*ListUserItem `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListAllUsersInOrganizationResponse) GetMsg() string {
+	if l == nil {
+		return ""
+	}
+	return l.Msg
+}
+
+func (l *ListAllUsersInOrganizationResponse) GetData() []*ListUserItem {
+	if l == nil {
+		return nil
+	}
+	return l.Data
+}
+
+func (l *ListAllUsersInOrganizationResponse) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListAllUsersInOrganizationResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListAllUsersInOrganizationResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListAllUsersInOrganizationResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListAllUsersInOrganizationResponse) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+type ListUserItem struct {
+	EntityType  string   `json:"entityType" url:"entityType"`
+	UserId      string   `json:"userId" url:"userId"`
+	LoginMethod string   `json:"loginMethod" url:"loginMethod"`
+	Roles       []string `json:"roles,omitempty" url:"roles,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (l *ListUserItem) GetEntityType() string {
+	if l == nil {
+		return ""
+	}
+	return l.EntityType
+}
+
+func (l *ListUserItem) GetUserId() string {
+	if l == nil {
+		return ""
+	}
+	return l.UserId
+}
+
+func (l *ListUserItem) GetLoginMethod() string {
+	if l == nil {
+		return ""
+	}
+	return l.LoginMethod
+}
+
+func (l *ListUserItem) GetRoles() []string {
+	if l == nil {
+		return nil
+	}
+	return l.Roles
+}
+
+func (l *ListUserItem) GetExtraProperties() map[string]interface{} {
+	return l.extraProperties
+}
+
+func (l *ListUserItem) UnmarshalJSON(data []byte) error {
+	type unmarshaler ListUserItem
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*l = ListUserItem(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *l)
+	if err != nil {
+		return err
+	}
+	l.extraProperties = extraProperties
+	l.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (l *ListUserItem) String() string {
+	if len(l.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(l.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(l); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", l)
+}
+
+// Serializer for OIDC Trust configuration
+type OidcTrust struct {
+	// OIDC Issuer URL
+	Issuer string `json:"Issuer" url:"Issuer"`
+	// OIDC Client ID
+	ClientId string `json:"ClientID" url:"ClientID"`
+	// Subject expression pattern
+	SubjectExpression string `json:"SubjectExpression" url:"SubjectExpression"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (o *OidcTrust) GetIssuer() string {
+	if o == nil {
+		return ""
+	}
+	return o.Issuer
+}
+
+func (o *OidcTrust) GetClientId() string {
+	if o == nil {
+		return ""
+	}
+	return o.ClientId
+}
+
+func (o *OidcTrust) GetSubjectExpression() string {
+	if o == nil {
+		return ""
+	}
+	return o.SubjectExpression
+}
+
+func (o *OidcTrust) GetExtraProperties() map[string]interface{} {
+	return o.extraProperties
+}
+
+func (o *OidcTrust) UnmarshalJSON(data []byte) error {
+	type unmarshaler OidcTrust
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*o = OidcTrust(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *o)
+	if err != nil {
+		return err
+	}
+	o.extraProperties = extraProperties
+	o.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (o *OidcTrust) String() string {
+	if len(o.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(o.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(o); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", o)
+}
+
+type ReadAuditLogResponse struct {
+	// List of audit log items.
+	Msg []*AuditLogItem `json:"msg,omitempty" url:"msg,omitempty"`
+	// The last evaluated key for pagination.
+	Lastevaluatedkey *string `json:"lastevaluatedkey,omitempty" url:"lastevaluatedkey,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (r *ReadAuditLogResponse) GetMsg() []*AuditLogItem {
+	if r == nil {
+		return nil
+	}
+	return r.Msg
+}
+
+func (r *ReadAuditLogResponse) GetLastevaluatedkey() *string {
+	if r == nil {
+		return nil
+	}
+	return r.Lastevaluatedkey
+}
+
+func (r *ReadAuditLogResponse) GetExtraProperties() map[string]interface{} {
+	return r.extraProperties
+}
+
+func (r *ReadAuditLogResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler ReadAuditLogResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*r = ReadAuditLogResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *r)
+	if err != nil {
+		return err
+	}
+	r.extraProperties = extraProperties
+	r.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (r *ReadAuditLogResponse) String() string {
+	if len(r.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(r); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", r)
 }
 
 type RemoveUserFromOrganizationResponse struct {
@@ -365,8 +1384,9 @@ func (r *RemoveUserFromOrganizationResponse) String() string {
 }
 
 type RoleCreateUpdateResponse struct {
-	Msg  *string           `json:"msg,omitempty" url:"msg,omitempty"`
-	Data *RoleDataResponse `json:"data,omitempty" url:"data,omitempty"`
+	Msg      *string           `json:"msg,omitempty" url:"msg,omitempty"`
+	Data     *RoleDataResponse `json:"data,omitempty" url:"data,omitempty"`
+	Warnings []string          `json:"warnings,omitempty" url:"warnings,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -384,6 +1404,13 @@ func (r *RoleCreateUpdateResponse) GetData() *RoleDataResponse {
 		return nil
 	}
 	return r.Data
+}
+
+func (r *RoleCreateUpdateResponse) GetWarnings() []string {
+	if r == nil {
+		return nil
+	}
+	return r.Warnings
 }
 
 func (r *RoleCreateUpdateResponse) GetExtraProperties() map[string]interface{} {
@@ -428,14 +1455,15 @@ type RoleDataResponse struct {
 	DocVersion         string                         `json:"DocVersion" url:"DocVersion"`
 	ParentId           string                         `json:"ParentId" url:"ParentId"`
 	ResourceId         string                         `json:"ResourceId" url:"ResourceId"`
+	Id                 string                         `json:"Id" url:"Id"`
 	ResourceType       string                         `json:"ResourceType" url:"ResourceType"`
 	Authors            []interface{}                  `json:"Authors,omitempty" url:"Authors,omitempty"`
 	// Time in milliseconds as a string
 	CreatedAt int `json:"CreatedAt" url:"CreatedAt"`
 	// Time in milliseconds as a string
-	ModifiedAt int            `json:"ModifiedAt" url:"ModifiedAt"`
-	IsActive   *IsArchiveEnum `json:"IsActive,omitempty" url:"IsActive,omitempty"`
-	IsArchive  IsArchiveEnum  `json:"IsArchive" url:"IsArchive"`
+	ModifiedAt int           `json:"ModifiedAt" url:"ModifiedAt"`
+	IsActive   *IsPublicEnum `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	IsArchive  IsPublicEnum  `json:"IsArchive" url:"IsArchive"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -497,6 +1525,13 @@ func (r *RoleDataResponse) GetResourceId() string {
 	return r.ResourceId
 }
 
+func (r *RoleDataResponse) GetId() string {
+	if r == nil {
+		return ""
+	}
+	return r.Id
+}
+
 func (r *RoleDataResponse) GetResourceType() string {
 	if r == nil {
 		return ""
@@ -525,14 +1560,14 @@ func (r *RoleDataResponse) GetModifiedAt() int {
 	return r.ModifiedAt
 }
 
-func (r *RoleDataResponse) GetIsActive() *IsArchiveEnum {
+func (r *RoleDataResponse) GetIsActive() *IsPublicEnum {
 	if r == nil {
 		return nil
 	}
 	return r.IsActive
 }
 
-func (r *RoleDataResponse) GetIsArchive() IsArchiveEnum {
+func (r *RoleDataResponse) GetIsArchive() IsPublicEnum {
 	if r == nil {
 		return ""
 	}
@@ -569,6 +1604,30 @@ func (r *RoleDataResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", r)
+}
+
+// * `V3.BETA` - V3.BETA
+// * `V4` - V4
+type RoleDocVersionEnum string
+
+const (
+	RoleDocVersionEnumV3Beta RoleDocVersionEnum = "V3.BETA"
+	RoleDocVersionEnumV4     RoleDocVersionEnum = "V4"
+)
+
+func NewRoleDocVersionEnumFromString(s string) (RoleDocVersionEnum, error) {
+	switch s {
+	case "V3.BETA":
+		return RoleDocVersionEnumV3Beta, nil
+	case "V4":
+		return RoleDocVersionEnumV4, nil
+	}
+	var t RoleDocVersionEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (r RoleDocVersionEnum) Ptr() *RoleDocVersionEnum {
+	return &r
 }
 
 type RoleGetResponse struct {
@@ -623,4 +1682,26 @@ func (r *RoleGetResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", r)
+}
+
+type ListAllApiAccessesRequestAccessType string
+
+const (
+	ListAllApiAccessesRequestAccessTypeApikey ListAllApiAccessesRequestAccessType = "APIKEY"
+	ListAllApiAccessesRequestAccessTypeOidc   ListAllApiAccessesRequestAccessType = "OIDC"
+)
+
+func NewListAllApiAccessesRequestAccessTypeFromString(s string) (ListAllApiAccessesRequestAccessType, error) {
+	switch s {
+	case "APIKEY":
+		return ListAllApiAccessesRequestAccessTypeApikey, nil
+	case "OIDC":
+		return ListAllApiAccessesRequestAccessTypeOidc, nil
+	}
+	var t ListAllApiAccessesRequestAccessType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (l ListAllApiAccessesRequestAccessType) Ptr() *ListAllApiAccessesRequestAccessType {
+	return &l
 }

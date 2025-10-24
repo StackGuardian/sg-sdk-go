@@ -9,6 +9,239 @@ import (
 	internal "github.com/StackGuardian/sg-sdk-go/internal"
 )
 
+type AiSettings struct {
+	// Indicates whether the organization has accepted the StackGuardian AI Terms of Service.
+	AcceptedTerms bool `json:"acceptedTerms" url:"acceptedTerms"`
+	// Indicates whether AI Bot(Documentation Assistant) feature is enabled for the organization.
+	EnableAIbot bool `json:"enableAIbot" url:"enableAIbot"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AiSettings) GetAcceptedTerms() bool {
+	if a == nil {
+		return false
+	}
+	return a.AcceptedTerms
+}
+
+func (a *AiSettings) GetEnableAIbot() bool {
+	if a == nil {
+		return false
+	}
+	return a.EnableAIbot
+}
+
+func (a *AiSettings) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AiSettings) UnmarshalJSON(data []byte) error {
+	type unmarshaler AiSettings
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AiSettings(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AiSettings) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+type AuditLogSettings struct {
+	// Indicates whether generation of audit logs should trigger a webhook.
+	EnableWebhook *bool `json:"enableWebhook,omitempty" url:"enableWebhook,omitempty"`
+	// The webhook configuration for the organization.
+	WebhookConfig *AuditLogWebhookConfig `json:"webhookConfig,omitempty" url:"webhookConfig,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AuditLogSettings) GetEnableWebhook() *bool {
+	if a == nil {
+		return nil
+	}
+	return a.EnableWebhook
+}
+
+func (a *AuditLogSettings) GetWebhookConfig() *AuditLogWebhookConfig {
+	if a == nil {
+		return nil
+	}
+	return a.WebhookConfig
+}
+
+func (a *AuditLogSettings) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AuditLogSettings) UnmarshalJSON(data []byte) error {
+	type unmarshaler AuditLogSettings
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AuditLogSettings(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AuditLogSettings) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+type AuditLogWebhookConfig struct {
+	// The URL for the audit log webhook.
+	Url string `json:"url" url:"url"`
+	// The headers to be sent with the audit log webhook. The Key is the header name and the Value is the header value.
+	Headers map[string]string `json:"headers,omitempty" url:"headers,omitempty"`
+	// Optional. You can set a webhook secret to verify that a webhook delivery is from StackGuardian. The value of secret must be a reference to a secret stored in the StackGuardian Vault. Visit our Audit log webhook documentation for more details on Webhook Secrets.
+	Secret *string `json:"secret,omitempty" url:"secret,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *AuditLogWebhookConfig) GetUrl() string {
+	if a == nil {
+		return ""
+	}
+	return a.Url
+}
+
+func (a *AuditLogWebhookConfig) GetHeaders() map[string]string {
+	if a == nil {
+		return nil
+	}
+	return a.Headers
+}
+
+func (a *AuditLogWebhookConfig) GetSecret() *string {
+	if a == nil {
+		return nil
+	}
+	return a.Secret
+}
+
+func (a *AuditLogWebhookConfig) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *AuditLogWebhookConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler AuditLogWebhookConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = AuditLogWebhookConfig(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *AuditLogWebhookConfig) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+type InfracostSettings struct {
+	// Indicates whether the user provided Infracost API key is to be used.
+	UseInfraCostApiKey bool `json:"useInfraCostApiKey" url:"useInfraCostApiKey"`
+	// The Infracost API key.
+	InfraCostApiKey *string `json:"infraCostApiKey,omitempty" url:"infraCostApiKey,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (i *InfracostSettings) GetUseInfraCostApiKey() bool {
+	if i == nil {
+		return false
+	}
+	return i.UseInfraCostApiKey
+}
+
+func (i *InfracostSettings) GetInfraCostApiKey() *string {
+	if i == nil {
+		return nil
+	}
+	return i.InfraCostApiKey
+}
+
+func (i *InfracostSettings) GetExtraProperties() map[string]interface{} {
+	return i.extraProperties
+}
+
+func (i *InfracostSettings) UnmarshalJSON(data []byte) error {
+	type unmarshaler InfracostSettings
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*i = InfracostSettings(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *i)
+	if err != nil {
+		return err
+	}
+	i.extraProperties = extraProperties
+	i.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (i *InfracostSettings) String() string {
+	if len(i.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(i); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", i)
+}
+
 type OrgGetResponse struct {
 	Msg *Organization `json:"msg,omitempty" url:"msg,omitempty"`
 
@@ -55,9 +288,76 @@ func (o *OrgGetResponse) String() string {
 	return fmt.Sprintf("%#v", o)
 }
 
+type OrgSettings struct {
+	// The Infracost settings for the organization.
+	InfraCostSettings *InfracostSettings `json:"infraCostSettings,omitempty" url:"infraCostSettings,omitempty"`
+	// The AI settings for the organization.
+	AiSettings *AiSettings `json:"aiSettings,omitempty" url:"aiSettings,omitempty"`
+	// The audit log settings for the organization.
+	AuditLogSettings *AuditLogSettings `json:"auditLogSettings,omitempty" url:"auditLogSettings,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (o *OrgSettings) GetInfraCostSettings() *InfracostSettings {
+	if o == nil {
+		return nil
+	}
+	return o.InfraCostSettings
+}
+
+func (o *OrgSettings) GetAiSettings() *AiSettings {
+	if o == nil {
+		return nil
+	}
+	return o.AiSettings
+}
+
+func (o *OrgSettings) GetAuditLogSettings() *AuditLogSettings {
+	if o == nil {
+		return nil
+	}
+	return o.AuditLogSettings
+}
+
+func (o *OrgSettings) GetExtraProperties() map[string]interface{} {
+	return o.extraProperties
+}
+
+func (o *OrgSettings) UnmarshalJSON(data []byte) error {
+	type unmarshaler OrgSettings
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*o = OrgSettings(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *o)
+	if err != nil {
+		return err
+	}
+	o.extraProperties = extraProperties
+	o.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (o *OrgSettings) String() string {
+	if len(o.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(o.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(o); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", o)
+}
+
 type Organization struct {
 	// The name of the organization.
 	ResourceName *string `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	// Organization level settings.
+	Settings *OrgSettings `json:"Settings,omitempty" url:"Settings,omitempty"`
 	// The administrators of the organization.
 	Admins []string `json:"Admins,omitempty" url:"Admins,omitempty"`
 	// Marketplace subscriptions
@@ -68,11 +368,11 @@ type Organization struct {
 	//
 	// * `0` - 0
 	// * `1` - 1
-	IsActive *IsArchiveEnum `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	IsActive *IsPublicEnum `json:"IsActive,omitempty" url:"IsActive,omitempty"`
 	// The resource ID of the organization.
 	ResourceId *string `json:"ResourceId,omitempty" url:"ResourceId,omitempty"`
 	// The last modified timestamp of the organization.
-	ModifiedAt *float64 `json:"ModifiedAt,omitempty" url:"ModifiedAt,omitempty"`
+	ModifiedAt *int `json:"ModifiedAt,omitempty" url:"ModifiedAt,omitempty"`
 	// The parent organization ID.
 	ParentId *string `json:"ParentId,omitempty" url:"ParentId,omitempty"`
 	// The resource type.
@@ -88,7 +388,7 @@ type Organization struct {
 	// The organization ID.
 	OrgId *string `json:"OrgId,omitempty" url:"OrgId,omitempty"`
 	// The creation timestamp of the organization
-	CreatedAt *float64 `json:"CreatedAt,omitempty" url:"CreatedAt,omitempty"`
+	CreatedAt *int `json:"CreatedAt,omitempty" url:"CreatedAt,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -99,6 +399,13 @@ func (o *Organization) GetResourceName() *string {
 		return nil
 	}
 	return o.ResourceName
+}
+
+func (o *Organization) GetSettings() *OrgSettings {
+	if o == nil {
+		return nil
+	}
+	return o.Settings
 }
 
 func (o *Organization) GetAdmins() []string {
@@ -122,7 +429,7 @@ func (o *Organization) GetIsArchive() *string {
 	return o.IsArchive
 }
 
-func (o *Organization) GetIsActive() *IsArchiveEnum {
+func (o *Organization) GetIsActive() *IsPublicEnum {
 	if o == nil {
 		return nil
 	}
@@ -136,7 +443,7 @@ func (o *Organization) GetResourceId() *string {
 	return o.ResourceId
 }
 
-func (o *Organization) GetModifiedAt() *float64 {
+func (o *Organization) GetModifiedAt() *int {
 	if o == nil {
 		return nil
 	}
@@ -192,7 +499,7 @@ func (o *Organization) GetOrgId() *string {
 	return o.OrgId
 }
 
-func (o *Organization) GetCreatedAt() *float64 {
+func (o *Organization) GetCreatedAt() *int {
 	if o == nil {
 		return nil
 	}

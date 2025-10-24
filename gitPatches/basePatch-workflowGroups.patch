@@ -15,7 +15,7 @@ index b1b905c..078a3a5 100644
  		"https://api.app.stackguardian.io",
  	)
 -	endpointURL := internal.EncodeURL(
--		baseURL+"/api/v1/orgs/%v/wfgrps/%v",
+-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/",
 -		org,
 -		wfGrp,
 -	)
@@ -35,7 +35,7 @@ index b1b905c..078a3a5 100644
  		"https://api.app.stackguardian.io",
  	)
 -	endpointURL := internal.EncodeURL(
--		baseURL+"/api/v1/orgs/%v/wfgrps/%v",
+-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/",
 -		org,
 -		wfGrp,
 -	)
@@ -55,7 +55,7 @@ index b1b905c..078a3a5 100644
  		"https://api.app.stackguardian.io",
  	)
 -	endpointURL := internal.EncodeURL(
--		baseURL+"/api/v1/orgs/%v/wfgrps/%v",
+-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/",
 -		org,
 -		wfGrp,
 -	)
@@ -95,7 +95,7 @@ index b1b905c..078a3a5 100644
 +		endpointURL += wfGrp
 +	} else {
 +		endpointURL = internal.EncodeURL(
-+			baseURL+"/api/v1/orgs/%v/wfgrps/%v",
++			baseURL+"/api/v1/orgs/%v/wfgrps/%v/",
 +			org,
 +			wfGrp,
 +		)

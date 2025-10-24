@@ -95,7 +95,7 @@ func (c *Client) ReadStackRun(
 		"https://api.app.stackguardian.io",
 	)
 	endpointURL := internal.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/stackruns/%v",
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/stackruns/%v/",
 		org,
 		wfGrp,
 		stack,
@@ -125,7 +125,7 @@ func (c *Client) ReadStackRun(
 	return response, nil
 }
 
-// Retrieves a list of all stack runs for a specific stack.
+// Retrieves a list of all stack runs for a specific stack. Supports Pagination and Filtering using query parameters.
 func (c *Client) ListAllStackRuns(
 	ctx context.Context,
 	org string,

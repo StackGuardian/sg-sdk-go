@@ -317,7 +317,7 @@ func (c *Client) ApproveWorkflowRun(
 	return response, nil
 }
 
-// Retrieve a list of all workflow runs.
+// Retrieve a list of all workflow runs. Supports Pagination and Filtering using query parameters.
 func (c *Client) ListAllWorkflowRuns(
 	ctx context.Context,
 	org string,

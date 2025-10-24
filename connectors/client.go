@@ -204,7 +204,7 @@ func (c *Client) UpdateConnector(
 	return response, nil
 }
 
-// List all Connectors inside an Organization.
+// List all Connectors inside an Organization. Supports Pagination and Filtering using query parameters.
 func (c *Client) ListAllConnectors(
 	ctx context.Context,
 	org string,

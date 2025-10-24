@@ -20,7 +20,8 @@ type Stack struct {
 	EnvironmentVariables *core.Optional[[]*EnvVars] `json:"EnvironmentVariables,omitempty" url:"-"`
 	// Defines the default deployment config when the workflows in WorkflowConfig do not set this key.
 	DeploymentPlatformConfig *core.Optional[[]*DeploymentPlatformConfig] `json:"DeploymentPlatformConfig,omitempty" url:"-"`
-	Actions                  *core.Optional[map[string]*Actions]         `json:"Actions,omitempty" url:"-"`
+	// Actions define the sequence in which the workflows in the Stack are to be executed along with the run configuration for each workflow. Each key in an action is the name of the action for example `apply`, `destroy`.
+	Actions *core.Optional[map[string]*Actions] `json:"Actions,omitempty" url:"-"`
 	// The ID of the template group that this Stack is mapped to. Null if the Stack is not mapped to any template group.
 	TemplateGroupId *core.Optional[string]                `json:"TemplateGroupId,omitempty" url:"-"`
 	WorkflowsConfig *core.Optional[WorkflowsConfig]       `json:"WorkflowsConfig,omitempty" url:"-"`
@@ -34,8 +35,16 @@ type Stack struct {
 }
 
 type ListAllStacksRequest struct {
+	// Filter stacks by description.
+	Description *string `json:"-" url:"Description,omitempty"`
+	// Filter stacks by resource names.
+	ResourceNames *string `json:"-" url:"ResourceNames,omitempty"`
+	// Filter stacks by tags.
+	Tags *string `json:"-" url:"Tags,omitempty"`
 	// Pagination token to retrieve the next set of results
 	Lastevaluatedkey *string `json:"-" url:"lastevaluatedkey,omitempty"`
+	// Limit the number of results returned. Default is 50. Maximum is 500.
+	Limit *int `json:"-" url:"limit,omitempty"`
 }
 
 type PatchedStack struct {
@@ -46,7 +55,8 @@ type PatchedStack struct {
 	EnvironmentVariables *core.Optional[[]*EnvVars] `json:"EnvironmentVariables,omitempty" url:"-"`
 	// Defines the default deployment config when the workflows in WorkflowConfig do not set this key.
 	DeploymentPlatformConfig *core.Optional[[]*DeploymentPlatformConfig] `json:"DeploymentPlatformConfig,omitempty" url:"-"`
-	Actions                  *core.Optional[map[string]*Actions]         `json:"Actions,omitempty" url:"-"`
+	// Actions define the sequence in which the workflows in the Stack are to be executed along with the run configuration for each workflow. Each key in an action is the name of the action for example `apply`, `destroy`.
+	Actions *core.Optional[map[string]*Actions] `json:"Actions,omitempty" url:"-"`
 	// The ID of the template group that this Stack is mapped to. Null if the Stack is not mapped to any template group.
 	TemplateGroupId *core.Optional[string]                `json:"TemplateGroupId,omitempty" url:"-"`
 	WorkflowsConfig *core.Optional[WorkflowsConfig]       `json:"WorkflowsConfig,omitempty" url:"-"`
@@ -57,6 +67,8 @@ type PatchedStack struct {
 	// Contextual tags to give meanings to your tags
 	ContextTags *core.Optional[map[string]*string] `json:"ContextTags,omitempty" url:"-"`
 	MiniSteps   *core.Optional[MiniStepsSchema]    `json:"MiniSteps,omitempty" url:"-"`
+	// Taints are issues that are affecting this Stack. A Taint may be purely informational or may require action to remove the taint.
+	Taints *core.Optional[[]string] `json:"Taints,omitempty" url:"-"`
 }
 
 type GeneratedStackCreateResponse struct {
@@ -175,7 +187,8 @@ type GeneratedStackCreateResponseDataStack struct {
 	EnvironmentVariables []*EnvVars `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
 	// Defines the default deployment config when the workflows in WorkflowConfig do not set this key.
 	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
-	Actions                  map[string]*Actions         `json:"Actions,omitempty" url:"Actions,omitempty"`
+	// Actions define the sequence in which the workflows in the Stack are to be executed along with the run configuration for each workflow. Each key in an action is the name of the action for example `apply`, `destroy`.
+	Actions map[string]*Actions `json:"Actions,omitempty" url:"Actions,omitempty"`
 	// The ID of the template group that this Stack is mapped to. Null if the Stack is not mapped to any template group.
 	TemplateGroupId *string               `json:"TemplateGroupId,omitempty" url:"TemplateGroupId,omitempty"`
 	WorkflowsConfig *WorkflowsConfig      `json:"WorkflowsConfig,omitempty" url:"WorkflowsConfig,omitempty"`
@@ -184,8 +197,10 @@ type GeneratedStackCreateResponseDataStack struct {
 	// Used only when upgrading Stack.
 	Operations map[string]interface{} `json:"Operations,omitempty" url:"Operations,omitempty"`
 	// Contextual tags to give meanings to your tags
-	ContextTags          map[string]*string                `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
-	MiniSteps            *MiniStepsSchema                  `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	MiniSteps   *MiniStepsSchema   `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	// Taints are issues that are affecting this Stack. A Taint may be purely informational or may require action to remove the taint.
+	Taints               []string                          `json:"Taints,omitempty" url:"Taints,omitempty"`
 	OrgId                string                            `json:"OrgId" url:"OrgId"`
 	SubResourceId        string                            `json:"SubResourceId" url:"SubResourceId"`
 	CreatedAt            int                               `json:"CreatedAt" url:"CreatedAt"`
@@ -293,6 +308,13 @@ func (g *GeneratedStackCreateResponseDataStack) GetMiniSteps() *MiniStepsSchema 
 		return nil
 	}
 	return g.MiniSteps
+}
+
+func (g *GeneratedStackCreateResponseDataStack) GetTaints() []string {
+	if g == nil {
+		return nil
+	}
+	return g.Taints
 }
 
 func (g *GeneratedStackCreateResponseDataStack) GetOrgId() string {
@@ -780,7 +802,8 @@ type GeneratedStackGetResponseMsg struct {
 	EnvironmentVariables []*EnvVars `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
 	// Defines the default deployment config when the workflows in WorkflowConfig do not set this key.
 	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
-	Actions                  map[string]*Actions         `json:"Actions,omitempty" url:"Actions,omitempty"`
+	// Actions define the sequence in which the workflows in the Stack are to be executed along with the run configuration for each workflow. Each key in an action is the name of the action for example `apply`, `destroy`.
+	Actions map[string]*Actions `json:"Actions,omitempty" url:"Actions,omitempty"`
 	// The ID of the template group that this Stack is mapped to. Null if the Stack is not mapped to any template group.
 	TemplateGroupId *string               `json:"TemplateGroupId,omitempty" url:"TemplateGroupId,omitempty"`
 	WorkflowsConfig *WorkflowsConfig      `json:"WorkflowsConfig,omitempty" url:"WorkflowsConfig,omitempty"`
@@ -789,8 +812,10 @@ type GeneratedStackGetResponseMsg struct {
 	// Used only when upgrading Stack.
 	Operations map[string]interface{} `json:"Operations,omitempty" url:"Operations,omitempty"`
 	// Contextual tags to give meanings to your tags
-	ContextTags          map[string]*string     `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
-	MiniSteps            *MiniStepsSchema       `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	MiniSteps   *MiniStepsSchema   `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	// Taints are issues that are affecting this Stack. A Taint may be purely informational or may require action to remove the taint.
+	Taints               []string               `json:"Taints,omitempty" url:"Taints,omitempty"`
 	StackFullId          string                 `json:"StackFullId" url:"StackFullId"`
 	WorkflowRelationsMap map[string]interface{} `json:"WorkflowRelationsMap,omitempty" url:"WorkflowRelationsMap,omitempty"`
 	IsActive             string                 `json:"IsActive" url:"IsActive"`
@@ -907,6 +932,13 @@ func (g *GeneratedStackGetResponseMsg) GetMiniSteps() *MiniStepsSchema {
 		return nil
 	}
 	return g.MiniSteps
+}
+
+func (g *GeneratedStackGetResponseMsg) GetTaints() []string {
+	if g == nil {
+		return nil
+	}
+	return g.Taints
 }
 
 func (g *GeneratedStackGetResponseMsg) GetStackFullId() string {

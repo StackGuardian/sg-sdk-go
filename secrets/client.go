@@ -162,7 +162,7 @@ func (c *Client) UpdateSecret(
 	return response, nil
 }
 
-// Lists all the secrets in the organization.
+// Lists all the secrets in the organization. This List All endpoint does not support pagination at the moment.
 func (c *Client) ListAllSecrets(
 	ctx context.Context,
 	org string,

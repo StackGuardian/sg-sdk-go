@@ -238,11 +238,12 @@ func (c *Client) CreateChildWorkflowGroup(
 	return response, nil
 }
 
-// List all the Child Workflow Groups in an existing Workflow Group.
+// List all the Child Workflow Groups in an existing Workflow Group. Supports Pagination and Filtering using query parameters.
 func (c *Client) ListAllChildWorkflowGroups(
 	ctx context.Context,
 	org string,
 	wfGrp string,
+	request *sgsdkgo.ListAllChildWorkflowGroupsRequest,
 	opts ...option.RequestOption,
 ) (*sgsdkgo.WorkflowGroupListAllResponse, error) {
 	options := core.NewRequestOptions(opts...)
@@ -256,6 +257,13 @@ func (c *Client) ListAllChildWorkflowGroups(
 		org,
 		wfGrp,
 	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
 		options.ToHeader(),
@@ -280,10 +288,11 @@ func (c *Client) ListAllChildWorkflowGroups(
 	return response, nil
 }
 
-// List all the Workflow Groups in an Organization.
+// List all the Workflow Groups in an Organization. Supports Pagination and Filtering using query parameters.
 func (c *Client) ListAllWorkflowGroups(
 	ctx context.Context,
 	org string,
+	request *sgsdkgo.ListAllWorkflowGroupsRequest,
 	opts ...option.RequestOption,
 ) (*sgsdkgo.WorkflowGroupListAllResponse, error) {
 	options := core.NewRequestOptions(opts...)
@@ -296,6 +305,13 @@ func (c *Client) ListAllWorkflowGroups(
 		baseURL+"/api/v1/orgs/%v/wfgrps/listall/",
 		org,
 	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
 		options.ToHeader(),
@@ -332,7 +348,7 @@ func escapeSlashesForNestedWorkflowGroup(baseURL, org, wfGrp string) string {
 		endpointURL += wfGrp
 	} else {
 		endpointURL = internal.EncodeURL(
-			baseURL+"/api/v1/orgs/%v/wfgrps/%v",
+			baseURL+"/api/v1/orgs/%v/wfgrps/%v/",
 			org,
 			wfGrp,
 		)

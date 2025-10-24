@@ -263,7 +263,7 @@ func (c *Client) ReadStackOutputs(
 	return response, nil
 }
 
-// Lists all the Stacks inside a Workflow Group.
+// Lists all the Stacks inside a Workflow Group. Supports Pagination and Filtering using query parameters.
 func (c *Client) ListAllStacks(
 	ctx context.Context,
 	org string,

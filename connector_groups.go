@@ -236,7 +236,6 @@ type IntegrationDataResponse struct {
 	Tags              []string              `json:"Tags,omitempty" url:"Tags,omitempty"`
 	// Contextual tags to give context to your tags
 	ContextTags    map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
-	Id             *string            `json:"Id,omitempty" url:"Id,omitempty"`
 	IsActive       *IsPublicEnum      `json:"IsActive,omitempty" url:"IsActive,omitempty"`
 	Authentication *Authentication    `json:"Authentication,omitempty" url:"Authentication,omitempty"`
 
@@ -291,13 +290,6 @@ func (i *IntegrationDataResponse) GetContextTags() map[string]*string {
 		return nil
 	}
 	return i.ContextTags
-}
-
-func (i *IntegrationDataResponse) GetId() *string {
-	if i == nil {
-		return nil
-	}
-	return i.Id
 }
 
 func (i *IntegrationDataResponse) GetIsActive() *IsPublicEnum {

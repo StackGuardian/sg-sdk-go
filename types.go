@@ -1069,6 +1069,125 @@ type GeneratedConnectorReadResponseMsg struct {
 	rawJSON         json.RawMessage
 }
 
+func (g *GeneratedConnectorReadResponseMsg) GetId() string {
+	if g == nil {
+		return ""
+	}
+	return g.Id
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetIsArchive() string {
+	if g == nil {
+		return ""
+	}
+	return g.IsArchive
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetIsActive() string {
+	if g == nil {
+		return ""
+	}
+	return g.IsActive
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetDescription() string {
+	if g == nil {
+		return ""
+	}
+	return g.Description
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetResourceId() string {
+	if g == nil {
+		return ""
+	}
+	return g.ResourceId
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetScope() []string {
+	if g == nil {
+		return nil
+	}
+	return g.Scope
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetModifiedAt() float64 {
+	if g == nil {
+		return 0
+	}
+	return g.ModifiedAt
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetParentId() string {
+	if g == nil {
+		return ""
+	}
+	return g.ParentId
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetResourceType() string {
+	if g == nil {
+		return ""
+	}
+	return g.ResourceType
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetTags() []string {
+	if g == nil {
+		return nil
+	}
+	return g.Tags
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetContextTags() map[string]string {
+	if g == nil {
+		return nil
+	}
+	return g.ContextTags
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetDocVersion() string {
+	if g == nil {
+		return ""
+	}
+	return g.DocVersion
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetAuthors() []string {
+	if g == nil {
+		return nil
+	}
+	return g.Authors
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetResourceName() string {
+	if g == nil {
+		return ""
+	}
+	return g.ResourceName
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetSubResourceId() string {
+	if g == nil {
+		return ""
+	}
+	return g.SubResourceId
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetOrgId() string {
+	if g == nil {
+		return ""
+	}
+	return g.OrgId
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetCreatedAt() float64 {
+	if g == nil {
+		return 0
+	}
+	return g.CreatedAt
+}
+
 func (g *GeneratedConnectorReadResponseMsg) GetDiscoverySettings() *GeneratedConnectorReadResponseMsgDiscoverysettings {
 	if g == nil {
 		return nil

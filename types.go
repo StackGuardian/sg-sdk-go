@@ -6,6 +6,7 @@ import (
 	json "encoding/json"
 	fmt "fmt"
 
+	"github.com/StackGuardian/sg-sdk-go/core"
 	internal "github.com/StackGuardian/sg-sdk-go/internal"
 )
 
@@ -5457,66 +5458,17 @@ func (n *Notifications) String() string {
 }
 
 type PatchedIntegration struct {
-	ResourceName      *string               `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
-	Description       *string               `json:"Description,omitempty" url:"Description,omitempty"`
-	Settings          *IntegrationsSettings `json:"Settings,omitempty" url:"Settings,omitempty"`
-	DiscoverySettings *Discoverysettings    `json:"DiscoverySettings,omitempty" url:"DiscoverySettings,omitempty"`
-	Scope             []string              `json:"Scope,omitempty" url:"Scope,omitempty"`
-	Tags              []string              `json:"Tags,omitempty" url:"Tags,omitempty"`
+	ResourceName      *core.Optional[*string]               `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	Description       *core.Optional[*string]               `json:"Description,omitempty" url:"Description,omitempty"`
+	Settings          *core.Optional[*IntegrationsSettings] `json:"Settings,omitempty" url:"Settings,omitempty"`
+	DiscoverySettings *core.Optional[*Discoverysettings]    `json:"DiscoverySettings,omitempty" url:"DiscoverySettings,omitempty"`
+	Scope             *core.Optional[[]string]              `json:"Scope,omitempty" url:"Scope,omitempty"`
+	Tags              *core.Optional[[]string]              `json:"Tags,omitempty" url:"Tags,omitempty"`
 	// Contextual tags to give context to your tags
-	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	ContextTags *core.Optional[map[string]*string] `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
-}
-
-func (p *PatchedIntegration) GetResourceName() *string {
-	if p == nil {
-		return nil
-	}
-	return p.ResourceName
-}
-
-func (p *PatchedIntegration) GetDescription() *string {
-	if p == nil {
-		return nil
-	}
-	return p.Description
-}
-
-func (p *PatchedIntegration) GetSettings() *IntegrationsSettings {
-	if p == nil {
-		return nil
-	}
-	return p.Settings
-}
-
-func (p *PatchedIntegration) GetDiscoverySettings() *Discoverysettings {
-	if p == nil {
-		return nil
-	}
-	return p.DiscoverySettings
-}
-
-func (p *PatchedIntegration) GetScope() []string {
-	if p == nil {
-		return nil
-	}
-	return p.Scope
-}
-
-func (p *PatchedIntegration) GetTags() []string {
-	if p == nil {
-		return nil
-	}
-	return p.Tags
-}
-
-func (p *PatchedIntegration) GetContextTags() map[string]*string {
-	if p == nil {
-		return nil
-	}
-	return p.ContextTags
 }
 
 func (p *PatchedIntegration) GetExtraProperties() map[string]interface{} {

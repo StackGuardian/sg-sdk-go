@@ -39,5 +39,6 @@
             }
         ]
     },
-    "Description": "test stack"
+    "Description": "test stack",
+    "ResourceName": "sdk-stack-unmarshall-test"
 }

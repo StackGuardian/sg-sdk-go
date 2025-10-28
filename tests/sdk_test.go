@@ -32,7 +32,9 @@ func TestSDK(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
+		dummyResourceName := "sdk-test-workflow-create-delete"
 		createWorkflowRequest := sggosdk.Workflow{
+			ResourceName: sggosdk.Optional(dummyResourceName),
 			DeploymentPlatformConfig: sggosdk.Optional([]*sggosdk.DeploymentPlatformConfig{{
 				Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
 				Config: map[string]interface{}{
@@ -63,6 +65,7 @@ func TestSDK(t *testing.T) {
 		createResponse, err := c.Workflows.CreateWorkflow(context.Background(), SG_ORG, SG_WF_GROUP, &createWorkflowRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, createResponse.Data.ResourceName)
+		assert.Equal(t, dummyResourceName, createResponse.Data.ResourceName)
 
 		deleteResposnse, err := c.Workflows.DeleteWorkflow(context.Background(), SG_ORG, createResponse.Data.ResourceName, SG_WF_GROUP)
 		assert.Equal(t, "Workflow "+createResponse.Data.ResourceName+" deleted", deleteResposnse.Msg)
@@ -422,8 +425,10 @@ func TestSDK(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
+		dummyResourceName := "sdk-test-stack-create-delete"
 		createStackRequest := sggosdk.Stack{
-			RunOnCreate: sggosdk.Bool(false),
+			ResourceName: sggosdk.Optional(dummyResourceName),
+			RunOnCreate:  sggosdk.Bool(false),
 			DeploymentPlatformConfig: sggosdk.Optional([]*sggosdk.DeploymentPlatformConfig{
 				{
 					Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
@@ -461,6 +466,7 @@ func TestSDK(t *testing.T) {
 		createStackResponse, err := c.Stacks.CreateStack(context.Background(), SG_ORG, SG_WF_GROUP, &createStackRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, createStackResponse.Data.Stack.ResourceName)
+		assert.Equal(t, dummyResourceName, *createStackResponse.Data.Stack.ResourceName)
 		assert.Equal(t, "Stack "+*createStackResponse.Data.Stack.ResourceName+" created", createStackResponse.Msg)
 
 		err = c.StackWorkflows.DeleteStackWorkflow(context.Background(), SG_ORG, *createStackResponse.Data.Stack.ResourceName,
@@ -767,8 +773,10 @@ func TestSDK(t *testing.T) {
 			option.WithBaseURL(SG_BASE_URL),
 		)
 		parentWorkflowGroupName := SG_WF_GROUP
+		dummyResourceName := "sg-sdk-child-workflow-group-create-delete"
 		createWorkflowGroupRequest := sggosdk.WorkflowGroup{
-			Description: sggosdk.String("child workflowGroup description"),
+			ResourceName: sggosdk.String(dummyResourceName),
+			Description:  sggosdk.String("child workflowGroup description"),
 		}
 		createChildWorkflowGroupResponse, err := c.WorkflowGroups.CreateChildWorkflowGroup(
 			context.Background(),
@@ -778,6 +786,7 @@ func TestSDK(t *testing.T) {
 		assert.Empty(t, err)
 		assert.NotEmpty(t, createChildWorkflowGroupResponse)
 		assert.NotEmpty(t, createChildWorkflowGroupResponse.Msg)
+		assert.Equal(t, dummyResourceName, *createChildWorkflowGroupResponse.Data.ResourceName)
 		assert.Contains(t, *createChildWorkflowGroupResponse.Msg, "created")
 
 		deleteWorkflowGroupResponse, err := c.WorkflowGroups.DeleteWorkflowGroup(context.Background(), SG_ORG,
@@ -794,8 +803,10 @@ func TestSDK(t *testing.T) {
 			option.WithBaseURL(SG_BASE_URL),
 		)
 		parentWorkflowGroupName := SG_WF_GROUP + "/1bger5ydab697a4jxe2gu"
+		dummyResourceName := "sg-sdk-child-workflow-group-create-delete"
 		createWorkflowGroupRequest := sggosdk.WorkflowGroup{
-			Description: sggosdk.String("child workflowGroup description"),
+			ResourceName: sggosdk.String(dummyResourceName),
+			Description:  sggosdk.String("child workflowGroup description"),
 		}
 		createChildWorkflowGroupResponse, err := c.WorkflowGroups.CreateChildWorkflowGroup(
 			context.Background(),
@@ -805,6 +816,7 @@ func TestSDK(t *testing.T) {
 		assert.Empty(t, err)
 		assert.NotEmpty(t, createChildWorkflowGroupResponse)
 		assert.NotEmpty(t, createChildWorkflowGroupResponse.Msg)
+		assert.Equal(t, dummyResourceName, *createChildWorkflowGroupResponse.Data.ResourceName)
 		assert.Contains(t, *createChildWorkflowGroupResponse.Msg, "created")
 
 		deleteWorkflowGroupResponse, err := c.WorkflowGroups.DeleteWorkflowGroup(context.Background(), SG_ORG,

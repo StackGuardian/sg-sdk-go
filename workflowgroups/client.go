@@ -348,7 +348,7 @@ func escapeSlashesForNestedWorkflowGroup(baseURL, org, wfGrp string) string {
 		endpointURL += wfGrp
 	} else {
 		endpointURL = internal.EncodeURL(
-			baseURL+"/api/v1/orgs/%v/wfgrps/%v/",
+			baseURL+"/api/v1/orgs/%v/wfgrps/%v",
 			org,
 			wfGrp,
 		)

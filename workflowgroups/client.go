@@ -211,7 +211,7 @@ func (c *Client) CreateChildWorkflowGroup(
 		c.baseURL,
 		"https://api.app.stackguardian.io",
 	)
-	endpointURL := escapeSlashesForNestedWorkflowGroup(baseURL, org, wfGrp) + "/wfgrps/"
+	endpointURL := escapeSlashesForNestedWorkflowGroup(baseURL, org, wfGrp) + "wfgrps/"
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
 		options.ToHeader(),
@@ -345,7 +345,7 @@ func escapeSlashesForNestedWorkflowGroup(baseURL, org, wfGrp string) string {
 			baseURL+"/api/v1/orgs/%v/wfgrps/",
 			org,
 		)
-		endpointURL += wfGrp
+		endpointURL += wfGrp + "/"
 	} else {
 		endpointURL = internal.EncodeURL(
 			baseURL+"/api/v1/orgs/%v/wfgrps/%v/",

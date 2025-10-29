@@ -48,7 +48,7 @@ func (c *Client) ReadStackWorkflow(
 		"https://api.app.stackguardian.io",
 	)
 	endpointURL := internal.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v",
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/",
 		org,
 		wfGrp,
 		stack,
@@ -94,7 +94,7 @@ func (c *Client) DeleteStackWorkflow(
 		"https://api.app.stackguardian.io",
 	)
 	endpointURL := internal.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v",
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/",
 		org,
 		wfGrp,
 		stack,
@@ -139,7 +139,7 @@ func (c *Client) UpdateStackWorkflow(
 		"https://api.app.stackguardian.io",
 	)
 	endpointURL := internal.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v",
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/",
 		org,
 		wfGrp,
 		stack,
@@ -171,7 +171,7 @@ func (c *Client) UpdateStackWorkflow(
 	return response, nil
 }
 
-// Retrieve a list of all artifacts for a workflow in a stack.
+// Retrieve a list of all artifacts for a workflow in a stack. This List All endpoint does not support pagination at the moment.
 func (c *Client) ListAllStackWorkflowsArtifacts(
 	ctx context.Context,
 	org string,
@@ -263,7 +263,70 @@ func (c *Client) StackWorkflowOutputs(
 	return response, nil
 }
 
-// Retrieve a list of all workflows in a Stack.
+// This endpoint returns a signed URL to upload a tfstate file for a Stack Workflow.
+// The state file can be uploaded by performing a PUT operation on the returned URL.
+// The URL is valid for 5 minutes.
+//
+// You can use the following curl command as an example on how to upload the state file using the returned URL:
+//
+//	curl -v -i -s -X PUT \
+//	    -H "Content-Type: application/json" \
+//	    -T "<your_tf_state_file>.json" \
+//	    "https://<your-returned-signed-url>"
+func (c *Client) GetSignedUrlToUploadTfstateFileForStackWorkflow(
+	ctx context.Context,
+	org string,
+	stack string,
+	wf string,
+	wfGrp string,
+	request *sgsdkgo.GetSignedUrlToUploadTfstateFileForStackWorkflowRequest,
+	opts ...option.RequestOption,
+) (*sgsdkgo.GeneratedWorkflowUploadUrlResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/tfstate_upload_url/",
+		org,
+		wfGrp,
+		stack,
+		wf,
+	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *sgsdkgo.GeneratedWorkflowUploadUrlResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Retrieve a list of all workflows in a Stack. Supports Pagination and Filtering using query parameters.
 func (c *Client) ListAllStackWorkflows(
 	ctx context.Context,
 	org string,

@@ -32,6 +32,319 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
+// Create a new API access (API Key or OIDC) inside an Organization.
+func (c *Client) CreateApiAccess(
+	ctx context.Context,
+	org string,
+	request *sgsdkgo.ApiAccess,
+	opts ...option.RequestOption,
+) (*sgsdkgo.ApiAccessCreateResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/apiaccesses/",
+		org,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+
+	var response *sgsdkgo.ApiAccessCreateResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Retrieve the details of an existing API access.
+func (c *Client) ReadApiAccess(
+	ctx context.Context,
+	accessId string,
+	org string,
+	opts ...option.RequestOption,
+) (*sgsdkgo.ApiAccessGetResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/apiaccesses/%v/",
+		org,
+		accessId,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *sgsdkgo.ApiAccessGetResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Delete the specified API access from the Organization.
+func (c *Client) DeleteApiAccess(
+	ctx context.Context,
+	accessId string,
+	org string,
+	opts ...option.RequestOption,
+) (*sgsdkgo.ApiAccessDeleteResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/apiaccesses/%v/",
+		org,
+		accessId,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *sgsdkgo.ApiAccessDeleteResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodDelete,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Update an existing API access. Note: ResourceName and AccessType cannot be changed.
+func (c *Client) UpdateApiAccess(
+	ctx context.Context,
+	accessId string,
+	org string,
+	request *sgsdkgo.PatchedApiAccessPatch,
+	opts ...option.RequestOption,
+) (*sgsdkgo.ApiAccessUpdateResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/apiaccesses/%v/",
+		org,
+		accessId,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+
+	var response *sgsdkgo.ApiAccessUpdateResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPatch,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Regenerate the API key for an existing API access. Only works for APIKEY access type. A new expiration date must be provided.
+func (c *Client) RegenerateApiKey(
+	ctx context.Context,
+	accessId string,
+	org string,
+	request *sgsdkgo.ApiAccessRegenerate,
+	opts ...option.RequestOption,
+) (*sgsdkgo.ApiAccessRegenerateResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/apiaccesses/%v/regenerate/",
+		org,
+		accessId,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+
+	var response *sgsdkgo.ApiAccessRegenerateResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// List all the API accesses inside an Organization. Supports pagination and filtering.
+func (c *Client) ListAllApiAccesses(
+	ctx context.Context,
+	org string,
+	request *sgsdkgo.ListAllApiAccessesRequest,
+	opts ...option.RequestOption,
+) (*sgsdkgo.ApiAccessListResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/apiaccesses/listall/",
+		org,
+	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *sgsdkgo.ApiAccessListResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Retrieve the audit logs of an Organization. To filter logs via query parameters, start and end time must be provided in Unix timestamp format (milliseconds).
+func (c *Client) ReadAuditLogs(
+	ctx context.Context,
+	org string,
+	request *sgsdkgo.ReadAuditLogsRequest,
+	opts ...option.RequestOption,
+) (*sgsdkgo.ReadAuditLogResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/audit_logs/",
+		org,
+	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *sgsdkgo.ReadAuditLogResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
 // Retrieve the details of an user or SSO group within an Organization.
 func (c *Client) ReadUser(
 	ctx context.Context,
@@ -162,6 +475,27 @@ func (c *Client) DeleteUser(
 }
 
 // Create a new Role inside an Organization.
+//
+// **Role Format Versions:**
+//
+// Roles support two format versions with different path interpretation behaviors:
+//
+// **V4 (Recommended - One-to-One Mapping):**
+// - Performs direct one-to-one mapping of path elements
+// - Requires all path arrays to have the same number of elements
+// - Example: `<wfGrp>: ["wfgrp1", "wfgrp2"]` and `<wf>: ["wf1", "wf2"]`
+// - Results in 2 mappings: wfgrp1/wf1, wfgrp2/wf2
+//
+// **V3.BETA (Deprecated - Cartesian Product):**
+// - Creates all possible combinations of the provided paths
+// - Example: If paths contain `<wfGrp>: ["wfgrp1", "wfgrp2"]` and `<wf>: ["wf1", "wf2"]`
+// - Results in 4 combinations: wfgrp1/wf1, wfgrp1/wf2, wfgrp2/wf1, wfgrp2/wf2
+// - Allows different number of elements in path arrays
+//
+// **Migration from V3.BETA to V4:**
+// To achieve V3.BETA behavior in V4 format, combine values using regex alternation:
+// - Instead of: `["wfgrp1", "wfgrp2"]` and `["wf1", "wf2"]`
+// - Use: `["wfgrp1|wfgrp2"]` and `["wf1|wf2"]`
 func (c *Client) CreateRole(
 	ctx context.Context,
 	org string,
@@ -287,6 +621,27 @@ func (c *Client) DeleteRole(
 }
 
 // Update an existing Role.
+//
+// **Role Format Versions:**
+//
+// Roles support two format versions with different path interpretation behaviors:
+//
+// **V4 (Recommended - One-to-One Mapping):**
+// - Performs direct one-to-one mapping of path elements
+// - Requires all path arrays to have the same number of elements
+// - Example: `<wfGrp>: ["wfgrp1", "wfgrp2"]` and `<wf>: ["wf1", "wf2"]`
+// - Results in 2 mappings: wfgrp1/wf1, wfgrp2/wf2
+//
+// **V3.BETA (Deprecated - Cartesian Product):**
+// - Creates all possible combinations of the provided paths
+// - Example: If paths contain `<wfGrp>: ["wfgrp1", "wfgrp2"]` and `<wf>: ["wf1", "wf2"]`
+// - Results in 4 combinations: wfgrp1/wf1, wfgrp1/wf2, wfgrp2/wf1, wfgrp2/wf2
+// - Allows different number of elements in path arrays
+//
+// **Migration from V3.BETA to V4:**
+// To achieve V3.BETA behavior in V4 format, combine values using regex alternation:
+// - Instead of: `["wfgrp1", "wfgrp2"]` and `["wf1", "wf2"]`
+// - Use: `["wfgrp1|wfgrp2"]` and `["wf1|wf2"]`
 func (c *Client) UpdateRole(
 	ctx context.Context,
 	org string,
@@ -331,10 +686,11 @@ func (c *Client) UpdateRole(
 	return response, nil
 }
 
-// List all the Roles inside an Organization.
+// List all the Roles inside an Organization. This List All endpoint does not support pagination at the moment.
 func (c *Client) ListAllRoles(
 	ctx context.Context,
 	org string,
+	request *sgsdkgo.ListAllRolesRequest,
 	opts ...option.RequestOption,
 ) error {
 	options := core.NewRequestOptions(opts...)
@@ -347,6 +703,13 @@ func (c *Client) ListAllRoles(
 		baseURL+"/api/v1/orgs/%v/roles/listall/",
 		org,
 	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
 		options.ToHeader(),
@@ -404,6 +767,54 @@ func (c *Client) UpdateUser(
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
 			Request:         request,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// List all users within an Organization.
+func (c *Client) ListAllUsers(
+	ctx context.Context,
+	org string,
+	request *sgsdkgo.ListAllUsersRequest,
+	opts ...option.RequestOption,
+) (*sgsdkgo.ListAllUsersInOrganizationResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/users/listall/",
+		org,
+	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *sgsdkgo.ListAllUsersInOrganizationResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
 			Response:        &response,
 		},
 	); err != nil {

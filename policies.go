@@ -11,8 +11,20 @@ import (
 )
 
 type ListAllPoliciesRequest struct {
+	// Filter policies by description.
+	Description *string `json:"-" url:"Description,omitempty"`
+	// Filter policies by policy types. Default is GENERAL.
+	PolicyTypes *string `json:"-" url:"PolicyTypes,omitempty"`
+	// Filter policies by resource names.
+	ResourceNames *string `json:"-" url:"ResourceNames,omitempty"`
+	// Filter policies by tags.
+	Tags *string `json:"-" url:"Tags,omitempty"`
 	// Pagination token to retrieve the next set of results
 	Lastevaluatedkey *string `json:"-" url:"lastevaluatedkey,omitempty"`
+	// Limit the number of results returned. Default is 50. Maximum is 500.
+	Limit *int `json:"-" url:"limit,omitempty"`
+	// Filter policies based on ResourceName, Tags or Description
+	SearchQuery *string `json:"-" url:"searchQuery,omitempty"`
 }
 
 type CustomSourcePolicy struct {
@@ -755,14 +767,14 @@ func (p *PoliciesFilterInsightConfig) String() string {
 }
 
 type PolicyCreateUpdateResponse struct {
-	Data *PolymorphicPolicy `json:"data,omitempty" url:"data,omitempty"`
-	Msg  *string            `json:"msg,omitempty" url:"msg,omitempty"`
+	Data *PolymorphicPolicyGetResponse `json:"data,omitempty" url:"data,omitempty"`
+	Msg  *string                       `json:"msg,omitempty" url:"msg,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (p *PolicyCreateUpdateResponse) GetData() *PolymorphicPolicy {
+func (p *PolicyCreateUpdateResponse) GetData() *PolymorphicPolicyGetResponse {
 	if p == nil {
 		return nil
 	}
@@ -880,6 +892,7 @@ type PolicyFilterInsightResponse struct {
 	Description *string `json:"Description,omitempty" url:"Description,omitempty"`
 	// Policies Config for the policy
 	PoliciesConfig      []*PoliciesFilterInsightConfig `json:"PoliciesConfig,omitempty" url:"PoliciesConfig,omitempty"`
+	Id                  string                         `json:"Id" url:"Id"`
 	IsArchive           string                         `json:"IsArchive" url:"IsArchive"`
 	IsActive            string                         `json:"IsActive" url:"IsActive"`
 	ResourceId          string                         `json:"ResourceId" url:"ResourceId"`
@@ -917,6 +930,13 @@ func (p *PolicyFilterInsightResponse) GetPoliciesConfig() []*PoliciesFilterInsig
 		return nil
 	}
 	return p.PoliciesConfig
+}
+
+func (p *PolicyFilterInsightResponse) GetId() string {
+	if p == nil {
+		return ""
+	}
+	return p.Id
 }
 
 func (p *PolicyFilterInsightResponse) GetIsArchive() string {
@@ -1169,6 +1189,7 @@ type PolicyGeneralResponse struct {
 	EnforcedOn []string `json:"EnforcedOn,omitempty" url:"EnforcedOn,omitempty"`
 	// Policies Config for the policy
 	PoliciesConfig      []*PoliciesConfig `json:"PoliciesConfig,omitempty" url:"PoliciesConfig,omitempty"`
+	Id                  string            `json:"Id" url:"Id"`
 	IsArchive           string            `json:"IsArchive" url:"IsArchive"`
 	IsActive            string            `json:"IsActive" url:"IsActive"`
 	ResourceId          string            `json:"ResourceId" url:"ResourceId"`
@@ -1240,6 +1261,13 @@ func (p *PolicyGeneralResponse) GetPoliciesConfig() []*PoliciesConfig {
 		return nil
 	}
 	return p.PoliciesConfig
+}
+
+func (p *PolicyGeneralResponse) GetId() string {
+	if p == nil {
+		return ""
+	}
+	return p.Id
 }
 
 func (p *PolicyGeneralResponse) GetIsArchive() string {

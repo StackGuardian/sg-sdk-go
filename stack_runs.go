@@ -12,6 +12,8 @@ import (
 type ListAllStackRunsRequest struct {
 	// Pagination token to retrieve the next set of results
 	Lastevaluatedkey *string `json:"-" url:"lastevaluatedkey,omitempty"`
+	// Limit the number of results returned. Default is 50. Maximum is 500.
+	Limit *int `json:"-" url:"limit,omitempty"`
 }
 
 type GeneratedStackRunsGetResponse struct {

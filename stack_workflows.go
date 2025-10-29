@@ -2,7 +2,26 @@
 
 package api
 
+type GetSignedUrlToUploadTfstateFileForStackWorkflowRequest struct {
+	// The name of the file to be uploaded. Defaults to `tfstate.json` if not provided.
+	Filename *string `json:"-" url:"filename,omitempty"`
+}
+
 type ListAllStackWorkflowsRequest struct {
+	// Filter workflows by description.
+	Description *string `json:"-" url:"Description,omitempty"`
+	// Filter workflows by IAC Template Id.
+	IacTemplateId *string `json:"-" url:"IACTemplateId,omitempty"`
+	// Filter workflows by latest workflow run statuses.
+	LatestWfRunStatuses *int `json:"-" url:"LatestWfRunStatuses,omitempty"`
+	// Filter workflows by resource names.
+	ResourceNames *string `json:"-" url:"ResourceNames,omitempty"`
+	// Filter workflows by runner names.
+	RunnerNames *string `json:"-" url:"RunnerNames,omitempty"`
+	// Filter workflows by tags.
+	Tags *string `json:"-" url:"Tags,omitempty"`
 	// Pagination token to retrieve the next set of results
 	Lastevaluatedkey *string `json:"-" url:"lastevaluatedkey,omitempty"`
+	// Limit the number of results returned. Default is 50. Maximum is 500.
+	Limit *int `json:"-" url:"limit,omitempty"`
 }

@@ -7,6 +7,7 @@ import (
 
 	accessmanagement "github.com/StackGuardian/sg-sdk-go/accessmanagement"
 	benchmarkreports "github.com/StackGuardian/sg-sdk-go/benchmarkreports"
+	connectorgroups "github.com/StackGuardian/sg-sdk-go/connectorgroups"
 	connectors "github.com/StackGuardian/sg-sdk-go/connectors"
 	core "github.com/StackGuardian/sg-sdk-go/core"
 	internal "github.com/StackGuardian/sg-sdk-go/internal"
@@ -34,6 +35,7 @@ type Client struct {
 
 	Organizations         *organizations.Client
 	AccessManagement      *accessmanagement.Client
+	ConnectorGroups       *connectorgroups.Client
 	Connectors            *connectors.Client
 	Policies              *policies.Client
 	BenchmarkReports      *benchmarkreports.Client
@@ -64,6 +66,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 		header:                options.ToHeader(),
 		Organizations:         organizations.NewClient(opts...),
 		AccessManagement:      accessmanagement.NewClient(opts...),
+		ConnectorGroups:       connectorgroups.NewClient(opts...),
 		Connectors:            connectors.NewClient(opts...),
 		Policies:              policies.NewClient(opts...),
 		BenchmarkReports:      benchmarkreports.NewClient(opts...),

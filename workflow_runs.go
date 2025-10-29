@@ -11,8 +11,12 @@ import (
 )
 
 type ListAllWorkflowRunsRequest struct {
+	// Filter by context tags.
+	ContextTags *string `json:"-" url:"contextTags,omitempty"`
 	// Pagination token to retrieve the next set of results
 	Lastevaluatedkey *string `json:"-" url:"lastevaluatedkey,omitempty"`
+	// Limit the number of results returned. Default is 50. Maximum is 500.
+	Limit *int `json:"-" url:"limit,omitempty"`
 }
 
 type PatchedWorkflowRun struct {
@@ -23,14 +27,17 @@ type PatchedWorkflowRun struct {
 	TerraformConfig          *core.Optional[map[string]interface{}]      `json:"TerraformConfig,omitempty" url:"-"`
 	TerraformAction          *core.Optional[TerraformAction]             `json:"TerraformAction,omitempty" url:"-"`
 	TriggerDetails           *core.Optional[map[string]interface{}]      `json:"TriggerDetails,omitempty" url:"-"`
-	ScheduledAt              *core.Optional[string]                      `json:"ScheduledAt,omitempty" url:"-"`
-	VcsConfig                *core.Optional[VcsConfig]                   `json:"VCSConfig,omitempty" url:"-"`
-	SgInternals              *core.Optional[map[string]interface{}]      `json:"SGInternals,omitempty" url:"-"`
-	RunnerConstraints        *core.Optional[RunnerConstraints]           `json:"RunnerConstraints,omitempty" url:"-"`
-	UserJobCpu               *core.Optional[int]                         `json:"UserJobCPU,omitempty" url:"-"`
-	UserJobMemory            *core.Optional[int]                         `json:"UserJobMemory,omitempty" url:"-"`
-	EnableChaining           *core.Optional[bool]                        `json:"EnableChaining,omitempty" url:"-"`
-	MiniSteps                *core.Optional[map[string]interface{}]      `json:"MiniSteps,omitempty" url:"-"`
+	// Scheduled time for the workflow run. This time cannot be in the past. Supported formats are: ISO 8601 (e.g., 2025-08-01T22:00:00Z), Unix timestamp in milliseconds (e.g., 1748355781000).
+	ScheduledAt       *core.Optional[string]                 `json:"ScheduledAt,omitempty" url:"-"`
+	VcsConfig         *core.Optional[VcsConfig]              `json:"VCSConfig,omitempty" url:"-"`
+	SgInternals       *core.Optional[map[string]interface{}] `json:"SGInternals,omitempty" url:"-"`
+	RunnerConstraints *core.Optional[RunnerConstraints]      `json:"RunnerConstraints,omitempty" url:"-"`
+	UserJobCpu        *core.Optional[int]                    `json:"UserJobCPU,omitempty" url:"-"`
+	UserJobMemory     *core.Optional[int]                    `json:"UserJobMemory,omitempty" url:"-"`
+	EnableChaining    *core.Optional[bool]                   `json:"EnableChaining,omitempty" url:"-"`
+	MiniSteps         *core.Optional[map[string]interface{}] `json:"MiniSteps,omitempty" url:"-"`
+	// Contextual tags to give context to your workflow run
+	ContextTags *core.Optional[map[string]*string] `json:"ContextTags,omitempty" url:"-"`
 }
 
 type GeneratedWorkfkowRunsUpdateResponse struct {
@@ -2177,19 +2184,22 @@ type WorkflowRunResponse struct {
 	TerraformConfig          map[string]interface{}      `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
 	TerraformAction          *TerraformAction            `json:"TerraformAction,omitempty" url:"TerraformAction,omitempty"`
 	TriggerDetails           map[string]interface{}      `json:"TriggerDetails,omitempty" url:"TriggerDetails,omitempty"`
-	ScheduledAt              *string                     `json:"ScheduledAt,omitempty" url:"ScheduledAt,omitempty"`
-	VcsConfig                *VcsConfig                  `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
-	SgInternals              map[string]interface{}      `json:"SGInternals,omitempty" url:"SGInternals,omitempty"`
-	RunnerConstraints        *RunnerConstraints          `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
-	UserJobCpu               *int                        `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
-	UserJobMemory            *int                        `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
-	EnableChaining           *bool                       `json:"EnableChaining,omitempty" url:"EnableChaining,omitempty"`
-	MiniSteps                map[string]interface{}      `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
-	ResourceName             string                      `json:"ResourceName" url:"ResourceName"`
-	CreatedAt                *float64                    `json:"CreatedAt,omitempty" url:"CreatedAt,omitempty"`
-	Authors                  []string                    `json:"Authors,omitempty" url:"Authors,omitempty"`
-	LatestStatus             *string                     `json:"LatestStatus,omitempty" url:"LatestStatus,omitempty"`
-	LatestStatusKey          *string                     `json:"LatestStatusKey,omitempty" url:"LatestStatusKey,omitempty"`
+	// Scheduled time for the workflow run. This time cannot be in the past. Supported formats are: ISO 8601 (e.g., 2025-08-01T22:00:00Z), Unix timestamp in milliseconds (e.g., 1748355781000).
+	ScheduledAt       *string                `json:"ScheduledAt,omitempty" url:"ScheduledAt,omitempty"`
+	VcsConfig         *VcsConfig             `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
+	SgInternals       map[string]interface{} `json:"SGInternals,omitempty" url:"SGInternals,omitempty"`
+	RunnerConstraints *RunnerConstraints     `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
+	UserJobCpu        *int                   `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
+	UserJobMemory     *int                   `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
+	EnableChaining    *bool                  `json:"EnableChaining,omitempty" url:"EnableChaining,omitempty"`
+	MiniSteps         map[string]interface{} `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	// Contextual tags to give context to your workflow run
+	ContextTags     map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	ResourceName    string             `json:"ResourceName" url:"ResourceName"`
+	CreatedAt       *float64           `json:"CreatedAt,omitempty" url:"CreatedAt,omitempty"`
+	Authors         []string           `json:"Authors,omitempty" url:"Authors,omitempty"`
+	LatestStatus    *string            `json:"LatestStatus,omitempty" url:"LatestStatus,omitempty"`
+	LatestStatusKey *string            `json:"LatestStatusKey,omitempty" url:"LatestStatusKey,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -2298,6 +2308,13 @@ func (w *WorkflowRunResponse) GetMiniSteps() map[string]interface{} {
 		return nil
 	}
 	return w.MiniSteps
+}
+
+func (w *WorkflowRunResponse) GetContextTags() map[string]*string {
+	if w == nil {
+		return nil
+	}
+	return w.ContextTags
 }
 
 func (w *WorkflowRunResponse) GetResourceName() string {

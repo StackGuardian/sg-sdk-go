@@ -32,7 +32,9 @@ func TestSDK(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
+		dummyResourceName := "sdk-test-workflow-create-delete"
 		createWorkflowRequest := sggosdk.Workflow{
+			ResourceName: sggosdk.Optional(dummyResourceName),
 			DeploymentPlatformConfig: sggosdk.Optional([]*sggosdk.DeploymentPlatformConfig{{
 				Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
 				Config: map[string]interface{}{
@@ -63,6 +65,7 @@ func TestSDK(t *testing.T) {
 		createResponse, err := c.Workflows.CreateWorkflow(context.Background(), SG_ORG, SG_WF_GROUP, &createWorkflowRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, createResponse.Data.ResourceName)
+		assert.Equal(t, dummyResourceName, createResponse.Data.ResourceName)
 
 		deleteResposnse, err := c.Workflows.DeleteWorkflow(context.Background(), SG_ORG, createResponse.Data.ResourceName, SG_WF_GROUP)
 		assert.Equal(t, "Workflow "+createResponse.Data.ResourceName+" deleted", deleteResposnse.Msg)
@@ -422,8 +425,10 @@ func TestSDK(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
+		dummyResourceName := "sdk-test-stack-create-delete"
 		createStackRequest := sggosdk.Stack{
-			RunOnCreate: sggosdk.Bool(false),
+			ResourceName: sggosdk.Optional(dummyResourceName),
+			RunOnCreate:  sggosdk.Bool(false),
 			DeploymentPlatformConfig: sggosdk.Optional([]*sggosdk.DeploymentPlatformConfig{
 				{
 					Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
@@ -461,6 +466,7 @@ func TestSDK(t *testing.T) {
 		createStackResponse, err := c.Stacks.CreateStack(context.Background(), SG_ORG, SG_WF_GROUP, &createStackRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, createStackResponse.Data.Stack.ResourceName)
+		assert.Equal(t, dummyResourceName, *createStackResponse.Data.Stack.ResourceName)
 		assert.Equal(t, "Stack "+*createStackResponse.Data.Stack.ResourceName+" created", createStackResponse.Msg)
 
 		err = c.StackWorkflows.DeleteStackWorkflow(context.Background(), SG_ORG, *createStackResponse.Data.Stack.ResourceName,
@@ -583,13 +589,14 @@ func TestSDK(t *testing.T) {
 			ArmClientId:       sggosdk.String("1"),
 			ArmClientSecret:   sggosdk.String("1"),
 		})
+		description := "test-connector description"
 		createConnectorRequest := sggosdk.Integration{
-			ResourceName: sggosdk.Optional(connectorName),
-			Description:  sggosdk.Optional("test-connector description"),
-			Settings: sggosdk.Optional(sggosdk.Settings{
-				Kind:   sggosdk.SettingsKindEnumAzureStatic,
+			ResourceName: &connectorName,
+			Description:  &description,
+			Settings: &sggosdk.IntegrationsSettings{
+				Kind:   sggosdk.IntegrationsSettingsKindEnumAzureStatic,
 				Config: settingsConfigArray,
-			}),
+			},
 		}
 		createConnectorResponse, err := c.Connectors.CreateConnector(context.Background(), SG_ORG, &createConnectorRequest)
 		assert.Empty(t, err)
@@ -630,11 +637,12 @@ func TestSDK(t *testing.T) {
 			ArmClientId:       sggosdk.String("1"),
 			ArmClientSecret:   sggosdk.String("1"),
 		})
+		updatedDescription := "updated description"
 		updateConnectorRequest := sggosdk.PatchedIntegration{
-			ResourceName: sggosdk.Optional(connectorName),
-			Description:  sggosdk.Optional("updated description"),
-			Settings: sggosdk.Optional(sggosdk.Settings{
-				Kind:   sggosdk.SettingsKindEnumAzureStatic,
+			ResourceName: sggosdk.Optional(&connectorName),
+			Description:  sggosdk.Optional(&updatedDescription),
+			Settings: sggosdk.Optional(&sggosdk.IntegrationsSettings{
+				Kind:   sggosdk.IntegrationsSettingsKindEnumAzureStatic,
 				Config: settingsConfigArray,
 			}),
 		}
@@ -741,7 +749,7 @@ func TestSDK(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		listAllWorkflowGroupResponse, err := c.WorkflowGroups.ListAllWorkflowGroups(context.Background(), SG_ORG)
+		listAllWorkflowGroupResponse, err := c.WorkflowGroups.ListAllWorkflowGroups(context.Background(), SG_ORG, &sggosdk.ListAllWorkflowGroupsRequest{})
 		assert.Empty(t, err)
 		assert.NotEmpty(t, listAllWorkflowGroupResponse.Msg)
 		assert.GreaterOrEqual(t, len(listAllWorkflowGroupResponse.Msg), 1)
@@ -753,7 +761,7 @@ func TestSDK(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		listAllWorkflowGroupResponse, err := c.WorkflowGroups.ListAllChildWorkflowGroups(context.Background(), SG_ORG, SG_WF_GROUP)
+		listAllWorkflowGroupResponse, err := c.WorkflowGroups.ListAllChildWorkflowGroups(context.Background(), SG_ORG, SG_WF_GROUP, &sggosdk.ListAllChildWorkflowGroupsRequest{})
 		assert.Empty(t, err)
 		assert.NotEmpty(t, listAllWorkflowGroupResponse.Msg)
 		assert.GreaterOrEqual(t, len(listAllWorkflowGroupResponse.Msg), 1)
@@ -765,8 +773,10 @@ func TestSDK(t *testing.T) {
 			option.WithBaseURL(SG_BASE_URL),
 		)
 		parentWorkflowGroupName := SG_WF_GROUP
+		dummyResourceName := "sg-sdk-child-workflow-group-create-delete"
 		createWorkflowGroupRequest := sggosdk.WorkflowGroup{
-			Description: sggosdk.String("child workflowGroup description"),
+			ResourceName: sggosdk.String(dummyResourceName),
+			Description:  sggosdk.String("child workflowGroup description"),
 		}
 		createChildWorkflowGroupResponse, err := c.WorkflowGroups.CreateChildWorkflowGroup(
 			context.Background(),
@@ -776,6 +786,7 @@ func TestSDK(t *testing.T) {
 		assert.Empty(t, err)
 		assert.NotEmpty(t, createChildWorkflowGroupResponse)
 		assert.NotEmpty(t, createChildWorkflowGroupResponse.Msg)
+		assert.Equal(t, dummyResourceName, *createChildWorkflowGroupResponse.Data.ResourceName)
 		assert.Contains(t, *createChildWorkflowGroupResponse.Msg, "created")
 
 		deleteWorkflowGroupResponse, err := c.WorkflowGroups.DeleteWorkflowGroup(context.Background(), SG_ORG,
@@ -792,8 +803,10 @@ func TestSDK(t *testing.T) {
 			option.WithBaseURL(SG_BASE_URL),
 		)
 		parentWorkflowGroupName := SG_WF_GROUP + "/1bger5ydab697a4jxe2gu"
+		dummyResourceName := "sg-sdk-child-workflow-group-create-delete"
 		createWorkflowGroupRequest := sggosdk.WorkflowGroup{
-			Description: sggosdk.String("child workflowGroup description"),
+			ResourceName: sggosdk.String(dummyResourceName),
+			Description:  sggosdk.String("child workflowGroup description"),
 		}
 		createChildWorkflowGroupResponse, err := c.WorkflowGroups.CreateChildWorkflowGroup(
 			context.Background(),
@@ -803,6 +816,7 @@ func TestSDK(t *testing.T) {
 		assert.Empty(t, err)
 		assert.NotEmpty(t, createChildWorkflowGroupResponse)
 		assert.NotEmpty(t, createChildWorkflowGroupResponse.Msg)
+		assert.Equal(t, dummyResourceName, *createChildWorkflowGroupResponse.Data.ResourceName)
 		assert.Contains(t, *createChildWorkflowGroupResponse.Msg, "created")
 
 		deleteWorkflowGroupResponse, err := c.WorkflowGroups.DeleteWorkflowGroup(context.Background(), SG_ORG,
@@ -885,7 +899,7 @@ func TestSDK(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		err := c.AccessManagement.ListAllRoles(context.Background(), SG_ORG)
+		err := c.AccessManagement.ListAllRoles(context.Background(), SG_ORG, &sggosdk.ListAllRolesRequest{})
 		assert.Empty(t, err)
 	})
 
@@ -906,8 +920,9 @@ func TestSDK(t *testing.T) {
 		assert.NotEmpty(t, createUserResponse)
 		assert.Equal(t, userName+" invited.", *createUserResponse.Msg)
 
+		userId := "eu-central-1_C6bwuggLI/local/" + userName
 		removeUserRequest := sggosdk.GetorRemoveUserFromOrganization{
-			UserId: "eu-central-1_C6bwuggLI/local/" + userName,
+			UserId: &userId,
 		}
 		deleteUserResponse, err := c.AccessManagement.DeleteUser(context.Background(), SG_ORG, &removeUserRequest)
 		assert.Empty(t, err)
@@ -923,7 +938,7 @@ func TestSDK(t *testing.T) {
 		userName := "test@dummy.com"
 
 		removeUserRequest := sggosdk.GetorRemoveUserFromOrganization{
-			UserId: userName,
+			UserId: &userName,
 		}
 		getUserResponse, err := c.AccessManagement.ReadUser(context.Background(), SG_ORG, &removeUserRequest)
 		assert.Empty(t, err)
@@ -1143,8 +1158,8 @@ func TestSDK(t *testing.T) {
 		)
 		runnerGroupName := "GoSDKTestRunnerGroup"
 		createRunnerGroupRequest := sggosdk.RunnerGroup{
-			ResourceName: sggosdk.String(runnerGroupName),
-			Description:  sggosdk.String("SDK Test Runner Group Description"),
+			ResourceName: sggosdk.Optional(runnerGroupName),
+			Description:  sggosdk.Optional("SDK Test Runner Group Description"),
 			StorageBackendConfig: &sggosdk.StorageBackendConfig{
 				Type:         sggosdk.StorageBackendConfigTypeEnumAwsS3,
 				AwsRegion:    sggosdk.String("eu-central-1"),

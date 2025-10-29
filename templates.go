@@ -10,6 +10,25 @@ import (
 	internal "github.com/StackGuardian/sg-sdk-go/internal"
 )
 
+type CreateTemplateRevisionRequest struct {
+	// Current organization name of the user, e.g. my-sg-org
+	SgOrgid string                 `json:"-" url:"-"`
+	Body    *CreateTemplateRequest `json:"-" url:"-"`
+}
+
+func (c *CreateTemplateRevisionRequest) UnmarshalJSON(data []byte) error {
+	body := new(CreateTemplateRequest)
+	if err := json.Unmarshal(data, &body); err != nil {
+		return err
+	}
+	c.Body = body
+	return nil
+}
+
+func (c *CreateTemplateRevisionRequest) MarshalJSON() ([]byte, error) {
+	return json.Marshal(c.Body)
+}
+
 type DeleteTemplateRevisionRequest struct {
 	// Current organization name of the user, e.g. my-sg-org
 	SgOrgid string `json:"-" url:"-"`
@@ -26,6 +45,19 @@ type ListAllTemplatesRequest struct {
 	SearchQuery *string `json:"-" url:"SearchQuery,omitempty"`
 	// Parent Template Id to list all revisions
 	TemplateId *string `json:"-" url:"TemplateId,omitempty"`
+	// Pagination token to retrieve the next set of results
+	Lastevaluatedkey *string `json:"-" url:"lastevaluatedkey,omitempty"`
+}
+
+type ListAllTemplatesBasedOnOwnerOrgRequest struct {
+	// Current organization name of the user, e.g. my-sg-org
+	SgOrgid string `json:"-" url:"-"`
+	// Pass 0 for private and 1 for public
+	IsPublic *string `json:"-" url:"IsPublic,omitempty"`
+	// Search using the name, tags or description of template
+	SearchQuery *string `json:"-" url:"SearchQuery,omitempty"`
+	// Pass true to list all shared templates
+	IsSharedTemplate *bool `json:"-" url:"isSharedTemplate,omitempty"`
 	// Pagination token to retrieve the next set of results
 	Lastevaluatedkey *string `json:"-" url:"lastevaluatedkey,omitempty"`
 }
@@ -49,7 +81,7 @@ type PatchedTemplateUpdate struct {
 	// Current organization name of the user, e.g. my-sg-org
 	SgOrgid          string                                 `json:"-" url:"-"`
 	TemplateName     *core.Optional[string]                 `json:"TemplateName,omitempty" url:"-"`
-	IsPublic         *core.Optional[IsArchiveEnum]          `json:"IsPublic,omitempty" url:"-"`
+	IsPublic         *core.Optional[IsPublicEnum]           `json:"IsPublic,omitempty" url:"-"`
 	LongDescription  *core.Optional[string]                 `json:"LongDescription,omitempty" url:"-"`
 	ShortDescription *core.Optional[string]                 `json:"ShortDescription,omitempty" url:"-"`
 	Deprecation      *core.Optional[Deprecation]            `json:"Deprecation,omitempty" url:"-"`
@@ -646,7 +678,8 @@ type StackDataResponse struct {
 	EnvironmentVariables []*EnvVars `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
 	// Defines the default deployment config when the workflows in WorkflowConfig do not set this key.
 	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
-	Actions                  map[string]*Actions         `json:"Actions,omitempty" url:"Actions,omitempty"`
+	// Actions define the sequence in which the workflows in the Stack are to be executed along with the run configuration for each workflow. Each key in an action is the name of the action for example `apply`, `destroy`.
+	Actions map[string]*Actions `json:"Actions,omitempty" url:"Actions,omitempty"`
 	// The ID of the template group that this Stack is mapped to. Null if the Stack is not mapped to any template group.
 	TemplateGroupId *string               `json:"TemplateGroupId,omitempty" url:"TemplateGroupId,omitempty"`
 	WorkflowsConfig *WorkflowsConfig      `json:"WorkflowsConfig,omitempty" url:"WorkflowsConfig,omitempty"`
@@ -655,8 +688,10 @@ type StackDataResponse struct {
 	// Used only when upgrading Stack.
 	Operations map[string]interface{} `json:"Operations,omitempty" url:"Operations,omitempty"`
 	// Contextual tags to give meanings to your tags
-	ContextTags          map[string]*string     `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
-	MiniSteps            *MiniStepsSchema       `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	MiniSteps   *MiniStepsSchema   `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	// Taints are issues that are affecting this Stack. A Taint may be purely informational or may require action to remove the taint.
+	Taints               []string               `json:"Taints,omitempty" url:"Taints,omitempty"`
 	WorkflowRelationsMap map[string]interface{} `json:"WorkflowRelationsMap,omitempty" url:"WorkflowRelationsMap,omitempty"`
 
 	extraProperties map[string]interface{}
@@ -754,6 +789,13 @@ func (s *StackDataResponse) GetMiniSteps() *MiniStepsSchema {
 	return s.MiniSteps
 }
 
+func (s *StackDataResponse) GetTaints() []string {
+	if s == nil {
+		return nil
+	}
+	return s.Taints
+}
+
 func (s *StackDataResponse) GetWorkflowRelationsMap() map[string]interface{} {
 	if s == nil {
 		return nil
@@ -810,9 +852,12 @@ type StackTemplate struct {
 	// Used only when upgrading Stack.
 	Operations map[string]interface{} `json:"Operations,omitempty" url:"Operations,omitempty"`
 	// Contextual tags to give meanings to your tags
-	ContextTags           map[string]*string                `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
-	MiniSteps             *MiniStepsSchema                  `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	MiniSteps   *MiniStepsSchema   `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	// Taints are issues that are affecting this Stack. A Taint may be purely informational or may require action to remove the taint.
+	Taints                []string                          `json:"Taints,omitempty" url:"Taints,omitempty"`
 	TemplateName          string                            `json:"TemplateName" url:"TemplateName"`
+	TemplateId            *string                           `json:"TemplateId,omitempty" url:"TemplateId,omitempty"`
 	OwnerOrg              string                            `json:"OwnerOrg" url:"OwnerOrg"`
 	SharedOrgsList        []string                          `json:"SharedOrgsList,omitempty" url:"SharedOrgsList,omitempty"`
 	ShortDescription      *string                           `json:"ShortDescription,omitempty" url:"ShortDescription,omitempty"`
@@ -822,7 +867,7 @@ type StackTemplate struct {
 	RuntimeSource         *RuntimeSource                    `json:"RuntimeSource,omitempty" url:"RuntimeSource,omitempty"`
 	GitHubComSync         map[string]interface{}            `json:"GitHubComSync,omitempty" url:"GitHubComSync,omitempty"`
 	VcsTriggers           *VcsTriggers                      `json:"VCSTriggers,omitempty" url:"VCSTriggers,omitempty"`
-	IsPublic              *IsArchiveEnum                    `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
+	IsPublic              *IsPublicEnum                     `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
 	TerraformIntelligence map[string]interface{}            `json:"TerraformIntelligence,omitempty" url:"TerraformIntelligence,omitempty"`
 	Templates             []*TemplateWorkflow               `json:"Templates,omitempty" url:"Templates,omitempty"`
 	SourceConfigKind      StackTemplateSourceConfigKindEnum `json:"SourceConfigKind,omitempty" url:"SourceConfigKind,omitempty"`
@@ -922,11 +967,25 @@ func (s *StackTemplate) GetMiniSteps() *MiniStepsSchema {
 	return s.MiniSteps
 }
 
+func (s *StackTemplate) GetTaints() []string {
+	if s == nil {
+		return nil
+	}
+	return s.Taints
+}
+
 func (s *StackTemplate) GetTemplateName() string {
 	if s == nil {
 		return ""
 	}
 	return s.TemplateName
+}
+
+func (s *StackTemplate) GetTemplateId() *string {
+	if s == nil {
+		return nil
+	}
+	return s.TemplateId
 }
 
 func (s *StackTemplate) GetOwnerOrg() string {
@@ -992,7 +1051,7 @@ func (s *StackTemplate) GetVcsTriggers() *VcsTriggers {
 	return s.VcsTriggers
 }
 
-func (s *StackTemplate) GetIsPublic() *IsArchiveEnum {
+func (s *StackTemplate) GetIsPublic() *IsPublicEnum {
 	if s == nil {
 		return nil
 	}
@@ -1144,8 +1203,8 @@ type Template struct {
 	Tags             []string                `json:"Tags,omitempty" url:"Tags,omitempty"`
 	// Contextual tags to give context to your tags
 	ContextTags           map[string]*string     `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
-	IsActive              *IsArchiveEnum         `json:"IsActive,omitempty" url:"IsActive,omitempty"`
-	IsPublic              *IsArchiveEnum         `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
+	IsActive              *IsPublicEnum          `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	IsPublic              *IsPublicEnum          `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
 	TerraformIntelligence map[string]interface{} `json:"TerraformIntelligence,omitempty" url:"TerraformIntelligence,omitempty"`
 	DefaultSchema         *string                `json:"DefaultSchema,omitempty" url:"DefaultSchema,omitempty"`
 
@@ -1265,14 +1324,14 @@ func (t *Template) GetContextTags() map[string]*string {
 	return t.ContextTags
 }
 
-func (t *Template) GetIsActive() *IsArchiveEnum {
+func (t *Template) GetIsActive() *IsPublicEnum {
 	if t == nil {
 		return nil
 	}
 	return t.IsActive
 }
 
-func (t *Template) GetIsPublic() *IsArchiveEnum {
+func (t *Template) GetIsPublic() *IsPublicEnum {
 	if t == nil {
 		return nil
 	}
@@ -1660,7 +1719,7 @@ type WorkflowTemplate struct {
 	ResourceName                *string                     `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
 	Description                 *string                     `json:"Description,omitempty" url:"Description,omitempty"`
 	Tags                        []string                    `json:"Tags,omitempty" url:"Tags,omitempty"`
-	IsActive                    *IsArchiveEnum              `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	IsActive                    *IsPublicEnum               `json:"IsActive,omitempty" url:"IsActive,omitempty"`
 	WfStepsConfig               []*WfStepsConfig            `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
 	WfType                      *WfTypeEnum                 `json:"WfType,omitempty" url:"WfType,omitempty"`
 	TerraformConfig             *TerraformConfig            `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
@@ -1696,6 +1755,7 @@ type WorkflowTemplate struct {
 	// Contextual tags to give context to your tags
 	ContextTags           map[string]*string      `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
 	TemplateName          string                  `json:"TemplateName" url:"TemplateName"`
+	TemplateId            *string                 `json:"TemplateId,omitempty" url:"TemplateId,omitempty"`
 	OwnerOrg              string                  `json:"OwnerOrg" url:"OwnerOrg"`
 	SharedOrgsList        []string                `json:"SharedOrgsList,omitempty" url:"SharedOrgsList,omitempty"`
 	ShortDescription      *string                 `json:"ShortDescription,omitempty" url:"ShortDescription,omitempty"`
@@ -1705,7 +1765,7 @@ type WorkflowTemplate struct {
 	InputSchemas          []*InputSchemas         `json:"InputSchemas,omitempty" url:"InputSchemas,omitempty"`
 	RuntimeSource         *RuntimeSource          `json:"RuntimeSource,omitempty" url:"RuntimeSource,omitempty"`
 	VcsTriggers           *VcsTriggers            `json:"VCSTriggers,omitempty" url:"VCSTriggers,omitempty"`
-	IsPublic              *IsArchiveEnum          `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
+	IsPublic              *IsPublicEnum           `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
 	TerraformIntelligence map[string]interface{}  `json:"TerraformIntelligence,omitempty" url:"TerraformIntelligence,omitempty"`
 
 	extraProperties map[string]interface{}
@@ -1733,7 +1793,7 @@ func (w *WorkflowTemplate) GetTags() []string {
 	return w.Tags
 }
 
-func (w *WorkflowTemplate) GetIsActive() *IsArchiveEnum {
+func (w *WorkflowTemplate) GetIsActive() *IsPublicEnum {
 	if w == nil {
 		return nil
 	}
@@ -1978,6 +2038,13 @@ func (w *WorkflowTemplate) GetTemplateName() string {
 	return w.TemplateName
 }
 
+func (w *WorkflowTemplate) GetTemplateId() *string {
+	if w == nil {
+		return nil
+	}
+	return w.TemplateId
+}
+
 func (w *WorkflowTemplate) GetOwnerOrg() string {
 	if w == nil {
 		return ""
@@ -2041,7 +2108,7 @@ func (w *WorkflowTemplate) GetVcsTriggers() *VcsTriggers {
 	return w.VcsTriggers
 }
 
-func (w *WorkflowTemplate) GetIsPublic() *IsArchiveEnum {
+func (w *WorkflowTemplate) GetIsPublic() *IsPublicEnum {
 	if w == nil {
 		return nil
 	}
@@ -2140,5 +2207,33 @@ func NewReadSubscriptionRequestSubscriptionTypeFromString(s string) (ReadSubscri
 }
 
 func (r ReadSubscriptionRequestSubscriptionType) Ptr() *ReadSubscriptionRequestSubscriptionType {
+	return &r
+}
+
+type ReadTemplateRevisionRequestTemplateType string
+
+const (
+	ReadTemplateRevisionRequestTemplateTypeIac          ReadTemplateRevisionRequestTemplateType = "IAC"
+	ReadTemplateRevisionRequestTemplateTypeIacGroup     ReadTemplateRevisionRequestTemplateType = "IAC_GROUP"
+	ReadTemplateRevisionRequestTemplateTypeIacPolicy    ReadTemplateRevisionRequestTemplateType = "IAC_POLICY"
+	ReadTemplateRevisionRequestTemplateTypeWorkflowStep ReadTemplateRevisionRequestTemplateType = "WORKFLOW_STEP"
+)
+
+func NewReadTemplateRevisionRequestTemplateTypeFromString(s string) (ReadTemplateRevisionRequestTemplateType, error) {
+	switch s {
+	case "IAC":
+		return ReadTemplateRevisionRequestTemplateTypeIac, nil
+	case "IAC_GROUP":
+		return ReadTemplateRevisionRequestTemplateTypeIacGroup, nil
+	case "IAC_POLICY":
+		return ReadTemplateRevisionRequestTemplateTypeIacPolicy, nil
+	case "WORKFLOW_STEP":
+		return ReadTemplateRevisionRequestTemplateTypeWorkflowStep, nil
+	}
+	var t ReadTemplateRevisionRequestTemplateType
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (r ReadTemplateRevisionRequestTemplateType) Ptr() *ReadTemplateRevisionRequestTemplateType {
 	return &r
 }

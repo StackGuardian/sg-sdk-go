@@ -204,7 +204,7 @@ func (c *Client) UpdatePolicy(
 	return response, nil
 }
 
-// List all the policies inside an Organization.
+// List all the policies inside an Organization. Supports Pagination and Filtering using query parameters.
 func (c *Client) ListAllPolicies(
 	ctx context.Context,
 	org string,

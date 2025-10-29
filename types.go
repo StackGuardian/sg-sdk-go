@@ -6,8 +6,112 @@ import (
 	json "encoding/json"
 	fmt "fmt"
 
+	"github.com/StackGuardian/sg-sdk-go/core"
 	internal "github.com/StackGuardian/sg-sdk-go/internal"
 )
+
+type ActionDependency struct {
+	// Condition for this dependency.
+	Condition *ActionDependencyCondition `json:"condition,omitempty" url:"condition,omitempty"`
+	// The ID of the workflow that this workflow depends on.
+	Id string `json:"id" url:"id"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *ActionDependency) GetCondition() *ActionDependencyCondition {
+	if a == nil {
+		return nil
+	}
+	return a.Condition
+}
+
+func (a *ActionDependency) GetId() string {
+	if a == nil {
+		return ""
+	}
+	return a.Id
+}
+
+func (a *ActionDependency) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *ActionDependency) UnmarshalJSON(data []byte) error {
+	type unmarshaler ActionDependency
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = ActionDependency(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *ActionDependency) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
+type ActionDependencyCondition struct {
+	// The latest status required for this dependency, e.g. `COMPLETED`.
+	LatestStatus string `json:"LatestStatus" url:"LatestStatus"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *ActionDependencyCondition) GetLatestStatus() string {
+	if a == nil {
+		return ""
+	}
+	return a.LatestStatus
+}
+
+func (a *ActionDependencyCondition) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *ActionDependencyCondition) UnmarshalJSON(data []byte) error {
+	type unmarshaler ActionDependencyCondition
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = ActionDependencyCondition(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *ActionDependencyCondition) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
 
 // * `apply` - apply
 // * `destroy` - destroy
@@ -49,11 +153,73 @@ func (a ActionEnum) Ptr() *ActionEnum {
 	return &a
 }
 
+type ActionOrder struct {
+	// Parameters contain the run configuration for the workflow run. For example: A terraform workflow could have
+	//
+	//	`{ "TerraformAction": {
+	//	    "action": "apply"
+	//	} }`
+	//	as its parameters.
+	Parameters map[string]interface{} `json:"parameters,omitempty" url:"parameters,omitempty"`
+	// Dependencies are used to define the ordering of the workflows in the action. The first workflow to run will have no dependencies. You can use dependencies to define which workflow should execute before each workflow and use this to build a sequence of workflows.
+	Dependencies []*ActionDependency `json:"dependencies,omitempty" url:"dependencies,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (a *ActionOrder) GetParameters() map[string]interface{} {
+	if a == nil {
+		return nil
+	}
+	return a.Parameters
+}
+
+func (a *ActionOrder) GetDependencies() []*ActionDependency {
+	if a == nil {
+		return nil
+	}
+	return a.Dependencies
+}
+
+func (a *ActionOrder) GetExtraProperties() map[string]interface{} {
+	return a.extraProperties
+}
+
+func (a *ActionOrder) UnmarshalJSON(data []byte) error {
+	type unmarshaler ActionOrder
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*a = ActionOrder(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *a)
+	if err != nil {
+		return err
+	}
+	a.extraProperties = extraProperties
+	a.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (a *ActionOrder) String() string {
+	if len(a.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(a.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(a); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", a)
+}
+
 type Actions struct {
-	Name        string                 `json:"name" url:"name"`
-	Description *string                `json:"description,omitempty" url:"description,omitempty"`
-	Default     *bool                  `json:"default,omitempty" url:"default,omitempty"`
-	Order       map[string]interface{} `json:"order,omitempty" url:"order,omitempty"`
+	Name        string  `json:"name" url:"name"`
+	Description *string `json:"description,omitempty" url:"description,omitempty"`
+	Default     *bool   `json:"default,omitempty" url:"default,omitempty"`
+	// Order defines the sequence in which the workflows in the Action are to be executed. The key in the order is the id of the workflow.
+	Order map[string]*ActionOrder `json:"order,omitempty" url:"order,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -80,7 +246,7 @@ func (a *Actions) GetDefault() *bool {
 	return a.Default
 }
 
-func (a *Actions) GetOrder() map[string]interface{} {
+func (a *Actions) GetOrder() map[string]*ActionOrder {
 	if a == nil {
 		return nil
 	}
@@ -117,6 +283,34 @@ func (a *Actions) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", a)
+}
+
+// * `ACCESS_TOKEN` - ACCESS_TOKEN
+// * `API_TOKEN` - API_TOKEN
+// * `APP_PASSWORD` - APP_PASSWORD
+type BitbucketAuthTypeEnum string
+
+const (
+	BitbucketAuthTypeEnumAccessToken BitbucketAuthTypeEnum = "ACCESS_TOKEN"
+	BitbucketAuthTypeEnumApiToken    BitbucketAuthTypeEnum = "API_TOKEN"
+	BitbucketAuthTypeEnumAppPassword BitbucketAuthTypeEnum = "APP_PASSWORD"
+)
+
+func NewBitbucketAuthTypeEnumFromString(s string) (BitbucketAuthTypeEnum, error) {
+	switch s {
+	case "ACCESS_TOKEN":
+		return BitbucketAuthTypeEnumAccessToken, nil
+	case "API_TOKEN":
+		return BitbucketAuthTypeEnumApiToken, nil
+	case "APP_PASSWORD":
+		return BitbucketAuthTypeEnumAppPassword, nil
+	}
+	var t BitbucketAuthTypeEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (b BitbucketAuthTypeEnum) Ptr() *BitbucketAuthTypeEnum {
+	return &b
 }
 
 type CacheConfig struct {
@@ -499,6 +693,216 @@ func (d DeploymentPlatformConfigKindEnum) Ptr() *DeploymentPlatformConfigKindEnu
 	return &d
 }
 
+type DiscoveryBenchmark struct {
+	RuntimeSource     *CustomSource               `json:"runtimeSource,omitempty" url:"runtimeSource,omitempty"`
+	Checks            []string                    `json:"checks,omitempty" url:"checks,omitempty"`
+	Regions           map[string]*DiscoveryRegion `json:"regions,omitempty" url:"regions,omitempty"`
+	Description       *string                     `json:"description,omitempty" url:"description,omitempty"`
+	SummaryDesc       *string                     `json:"summaryDesc,omitempty" url:"summaryDesc,omitempty"`
+	Active            *bool                       `json:"active,omitempty" url:"active,omitempty"`
+	Label             string                      `json:"label" url:"label"`
+	IsCustomCheck     *bool                       `json:"isCustomCheck,omitempty" url:"isCustomCheck,omitempty"`
+	SummaryTitle      string                      `json:"summaryTitle" url:"summaryTitle"`
+	DiscoveryInterval *int                        `json:"discoveryInterval,omitempty" url:"discoveryInterval,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DiscoveryBenchmark) GetRuntimeSource() *CustomSource {
+	if d == nil {
+		return nil
+	}
+	return d.RuntimeSource
+}
+
+func (d *DiscoveryBenchmark) GetChecks() []string {
+	if d == nil {
+		return nil
+	}
+	return d.Checks
+}
+
+func (d *DiscoveryBenchmark) GetRegions() map[string]*DiscoveryRegion {
+	if d == nil {
+		return nil
+	}
+	return d.Regions
+}
+
+func (d *DiscoveryBenchmark) GetDescription() *string {
+	if d == nil {
+		return nil
+	}
+	return d.Description
+}
+
+func (d *DiscoveryBenchmark) GetSummaryDesc() *string {
+	if d == nil {
+		return nil
+	}
+	return d.SummaryDesc
+}
+
+func (d *DiscoveryBenchmark) GetActive() *bool {
+	if d == nil {
+		return nil
+	}
+	return d.Active
+}
+
+func (d *DiscoveryBenchmark) GetLabel() string {
+	if d == nil {
+		return ""
+	}
+	return d.Label
+}
+
+func (d *DiscoveryBenchmark) GetIsCustomCheck() *bool {
+	if d == nil {
+		return nil
+	}
+	return d.IsCustomCheck
+}
+
+func (d *DiscoveryBenchmark) GetSummaryTitle() string {
+	if d == nil {
+		return ""
+	}
+	return d.SummaryTitle
+}
+
+func (d *DiscoveryBenchmark) GetDiscoveryInterval() *int {
+	if d == nil {
+		return nil
+	}
+	return d.DiscoveryInterval
+}
+
+func (d *DiscoveryBenchmark) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *DiscoveryBenchmark) UnmarshalJSON(data []byte) error {
+	type unmarshaler DiscoveryBenchmark
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DiscoveryBenchmark(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DiscoveryBenchmark) String() string {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+type DiscoveryRegion struct {
+	Emails []string `json:"emails,omitempty" url:"emails,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *DiscoveryRegion) GetEmails() []string {
+	if d == nil {
+		return nil
+	}
+	return d.Emails
+}
+
+func (d *DiscoveryRegion) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *DiscoveryRegion) UnmarshalJSON(data []byte) error {
+	type unmarshaler DiscoveryRegion
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DiscoveryRegion(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DiscoveryRegion) String() string {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
+type Discoverysettings struct {
+	Benchmarks map[string]*DiscoveryBenchmark `json:"benchmarks,omitempty" url:"benchmarks,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (d *Discoverysettings) GetBenchmarks() map[string]*DiscoveryBenchmark {
+	if d == nil {
+		return nil
+	}
+	return d.Benchmarks
+}
+
+func (d *Discoverysettings) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *Discoverysettings) UnmarshalJSON(data []byte) error {
+	type unmarshaler Discoverysettings
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = Discoverysettings(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *Discoverysettings) String() string {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
+}
+
 type EnvVarConfig struct {
 	VarName   string  `json:"varName" url:"varName"`
 	TextValue *string `json:"textValue,omitempty" url:"textValue,omitempty"`
@@ -637,6 +1041,592 @@ func NewEnvVarsKindEnumFromString(s string) (EnvVarsKindEnum, error) {
 
 func (e EnvVarsKindEnum) Ptr() *EnvVarsKindEnum {
 	return &e
+}
+
+type GeneratedConnectorReadResponseMsg struct {
+	Id                string                                              `json:"Id" url:"Id"`
+	IsArchive         string                                              `json:"IsArchive" url:"IsArchive"`
+	IsActive          string                                              `json:"IsActive" url:"IsActive"`
+	Description       string                                              `json:"Description" url:"Description"`
+	ResourceId        string                                              `json:"ResourceId" url:"ResourceId"`
+	Scope             []string                                            `json:"Scope,omitempty" url:"Scope,omitempty"`
+	ModifiedAt        float64                                             `json:"ModifiedAt" url:"ModifiedAt"`
+	ParentId          string                                              `json:"ParentId" url:"ParentId"`
+	ResourceType      string                                              `json:"ResourceType" url:"ResourceType"`
+	Tags              []string                                            `json:"Tags,omitempty" url:"Tags,omitempty"`
+	ContextTags       map[string]string                                   `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	DocVersion        string                                              `json:"DocVersion" url:"DocVersion"`
+	Authors           []string                                            `json:"Authors,omitempty" url:"Authors,omitempty"`
+	ResourceName      string                                              `json:"ResourceName" url:"ResourceName"`
+	SubResourceId     string                                              `json:"SubResourceId" url:"SubResourceId"`
+	OrgId             string                                              `json:"OrgId" url:"OrgId"`
+	CreatedAt         float64                                             `json:"CreatedAt" url:"CreatedAt"`
+	DiscoverySettings *GeneratedConnectorReadResponseMsgDiscoverysettings `json:"DiscoverySettings,omitempty" url:"DiscoverySettings,omitempty"`
+	Authentication    *GeneratedConnectorReadResponseMsgAuthentication    `json:"Authentication,omitempty" url:"Authentication,omitempty"`
+	Settings          *GeneratedConnectorReadResponseMsgSettings          `json:"Settings,omitempty" url:"Settings,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetId() string {
+	if g == nil {
+		return ""
+	}
+	return g.Id
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetIsArchive() string {
+	if g == nil {
+		return ""
+	}
+	return g.IsArchive
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetIsActive() string {
+	if g == nil {
+		return ""
+	}
+	return g.IsActive
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetDescription() string {
+	if g == nil {
+		return ""
+	}
+	return g.Description
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetResourceId() string {
+	if g == nil {
+		return ""
+	}
+	return g.ResourceId
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetScope() []string {
+	if g == nil {
+		return nil
+	}
+	return g.Scope
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetModifiedAt() float64 {
+	if g == nil {
+		return 0
+	}
+	return g.ModifiedAt
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetParentId() string {
+	if g == nil {
+		return ""
+	}
+	return g.ParentId
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetResourceType() string {
+	if g == nil {
+		return ""
+	}
+	return g.ResourceType
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetTags() []string {
+	if g == nil {
+		return nil
+	}
+	return g.Tags
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetContextTags() map[string]string {
+	if g == nil {
+		return nil
+	}
+	return g.ContextTags
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetDocVersion() string {
+	if g == nil {
+		return ""
+	}
+	return g.DocVersion
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetAuthors() []string {
+	if g == nil {
+		return nil
+	}
+	return g.Authors
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetResourceName() string {
+	if g == nil {
+		return ""
+	}
+	return g.ResourceName
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetSubResourceId() string {
+	if g == nil {
+		return ""
+	}
+	return g.SubResourceId
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetOrgId() string {
+	if g == nil {
+		return ""
+	}
+	return g.OrgId
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetCreatedAt() float64 {
+	if g == nil {
+		return 0
+	}
+	return g.CreatedAt
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetDiscoverySettings() *GeneratedConnectorReadResponseMsgDiscoverysettings {
+	if g == nil {
+		return nil
+	}
+	return g.DiscoverySettings
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetAuthentication() *GeneratedConnectorReadResponseMsgAuthentication {
+	if g == nil {
+		return nil
+	}
+	return g.Authentication
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetSettings() *GeneratedConnectorReadResponseMsgSettings {
+	if g == nil {
+		return nil
+	}
+	return g.Settings
+}
+
+func (g *GeneratedConnectorReadResponseMsg) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedConnectorReadResponseMsg) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedConnectorReadResponseMsg
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedConnectorReadResponseMsg(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedConnectorReadResponseMsg) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedConnectorReadResponseMsgAuthentication struct {
+	AuthenticatedAt float64 `json:"authenticatedAt" url:"authenticatedAt"`
+	Authenticated   bool    `json:"authenticated" url:"authenticated"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GeneratedConnectorReadResponseMsgAuthentication) GetAuthenticatedAt() float64 {
+	if g == nil {
+		return 0
+	}
+	return g.AuthenticatedAt
+}
+
+func (g *GeneratedConnectorReadResponseMsgAuthentication) GetAuthenticated() bool {
+	if g == nil {
+		return false
+	}
+	return g.Authenticated
+}
+
+func (g *GeneratedConnectorReadResponseMsgAuthentication) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedConnectorReadResponseMsgAuthentication) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedConnectorReadResponseMsgAuthentication
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedConnectorReadResponseMsgAuthentication(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedConnectorReadResponseMsgAuthentication) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedConnectorReadResponseMsgDiscoverysettings struct {
+	DiscoveryInterval *int                                                                     `json:"discoveryInterval,omitempty" url:"discoveryInterval,omitempty"`
+	Benchmarks        map[string]*GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks `json:"benchmarks,omitempty" url:"benchmarks,omitempty"`
+	Regions           []*GeneratedConnectorReadResponseMsgDiscoverysettingsRegions             `json:"regions,omitempty" url:"regions,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettings) GetDiscoveryInterval() *int {
+	if g == nil {
+		return nil
+	}
+	return g.DiscoveryInterval
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettings) GetBenchmarks() map[string]*GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks {
+	if g == nil {
+		return nil
+	}
+	return g.Benchmarks
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettings) GetRegions() []*GeneratedConnectorReadResponseMsgDiscoverysettingsRegions {
+	if g == nil {
+		return nil
+	}
+	return g.Regions
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettings) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettings) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedConnectorReadResponseMsgDiscoverysettings
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedConnectorReadResponseMsgDiscoverysettings(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettings) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks struct {
+	RuntimeSource     *CustomSource                                                                   `json:"runtimeSource,omitempty" url:"runtimeSource,omitempty"`
+	Checks            []string                                                                        `json:"checks,omitempty" url:"checks,omitempty"`
+	Regions           map[string]*GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarksRegions `json:"regions,omitempty" url:"regions,omitempty"`
+	LastDiscoveryTime *int                                                                            `json:"lastDiscoveryTime,omitempty" url:"lastDiscoveryTime,omitempty"`
+	Description       *string                                                                         `json:"description,omitempty" url:"description,omitempty"`
+	SummaryDesc       *string                                                                         `json:"summaryDesc,omitempty" url:"summaryDesc,omitempty"`
+	Active            bool                                                                            `json:"active" url:"active"`
+	Label             *string                                                                         `json:"label,omitempty" url:"label,omitempty"`
+	IsCustomCheck     *bool                                                                           `json:"isCustomCheck,omitempty" url:"isCustomCheck,omitempty"`
+	SummaryTitle      *string                                                                         `json:"summaryTitle,omitempty" url:"summaryTitle,omitempty"`
+	DiscoveryInterval *int                                                                            `json:"discoveryInterval,omitempty" url:"discoveryInterval,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks) GetRuntimeSource() *CustomSource {
+	if g == nil {
+		return nil
+	}
+	return g.RuntimeSource
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks) GetChecks() []string {
+	if g == nil {
+		return nil
+	}
+	return g.Checks
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks) GetRegions() map[string]*GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarksRegions {
+	if g == nil {
+		return nil
+	}
+	return g.Regions
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks) GetLastDiscoveryTime() *int {
+	if g == nil {
+		return nil
+	}
+	return g.LastDiscoveryTime
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks) GetDescription() *string {
+	if g == nil {
+		return nil
+	}
+	return g.Description
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks) GetSummaryDesc() *string {
+	if g == nil {
+		return nil
+	}
+	return g.SummaryDesc
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks) GetActive() bool {
+	if g == nil {
+		return false
+	}
+	return g.Active
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks) GetLabel() *string {
+	if g == nil {
+		return nil
+	}
+	return g.Label
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks) GetIsCustomCheck() *bool {
+	if g == nil {
+		return nil
+	}
+	return g.IsCustomCheck
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks) GetSummaryTitle() *string {
+	if g == nil {
+		return nil
+	}
+	return g.SummaryTitle
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks) GetDiscoveryInterval() *int {
+	if g == nil {
+		return nil
+	}
+	return g.DiscoveryInterval
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarks) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarksRegions struct {
+	Emails []string `json:"emails,omitempty" url:"emails,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarksRegions) GetEmails() []string {
+	if g == nil {
+		return nil
+	}
+	return g.Emails
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarksRegions) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarksRegions) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarksRegions
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarksRegions(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsBenchmarksRegions) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedConnectorReadResponseMsgDiscoverysettingsRegions struct {
+	Region string `json:"region" url:"region"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsRegions) GetRegion() string {
+	if g == nil {
+		return ""
+	}
+	return g.Region
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsRegions) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsRegions) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedConnectorReadResponseMsgDiscoverysettingsRegions
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedConnectorReadResponseMsgDiscoverysettingsRegions(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedConnectorReadResponseMsgDiscoverysettingsRegions) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+type GeneratedConnectorReadResponseMsgSettings struct {
+	Kind   string            `json:"kind" url:"kind"`
+	Config []*SettingsConfig `json:"config,omitempty" url:"config,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GeneratedConnectorReadResponseMsgSettings) GetKind() string {
+	if g == nil {
+		return ""
+	}
+	return g.Kind
+}
+
+func (g *GeneratedConnectorReadResponseMsgSettings) GetConfig() []*SettingsConfig {
+	if g == nil {
+		return nil
+	}
+	return g.Config
+}
+
+func (g *GeneratedConnectorReadResponseMsgSettings) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedConnectorReadResponseMsgSettings) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedConnectorReadResponseMsgSettings
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedConnectorReadResponseMsgSettings(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedConnectorReadResponseMsgSettings) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
 }
 
 type GeneratedMsgDeploymentplatformconfig struct {
@@ -2349,7 +3339,7 @@ type GeneratedWorkflowGetMsg struct {
 	UserJobMemory             float64                        `json:"UserJobMemory" url:"UserJobMemory"`
 	UserJobCpu                float64                        `json:"UserJobCPU" url:"UserJobCPU"`
 	NumberOfApprovalsRequired float64                        `json:"NumberOfApprovalsRequired" url:"NumberOfApprovalsRequired"`
-	IsActive                  *IsArchiveEnum                 `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	IsActive                  *IsPublicEnum                  `json:"IsActive,omitempty" url:"IsActive,omitempty"`
 	Approvers                 []interface{}                  `json:"Approvers,omitempty" url:"Approvers,omitempty"`
 	Tags                      []string                       `json:"Tags,omitempty" url:"Tags,omitempty"`
 	Authors                   []string                       `json:"Authors,omitempty" url:"Authors,omitempty"`
@@ -2396,7 +3386,7 @@ func (g *GeneratedWorkflowGetMsg) GetNumberOfApprovalsRequired() float64 {
 	return g.NumberOfApprovalsRequired
 }
 
-func (g *GeneratedWorkflowGetMsg) GetIsActive() *IsArchiveEnum {
+func (g *GeneratedWorkflowGetMsg) GetIsActive() *IsPublicEnum {
 	if g == nil {
 		return nil
 	}
@@ -3441,6 +4431,52 @@ func (g *GeneratedWorkflowUpdateResponseDataVcsconfigIacvcsconfig) String() stri
 	return fmt.Sprintf("%#v", g)
 }
 
+type GeneratedWorkflowUploadUrlResponse struct {
+	Msg string `json:"msg" url:"msg"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GeneratedWorkflowUploadUrlResponse) GetMsg() string {
+	if g == nil {
+		return ""
+	}
+	return g.Msg
+}
+
+func (g *GeneratedWorkflowUploadUrlResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedWorkflowUploadUrlResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedWorkflowUploadUrlResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedWorkflowUploadUrlResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedWorkflowUploadUrlResponse) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
 type GeneratedWorkflowsListAllMsg struct {
 	GitHubComRepoId   string        `json:"GitHubComRepoID" url:"GitHubComRepoID"`
 	IsActive          string        `json:"IsActive" url:"IsActive"`
@@ -3861,27 +4897,294 @@ func (i InputSchemasTypeEnum) Ptr() *InputSchemasTypeEnum {
 	return &i
 }
 
-// * `0` - 0
-// * `1` - 1
-type IsArchiveEnum string
+type Integration struct {
+	ResourceName      *string               `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	Description       *string               `json:"Description,omitempty" url:"Description,omitempty"`
+	Settings          *IntegrationsSettings `json:"Settings,omitempty" url:"Settings,omitempty"`
+	DiscoverySettings *Discoverysettings    `json:"DiscoverySettings,omitempty" url:"DiscoverySettings,omitempty"`
+	Scope             []string              `json:"Scope,omitempty" url:"Scope,omitempty"`
+	Tags              []string              `json:"Tags,omitempty" url:"Tags,omitempty"`
+	// Contextual tags to give context to your tags
+	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (i *Integration) GetResourceName() *string {
+	if i == nil {
+		return nil
+	}
+	return i.ResourceName
+}
+
+func (i *Integration) GetDescription() *string {
+	if i == nil {
+		return nil
+	}
+	return i.Description
+}
+
+func (i *Integration) GetSettings() *IntegrationsSettings {
+	if i == nil {
+		return nil
+	}
+	return i.Settings
+}
+
+func (i *Integration) GetDiscoverySettings() *Discoverysettings {
+	if i == nil {
+		return nil
+	}
+	return i.DiscoverySettings
+}
+
+func (i *Integration) GetScope() []string {
+	if i == nil {
+		return nil
+	}
+	return i.Scope
+}
+
+func (i *Integration) GetTags() []string {
+	if i == nil {
+		return nil
+	}
+	return i.Tags
+}
+
+func (i *Integration) GetContextTags() map[string]*string {
+	if i == nil {
+		return nil
+	}
+	return i.ContextTags
+}
+
+func (i *Integration) GetExtraProperties() map[string]interface{} {
+	return i.extraProperties
+}
+
+func (i *Integration) UnmarshalJSON(data []byte) error {
+	type unmarshaler Integration
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*i = Integration(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *i)
+	if err != nil {
+		return err
+	}
+	i.extraProperties = extraProperties
+	i.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (i *Integration) String() string {
+	if len(i.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(i); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", i)
+}
+
+type IntegrationUpdateResponse struct {
+	Msg  *string                            `json:"msg,omitempty" url:"msg,omitempty"`
+	Data *GeneratedConnectorReadResponseMsg `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (i *IntegrationUpdateResponse) GetMsg() *string {
+	if i == nil {
+		return nil
+	}
+	return i.Msg
+}
+
+func (i *IntegrationUpdateResponse) GetData() *GeneratedConnectorReadResponseMsg {
+	if i == nil {
+		return nil
+	}
+	return i.Data
+}
+
+func (i *IntegrationUpdateResponse) GetExtraProperties() map[string]interface{} {
+	return i.extraProperties
+}
+
+func (i *IntegrationUpdateResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler IntegrationUpdateResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*i = IntegrationUpdateResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *i)
+	if err != nil {
+		return err
+	}
+	i.extraProperties = extraProperties
+	i.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (i *IntegrationUpdateResponse) String() string {
+	if len(i.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(i); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", i)
+}
+
+type IntegrationsSettings struct {
+	Kind   IntegrationsSettingsKindEnum `json:"kind" url:"kind"`
+	Config []*SettingsConfig            `json:"config,omitempty" url:"config,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (i *IntegrationsSettings) GetKind() IntegrationsSettingsKindEnum {
+	if i == nil {
+		return ""
+	}
+	return i.Kind
+}
+
+func (i *IntegrationsSettings) GetConfig() []*SettingsConfig {
+	if i == nil {
+		return nil
+	}
+	return i.Config
+}
+
+func (i *IntegrationsSettings) GetExtraProperties() map[string]interface{} {
+	return i.extraProperties
+}
+
+func (i *IntegrationsSettings) UnmarshalJSON(data []byte) error {
+	type unmarshaler IntegrationsSettings
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*i = IntegrationsSettings(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *i)
+	if err != nil {
+		return err
+	}
+	i.extraProperties = extraProperties
+	i.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (i *IntegrationsSettings) String() string {
+	if len(i.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(i); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", i)
+}
+
+// * `GITHUB_COM` - GITHUB_COM
+// * `GITHUB_APP_CUSTOM` - GITHUB_APP_CUSTOM
+// * `AWS_STATIC` - AWS_STATIC
+// * `GCP_STATIC` - GCP_STATIC
+// * `GCP_OIDC` - GCP_OIDC
+// * `AWS_RBAC` - AWS_RBAC
+// * `AWS_OIDC` - AWS_OIDC
+// * `AZURE_STATIC` - AZURE_STATIC
+// * `AZURE_OIDC` - AZURE_OIDC
+// * `BITBUCKET_ORG` - BITBUCKET_ORG
+// * `GITLAB_COM` - GITLAB_COM
+// * `AZURE_DEVOPS` - AZURE_DEVOPS
+type IntegrationsSettingsKindEnum string
 
 const (
-	IsArchiveEnumZero IsArchiveEnum = "0"
-	IsArchiveEnumOne  IsArchiveEnum = "1"
+	IntegrationsSettingsKindEnumGithubCom       IntegrationsSettingsKindEnum = "GITHUB_COM"
+	IntegrationsSettingsKindEnumGithubAppCustom IntegrationsSettingsKindEnum = "GITHUB_APP_CUSTOM"
+	IntegrationsSettingsKindEnumAwsStatic       IntegrationsSettingsKindEnum = "AWS_STATIC"
+	IntegrationsSettingsKindEnumGcpStatic       IntegrationsSettingsKindEnum = "GCP_STATIC"
+	IntegrationsSettingsKindEnumGcpOidc         IntegrationsSettingsKindEnum = "GCP_OIDC"
+	IntegrationsSettingsKindEnumAwsRbac         IntegrationsSettingsKindEnum = "AWS_RBAC"
+	IntegrationsSettingsKindEnumAwsOidc         IntegrationsSettingsKindEnum = "AWS_OIDC"
+	IntegrationsSettingsKindEnumAzureStatic     IntegrationsSettingsKindEnum = "AZURE_STATIC"
+	IntegrationsSettingsKindEnumAzureOidc       IntegrationsSettingsKindEnum = "AZURE_OIDC"
+	IntegrationsSettingsKindEnumBitbucketOrg    IntegrationsSettingsKindEnum = "BITBUCKET_ORG"
+	IntegrationsSettingsKindEnumGitlabCom       IntegrationsSettingsKindEnum = "GITLAB_COM"
+	IntegrationsSettingsKindEnumAzureDevops     IntegrationsSettingsKindEnum = "AZURE_DEVOPS"
 )
 
-func NewIsArchiveEnumFromString(s string) (IsArchiveEnum, error) {
+func NewIntegrationsSettingsKindEnumFromString(s string) (IntegrationsSettingsKindEnum, error) {
 	switch s {
-	case "0":
-		return IsArchiveEnumZero, nil
-	case "1":
-		return IsArchiveEnumOne, nil
+	case "GITHUB_COM":
+		return IntegrationsSettingsKindEnumGithubCom, nil
+	case "GITHUB_APP_CUSTOM":
+		return IntegrationsSettingsKindEnumGithubAppCustom, nil
+	case "AWS_STATIC":
+		return IntegrationsSettingsKindEnumAwsStatic, nil
+	case "GCP_STATIC":
+		return IntegrationsSettingsKindEnumGcpStatic, nil
+	case "GCP_OIDC":
+		return IntegrationsSettingsKindEnumGcpOidc, nil
+	case "AWS_RBAC":
+		return IntegrationsSettingsKindEnumAwsRbac, nil
+	case "AWS_OIDC":
+		return IntegrationsSettingsKindEnumAwsOidc, nil
+	case "AZURE_STATIC":
+		return IntegrationsSettingsKindEnumAzureStatic, nil
+	case "AZURE_OIDC":
+		return IntegrationsSettingsKindEnumAzureOidc, nil
+	case "BITBUCKET_ORG":
+		return IntegrationsSettingsKindEnumBitbucketOrg, nil
+	case "GITLAB_COM":
+		return IntegrationsSettingsKindEnumGitlabCom, nil
+	case "AZURE_DEVOPS":
+		return IntegrationsSettingsKindEnumAzureDevops, nil
 	}
-	var t IsArchiveEnum
+	var t IntegrationsSettingsKindEnum
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
 }
 
-func (i IsArchiveEnum) Ptr() *IsArchiveEnum {
+func (i IntegrationsSettingsKindEnum) Ptr() *IntegrationsSettingsKindEnum {
+	return &i
+}
+
+// * `0` - 0
+// * `1` - 1
+type IsPublicEnum string
+
+const (
+	IsPublicEnumZero IsPublicEnum = "0"
+	IsPublicEnumOne  IsPublicEnum = "1"
+)
+
+func NewIsPublicEnumFromString(s string) (IsPublicEnum, error) {
+	switch s {
+	case "0":
+		return IsPublicEnumZero, nil
+	case "1":
+		return IsPublicEnumOne, nil
+	}
+	var t IsPublicEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (i IsPublicEnum) Ptr() *IsPublicEnum {
 	return &i
 }
 
@@ -4273,11 +5576,57 @@ func (n *Notifications) String() string {
 	return fmt.Sprintf("%#v", n)
 }
 
+type PatchedIntegration struct {
+	ResourceName      *core.Optional[*string]               `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	Description       *core.Optional[*string]               `json:"Description,omitempty" url:"Description,omitempty"`
+	Settings          *core.Optional[*IntegrationsSettings] `json:"Settings,omitempty" url:"Settings,omitempty"`
+	DiscoverySettings *core.Optional[*Discoverysettings]    `json:"DiscoverySettings,omitempty" url:"DiscoverySettings,omitempty"`
+	Scope             *core.Optional[[]string]              `json:"Scope,omitempty" url:"Scope,omitempty"`
+	Tags              *core.Optional[[]string]              `json:"Tags,omitempty" url:"Tags,omitempty"`
+	// Contextual tags to give context to your tags
+	ContextTags *core.Optional[map[string]*string] `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (p *PatchedIntegration) GetExtraProperties() map[string]interface{} {
+	return p.extraProperties
+}
+
+func (p *PatchedIntegration) UnmarshalJSON(data []byte) error {
+	type unmarshaler PatchedIntegration
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*p = PatchedIntegration(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *p)
+	if err != nil {
+		return err
+	}
+	p.extraProperties = extraProperties
+	p.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (p *PatchedIntegration) String() string {
+	if len(p.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(p.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(p); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", p)
+}
+
 type PatchedWorkflow struct {
 	ResourceName                *string                     `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
 	Description                 *string                     `json:"Description,omitempty" url:"Description,omitempty"`
 	Tags                        []string                    `json:"Tags,omitempty" url:"Tags,omitempty"`
-	IsActive                    *IsArchiveEnum              `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	IsActive                    *IsPublicEnum               `json:"IsActive,omitempty" url:"IsActive,omitempty"`
 	WfStepsConfig               []*WfStepsConfig            `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
 	WfType                      *WfTypeEnum                 `json:"WfType,omitempty" url:"WfType,omitempty"`
 	TerraformConfig             *TerraformConfig            `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
@@ -4338,7 +5687,7 @@ func (p *PatchedWorkflow) GetTags() []string {
 	return p.Tags
 }
 
-func (p *PatchedWorkflow) GetIsActive() *IsArchiveEnum {
+func (p *PatchedWorkflow) GetIsActive() *IsPublicEnum {
 	if p == nil {
 		return nil
 	}
@@ -4922,6 +6271,324 @@ func (r *RuntimeSourceConfig) String() string {
 // * `CONTAINER_REGISTRY` - CONTAINER_REGISTRY
 type RuntimeSourceSourceConfigDestKindEnum = string
 
+type SettingsConfig struct {
+	InstallationId          *string `json:"installationId,omitempty" url:"installationId,omitempty"`
+	AvatarUrl               *string `json:"avatar_url,omitempty" url:"avatar_url,omitempty"`
+	FailedGhapiCall         *string `json:"failedGHAPICall,omitempty" url:"failedGHAPICall,omitempty"`
+	Login                   *string `json:"login,omitempty" url:"login,omitempty"`
+	SetupAction             *string `json:"setupAction,omitempty" url:"setupAction,omitempty"`
+	GithubAppId             *string `json:"githubAppId,omitempty" url:"githubAppId,omitempty"`
+	GithubAppWebhookSecret  *string `json:"githubAppWebhookSecret,omitempty" url:"githubAppWebhookSecret,omitempty"`
+	GithubApiUrl            *string `json:"githubApiUrl,omitempty" url:"githubApiUrl,omitempty"`
+	GithubHttpUrl           *string `json:"githubHttpUrl,omitempty" url:"githubHttpUrl,omitempty"`
+	GithubAppClientId       *string `json:"githubAppClientId,omitempty" url:"githubAppClientId,omitempty"`
+	GithubAppClientSecret   *string `json:"githubAppClientSecret,omitempty" url:"githubAppClientSecret,omitempty"`
+	GithubAppPemFileContent *string `json:"githubAppPemFileContent,omitempty" url:"githubAppPemFileContent,omitempty"`
+	GithubAppWebhookUrl     *string `json:"githubAppWebhookURL,omitempty" url:"githubAppWebhookURL,omitempty"`
+	GitlabCreds             *string `json:"gitlabCreds,omitempty" url:"gitlabCreds,omitempty"`
+	GitlabHttpUrl           *string `json:"gitlabHttpUrl,omitempty" url:"gitlabHttpUrl,omitempty"`
+	GitlabApiUrl            *string `json:"gitlabApiUrl,omitempty" url:"gitlabApiUrl,omitempty"`
+	AzureCreds              *string `json:"azureCreds,omitempty" url:"azureCreds,omitempty"`
+	AzureDevopsHttpUrl      *string `json:"azureDevopsHttpUrl,omitempty" url:"azureDevopsHttpUrl,omitempty"`
+	AzureDevopsApiUrl       *string `json:"azureDevopsApiUrl,omitempty" url:"azureDevopsApiUrl,omitempty"`
+	// The authentication type. If not provided, it will be inferred based on other fields.
+	//
+	// * `ACCESS_TOKEN` - ACCESS_TOKEN
+	// * `API_TOKEN` - API_TOKEN
+	// * `APP_PASSWORD` - APP_PASSWORD
+	BitbucketAuthType *BitbucketAuthTypeEnum `json:"bitbucketAuthType,omitempty" url:"bitbucketAuthType,omitempty"`
+	// Credentials for 'APP_PASSWORD' or 'API_TOKEN' auth. Format should be '<username>:<secret>'.
+	BitbucketCreds *string `json:"bitbucketCreds,omitempty" url:"bitbucketCreds,omitempty"`
+	// User email, required for 'API_TOKEN' authentication.
+	BitbucketEmail *string `json:"bitbucketEmail,omitempty" url:"bitbucketEmail,omitempty"`
+	// Bearer token for 'ACCESS_TOKEN' authentication. This is the recommended method.
+	BitbucketAccessToken *string `json:"bitbucketAccessToken,omitempty" url:"bitbucketAccessToken,omitempty"`
+	AwsAccessKeyId       *string `json:"awsAccessKeyId,omitempty" url:"awsAccessKeyId,omitempty"`
+	AwsSecretAccessKey   *string `json:"awsSecretAccessKey,omitempty" url:"awsSecretAccessKey,omitempty"`
+	AwsDefaultRegion     *string `json:"awsDefaultRegion,omitempty" url:"awsDefaultRegion,omitempty"`
+	RoleArn              *string `json:"roleArn,omitempty" url:"roleArn,omitempty"`
+	ExternalId           *string `json:"externalId,omitempty" url:"externalId,omitempty"`
+	DurationSeconds      *string `json:"durationSeconds,omitempty" url:"durationSeconds,omitempty"`
+	ArmTenantId          *string `json:"armTenantId,omitempty" url:"armTenantId,omitempty"`
+	ArmSubscriptionId    *string `json:"armSubscriptionId,omitempty" url:"armSubscriptionId,omitempty"`
+	ArmClientId          *string `json:"armClientId,omitempty" url:"armClientId,omitempty"`
+	ArmClientSecret      *string `json:"armClientSecret,omitempty" url:"armClientSecret,omitempty"`
+	GcpConfigFileContent *string `json:"gcpConfigFileContent,omitempty" url:"gcpConfigFileContent,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (s *SettingsConfig) GetInstallationId() *string {
+	if s == nil {
+		return nil
+	}
+	return s.InstallationId
+}
+
+func (s *SettingsConfig) GetAvatarUrl() *string {
+	if s == nil {
+		return nil
+	}
+	return s.AvatarUrl
+}
+
+func (s *SettingsConfig) GetFailedGhapiCall() *string {
+	if s == nil {
+		return nil
+	}
+	return s.FailedGhapiCall
+}
+
+func (s *SettingsConfig) GetLogin() *string {
+	if s == nil {
+		return nil
+	}
+	return s.Login
+}
+
+func (s *SettingsConfig) GetSetupAction() *string {
+	if s == nil {
+		return nil
+	}
+	return s.SetupAction
+}
+
+func (s *SettingsConfig) GetGithubAppId() *string {
+	if s == nil {
+		return nil
+	}
+	return s.GithubAppId
+}
+
+func (s *SettingsConfig) GetGithubAppWebhookSecret() *string {
+	if s == nil {
+		return nil
+	}
+	return s.GithubAppWebhookSecret
+}
+
+func (s *SettingsConfig) GetGithubApiUrl() *string {
+	if s == nil {
+		return nil
+	}
+	return s.GithubApiUrl
+}
+
+func (s *SettingsConfig) GetGithubHttpUrl() *string {
+	if s == nil {
+		return nil
+	}
+	return s.GithubHttpUrl
+}
+
+func (s *SettingsConfig) GetGithubAppClientId() *string {
+	if s == nil {
+		return nil
+	}
+	return s.GithubAppClientId
+}
+
+func (s *SettingsConfig) GetGithubAppClientSecret() *string {
+	if s == nil {
+		return nil
+	}
+	return s.GithubAppClientSecret
+}
+
+func (s *SettingsConfig) GetGithubAppPemFileContent() *string {
+	if s == nil {
+		return nil
+	}
+	return s.GithubAppPemFileContent
+}
+
+func (s *SettingsConfig) GetGithubAppWebhookUrl() *string {
+	if s == nil {
+		return nil
+	}
+	return s.GithubAppWebhookUrl
+}
+
+func (s *SettingsConfig) GetGitlabCreds() *string {
+	if s == nil {
+		return nil
+	}
+	return s.GitlabCreds
+}
+
+func (s *SettingsConfig) GetGitlabHttpUrl() *string {
+	if s == nil {
+		return nil
+	}
+	return s.GitlabHttpUrl
+}
+
+func (s *SettingsConfig) GetGitlabApiUrl() *string {
+	if s == nil {
+		return nil
+	}
+	return s.GitlabApiUrl
+}
+
+func (s *SettingsConfig) GetAzureCreds() *string {
+	if s == nil {
+		return nil
+	}
+	return s.AzureCreds
+}
+
+func (s *SettingsConfig) GetAzureDevopsHttpUrl() *string {
+	if s == nil {
+		return nil
+	}
+	return s.AzureDevopsHttpUrl
+}
+
+func (s *SettingsConfig) GetAzureDevopsApiUrl() *string {
+	if s == nil {
+		return nil
+	}
+	return s.AzureDevopsApiUrl
+}
+
+func (s *SettingsConfig) GetBitbucketAuthType() *BitbucketAuthTypeEnum {
+	if s == nil {
+		return nil
+	}
+	return s.BitbucketAuthType
+}
+
+func (s *SettingsConfig) GetBitbucketCreds() *string {
+	if s == nil {
+		return nil
+	}
+	return s.BitbucketCreds
+}
+
+func (s *SettingsConfig) GetBitbucketEmail() *string {
+	if s == nil {
+		return nil
+	}
+	return s.BitbucketEmail
+}
+
+func (s *SettingsConfig) GetBitbucketAccessToken() *string {
+	if s == nil {
+		return nil
+	}
+	return s.BitbucketAccessToken
+}
+
+func (s *SettingsConfig) GetAwsAccessKeyId() *string {
+	if s == nil {
+		return nil
+	}
+	return s.AwsAccessKeyId
+}
+
+func (s *SettingsConfig) GetAwsSecretAccessKey() *string {
+	if s == nil {
+		return nil
+	}
+	return s.AwsSecretAccessKey
+}
+
+func (s *SettingsConfig) GetAwsDefaultRegion() *string {
+	if s == nil {
+		return nil
+	}
+	return s.AwsDefaultRegion
+}
+
+func (s *SettingsConfig) GetRoleArn() *string {
+	if s == nil {
+		return nil
+	}
+	return s.RoleArn
+}
+
+func (s *SettingsConfig) GetExternalId() *string {
+	if s == nil {
+		return nil
+	}
+	return s.ExternalId
+}
+
+func (s *SettingsConfig) GetDurationSeconds() *string {
+	if s == nil {
+		return nil
+	}
+	return s.DurationSeconds
+}
+
+func (s *SettingsConfig) GetArmTenantId() *string {
+	if s == nil {
+		return nil
+	}
+	return s.ArmTenantId
+}
+
+func (s *SettingsConfig) GetArmSubscriptionId() *string {
+	if s == nil {
+		return nil
+	}
+	return s.ArmSubscriptionId
+}
+
+func (s *SettingsConfig) GetArmClientId() *string {
+	if s == nil {
+		return nil
+	}
+	return s.ArmClientId
+}
+
+func (s *SettingsConfig) GetArmClientSecret() *string {
+	if s == nil {
+		return nil
+	}
+	return s.ArmClientSecret
+}
+
+func (s *SettingsConfig) GetGcpConfigFileContent() *string {
+	if s == nil {
+		return nil
+	}
+	return s.GcpConfigFileContent
+}
+
+func (s *SettingsConfig) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
+}
+
+func (s *SettingsConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler SettingsConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*s = SettingsConfig(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
+	if err != nil {
+		return err
+	}
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (s *SettingsConfig) String() string {
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(s); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", s)
+}
+
 type StackAction struct {
 	ActionType string `json:"ActionType" url:"ActionType"`
 
@@ -5114,7 +6781,7 @@ type TemplateWorkflow struct {
 	ResourceName                *string                     `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
 	Description                 *string                     `json:"Description,omitempty" url:"Description,omitempty"`
 	Tags                        []string                    `json:"Tags,omitempty" url:"Tags,omitempty"`
-	IsActive                    *IsArchiveEnum              `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	IsActive                    *IsPublicEnum               `json:"IsActive,omitempty" url:"IsActive,omitempty"`
 	WfStepsConfig               []*WfStepsConfig            `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
 	WfType                      *WfTypeEnum                 `json:"WfType,omitempty" url:"WfType,omitempty"`
 	TerraformConfig             *TerraformConfig            `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
@@ -5179,7 +6846,7 @@ func (t *TemplateWorkflow) GetTags() []string {
 	return t.Tags
 }
 
-func (t *TemplateWorkflow) GetIsActive() *IsArchiveEnum {
+func (t *TemplateWorkflow) GetIsActive() *IsPublicEnum {
 	if t == nil {
 		return nil
 	}
@@ -5640,8 +7307,9 @@ func (t *TerraformAction) String() string {
 }
 
 type TerraformConfig struct {
-	TerraformVersion        *string          `json:"terraformVersion,omitempty" url:"terraformVersion,omitempty"`
-	DriftCheck              *bool            `json:"driftCheck,omitempty" url:"driftCheck,omitempty"`
+	TerraformVersion *string `json:"terraformVersion,omitempty" url:"terraformVersion,omitempty"`
+	DriftCheck       *bool   `json:"driftCheck,omitempty" url:"driftCheck,omitempty"`
+	// Cron expression for drift check. Docs on how to create the cron expression: https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-scheduled-rule-pattern.html
 	DriftCron               *string          `json:"driftCron,omitempty" url:"driftCron,omitempty"`
 	ManagedTerraformState   *bool            `json:"managedTerraformState,omitempty" url:"managedTerraformState,omitempty"`
 	ApprovalPreApply        *bool            `json:"approvalPreApply,omitempty" url:"approvalPreApply,omitempty"`
@@ -5846,8 +7514,9 @@ func (t *TerraformConfig) String() string {
 }
 
 type UserSchedules struct {
-	Name   *string      `json:"name,omitempty" url:"name,omitempty"`
-	Desc   *string      `json:"desc,omitempty" url:"desc,omitempty"`
+	Name *string `json:"name,omitempty" url:"name,omitempty"`
+	Desc *string `json:"desc,omitempty" url:"desc,omitempty"`
+	// Cron expression for scheduled workflow run. Docs on how to create the cron expression: https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-scheduled-rule-pattern.html
 	Cron   string       `json:"cron" url:"cron"`
 	State  StateEnum    `json:"state" url:"state"`
 	Inputs *WorkflowRun `json:"inputs,omitempty" url:"inputs,omitempty"`
@@ -6343,14 +8012,17 @@ type WorkflowRun struct {
 	TerraformConfig          map[string]interface{}      `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
 	TerraformAction          *TerraformAction            `json:"TerraformAction,omitempty" url:"TerraformAction,omitempty"`
 	TriggerDetails           map[string]interface{}      `json:"TriggerDetails,omitempty" url:"TriggerDetails,omitempty"`
-	ScheduledAt              *string                     `json:"ScheduledAt,omitempty" url:"ScheduledAt,omitempty"`
-	VcsConfig                *VcsConfig                  `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
-	SgInternals              map[string]interface{}      `json:"SGInternals,omitempty" url:"SGInternals,omitempty"`
-	RunnerConstraints        *RunnerConstraints          `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
-	UserJobCpu               *int                        `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
-	UserJobMemory            *int                        `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
-	EnableChaining           *bool                       `json:"EnableChaining,omitempty" url:"EnableChaining,omitempty"`
-	MiniSteps                map[string]interface{}      `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	// Scheduled time for the workflow run. This time cannot be in the past. Supported formats are: ISO 8601 (e.g., 2025-08-01T22:00:00Z), Unix timestamp in milliseconds (e.g., 1748355781000).
+	ScheduledAt       *string                `json:"ScheduledAt,omitempty" url:"ScheduledAt,omitempty"`
+	VcsConfig         *VcsConfig             `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
+	SgInternals       map[string]interface{} `json:"SGInternals,omitempty" url:"SGInternals,omitempty"`
+	RunnerConstraints *RunnerConstraints     `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
+	UserJobCpu        *int                   `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
+	UserJobMemory     *int                   `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
+	EnableChaining    *bool                  `json:"EnableChaining,omitempty" url:"EnableChaining,omitempty"`
+	MiniSteps         map[string]interface{} `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	// Contextual tags to give context to your workflow run
+	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -6459,6 +8131,13 @@ func (w *WorkflowRun) GetMiniSteps() map[string]interface{} {
 		return nil
 	}
 	return w.MiniSteps
+}
+
+func (w *WorkflowRun) GetContextTags() map[string]*string {
+	if w == nil {
+		return nil
+	}
+	return w.ContextTags
 }
 
 func (w *WorkflowRun) GetExtraProperties() map[string]interface{} {
@@ -6613,7 +8292,7 @@ type WorkflowsConfigWorkflow struct {
 	ResourceName                *string                     `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
 	Description                 *string                     `json:"Description,omitempty" url:"Description,omitempty"`
 	Tags                        []string                    `json:"Tags,omitempty" url:"Tags,omitempty"`
-	IsActive                    *IsArchiveEnum              `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	IsActive                    *IsPublicEnum               `json:"IsActive,omitempty" url:"IsActive,omitempty"`
 	WfStepsConfig               []*WfStepsConfig            `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
 	WfType                      *WfTypeEnum                 `json:"WfType,omitempty" url:"WfType,omitempty"`
 	TerraformConfig             *TerraformConfig            `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
@@ -6647,7 +8326,8 @@ type WorkflowsConfigWorkflow struct {
 	BicepResources              map[string]interface{}      `json:"BicepResources,omitempty" url:"BicepResources,omitempty"`
 	SgCustomWorkflowRunFacts    map[string]interface{}      `json:"SGCustomWorkflowRunFacts,omitempty" url:"SGCustomWorkflowRunFacts,omitempty"`
 	// Contextual tags to give context to your tags
-	ContextTags  map[string]*string     `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	// The ID of the workflow. This is the ID of the workflow defined in the Stack Template.
 	Id           *string                `json:"id,omitempty" url:"id,omitempty"`
 	TemplateId   *string                `json:"templateId,omitempty" url:"templateId,omitempty"`
 	IacInputData *TemplatesIacInputData `json:"iacInputData,omitempty" url:"iacInputData,omitempty"`
@@ -6678,7 +8358,7 @@ func (w *WorkflowsConfigWorkflow) GetTags() []string {
 	return w.Tags
 }
 
-func (w *WorkflowsConfigWorkflow) GetIsActive() *IsArchiveEnum {
+func (w *WorkflowsConfigWorkflow) GetIsActive() *IsPublicEnum {
 	if w == nil {
 		return nil
 	}

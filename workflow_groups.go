@@ -10,6 +10,34 @@ import (
 	internal "github.com/StackGuardian/sg-sdk-go/internal"
 )
 
+type ListAllChildWorkflowGroupsRequest struct {
+	// Filter child workflow groups by description.
+	Description *string `json:"-" url:"Description,omitempty"`
+	// Filter child workflow groups by resource names.
+	ResourceNames *string `json:"-" url:"ResourceNames,omitempty"`
+	// Filter child workflow groups by tags.
+	Tags *string `json:"-" url:"Tags,omitempty"`
+	// Pagination token to retrieve the next set of results
+	Lastevaluatedkey *string `json:"-" url:"lastevaluatedkey,omitempty"`
+	// Limit the number of results returned. Default is 50. Maximum is 500.
+	Limit *int `json:"-" url:"limit,omitempty"`
+}
+
+type ListAllWorkflowGroupsRequest struct {
+	// Filter workflow groups by description.
+	Description *string `json:"-" url:"Description,omitempty"`
+	// Filter workflow groups by resource names.
+	ResourceNames *string `json:"-" url:"ResourceNames,omitempty"`
+	// Filter workflow groups by tags.
+	Tags *string `json:"-" url:"Tags,omitempty"`
+	// Pagination token to retrieve the next set of results
+	Lastevaluatedkey *string `json:"-" url:"lastevaluatedkey,omitempty"`
+	// Limit the number of results returned. Default is 50. Maximum is 500.
+	Limit *int `json:"-" url:"limit,omitempty"`
+	// Filter workflow groups based on ResourceName, Tags or Description
+	SearchQuery *string `json:"-" url:"searchQuery,omitempty"`
+}
+
 type PatchedWorkflowGroup struct {
 	ResourceName *core.Optional[string]   `json:"ResourceName,omitempty" url:"-"`
 	Description  *core.Optional[string]   `json:"Description,omitempty" url:"-"`
@@ -162,7 +190,8 @@ type WorkflowGroupDataResponse struct {
 	SubResourceId *string            `json:"SubResourceId,omitempty" url:"SubResourceId,omitempty"`
 	WfgrpIndexId  *string            `json:"WfgrpIndexId,omitempty" url:"WfgrpIndexId,omitempty"`
 	Authors       []string           `json:"Authors,omitempty" url:"Authors,omitempty"`
-	IsActive      *IsArchiveEnum     `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	IsActive      *IsPublicEnum      `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	Id            string             `json:"Id" url:"Id"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -287,11 +316,18 @@ func (w *WorkflowGroupDataResponse) GetAuthors() []string {
 	return w.Authors
 }
 
-func (w *WorkflowGroupDataResponse) GetIsActive() *IsArchiveEnum {
+func (w *WorkflowGroupDataResponse) GetIsActive() *IsPublicEnum {
 	if w == nil {
 		return nil
 	}
 	return w.IsActive
+}
+
+func (w *WorkflowGroupDataResponse) GetId() string {
+	if w == nil {
+		return ""
+	}
+	return w.Id
 }
 
 func (w *WorkflowGroupDataResponse) GetExtraProperties() map[string]interface{} {

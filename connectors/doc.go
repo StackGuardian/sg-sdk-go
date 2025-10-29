@@ -3,6 +3,4 @@
 // Connectors in StackGuardian act as a secure bridge, integrating your cloud infrastructure with essential services like version control, cloud service providers, and secret management vaults.
 //
 // For more details on Connectors, visit our [Documentation](https://docs.stackguardian.io/docs/connectors/overview/).
-//
-// For creation of Cloud connector groups please refer to [this page](https://docs.stackguardian.io/docs/connectors/csp/aws/#group-connector).
 package connectors

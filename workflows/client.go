@@ -32,7 +32,12 @@ func NewClient(opts ...option.RequestOption) *Client {
 	}
 }
 
-// Create a new workflow.
+// Create a new workflow in the Workflow Group.
+//
+// To create a workflow with a state file:
+// 1. Create a workflow using this `Create Workflow` endpoint.
+// 2. Use the '[Get Signed URL to upload tfstate file](#tag/Workflows/operation/Get%20Signed%20URL%20to%20upload%20tfstate%20file)' endpoint to get a signed upload URL for this Workflow.
+// 3. Upload the state file to the returned signed URL.
 func (c *Client) CreateWorkflow(
 	ctx context.Context,
 	org string,
@@ -92,7 +97,7 @@ func (c *Client) ReadWorkflow(
 		"https://api.app.stackguardian.io",
 	)
 	endpointURL := internal.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v",
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/",
 		org,
 		wfGrp,
 		wf,
@@ -136,7 +141,7 @@ func (c *Client) DeleteWorkflow(
 		"https://api.app.stackguardian.io",
 	)
 	endpointURL := internal.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v",
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/",
 		org,
 		wfGrp,
 		wf,
@@ -181,7 +186,7 @@ func (c *Client) UpdateWorkflow(
 		"https://api.app.stackguardian.io",
 	)
 	endpointURL := internal.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v",
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/",
 		org,
 		wfGrp,
 		wf,
@@ -212,7 +217,7 @@ func (c *Client) UpdateWorkflow(
 	return response, nil
 }
 
-// Retrieve a list of all artifacts for a workflow.
+// Retrieve a list of all artifacts for a workflow. This List All endpoint does not support pagination at the moment.
 func (c *Client) ListAllWorkflowArtifacts(
 	ctx context.Context,
 	org string,
@@ -227,7 +232,7 @@ func (c *Client) ListAllWorkflowArtifacts(
 		"https://api.app.stackguardian.io",
 	)
 	endpointURL := internal.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/listall_artifacts",
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/listall_artifacts/",
 		org,
 		wfGrp,
 		wf,
@@ -300,7 +305,71 @@ func (c *Client) Outputs(
 	return response, nil
 }
 
-// Retrieve a list of all workflows in a workflow group.
+// This endpoint returns a signed URL to upload a tfstate file for a workflow.
+// The state file can be uploaded by performing a PUT operation on the returned URL.
+// This URL is valid for 5 minutes.
+//
+// To create a workflow with a state file:
+// 1. Create a Workflow using the '[Create Workflow](#tag/Workflows/operation/Create%20Workflow)' endpoint.
+// 2. Use this `Get Signed URL to upload tfstate file` endpoint to get a signed upload URL for this Workflow.
+// 3. Upload the state file to the returned URL using a PUT request like in the example below:
+//
+//	curl -v -i -s -X PUT \
+//	    -H "Content-Type: application/json" \
+//	    -T "<your_tf_state_file>.json" \
+//	    "https://<your-returned-signed-url>"
+func (c *Client) GetSignedUrlToUploadTfstateFile(
+	ctx context.Context,
+	org string,
+	wf string,
+	wfGrp string,
+	request *sgsdkgo.GetSignedUrlToUploadTfstateFileRequest,
+	opts ...option.RequestOption,
+) (*sgsdkgo.GeneratedWorkflowUploadUrlResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/tfstate_upload_url/",
+		org,
+		wfGrp,
+		wf,
+	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *sgsdkgo.GeneratedWorkflowUploadUrlResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Retrieve a list of all workflows in a workflow group. Supports Pagination and Filtering using query parameters.
 func (c *Client) ListAllWorkflows(
 	ctx context.Context,
 	org string,

@@ -175,6 +175,7 @@ type AddUserToOrganization struct {
 	Role         *string  `json:"role,omitempty" url:"role,omitempty"`
 	Roles        []string `json:"roles,omitempty" url:"roles,omitempty"`
 	ResendInvite *bool    `json:"resendInvite,omitempty" url:"resendInvite,omitempty"`
+	SendEmail    *bool    `json:"sendEmail,omitempty" url:"sendEmail,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -220,6 +221,13 @@ func (a *AddUserToOrganization) GetResendInvite() *bool {
 		return nil
 	}
 	return a.ResendInvite
+}
+
+func (a *AddUserToOrganization) GetSendEmail() *bool {
+	if a == nil {
+		return nil
+	}
+	return a.SendEmail
 }
 
 func (a *AddUserToOrganization) GetExtraProperties() map[string]interface{} {

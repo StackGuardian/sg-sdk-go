@@ -29,20 +29,10 @@ func (s *Service) GetBenchmarkReports(ctx context.Context, org string, request *
 		return nil, err
 	}
 
-	queryParams := internal.EncodeQueryParams(map[string]interface{}{
-		"groupBy":              request.GroupBy,
-		"filter":               request.Filter,
-		"page":                 request.Page,
-		"pageSize":             request.PageSize,
-		"resourceType":         request.ResourceType,
-		"controlId":            request.ControlId,
-		"benchmarkName":        request.BenchmarkName,
-		"status":               request.Status,
-		"integrationType":      request.IntegrationType,
-		"integrationName":      request.IntegrationName,
-		"integrationGroupName": request.IntegrationGroupName,
-		"regions":              request.Regions,
-	})
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
 
 	var response []interface{}
 	err = s.client.Do(ctx, &internal.RequestOptions{

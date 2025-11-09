@@ -131,11 +131,10 @@ func (s *Service) ListAllApiAccesses(ctx context.Context, org string, request *a
 		return nil, err
 	}
 
-	queryParams := internal.EncodeQueryParams(map[string]interface{}{
-		"filter":   request.Filter,
-		"page":     request.Page,
-		"pageSize": request.PageSize,
-	})
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
 
 	var response api.ApiAccessListResponse
 	err = s.client.Do(ctx, &internal.RequestOptions{
@@ -159,12 +158,10 @@ func (s *Service) ReadAuditLogs(ctx context.Context, org string, request *api.Re
 		return nil, err
 	}
 
-	queryParams := internal.EncodeQueryParams(map[string]interface{}{
-		"page":      request.Page,
-		"pageSize":  request.PageSize,
-		"startTime": request.StartTime,
-		"endTime":   request.EndTime,
-	})
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
 
 	var response api.ReadAuditLogResponse
 	err = s.client.Do(ctx, &internal.RequestOptions{
@@ -331,9 +328,10 @@ func (s *Service) ListAllRoles(ctx context.Context, org string, request *api.Lis
 		return err
 	}
 
-	queryParams := internal.EncodeQueryParams(map[string]interface{}{
-		"filter": request.Filter,
-	})
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return err
+	}
 
 	err = s.client.Do(ctx, &internal.RequestOptions{
 		Method:      http.MethodGet,
@@ -375,11 +373,10 @@ func (s *Service) ListAllUsers(ctx context.Context, org string, request *api.Lis
 		return nil, err
 	}
 
-	queryParams := internal.EncodeQueryParams(map[string]interface{}{
-		"filter":   request.Filter,
-		"page":     request.Page,
-		"pageSize": request.PageSize,
-	})
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
 
 	var response api.ListAllUsersInOrganizationResponse
 	err = s.client.Do(ctx, &internal.RequestOptions{

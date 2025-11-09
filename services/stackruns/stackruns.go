@@ -69,11 +69,10 @@ func (s *Service) ListAllStackRuns(ctx context.Context, org, stack, wfGrp string
 		return nil, err
 	}
 
-	queryParams := internal.EncodeQueryParams(map[string]interface{}{
-		"filter":   request.Filter,
-		"page":     request.Page,
-		"pageSize": request.PageSize,
-	})
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
 
 	var response api.GeneratedStackRunsListAllResponse
 	err = s.client.Do(ctx, &internal.RequestOptions{

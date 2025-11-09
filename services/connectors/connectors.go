@@ -110,11 +110,10 @@ func (s *Service) ListAllConnectors(ctx context.Context, org string, request *ap
 		return nil, err
 	}
 
-	queryParams := internal.EncodeQueryParams(map[string]interface{}{
-		"filter":   request.Filter,
-		"page":     request.Page,
-		"pageSize": request.PageSize,
-	})
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
 
 	var response api.GeneratedConnectorListAllResponseMsg
 	err = s.client.Do(ctx, &internal.RequestOptions{

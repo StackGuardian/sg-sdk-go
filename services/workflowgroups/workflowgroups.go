@@ -136,11 +136,10 @@ func (s *Service) ListAllChildWorkflowGroups(ctx context.Context, org, wfGrp str
 		return nil, err
 	}
 
-	queryParams := internal.EncodeQueryParams(map[string]interface{}{
-		"filter":   request.Filter,
-		"page":     request.Page,
-		"pageSize": request.PageSize,
-	})
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
 
 	var response api.WorkflowGroupListAllResponse
 	err = s.client.Do(ctx, &internal.RequestOptions{
@@ -164,11 +163,10 @@ func (s *Service) ListAllWorkflowGroups(ctx context.Context, org string, request
 		return nil, err
 	}
 
-	queryParams := internal.EncodeQueryParams(map[string]interface{}{
-		"filter":   request.Filter,
-		"page":     request.Page,
-		"pageSize": request.PageSize,
-	})
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
 
 	var response api.WorkflowGroupListAllResponse
 	err = s.client.Do(ctx, &internal.RequestOptions{

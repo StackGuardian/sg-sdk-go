@@ -4,7 +4,6 @@ import (
 	"context"
 	"net/http"
 
-	api "github.com/StackGuardian/sg-sdk-go"
 	"github.com/StackGuardian/sg-sdk-go/internal"
 )
 

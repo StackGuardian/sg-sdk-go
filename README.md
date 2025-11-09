@@ -311,6 +311,90 @@ The SDK provides access to all StackGuardian services:
 - **Templates** - Manage templates
 - **BenchmarkReports** - Get benchmark reports
 
+## Testing
+
+### Running Tests
+
+```bash
+# Run all tests
+go test ./...
+
+# Run tests with coverage
+go test -cover ./...
+
+# Run only unit tests (skip integration tests)
+go test -short ./...
+
+# Run with race detector
+go test -race ./...
+
+# Run specific package tests
+go test ./internal/...
+go test ./stackguardian/...
+```
+
+### Integration Tests
+
+Integration tests require API credentials:
+
+```bash
+# Set environment variables
+export SG_API_TOKEN="your-api-token"
+export SG_ORG="your-org-name"
+
+# Run integration tests
+go test ./tests/...
+```
+
+Integration tests are automatically skipped when:
+- Running in short mode (`go test -short`)
+- `SG_API_TOKEN` environment variable is not set
+
+### Testing Your Code
+
+For testability, define minimal interfaces for the operations you use:
+
+```go
+// Define an interface with only the methods you need
+type OrganizationReader interface {
+    ReadOrganization(ctx context.Context, org string) (*api.OrgGetResponse, error)
+}
+
+// Your function depends on the interface, not the concrete client
+func GetOrgInfo(ctx context.Context, client OrganizationReader, orgName string) error {
+    org, err := client.ReadOrganization(ctx, orgName)
+    if err != nil {
+        return err
+    }
+    // Use org...
+    return nil
+}
+```
+
+In tests, create a mock that implements only that interface:
+
+```go
+type mockOrgReader struct {
+    mock.Mock
+}
+
+func (m *mockOrgReader) ReadOrganization(ctx context.Context, org string) (*api.OrgGetResponse, error) {
+    args := m.Called(ctx, org)
+    return args.Get(0).(*api.OrgGetResponse), args.Error(1)
+}
+
+func TestGetOrgInfo(t *testing.T) {
+    mockClient := new(mockOrgReader)
+    mockClient.On("ReadOrganization", mock.Anything, "test-org").Return(&api.OrgGetResponse{}, nil)
+
+    err := GetOrgInfo(context.Background(), mockClient, "test-org")
+    assert.NoError(t, err)
+    mockClient.AssertExpectations(t)
+}
+```
+
+This pattern follows AWS SDK v2 best practices and makes your code much easier to test.
+
 ## Migration from v1.x
 
 If you're migrating from v1.x (Fern-generated SDK), here are the key changes:

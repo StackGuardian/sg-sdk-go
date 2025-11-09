@@ -154,11 +154,10 @@ func (s *Service) ListAllWorkflowRuns(ctx context.Context, org, wf, wfGrp string
 		return nil, err
 	}
 
-	queryParams := internal.EncodeQueryParams(map[string]interface{}{
-		"filter":   request.Filter,
-		"page":     request.Page,
-		"pageSize": request.PageSize,
-	})
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
 
 	var response api.GeneratedWorkflowRunListAll
 	err = s.client.Do(ctx, &internal.RequestOptions{

@@ -3,6 +3,8 @@ package stackguardian
 import (
 	"net/http"
 	"time"
+
+	api "github.com/StackGuardian/sg-sdk-go"
 )
 
 // Config holds the configuration for the StackGuardian client.
@@ -44,7 +46,7 @@ func DefaultConfig() *Config {
 		MaxRetries:   3,
 		RetryWaitMin: 1 * time.Second,
 		RetryWaitMax: 30 * time.Second,
-		UserAgent:    "sg-sdk-go/v2.0.0",
+		UserAgent:    "sg-sdk-go/v" + Version,
 	}
 }
 

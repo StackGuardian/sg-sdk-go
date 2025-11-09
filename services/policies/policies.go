@@ -110,11 +110,10 @@ func (s *Service) ListAllPolicies(ctx context.Context, org string, request *api.
 		return err
 	}
 
-	queryParams := internal.EncodeQueryParams(map[string]interface{}{
-		"filter":   request.Filter,
-		"page":     request.Page,
-		"pageSize": request.PageSize,
-	})
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return err
+	}
 
 	err = s.client.Do(ctx, &internal.RequestOptions{
 		Method:      http.MethodGet,

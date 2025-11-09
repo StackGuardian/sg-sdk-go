@@ -157,9 +157,10 @@ func (s *Service) GetSignedUrlToUploadTfstateFile(ctx context.Context, org, wf, 
 		return nil, err
 	}
 
-	queryParams := internal.EncodeQueryParams(map[string]interface{}{
-		"fileName": request.FileName,
-	})
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
 
 	var response api.GeneratedWorkflowUploadUrlResponse
 	err = s.client.Do(ctx, &internal.RequestOptions{
@@ -183,11 +184,10 @@ func (s *Service) ListAllWorkflows(ctx context.Context, org, wfGrp string, reque
 		return nil, err
 	}
 
-	queryParams := internal.EncodeQueryParams(map[string]interface{}{
-		"filter":   request.Filter,
-		"page":     request.Page,
-		"pageSize": request.PageSize,
-	})
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
 
 	var response api.WorkflowsListAll
 	err = s.client.Do(ctx, &internal.RequestOptions{

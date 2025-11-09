@@ -193,11 +193,10 @@ func (s *Service) ListAllConnectorsInAGroup(ctx context.Context, integrationgrou
 		return nil, err
 	}
 
-	queryParams := internal.EncodeQueryParams(map[string]interface{}{
-		"filter":   request.Filter,
-		"page":     request.Page,
-		"pageSize": request.PageSize,
-	})
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
 
 	var response api.IntegrationGroupsListAllIntegrations
 	err = s.client.Do(ctx, &internal.RequestOptions{
@@ -220,11 +219,10 @@ func (s *Service) ListAllConnectorGroups(ctx context.Context, org string, reques
 		return nil, err
 	}
 
-	queryParams := internal.EncodeQueryParams(map[string]interface{}{
-		"filter":   request.Filter,
-		"page":     request.Page,
-		"pageSize": request.PageSize,
-	})
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
 
 	var response api.IntegrationGroupsListAllResponse
 	err = s.client.Do(ctx, &internal.RequestOptions{

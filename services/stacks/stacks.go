@@ -130,13 +130,10 @@ func (s *Service) ListAllStacks(ctx context.Context, org, wfGrp string, request 
 		return nil, err
 	}
 
-	// Convert request to query params if needed
-	// For now, we'll pass it as query parameters
-	queryParams := internal.EncodeQueryParams(map[string]interface{}{
-		"filter":   request.Filter,
-		"page":     request.Page,
-		"pageSize": request.PageSize,
-	})
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
 
 	var response api.GeneratedStackListAllResponse
 	err = s.client.Do(ctx, &internal.RequestOptions{

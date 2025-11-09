@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/StackGuardian/sg-sdk-go/internal"
-	api "github.com/StackGuardian/sg-sdk-go"
 )
 
 // Service provides access to the Workflow Run Facts API.

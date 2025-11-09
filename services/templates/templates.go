@@ -27,11 +27,10 @@ func (s *Service) ReadSubscription(ctx context.Context, org string, request *api
 		return nil, err
 	}
 
-	queryParams := internal.EncodeQueryParams(map[string]interface{}{
-		"filter":   request.Filter,
-		"page":     request.Page,
-		"pageSize": request.PageSize,
-	})
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
 
 	var response api.GetSubscriptionResponse
 	err = s.client.Do(ctx, &internal.RequestOptions{
@@ -54,11 +53,10 @@ func (s *Service) ListAllTemplatesBasedOnOwnerOrg(ctx context.Context, org strin
 		return nil, err
 	}
 
-	queryParams := internal.EncodeQueryParams(map[string]interface{}{
-		"filter":   request.Filter,
-		"page":     request.Page,
-		"pageSize": request.PageSize,
-	})
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
 
 	var response api.ListallTemplatesResponse
 	err = s.client.Do(ctx, &internal.RequestOptions{
@@ -66,9 +64,6 @@ func (s *Service) ListAllTemplatesBasedOnOwnerOrg(ctx context.Context, org strin
 		Path:        path,
 		QueryParams: queryParams,
 		Response:    &response,
-		Headers: map[string]string{
-			"x-sg-orgid": request.SgOrgid,
-		},
 	})
 	if err != nil {
 		return nil, err
@@ -90,9 +85,6 @@ func (s *Service) CreateTemplateRevision(ctx context.Context, request *api.Creat
 		Path:     path,
 		Body:     request,
 		Response: &response,
-		Headers: map[string]string{
-			"x-sg-orgid": request.SgOrgid,
-		},
 	})
 	if err != nil {
 		return nil, err
@@ -115,9 +107,6 @@ func (s *Service) ReadTemplateRevision(ctx context.Context, org, templateRevisio
 		Method:   http.MethodGet,
 		Path:     path,
 		Response: &response,
-		Headers: map[string]string{
-			"x-sg-orgid": request.SgOrgid,
-		},
 	})
 	if err != nil {
 		return nil, err
@@ -137,9 +126,6 @@ func (s *Service) DeleteTemplateRevision(ctx context.Context, org, templateRevis
 	err = s.client.Do(ctx, &internal.RequestOptions{
 		Method: http.MethodDelete,
 		Path:   path,
-		Headers: map[string]string{
-			"x-sg-orgid": request.SgOrgid,
-		},
 	})
 	if err != nil {
 		return err
@@ -161,9 +147,6 @@ func (s *Service) UpdateTemplateRevision(ctx context.Context, org, templateRevis
 		Path:     path,
 		Body:     request,
 		Response: &response,
-		Headers: map[string]string{
-			"x-sg-orgid": request.SgOrgid,
-		},
 	})
 	if err != nil {
 		return nil, err
@@ -180,11 +163,10 @@ func (s *Service) ListAllTemplates(ctx context.Context, templateType api.ListAll
 		return nil, err
 	}
 
-	queryParams := internal.EncodeQueryParams(map[string]interface{}{
-		"filter":   request.Filter,
-		"page":     request.Page,
-		"pageSize": request.PageSize,
-	})
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
 
 	var response api.ListallTemplatesResponse
 	err = s.client.Do(ctx, &internal.RequestOptions{
@@ -192,9 +174,6 @@ func (s *Service) ListAllTemplates(ctx context.Context, templateType api.ListAll
 		Path:        path,
 		QueryParams: queryParams,
 		Response:    &response,
-		Headers: map[string]string{
-			"x-sg-orgid": request.SgOrgid,
-		},
 	})
 	if err != nil {
 		return nil, err
@@ -215,9 +194,6 @@ func (s *Service) ReadIacGroupsIacTemplate(ctx context.Context, org, subTemplate
 		Method:   http.MethodGet,
 		Path:     path,
 		Response: &response,
-		Headers: map[string]string{
-			"x-sg-orgid": request.SgOrgid,
-		},
 	})
 	if err != nil {
 		return nil, err

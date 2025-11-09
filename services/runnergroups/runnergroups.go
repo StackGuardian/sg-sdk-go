@@ -48,9 +48,10 @@ func (s *Service) ReadRunnerGroup(ctx context.Context, org, runnerGroup string, 
 		return nil, err
 	}
 
-	queryParams := internal.EncodeQueryParams(map[string]interface{}{
-		"showInstances": request.ShowInstances,
-	})
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
 
 	var response api.RunnerGroupSerializerResponse
 	err = s.client.Do(ctx, &internal.RequestOptions{

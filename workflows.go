@@ -11,6 +11,7 @@ import (
 )
 
 type Workflow struct {
+	Id                          *string                                     `json:"Id,omitempty" url:"-"`
 	ResourceName                *core.Optional[string]                      `json:"ResourceName,omitempty" url:"-"`
 	Description                 *core.Optional[string]                      `json:"Description,omitempty" url:"-"`
 	Tags                        *core.Optional[[]string]                    `json:"Tags,omitempty" url:"-"`

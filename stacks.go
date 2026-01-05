@@ -12,6 +12,7 @@ import (
 
 type Stack struct {
 	// Triggers immediate stack creation process if true.
+	Id           *string                  `json:"Id,omitempty" url:"-"`
 	RunOnCreate  *bool                    `json:"-" url:"runOnCreate,omitempty"`
 	ResourceName *core.Optional[string]   `json:"ResourceName,omitempty" url:"-"`
 	Description  *core.Optional[string]   `json:"Description,omitempty" url:"-"`

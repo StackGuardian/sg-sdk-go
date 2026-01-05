@@ -47,6 +47,7 @@ type PatchedWorkflowGroup struct {
 }
 
 type WorkflowGroup struct {
+	Id           *string  `json:"Id,omitempty" url:"Id,omitempty"`
 	ResourceName *string  `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
 	Description  *string  `json:"Description,omitempty" url:"Description,omitempty"`
 	Tags         []string `json:"Tags,omitempty" url:"Tags,omitempty"`

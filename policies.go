@@ -1063,6 +1063,8 @@ func (p *PolicyFilterInsightResponse) String() string {
 }
 
 type PolicyGeneral struct {
+	// Id of the policy
+	Id *string `json:"Id,omitempty" url:"Id,omitempty"`
 	// Name of the policy
 	ResourceName *string `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
 	// Description of the policy

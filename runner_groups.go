@@ -11,6 +11,7 @@ import (
 )
 
 type RunnerGroup struct {
+	Id                         *string                                `json:"Id,omitempty"`
 	ResourceName               *core.Optional[string]                 `json:"ResourceName,omitempty" url:"-"`
 	Tags                       *core.Optional[[]string]               `json:"Tags,omitempty" url:"-"`
 	Description                *core.Optional[string]                 `json:"Description,omitempty" url:"-"`

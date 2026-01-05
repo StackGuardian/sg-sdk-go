@@ -42,6 +42,7 @@ type ApiAccess struct {
 }
 
 type Role struct {
+	Id           *string                  `json:"Id,omitempty"`
 	ResourceName string                   `json:"ResourceName" url:"-"`
 	Description  *core.Optional[string]   `json:"Description,omitempty" url:"-"`
 	Tags         *core.Optional[[]string] `json:"Tags,omitempty" url:"-"`

@@ -4898,6 +4898,7 @@ func (i InputSchemasTypeEnum) Ptr() *InputSchemasTypeEnum {
 }
 
 type Integration struct {
+	Id                *string               `json:"Id,omitempty" url:"Id,omitempty"`
 	ResourceName      *string               `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
 	Description       *string               `json:"Description,omitempty" url:"Description,omitempty"`
 	Settings          *IntegrationsSettings `json:"Settings,omitempty" url:"Settings,omitempty"`

@@ -51,6 +51,7 @@ type WorkflowStepRuntimeSource struct {
 
 type UpdateWorkflowStepTemplateRequestModel struct {
 	SourceConfigKind *core.Optional[WorkflowStepTemplateSourceConfigKindEnum] `json:"SourceConfigKind,omitempty" url:"SourceConfigKind,omitempty"`
+	ShortDescription *core.Optional[string]                                   `json:"ShortDescription,omitempty" url:"ShortDescription,omitempty"`
 	RuntimeSource    *core.Optional[WorkflowStepRuntimeSource]                `json:"RuntimeSource,omitempty" url:"RuntimeSource,omitempty"`
 	OwnerOrg         *core.Optional[string]                                   `json:"OwnerOrg" url:"OwnerOrg"`
 	Tags             *core.Optional[[]string]                                 `json:"Tags,omitempty" url:"Tags,omitempty"`
@@ -67,6 +68,7 @@ type UpdateWorkflowStepTemplateRequestModel struct {
 
 type UpdateWorkflowStepTemplateResponse struct {
 	Id               string                                   `json:"Id,omitempty" url:"Id,omitempty"`
+	ShortDescription *string                                  `json:"ShortDescription,omitempty" url:"ShortDescription,omitempty"`
 	SourceConfigKind WorkflowStepTemplateSourceConfigKindEnum `json:"SourceConfigKind,omitempty" url:"SourceConfigKind,omitempty"`
 	RuntimeSource    *WorkflowStepRuntimeSource               `json:"RuntimeSource,omitempty" url:"RuntimeSource,omitempty"`
 	TemplateId       *string                                  `json:"TemplateId,omitempty" url:"TemplateId,omitempty"`

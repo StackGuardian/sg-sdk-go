@@ -2,7 +2,7 @@ package workflowsteptemplaterevision
 
 import (
 	"github.com/StackGuardian/sg-sdk-go/core"
-	"github.com/StackGuardian/sg-sdk-go/core/workflowsteptemplate"
+	"github.com/StackGuardian/sg-sdk-go/workflowsteptemplate"
 )
 
 type Deprecation struct {

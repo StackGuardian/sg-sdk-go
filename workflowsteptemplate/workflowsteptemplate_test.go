@@ -8,8 +8,8 @@ import (
 	"testing"
 
 	sgsdkgo "github.com/StackGuardian/sg-sdk-go"
-	"github.com/StackGuardian/sg-sdk-go/core/workflowsteptemplate"
 	option "github.com/StackGuardian/sg-sdk-go/option"
+	"github.com/StackGuardian/sg-sdk-go/workflowsteptemplate"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -33,9 +33,11 @@ func getNewClient() *workflowsteptemplate.Client {
 
 func TestCreateWorkflowStepTemplate(t *testing.T) {
 	isActive := workflowsteptemplate.IsPublicEnum("0")
+	description := "test description"
 	var workflowStepTemplate = workflowsteptemplate.CreateWorkflowStepTemplate{
 		TemplateType:     workflowStepTemplateType,
 		SourceConfigKind: workflowsteptemplate.WorkflowStepTemplateSourceConfigKindDockerImageEnum,
+		ShortDescription: &description,
 		TemplateName:     workflowStepTemplateName,
 		ContextTags: map[string]string{
 			"test": "tag-testing",

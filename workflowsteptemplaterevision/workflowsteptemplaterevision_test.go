@@ -8,9 +8,9 @@ import (
 	"testing"
 
 	sgsdkgo "github.com/StackGuardian/sg-sdk-go"
-	"github.com/StackGuardian/sg-sdk-go/core/workflowsteptemplate"
-	workflowsteptemplaterevision "github.com/StackGuardian/sg-sdk-go/core/workflowstetemplaterevision"
 	"github.com/StackGuardian/sg-sdk-go/option"
+	"github.com/StackGuardian/sg-sdk-go/workflowsteptemplate"
+	"github.com/StackGuardian/sg-sdk-go/workflowsteptemplaterevision"
 	"github.com/stretchr/testify/assert"
 )
 

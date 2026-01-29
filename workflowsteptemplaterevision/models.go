@@ -2,7 +2,7 @@ package workflowsteptemplaterevision
 
 import (
 	"github.com/StackGuardian/sg-sdk-go/core"
-	"github.com/StackGuardian/sg-sdk-go/core/workflowsteptemplate"
+	"github.com/StackGuardian/sg-sdk-go/workflowsteptemplate"
 )
 
 type Deprecation struct {
@@ -26,6 +26,7 @@ type CreateWorkflowStepTemplateRevisionModel struct {
 }
 
 type WorkflowStepTemplateRevisionResponseData struct {
+	Id               string
 	Alias            *string                                                       `json:"Alias,omitempty" url:"Alias,omitempty"`
 	ContextTags      map[string]string                                             `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
 	Deprecation      *Deprecation                                                  `json:"Deprecation,omitempty" url:"Deprecation,omitempty"`

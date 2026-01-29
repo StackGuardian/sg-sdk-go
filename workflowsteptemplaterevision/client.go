@@ -6,9 +6,9 @@ import (
 	"net/http"
 
 	"github.com/StackGuardian/sg-sdk-go/core"
-	"github.com/StackGuardian/sg-sdk-go/core/workflowsteptemplate"
 	"github.com/StackGuardian/sg-sdk-go/internal"
 	"github.com/StackGuardian/sg-sdk-go/option"
+	"github.com/StackGuardian/sg-sdk-go/workflowsteptemplate"
 )
 
 type Client struct {

@@ -26,6 +26,8 @@ import (
 	workflowrunfacts "github.com/StackGuardian/sg-sdk-go/workflowrunfacts"
 	workflowruns "github.com/StackGuardian/sg-sdk-go/workflowruns"
 	workflows "github.com/StackGuardian/sg-sdk-go/workflows"
+	workflowsteptemplate "github.com/StackGuardian/sg-sdk-go/workflowsteptemplate"
+	workflowsteptemplaterevision "github.com/StackGuardian/sg-sdk-go/workflowsteptemplaterevision"
 	workflowtemplaterevisions "github.com/StackGuardian/sg-sdk-go/workflowtemplaterevisions"
 	workflowtemplates "github.com/StackGuardian/sg-sdk-go/workflowtemplates"
 )
@@ -35,25 +37,27 @@ type Client struct {
 	caller  *internal.Caller
 	header  http.Header
 
-	Organizations              *organizations.Client
-	AccessManagement           *accessmanagement.Client
-	ConnectorGroups            *connectorgroups.Client
-	Connectors                 *connectors.Client
-	Policies                   *policies.Client
-	BenchmarkReports           *benchmarkreports.Client
-	RunnerGroups               *runnergroups.Client
-	Secrets                    *secrets.Client
-	Templates                  *templates.Client
-	WorkflowGroups             *workflowgroups.Client
-	Stacks                     *stacks.Client
-	StackRuns                  *stackruns.Client
-	StackWorkflows             *stackworkflows.Client
-	StackWorkflowRuns          *stackworkflowruns.Client
-	StackWorkflowRunFacts      *stackworkflowrunfacts.Client
-	Workflows                  *workflows.Client
-	WorkflowRuns               *workflowruns.Client
-	WorkflowRunFacts           *workflowrunfacts.Client
-	WorkflowTemplates          *workflowtemplates.Client
+	Organizations                *organizations.Client
+	AccessManagement             *accessmanagement.Client
+	ConnectorGroups              *connectorgroups.Client
+	Connectors                   *connectors.Client
+	Policies                     *policies.Client
+	BenchmarkReports             *benchmarkreports.Client
+	RunnerGroups                 *runnergroups.Client
+	Secrets                      *secrets.Client
+	Templates                    *templates.Client
+	WorkflowGroups               *workflowgroups.Client
+	Stacks                       *stacks.Client
+	StackRuns                    *stackruns.Client
+	StackWorkflows               *stackworkflows.Client
+	StackWorkflowRuns            *stackworkflowruns.Client
+	StackWorkflowRunFacts        *stackworkflowrunfacts.Client
+	Workflows                    *workflows.Client
+	WorkflowRuns                 *workflowruns.Client
+	WorkflowRunFacts             *workflowrunfacts.Client
+	WorkflowStepTemplate         *workflowsteptemplate.Client
+	WorkflowStepTemplateRevision *workflowsteptemplaterevision.Client
+  WorkflowTemplates          *workflowtemplates.Client
 	WorkflowTemplatesRevisions *workflowtemplaterevisions.Client
 }
 
@@ -67,25 +71,27 @@ func NewClient(opts ...option.RequestOption) *Client {
 				MaxAttempts: options.MaxAttempts,
 			},
 		),
-		header:                     options.ToHeader(),
-		Organizations:              organizations.NewClient(opts...),
-		AccessManagement:           accessmanagement.NewClient(opts...),
-		ConnectorGroups:            connectorgroups.NewClient(opts...),
-		Connectors:                 connectors.NewClient(opts...),
-		Policies:                   policies.NewClient(opts...),
-		BenchmarkReports:           benchmarkreports.NewClient(opts...),
-		RunnerGroups:               runnergroups.NewClient(opts...),
-		Secrets:                    secrets.NewClient(opts...),
-		Templates:                  templates.NewClient(opts...),
-		WorkflowGroups:             workflowgroups.NewClient(opts...),
-		Stacks:                     stacks.NewClient(opts...),
-		StackRuns:                  stackruns.NewClient(opts...),
-		StackWorkflows:             stackworkflows.NewClient(opts...),
-		StackWorkflowRuns:          stackworkflowruns.NewClient(opts...),
-		StackWorkflowRunFacts:      stackworkflowrunfacts.NewClient(opts...),
-		Workflows:                  workflows.NewClient(opts...),
-		WorkflowRuns:               workflowruns.NewClient(opts...),
-		WorkflowRunFacts:           workflowrunfacts.NewClient(opts...),
+		header:                       options.ToHeader(),
+		Organizations:                organizations.NewClient(opts...),
+		AccessManagement:             accessmanagement.NewClient(opts...),
+		ConnectorGroups:              connectorgroups.NewClient(opts...),
+		Connectors:                   connectors.NewClient(opts...),
+		Policies:                     policies.NewClient(opts...),
+		BenchmarkReports:             benchmarkreports.NewClient(opts...),
+		RunnerGroups:                 runnergroups.NewClient(opts...),
+		Secrets:                      secrets.NewClient(opts...),
+		Templates:                    templates.NewClient(opts...),
+		WorkflowGroups:               workflowgroups.NewClient(opts...),
+		Stacks:                       stacks.NewClient(opts...),
+		StackRuns:                    stackruns.NewClient(opts...),
+		StackWorkflows:               stackworkflows.NewClient(opts...),
+		StackWorkflowRuns:            stackworkflowruns.NewClient(opts...),
+		StackWorkflowRunFacts:        stackworkflowrunfacts.NewClient(opts...),
+		Workflows:                    workflows.NewClient(opts...),
+		WorkflowRuns:                 workflowruns.NewClient(opts...),
+		WorkflowRunFacts:             workflowrunfacts.NewClient(opts...),
+		WorkflowStepTemplate:         workflowsteptemplate.NewClient(opts...),
+		WorkflowStepTemplateRevision: workflowsteptemplaterevision.NewClient(opts...),
 		WorkflowTemplates:          workflowtemplates.NewClient(opts...),
 		WorkflowTemplatesRevisions: workflowtemplaterevisions.NewClient(opts...),
 	}

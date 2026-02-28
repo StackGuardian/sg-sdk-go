@@ -394,10 +394,6 @@ func (c *CacheConfig) String() string {
 type CustomSource struct {
 	SourceConfigDestKind CustomSourceSourceConfigDestKindEnum `json:"sourceConfigDestKind" url:"sourceConfigDestKind"`
 	Config               *CustomSourceConfig                  `json:"config,omitempty" url:"config,omitempty"`
-	AdditionalConfig     map[string]interface{}               `json:"additionalConfig,omitempty" url:"additionalConfig,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
 }
 
 func (c *CustomSource) GetSourceConfigDestKind() CustomSourceSourceConfigDestKindEnum {
@@ -414,17 +410,6 @@ func (c *CustomSource) GetConfig() *CustomSourceConfig {
 	return c.Config
 }
 
-func (c *CustomSource) GetAdditionalConfig() map[string]interface{} {
-	if c == nil {
-		return nil
-	}
-	return c.AdditionalConfig
-}
-
-func (c *CustomSource) GetExtraProperties() map[string]interface{} {
-	return c.extraProperties
-}
-
 func (c *CustomSource) UnmarshalJSON(data []byte) error {
 	type unmarshaler CustomSource
 	var value unmarshaler
@@ -432,25 +417,7 @@ func (c *CustomSource) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*c = CustomSource(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
-	if err != nil {
-		return err
-	}
-	c.extraProperties = extraProperties
-	c.rawJSON = json.RawMessage(data)
 	return nil
-}
-
-func (c *CustomSource) String() string {
-	if len(c.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(c); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", c)
 }
 
 type CustomSourceConfig struct {
@@ -4878,6 +4845,7 @@ const (
 	InputSchemasTypeEnumFormJsonschema InputSchemasTypeEnum = "FORM_JSONSCHEMA"
 	InputSchemasTypeEnumRawJson        InputSchemasTypeEnum = "RAW_JSON"
 	InputSchemasTypeEnumTirithJson     InputSchemasTypeEnum = "TIRITH_JSON"
+	InputSchemasTypeEnumNoCodeJson     InputSchemasTypeEnum = "NO_CODE_JSON"
 )
 
 func NewInputSchemasTypeEnumFromString(s string) (InputSchemasTypeEnum, error) {
@@ -6011,12 +5979,8 @@ func (p PolicyTypeEnum) Ptr() *PolicyTypeEnum {
 }
 
 type RunnerConstraints struct {
-	Type      RunnerConstraintsTypeEnum `json:"type" url:"type"`
-	Names     []string                  `json:"names,omitempty" url:"names,omitempty"`
-	Selectors []string                  `json:"selectors,omitempty" url:"selectors,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
+	Type  RunnerConstraintsTypeEnum `json:"type" url:"type"`
+	Names []string                  `json:"names,omitempty" url:"names,omitempty"`
 }
 
 func (r *RunnerConstraints) GetType() RunnerConstraintsTypeEnum {
@@ -6033,17 +5997,6 @@ func (r *RunnerConstraints) GetNames() []string {
 	return r.Names
 }
 
-func (r *RunnerConstraints) GetSelectors() []string {
-	if r == nil {
-		return nil
-	}
-	return r.Selectors
-}
-
-func (r *RunnerConstraints) GetExtraProperties() map[string]interface{} {
-	return r.extraProperties
-}
-
 func (r *RunnerConstraints) UnmarshalJSON(data []byte) error {
 	type unmarshaler RunnerConstraints
 	var value unmarshaler
@@ -6051,25 +6004,7 @@ func (r *RunnerConstraints) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*r = RunnerConstraints(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *r)
-	if err != nil {
-		return err
-	}
-	r.extraProperties = extraProperties
-	r.rawJSON = json.RawMessage(data)
 	return nil
-}
-
-func (r *RunnerConstraints) String() string {
-	if len(r.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(r.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(r); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", r)
 }
 
 // * `private` - private
@@ -6747,12 +6682,10 @@ func (s StateEnum) Ptr() *StateEnum {
 type TemplateTypeEnum string
 
 const (
-	TemplateTypeEnumIac                TemplateTypeEnum = "IAC"
-	TemplateTypeEnumIacGroup           TemplateTypeEnum = "IAC_GROUP"
-	TemplateTypeEnumWorkflowStep       TemplateTypeEnum = "WORKFLOW_STEP"
-	TemplateTypeEnumIacPolicy          TemplateTypeEnum = "IAC_POLICY"
-	TemplateTypeEnumWorkflowStepPolicy TemplateTypeEnum = "WORKFLOW_STEP_POLICY"
-	TemplateTypeEnumReactivePolicy     TemplateTypeEnum = "REACTIVE_POLICY"
+	TemplateTypeEnumIac          TemplateTypeEnum = "IAC"
+	TemplateTypeEnumIacGroup     TemplateTypeEnum = "IAC_GROUP"
+	TemplateTypeEnumWorkflowStep TemplateTypeEnum = "WORKFLOW_STEP"
+	TemplateTypeEnumIacPolicy    TemplateTypeEnum = "IAC_POLICY"
 )
 
 func NewTemplateTypeEnumFromString(s string) (TemplateTypeEnum, error) {
@@ -6765,10 +6698,6 @@ func NewTemplateTypeEnumFromString(s string) (TemplateTypeEnum, error) {
 		return TemplateTypeEnumWorkflowStep, nil
 	case "IAC_POLICY":
 		return TemplateTypeEnumIacPolicy, nil
-	case "WORKFLOW_STEP_POLICY":
-		return TemplateTypeEnumWorkflowStepPolicy, nil
-	case "REACTIVE_POLICY":
-		return TemplateTypeEnumReactivePolicy, nil
 	}
 	var t TemplateTypeEnum
 	return "", fmt.Errorf("%s is not a valid %T", s, t)
@@ -7263,9 +7192,6 @@ func (t *TemplatesIacInputData) String() string {
 
 type TerraformAction struct {
 	Action *ActionEnum `json:"action,omitempty" url:"action,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
 }
 
 func (t *TerraformAction) GetAction() *ActionEnum {
@@ -7275,10 +7201,6 @@ func (t *TerraformAction) GetAction() *ActionEnum {
 	return t.Action
 }
 
-func (t *TerraformAction) GetExtraProperties() map[string]interface{} {
-	return t.extraProperties
-}
-
 func (t *TerraformAction) UnmarshalJSON(data []byte) error {
 	type unmarshaler TerraformAction
 	var value unmarshaler
@@ -7286,50 +7208,32 @@ func (t *TerraformAction) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	*t = TerraformAction(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *t)
-	if err != nil {
-		return err
-	}
-	t.extraProperties = extraProperties
-	t.rawJSON = json.RawMessage(data)
 	return nil
-}
-
-func (t *TerraformAction) String() string {
-	if len(t.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(t.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(t); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", t)
 }
 
 type TerraformConfig struct {
 	TerraformVersion *string `json:"terraformVersion,omitempty" url:"terraformVersion,omitempty"`
 	DriftCheck       *bool   `json:"driftCheck,omitempty" url:"driftCheck,omitempty"`
 	// Cron expression for drift check. Docs on how to create the cron expression: https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-scheduled-rule-pattern.html
-	DriftCron               *string          `json:"driftCron,omitempty" url:"driftCron,omitempty"`
-	ManagedTerraformState   *bool            `json:"managedTerraformState,omitempty" url:"managedTerraformState,omitempty"`
-	ApprovalPreApply        *bool            `json:"approvalPreApply,omitempty" url:"approvalPreApply,omitempty"`
-	TerraformPlanOptions    *string          `json:"terraformPlanOptions,omitempty" url:"terraformPlanOptions,omitempty"`
-	TerraformInitOptions    *string          `json:"terraformInitOptions,omitempty" url:"terraformInitOptions,omitempty"`
-	TerraformBinPath        []*MountPoint    `json:"terraformBinPath,omitempty" url:"terraformBinPath,omitempty"`
-	Timeout                 *int             `json:"timeout,omitempty" url:"timeout,omitempty"`
-	PostApplyWfStepsConfig  []*WfStepsConfig `json:"postApplyWfStepsConfig,omitempty" url:"postApplyWfStepsConfig,omitempty"`
-	PreApplyWfStepsConfig   []*WfStepsConfig `json:"preApplyWfStepsConfig,omitempty" url:"preApplyWfStepsConfig,omitempty"`
-	PrePlanWfStepsConfig    []*WfStepsConfig `json:"prePlanWfStepsConfig,omitempty" url:"prePlanWfStepsConfig,omitempty"`
-	PostPlanWfStepsConfig   []*WfStepsConfig `json:"postPlanWfStepsConfig,omitempty" url:"postPlanWfStepsConfig,omitempty"`
-	PreInitHooks            []string         `json:"preInitHooks,omitempty" url:"preInitHooks,omitempty"`
-	PrePlanHooks            []string         `json:"prePlanHooks,omitempty" url:"prePlanHooks,omitempty"`
-	PostPlanHooks           []string         `json:"postPlanHooks,omitempty" url:"postPlanHooks,omitempty"`
-	PreApplyHooks           []string         `json:"preApplyHooks,omitempty" url:"preApplyHooks,omitempty"`
-	PostApplyHooks          []string         `json:"postApplyHooks,omitempty" url:"postApplyHooks,omitempty"`
-	RunPreInitHooksOnDrift  *bool            `json:"runPreInitHooksOnDrift,omitempty" url:"runPreInitHooksOnDrift,omitempty"`
-	RunPrePlanHooksOnDrift  *bool            `json:"runPrePlanHooksOnDrift,omitempty" url:"runPrePlanHooksOnDrift,omitempty"`
-	RunPostPlanHooksOnDrift *bool            `json:"runPostPlanHooksOnDrift,omitempty" url:"runPostPlanHooksOnDrift,omitempty"`
+	DriftCron               *string         `json:"driftCron,omitempty" url:"driftCron,omitempty"`
+	ManagedTerraformState   *bool           `json:"managedTerraformState,omitempty" url:"managedTerraformState,omitempty"`
+	ApprovalPreApply        *bool           `json:"approvalPreApply,omitempty" url:"approvalPreApply,omitempty"`
+	TerraformPlanOptions    *string         `json:"terraformPlanOptions,omitempty" url:"terraformPlanOptions,omitempty"`
+	TerraformInitOptions    *string         `json:"terraformInitOptions,omitempty" url:"terraformInitOptions,omitempty"`
+	TerraformBinPath        []MountPoint    `json:"terraformBinPath,omitempty" url:"terraformBinPath,omitempty"`
+	Timeout                 *int            `json:"timeout,omitempty" url:"timeout,omitempty"`
+	PostApplyWfStepsConfig  []WfStepsConfig `json:"postApplyWfStepsConfig,omitempty" url:"postApplyWfStepsConfig,omitempty"`
+	PreApplyWfStepsConfig   []WfStepsConfig `json:"preApplyWfStepsConfig,omitempty" url:"preApplyWfStepsConfig,omitempty"`
+	PrePlanWfStepsConfig    []WfStepsConfig `json:"prePlanWfStepsConfig,omitempty" url:"prePlanWfStepsConfig,omitempty"`
+	PostPlanWfStepsConfig   []WfStepsConfig `json:"postPlanWfStepsConfig,omitempty" url:"postPlanWfStepsConfig,omitempty"`
+	PreInitHooks            []string        `json:"preInitHooks,omitempty" url:"preInitHooks,omitempty"`
+	PrePlanHooks            []string        `json:"prePlanHooks,omitempty" url:"prePlanHooks,omitempty"`
+	PostPlanHooks           []string        `json:"postPlanHooks,omitempty" url:"postPlanHooks,omitempty"`
+	PreApplyHooks           []string        `json:"preApplyHooks,omitempty" url:"preApplyHooks,omitempty"`
+	PostApplyHooks          []string        `json:"postApplyHooks,omitempty" url:"postApplyHooks,omitempty"`
+	RunPreInitHooksOnDrift  *bool           `json:"runPreInitHooksOnDrift,omitempty" url:"runPreInitHooksOnDrift,omitempty"`
+	RunPrePlanHooksOnDrift  *bool           `json:"runPrePlanHooksOnDrift,omitempty" url:"runPrePlanHooksOnDrift,omitempty"`
+	RunPostPlanHooksOnDrift *bool           `json:"runPostPlanHooksOnDrift,omitempty" url:"runPostPlanHooksOnDrift,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -7384,7 +7288,7 @@ func (t *TerraformConfig) GetTerraformInitOptions() *string {
 	return t.TerraformInitOptions
 }
 
-func (t *TerraformConfig) GetTerraformBinPath() []*MountPoint {
+func (t *TerraformConfig) GetTerraformBinPath() []MountPoint {
 	if t == nil {
 		return nil
 	}
@@ -7398,28 +7302,28 @@ func (t *TerraformConfig) GetTimeout() *int {
 	return t.Timeout
 }
 
-func (t *TerraformConfig) GetPostApplyWfStepsConfig() []*WfStepsConfig {
+func (t *TerraformConfig) GetPostApplyWfStepsConfig() []WfStepsConfig {
 	if t == nil {
 		return nil
 	}
 	return t.PostApplyWfStepsConfig
 }
 
-func (t *TerraformConfig) GetPreApplyWfStepsConfig() []*WfStepsConfig {
+func (t *TerraformConfig) GetPreApplyWfStepsConfig() []WfStepsConfig {
 	if t == nil {
 		return nil
 	}
 	return t.PreApplyWfStepsConfig
 }
 
-func (t *TerraformConfig) GetPrePlanWfStepsConfig() []*WfStepsConfig {
+func (t *TerraformConfig) GetPrePlanWfStepsConfig() []WfStepsConfig {
 	if t == nil {
 		return nil
 	}
 	return t.PrePlanWfStepsConfig
 }
 
-func (t *TerraformConfig) GetPostPlanWfStepsConfig() []*WfStepsConfig {
+func (t *TerraformConfig) GetPostPlanWfStepsConfig() []WfStepsConfig {
 	if t == nil {
 		return nil
 	}
@@ -7831,11 +7735,11 @@ type WfStepInputDataSchemaTypeEnum = string
 
 type WfStepsConfig struct {
 	Name                 string           `json:"name" url:"name"`
-	EnvironmentVariables []*EnvVars       `json:"environmentVariables,omitempty" url:"environmentVariables,omitempty"`
+	EnvironmentVariables []EnvVars        `json:"environmentVariables,omitempty" url:"environmentVariables,omitempty"`
 	Approval             *bool            `json:"approval,omitempty" url:"approval,omitempty"`
 	Timeout              *int             `json:"timeout,omitempty" url:"timeout,omitempty"`
-	CmdOverride          interface{}      `json:"cmdOverride,omitempty" url:"cmdOverride,omitempty"`
-	MountPoints          []*MountPoint    `json:"mountPoints,omitempty" url:"mountPoints,omitempty"`
+	CmdOverride          *string          `json:"cmdOverride,omitempty" url:"cmdOverride,omitempty"`
+	MountPoints          []MountPoint     `json:"mountPoints,omitempty" url:"mountPoints,omitempty"`
 	WfStepTemplateId     *string          `json:"wfStepTemplateId,omitempty" url:"wfStepTemplateId,omitempty"`
 	WfStepInputData      *WfStepInputData `json:"wfStepInputData,omitempty" url:"wfStepInputData,omitempty"`
 
@@ -7850,7 +7754,7 @@ func (w *WfStepsConfig) GetName() string {
 	return w.Name
 }
 
-func (w *WfStepsConfig) GetEnvironmentVariables() []*EnvVars {
+func (w *WfStepsConfig) GetEnvironmentVariables() []EnvVars {
 	if w == nil {
 		return nil
 	}
@@ -7878,7 +7782,7 @@ func (w *WfStepsConfig) GetCmdOverride() interface{} {
 	return w.CmdOverride
 }
 
-func (w *WfStepsConfig) GetMountPoints() []*MountPoint {
+func (w *WfStepsConfig) GetMountPoints() []MountPoint {
 	if w == nil {
 		return nil
 	}

@@ -28,6 +28,8 @@ import (
 	workflows "github.com/StackGuardian/sg-sdk-go/workflows"
 	workflowsteptemplate "github.com/StackGuardian/sg-sdk-go/workflowsteptemplate"
 	workflowsteptemplaterevision "github.com/StackGuardian/sg-sdk-go/workflowsteptemplaterevision"
+	workflowtemplaterevisions "github.com/StackGuardian/sg-sdk-go/workflowtemplaterevisions"
+	workflowtemplates "github.com/StackGuardian/sg-sdk-go/workflowtemplates"
 )
 
 type Client struct {
@@ -55,6 +57,8 @@ type Client struct {
 	WorkflowRunFacts             *workflowrunfacts.Client
 	WorkflowStepTemplate         *workflowsteptemplate.Client
 	WorkflowStepTemplateRevision *workflowsteptemplaterevision.Client
+  WorkflowTemplates          *workflowtemplates.Client
+	WorkflowTemplatesRevisions *workflowtemplaterevisions.Client
 }
 
 func NewClient(opts ...option.RequestOption) *Client {
@@ -88,5 +92,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 		WorkflowRunFacts:             workflowrunfacts.NewClient(opts...),
 		WorkflowStepTemplate:         workflowsteptemplate.NewClient(opts...),
 		WorkflowStepTemplateRevision: workflowsteptemplaterevision.NewClient(opts...),
+		WorkflowTemplates:          workflowtemplates.NewClient(opts...),
+		WorkflowTemplatesRevisions: workflowtemplaterevisions.NewClient(opts...),
 	}
 }

@@ -57,8 +57,8 @@ type Client struct {
 	WorkflowRunFacts             *workflowrunfacts.Client
 	WorkflowStepTemplate         *workflowsteptemplate.Client
 	WorkflowStepTemplateRevision *workflowsteptemplaterevision.Client
-  WorkflowTemplates          *workflowtemplates.Client
-	WorkflowTemplatesRevisions *workflowtemplaterevisions.Client
+	WorkflowTemplates            *workflowtemplates.Client
+	WorkflowTemplatesRevisions   *workflowtemplaterevisions.Client
 }
 
 func NewClient(opts ...option.RequestOption) *Client {
@@ -92,7 +92,7 @@ func NewClient(opts ...option.RequestOption) *Client {
 		WorkflowRunFacts:             workflowrunfacts.NewClient(opts...),
 		WorkflowStepTemplate:         workflowsteptemplate.NewClient(opts...),
 		WorkflowStepTemplateRevision: workflowsteptemplaterevision.NewClient(opts...),
-		WorkflowTemplates:          workflowtemplates.NewClient(opts...),
-		WorkflowTemplatesRevisions: workflowtemplaterevisions.NewClient(opts...),
+		WorkflowTemplates:            workflowtemplates.NewClient(opts...),
+		WorkflowTemplatesRevisions:   workflowtemplaterevisions.NewClient(opts...),
 	}
 }

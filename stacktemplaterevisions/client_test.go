@@ -118,11 +118,10 @@ func TestCreateStackTemplateRevision(t *testing.T) {
 		&stacktemplaterevisions.CreateStackTemplateRevisionRequest{
 			Alias:            alias,
 			Notes:            "initial stack template revision",
-			TempalteName:     stackTemplateName,
 			OwnerOrg:         ownerOrg,
 			SourceConfigKind: stacktemplates.StackTemplateSourceConfigKindMixed.Ptr(),
-			WorkflowsConfig: &sgsdkgo.WorkflowsConfig{
-				Workflows: []*sgsdkgo.WorkflowsConfigWorkflow{
+			WorkflowsConfig: &stacktemplaterevisions.StackTemplateRevisionWorkflowsConfig{
+				Workflows: []*stacktemplaterevisions.StackTemplateRevisionWorkflow{
 					{TemplateId: sgsdkgo.String("/" + ownerOrg + "/" + wfTemplateId)},
 				},
 			},
@@ -154,11 +153,10 @@ func TestReadStackTemplateRevision(t *testing.T) {
 		&stacktemplaterevisions.CreateStackTemplateRevisionRequest{
 			Alias:            "v1.0",
 			Notes:            "initial stack template revision",
-			TempalteName:     stackTemplateName,
 			OwnerOrg:         ownerOrg,
 			SourceConfigKind: stacktemplates.StackTemplateSourceConfigKindMixed.Ptr(),
-			WorkflowsConfig: &sgsdkgo.WorkflowsConfig{
-				Workflows: []*sgsdkgo.WorkflowsConfigWorkflow{
+			WorkflowsConfig: &stacktemplaterevisions.StackTemplateRevisionWorkflowsConfig{
+				Workflows: []*stacktemplaterevisions.StackTemplateRevisionWorkflow{
 					{TemplateId: sgsdkgo.String("/" + ownerOrg + "/" + wfTemplateId)},
 				},
 			},
@@ -192,11 +190,10 @@ func TestUpdateStackTemplateRevision(t *testing.T) {
 		&stacktemplaterevisions.CreateStackTemplateRevisionRequest{
 			Alias:            "v1.0",
 			Notes:            "initial stack template revision",
-			TempalteName:     stackTemplateName,
 			OwnerOrg:         ownerOrg,
 			SourceConfigKind: stacktemplates.StackTemplateSourceConfigKindMixed.Ptr(),
-			WorkflowsConfig: &sgsdkgo.WorkflowsConfig{
-				Workflows: []*sgsdkgo.WorkflowsConfigWorkflow{
+			WorkflowsConfig: &stacktemplaterevisions.StackTemplateRevisionWorkflowsConfig{
+				Workflows: []*stacktemplaterevisions.StackTemplateRevisionWorkflow{
 					{TemplateId: sgsdkgo.String("/" + ownerOrg + "/" + wfTemplateId)},
 				},
 			},
@@ -209,10 +206,9 @@ func TestUpdateStackTemplateRevision(t *testing.T) {
 	revisionId := stackTemplateId + ":1"
 	resp, err := client.UpdateStackTemplateRevision(context.TODO(), org, revisionId,
 		&stacktemplaterevisions.UpdateStackTemplateRevisionRequest{
-			Alias:            sgsdkgo.Optional(revisionAlias),
-			Notes:            sgsdkgo.Optional("updated stack template revision notes"),
-			OwnerOrg:         sgsdkgo.Optional(ownerOrg),
-			SourceConfigKind: sgsdkgo.Optional(stacktemplates.StackTemplateSourceConfigKindMixed),
+			Alias:    sgsdkgo.Optional(revisionAlias),
+			Notes:    sgsdkgo.Optional("updated stack template revision notes"),
+			OwnerOrg: sgsdkgo.Optional(ownerOrg),
 		},
 	)
 	if err != nil {
@@ -238,11 +234,10 @@ func TestDeleteStackTemplateRevision(t *testing.T) {
 		&stacktemplaterevisions.CreateStackTemplateRevisionRequest{
 			Alias:            "v1.0",
 			Notes:            "initial stack template revision",
-			TempalteName:     stackTemplateName,
 			OwnerOrg:         ownerOrg,
 			SourceConfigKind: stacktemplates.StackTemplateSourceConfigKindMixed.Ptr(),
-			WorkflowsConfig: &sgsdkgo.WorkflowsConfig{
-				Workflows: []*sgsdkgo.WorkflowsConfigWorkflow{
+			WorkflowsConfig: &stacktemplaterevisions.StackTemplateRevisionWorkflowsConfig{
+				Workflows: []*stacktemplaterevisions.StackTemplateRevisionWorkflow{
 					{TemplateId: sgsdkgo.String("/" + ownerOrg + "/" + wfTemplateId)},
 				},
 			},

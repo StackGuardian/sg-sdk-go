@@ -12,19 +12,14 @@ const TemplateType = "IAC_GROUP"
 type StackTemplateSourceConfigKindEnum string
 
 const (
-	StackTemplateSourceConfigKindTerraform         StackTemplateSourceConfigKindEnum = "TERRAFORM"
-	StackTemplateSourceConfigKindOpentofu          StackTemplateSourceConfigKindEnum = "OPENTOFU"
-	StackTemplateSourceConfigKindAnsiblePlaybook   StackTemplateSourceConfigKindEnum = "ANSIBLE_PLAYBOOK"
-	StackTemplateSourceConfigKindHelm              StackTemplateSourceConfigKindEnum = "HELM"
-	StackTemplateSourceConfigKindKubectl           StackTemplateSourceConfigKindEnum = "KUBECTL"
-	StackTemplateSourceConfigKindCloudformation    StackTemplateSourceConfigKindEnum = "CLOUDFORMATION"
-	StackTemplateSourceConfigKindDockerImage       StackTemplateSourceConfigKindEnum = "DOCKER_IMAGE"
-	StackTemplateSourceConfigKindOpaRego           StackTemplateSourceConfigKindEnum = "OPA_REGO"
-	StackTemplateSourceConfigKindSgPolicyFramework StackTemplateSourceConfigKindEnum = "SG_POLICY_FRAMEWORK"
-	StackTemplateSourceConfigKindCheckov           StackTemplateSourceConfigKindEnum = "CHECKOV"
-	StackTemplateSourceConfigKindSteampipe         StackTemplateSourceConfigKindEnum = "STEAMPIPE"
-	StackTemplateSourceConfigKindMixed             StackTemplateSourceConfigKindEnum = "MIXED"
-	StackTemplateSourceConfigKindCustom            StackTemplateSourceConfigKindEnum = "CUSTOM"
+	StackTemplateSourceConfigKindTerraform       StackTemplateSourceConfigKindEnum = "TERRAFORM"
+	StackTemplateSourceConfigKindOpentofu        StackTemplateSourceConfigKindEnum = "OPENTOFU"
+	StackTemplateSourceConfigKindAnsiblePlaybook StackTemplateSourceConfigKindEnum = "ANSIBLE_PLAYBOOK"
+	StackTemplateSourceConfigKindHelm            StackTemplateSourceConfigKindEnum = "HELM"
+	StackTemplateSourceConfigKindKubectl         StackTemplateSourceConfigKindEnum = "KUBECTL"
+	StackTemplateSourceConfigKindCloudformation  StackTemplateSourceConfigKindEnum = "CLOUDFORMATION"
+	StackTemplateSourceConfigKindMixed           StackTemplateSourceConfigKindEnum = "MIXED"
+	StackTemplateSourceConfigKindCustom          StackTemplateSourceConfigKindEnum = "CUSTOM"
 )
 
 func NewStackTemplateSourceConfigKindEnumFromString(s string) (StackTemplateSourceConfigKindEnum, error) {
@@ -41,16 +36,6 @@ func NewStackTemplateSourceConfigKindEnumFromString(s string) (StackTemplateSour
 		return StackTemplateSourceConfigKindKubectl, nil
 	case "CLOUDFORMATION":
 		return StackTemplateSourceConfigKindCloudformation, nil
-	case "DOCKER_IMAGE":
-		return StackTemplateSourceConfigKindDockerImage, nil
-	case "OPA_REGO":
-		return StackTemplateSourceConfigKindOpaRego, nil
-	case "SG_POLICY_FRAMEWORK":
-		return StackTemplateSourceConfigKindSgPolicyFramework, nil
-	case "CHECKOV":
-		return StackTemplateSourceConfigKindCheckov, nil
-	case "STEAMPIPE":
-		return StackTemplateSourceConfigKindSteampipe, nil
 	case "MIXED":
 		return StackTemplateSourceConfigKindMixed, nil
 	case "CUSTOM":

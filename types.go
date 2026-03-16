@@ -153,6 +153,13 @@ func (a ActionEnum) Ptr() *ActionEnum {
 	return &a
 }
 
+type StackActionParameters struct {
+	TerraformAction         *TerraformAction          `json:"TerraformAction,omitempty" url:"TerraformAction,omitempty"`
+	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	WfStepsConfig           []*WfStepsConfig           `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
+	EnvironmentVariables    []*EnvVars                 `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
+}
+
 type ActionOrder struct {
 	// Parameters contain the run configuration for the workflow run. For example: A terraform workflow could have
 	//
@@ -160,7 +167,7 @@ type ActionOrder struct {
 	//	    "action": "apply"
 	//	} }`
 	//	as its parameters.
-	Parameters map[string]interface{} `json:"parameters,omitempty" url:"parameters,omitempty"`
+	Parameters *StackActionParameters `json:"parameters,omitempty" url:"parameters,omitempty"`
 	// Dependencies are used to define the ordering of the workflows in the action. The first workflow to run will have no dependencies. You can use dependencies to define which workflow should execute before each workflow and use this to build a sequence of workflows.
 	Dependencies []*ActionDependency `json:"dependencies,omitempty" url:"dependencies,omitempty"`
 
@@ -168,7 +175,7 @@ type ActionOrder struct {
 	rawJSON         json.RawMessage
 }
 
-func (a *ActionOrder) GetParameters() map[string]interface{} {
+func (a *ActionOrder) GetParameters() *StackActionParameters {
 	if a == nil {
 		return nil
 	}

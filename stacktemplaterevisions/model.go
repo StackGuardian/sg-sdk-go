@@ -84,7 +84,7 @@ type UpdateStackTemplateRevisionRequest struct {
 	OwnerOrg         *core.Optional[string]                                           `json:"OwnerOrg,omitempty" url:"OwnerOrg,omitempty"`
 	Tags             *core.Optional[[]string]                                         `json:"Tags,omitempty" url:"Tags,omitempty"`
 	ContextTags      *core.Optional[map[string]string]                                `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
-	LongDescription  *string                                                          `json:"LongDescription,omitempty" url:"LongDescription,omitempty"`
+	LongDescription  *core.Optional[string]                                           `json:"LongDescription,omitempty" url:"LongDescription,omitempty"`
 	IsActive         *core.Optional[sgsdkgo.IsPublicEnum]                             `json:"IsActive,omitempty" url:"IsActive,omitempty"`
 	IsPublic         *core.Optional[sgsdkgo.IsPublicEnum]                             `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
 	Alias            *core.Optional[string]                                           `json:"Alias,omitempty" url:"Alias,omitempty"`

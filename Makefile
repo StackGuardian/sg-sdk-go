@@ -1,16 +1,44 @@
-# Makefile
+# Makefile for StackGuardian Go SDK
+
+.PHONY: all build test fmt vet lint clean
+
+# Default target
+all: fmt vet build
 
 # Format the Go SDK code
-format:
+fmt:
 	gofmt -w .
 	goimports -w .
 
-# Apply git patches in order
-# Any new patches are to be added at the end of this block
-apply-patch:
-	git apply gitPatches/basePatch-workflowGroups.patch
-	git apply gitPatches/basePatch-UnmashalJSON-Optional.patch
-	git apply gitPatches/basePatch-optional-for-patched-policies.patch
-	git apply gitPatches/basePatch-optional-for-patched-integration.patch
-# Build target to format and apply patches in sequence
-build: format apply-patch
+# Run go vet
+vet:
+	go vet ./...
+
+# Build the SDK (verify compilation)
+build:
+	go build ./...
+
+# Run tests
+test:
+	go test -v -race -cover ./...
+
+# Run linter (requires golangci-lint)
+lint:
+	golangci-lint run
+
+# Clean build artifacts
+clean:
+	go clean ./...
+	rm -rf dist/
+
+# Install development dependencies
+install-dev-tools:
+	go install golang.org/x/tools/cmd/goimports@latest
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
+# Run examples (requires SG_API_TOKEN environment variable)
+run-example-basic:
+	go run examples/basic/main.go
+
+run-example-workflow:
+	go run examples/workflow_run/main.go

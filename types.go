@@ -154,10 +154,10 @@ func (a ActionEnum) Ptr() *ActionEnum {
 }
 
 type StackActionParameters struct {
-	TerraformAction         *TerraformAction          `json:"TerraformAction,omitempty" url:"TerraformAction,omitempty"`
+	TerraformAction          *TerraformAction            `json:"TerraformAction,omitempty" url:"TerraformAction,omitempty"`
 	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
-	WfStepsConfig           []*WfStepsConfig           `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
-	EnvironmentVariables    []*EnvVars                 `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
+	WfStepsConfig            []*WfStepsConfig            `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
+	EnvironmentVariables     []*EnvVars                  `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
 }
 
 type ActionOrder struct {
@@ -3310,52 +3310,53 @@ func (g *GeneratedMsgVcsconfigIacvcsconfig) String() string {
 }
 
 type GeneratedWorkflowGetMsg struct {
-	UserJobMemory             float64                        `json:"UserJobMemory" url:"UserJobMemory"`
-	UserJobCpu                float64                        `json:"UserJobCPU" url:"UserJobCPU"`
-	NumberOfApprovalsRequired float64                        `json:"NumberOfApprovalsRequired" url:"NumberOfApprovalsRequired"`
+	Id                        string                         `json:"Id" url:"Id"`
+	UserJobMemory             *int                           `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
+	UserJobCpu                *int                           `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
+	NumberOfApprovalsRequired *int                           `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
 	IsActive                  *IsPublicEnum                  `json:"IsActive,omitempty" url:"IsActive,omitempty"`
-	Approvers                 []interface{}                  `json:"Approvers,omitempty" url:"Approvers,omitempty"`
+	Approvers                 []string                       `json:"Approvers,omitempty" url:"Approvers,omitempty"`
 	Tags                      []string                       `json:"Tags,omitempty" url:"Tags,omitempty"`
 	Authors                   []string                       `json:"Authors,omitempty" url:"Authors,omitempty"`
-	WfStepsConfig             []interface{}                  `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
+	WfStepsConfig             []*WfStepsConfig               `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
 	ActivitySubscribers       []string                       `json:"ActivitySubscribers,omitempty" url:"ActivitySubscribers,omitempty"`
 	SubResourceId             string                         `json:"SubResourceId" url:"SubResourceId"`
 	OrgId                     string                         `json:"OrgId" url:"OrgId"`
 	CreatedAt                 float64                        `json:"CreatedAt" url:"CreatedAt"`
 	IsArchive                 string                         `json:"IsArchive" url:"IsArchive"`
-	Description               string                         `json:"Description" url:"Description"`
+	Description               *string                        `json:"Description,omitempty" url:"Description,omitempty"`
 	ResourceId                string                         `json:"ResourceId" url:"ResourceId"`
-	WfType                    string                         `json:"WfType" url:"WfType"`
+	WfType                    *WfTypeEnum                    `json:"WfType,omitempty" url:"WfType,omitempty"`
 	ModifiedAt                float64                        `json:"ModifiedAt" url:"ModifiedAt"`
 	ParentId                  string                         `json:"ParentId" url:"ParentId"`
 	ResourceType              string                         `json:"ResourceType" url:"ResourceType"`
 	LatestWfrunStatus         string                         `json:"LatestWfrunStatus" url:"LatestWfrunStatus"`
 	DocVersion                string                         `json:"DocVersion" url:"DocVersion"`
 	EnforcedPolicies          []interface{}                  `json:"EnforcedPolicies,omitempty" url:"EnforcedPolicies,omitempty"`
-	ResourceName              string                         `json:"ResourceName" url:"ResourceName"`
+	ResourceName              *string                        `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
 	RunnerConstraints         *GeneratedMsgRunnerconstraints `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (g *GeneratedWorkflowGetMsg) GetUserJobMemory() float64 {
+func (g *GeneratedWorkflowGetMsg) GetUserJobMemory() *int {
 	if g == nil {
-		return 0
+		return nil
 	}
 	return g.UserJobMemory
 }
 
-func (g *GeneratedWorkflowGetMsg) GetUserJobCpu() float64 {
+func (g *GeneratedWorkflowGetMsg) GetUserJobCpu() *int {
 	if g == nil {
-		return 0
+		return nil
 	}
 	return g.UserJobCpu
 }
 
-func (g *GeneratedWorkflowGetMsg) GetNumberOfApprovalsRequired() float64 {
+func (g *GeneratedWorkflowGetMsg) GetNumberOfApprovalsRequired() *int {
 	if g == nil {
-		return 0
+		return nil
 	}
 	return g.NumberOfApprovalsRequired
 }
@@ -3367,7 +3368,7 @@ func (g *GeneratedWorkflowGetMsg) GetIsActive() *IsPublicEnum {
 	return g.IsActive
 }
 
-func (g *GeneratedWorkflowGetMsg) GetApprovers() []interface{} {
+func (g *GeneratedWorkflowGetMsg) GetApprovers() []string {
 	if g == nil {
 		return nil
 	}
@@ -3388,7 +3389,7 @@ func (g *GeneratedWorkflowGetMsg) GetAuthors() []string {
 	return g.Authors
 }
 
-func (g *GeneratedWorkflowGetMsg) GetWfStepsConfig() []interface{} {
+func (g *GeneratedWorkflowGetMsg) GetWfStepsConfig() []*WfStepsConfig {
 	if g == nil {
 		return nil
 	}
@@ -3430,9 +3431,9 @@ func (g *GeneratedWorkflowGetMsg) GetIsArchive() string {
 	return g.IsArchive
 }
 
-func (g *GeneratedWorkflowGetMsg) GetDescription() string {
+func (g *GeneratedWorkflowGetMsg) GetDescription() *string {
 	if g == nil {
-		return ""
+		return nil
 	}
 	return g.Description
 }
@@ -3444,9 +3445,9 @@ func (g *GeneratedWorkflowGetMsg) GetResourceId() string {
 	return g.ResourceId
 }
 
-func (g *GeneratedWorkflowGetMsg) GetWfType() string {
+func (g *GeneratedWorkflowGetMsg) GetWfType() *WfTypeEnum {
 	if g == nil {
-		return ""
+		return nil
 	}
 	return g.WfType
 }
@@ -3493,9 +3494,9 @@ func (g *GeneratedWorkflowGetMsg) GetEnforcedPolicies() []interface{} {
 	return g.EnforcedPolicies
 }
 
-func (g *GeneratedWorkflowGetMsg) GetResourceName() string {
+func (g *GeneratedWorkflowGetMsg) GetResourceName() *string {
 	if g == nil {
-		return ""
+		return nil
 	}
 	return g.ResourceName
 }
@@ -5164,6 +5165,30 @@ func (i IsPublicEnum) Ptr() *IsPublicEnum {
 	return &i
 }
 
+// * `enabled` - enabled
+// * `disabled` - disabled
+type ParallelExecutionEnum string
+
+const (
+	ParallelExecutionEnumEnabled  ParallelExecutionEnum = "enabled"
+	ParallelExecutionEnumDisabled ParallelExecutionEnum = "disabled"
+)
+
+func NewParallelExecutionEnumFromString(s string) (ParallelExecutionEnum, error) {
+	switch s {
+	case "enabled":
+		return ParallelExecutionEnumEnabled, nil
+	case "disabled":
+		return ParallelExecutionEnumDisabled, nil
+	}
+	var t ParallelExecutionEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (p ParallelExecutionEnum) Ptr() *ParallelExecutionEnum {
+	return &p
+}
+
 type MiniSteps struct {
 	WorkflowGroupId    string                 `json:"workflowGroupId" url:"workflowGroupId"`
 	WorkflowId         *string                `json:"workflowId,omitempty" url:"workflowId,omitempty"`
@@ -5599,302 +5624,318 @@ func (p *PatchedIntegration) String() string {
 }
 
 type PatchedWorkflow struct {
-	ResourceName                *string                     `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
-	Description                 *string                     `json:"Description,omitempty" url:"Description,omitempty"`
-	Tags                        []string                    `json:"Tags,omitempty" url:"Tags,omitempty"`
-	IsActive                    *IsPublicEnum               `json:"IsActive,omitempty" url:"IsActive,omitempty"`
-	WfStepsConfig               []*WfStepsConfig            `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
-	WfType                      *WfTypeEnum                 `json:"WfType,omitempty" url:"WfType,omitempty"`
-	TerraformConfig             *TerraformConfig            `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
-	EnvironmentVariables        []*EnvVars                  `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
-	DeploymentPlatformConfig    []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
-	VcsConfig                   *VcsConfig                  `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
-	UserSchedules               []*UserSchedules            `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
-	GitHubComSync               map[string]interface{}      `json:"GitHubComSync,omitempty" url:"GitHubComSync,omitempty"`
-	MiniSteps                   *MiniStepsSchema            `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
-	Approvers                   []string                    `json:"Approvers,omitempty" url:"Approvers,omitempty"`
-	NumberOfApprovalsRequired   *int                        `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
-	RunnerConstraints           *RunnerConstraints          `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
-	UserJobCpu                  *int                        `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
-	UserJobMemory               *int                        `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
-	CacheConfig                 *CacheConfig                `json:"CacheConfig,omitempty" url:"CacheConfig,omitempty"`
-	TfStateCleaned              map[string]interface{}      `json:"TfStateCleaned,omitempty" url:"TfStateCleaned,omitempty"`
-	InfracostBreakdown          map[string]interface{}      `json:"InfracostBreakdown,omitempty" url:"InfracostBreakdown,omitempty"`
-	PolicyEvalResults           map[string]interface{}      `json:"PolicyEvalResults,omitempty" url:"PolicyEvalResults,omitempty"`
-	InfracostBreakdownPreApply  map[string]interface{}      `json:"InfracostBreakdownPreApply,omitempty" url:"InfracostBreakdownPreApply,omitempty"`
-	InfracostBreakdownPostApply map[string]interface{}      `json:"InfracostBreakdownPostApply,omitempty" url:"InfracostBreakdownPostApply,omitempty"`
-	TfDrift                     map[string]interface{}      `json:"TfDrift,omitempty" url:"TfDrift,omitempty"`
-	CfStateCleaned              map[string]interface{}      `json:"CfStateCleaned,omitempty" url:"CfStateCleaned,omitempty"`
-	CfStackPlan                 map[string]interface{}      `json:"CfStackPlan,omitempty" url:"CfStackPlan,omitempty"`
-	CfDrift                     map[string]interface{}      `json:"CfDrift,omitempty" url:"CfDrift,omitempty"`
-	K8SResources                map[string]interface{}      `json:"K8sResources,omitempty" url:"K8sResources,omitempty"`
-	K8SDrift                    map[string]interface{}      `json:"K8sDrift,omitempty" url:"K8sDrift,omitempty"`
-	TerragruntDrift             map[string]interface{}      `json:"TerragruntDrift,omitempty" url:"TerragruntDrift,omitempty"`
-	AnsibleOutputs              map[string]interface{}      `json:"AnsibleOutputs,omitempty" url:"AnsibleOutputs,omitempty"`
-	AnsiblePlan                 map[string]interface{}      `json:"AnsiblePlan,omitempty" url:"AnsiblePlan,omitempty"`
-	AnsibleDrift                map[string]interface{}      `json:"AnsibleDrift,omitempty" url:"AnsibleDrift,omitempty"`
-	BicepResources              map[string]interface{}      `json:"BicepResources,omitempty" url:"BicepResources,omitempty"`
-	SgCustomWorkflowRunFacts    map[string]interface{}      `json:"SGCustomWorkflowRunFacts,omitempty" url:"SGCustomWorkflowRunFacts,omitempty"`
+	ResourceName                *core.Optional[string]                      `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	Description                 *core.Optional[string]                      `json:"Description,omitempty" url:"Description,omitempty"`
+	Tags                        *core.Optional[[]string]                    `json:"Tags,omitempty" url:"Tags,omitempty"`
+	IsActive                    *core.Optional[IsPublicEnum]                `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	WfStepsConfig               *core.Optional[[]*WfStepsConfig]            `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
+	WfType                      *core.Optional[WfTypeEnum]                  `json:"WfType,omitempty" url:"WfType,omitempty"`
+	TerraformConfig             *core.Optional[TerraformConfig]             `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
+	EnvironmentVariables        *core.Optional[[]*EnvVars]                  `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
+	DeploymentPlatformConfig    *core.Optional[[]*DeploymentPlatformConfig] `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	VcsConfig                   *core.Optional[VcsConfig]                   `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
+	UserSchedules               *core.Optional[[]*UserSchedules]            `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
+	GitHubComSync               *core.Optional[map[string]interface{}]      `json:"GitHubComSync,omitempty" url:"GitHubComSync,omitempty"`
+	MiniSteps                   *core.Optional[MiniStepsSchema]             `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	Approvers                   *core.Optional[[]string]                    `json:"Approvers,omitempty" url:"Approvers,omitempty"`
+	NumberOfApprovalsRequired   *core.Optional[int]                         `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
+	RunnerConstraints           *core.Optional[RunnerConstraints]           `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
+	UserJobCpu                  *core.Optional[int]                         `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
+	UserJobMemory               *core.Optional[int]                         `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
+	ParallelExecution           *core.Optional[ParallelExecutionEnum]       `json:"ParallelExecution,omitempty" url:"ParallelExecution,omitempty"`
+	NumResources                *core.Optional[int]                         `json:"NumResources,omitempty" url:"NumResources,omitempty"`
+	CacheConfig                 *core.Optional[CacheConfig]                 `json:"CacheConfig,omitempty" url:"CacheConfig,omitempty"`
+	TfStateCleaned              *core.Optional[map[string]interface{}]      `json:"TfStateCleaned,omitempty" url:"TfStateCleaned,omitempty"`
+	InfracostBreakdown          *core.Optional[map[string]interface{}]      `json:"InfracostBreakdown,omitempty" url:"InfracostBreakdown,omitempty"`
+	PolicyEvalResults           *core.Optional[map[string]interface{}]      `json:"PolicyEvalResults,omitempty" url:"PolicyEvalResults,omitempty"`
+	InfracostBreakdownPreApply  *core.Optional[map[string]interface{}]      `json:"InfracostBreakdownPreApply,omitempty" url:"InfracostBreakdownPreApply,omitempty"`
+	InfracostBreakdownPostApply *core.Optional[map[string]interface{}]      `json:"InfracostBreakdownPostApply,omitempty" url:"InfracostBreakdownPostApply,omitempty"`
+	TfDrift                     *core.Optional[map[string]interface{}]      `json:"TfDrift,omitempty" url:"TfDrift,omitempty"`
+	CfStateCleaned              *core.Optional[map[string]interface{}]      `json:"CfStateCleaned,omitempty" url:"CfStateCleaned,omitempty"`
+	CfStackPlan                 *core.Optional[map[string]interface{}]      `json:"CfStackPlan,omitempty" url:"CfStackPlan,omitempty"`
+	CfDrift                     *core.Optional[map[string]interface{}]      `json:"CfDrift,omitempty" url:"CfDrift,omitempty"`
+	K8SResources                *core.Optional[map[string]interface{}]      `json:"K8sResources,omitempty" url:"K8sResources,omitempty"`
+	K8SDrift                    *core.Optional[map[string]interface{}]      `json:"K8sDrift,omitempty" url:"K8sDrift,omitempty"`
+	TerragruntDrift             *core.Optional[map[string]interface{}]      `json:"TerragruntDrift,omitempty" url:"TerragruntDrift,omitempty"`
+	AnsibleOutputs              *core.Optional[map[string]interface{}]      `json:"AnsibleOutputs,omitempty" url:"AnsibleOutputs,omitempty"`
+	AnsiblePlan                 *core.Optional[map[string]interface{}]      `json:"AnsiblePlan,omitempty" url:"AnsiblePlan,omitempty"`
+	AnsibleDrift                *core.Optional[map[string]interface{}]      `json:"AnsibleDrift,omitempty" url:"AnsibleDrift,omitempty"`
+	BicepResources              *core.Optional[map[string]interface{}]      `json:"BicepResources,omitempty" url:"BicepResources,omitempty"`
+	SgCustomWorkflowRunFacts    *core.Optional[map[string]interface{}]      `json:"SGCustomWorkflowRunFacts,omitempty" url:"SGCustomWorkflowRunFacts,omitempty"`
 	// Contextual tags to give context to your tags
-	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	ContextTags *core.Optional[map[string]*string] `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (p *PatchedWorkflow) GetResourceName() *string {
+func (p *PatchedWorkflow) GetResourceName() *core.Optional[string] {
 	if p == nil {
 		return nil
 	}
 	return p.ResourceName
 }
 
-func (p *PatchedWorkflow) GetDescription() *string {
+func (p *PatchedWorkflow) GetDescription() *core.Optional[string] {
 	if p == nil {
 		return nil
 	}
 	return p.Description
 }
 
-func (p *PatchedWorkflow) GetTags() []string {
+func (p *PatchedWorkflow) GetTags() *core.Optional[[]string] {
 	if p == nil {
 		return nil
 	}
 	return p.Tags
 }
 
-func (p *PatchedWorkflow) GetIsActive() *IsPublicEnum {
+func (p *PatchedWorkflow) GetIsActive() *core.Optional[IsPublicEnum] {
 	if p == nil {
 		return nil
 	}
 	return p.IsActive
 }
 
-func (p *PatchedWorkflow) GetWfStepsConfig() []*WfStepsConfig {
+func (p *PatchedWorkflow) GetWfStepsConfig() *core.Optional[[]*WfStepsConfig] {
 	if p == nil {
 		return nil
 	}
 	return p.WfStepsConfig
 }
 
-func (p *PatchedWorkflow) GetWfType() *WfTypeEnum {
+func (p *PatchedWorkflow) GetWfType() *core.Optional[WfTypeEnum] {
 	if p == nil {
 		return nil
 	}
 	return p.WfType
 }
 
-func (p *PatchedWorkflow) GetTerraformConfig() *TerraformConfig {
+func (p *PatchedWorkflow) GetTerraformConfig() *core.Optional[TerraformConfig] {
 	if p == nil {
 		return nil
 	}
 	return p.TerraformConfig
 }
 
-func (p *PatchedWorkflow) GetEnvironmentVariables() []*EnvVars {
+func (p *PatchedWorkflow) GetEnvironmentVariables() *core.Optional[[]*EnvVars] {
 	if p == nil {
 		return nil
 	}
 	return p.EnvironmentVariables
 }
 
-func (p *PatchedWorkflow) GetDeploymentPlatformConfig() []*DeploymentPlatformConfig {
+func (p *PatchedWorkflow) GetDeploymentPlatformConfig() *core.Optional[[]*DeploymentPlatformConfig] {
 	if p == nil {
 		return nil
 	}
 	return p.DeploymentPlatformConfig
 }
 
-func (p *PatchedWorkflow) GetVcsConfig() *VcsConfig {
+func (p *PatchedWorkflow) GetVcsConfig() *core.Optional[VcsConfig] {
 	if p == nil {
 		return nil
 	}
 	return p.VcsConfig
 }
 
-func (p *PatchedWorkflow) GetUserSchedules() []*UserSchedules {
+func (p *PatchedWorkflow) GetUserSchedules() *core.Optional[[]*UserSchedules] {
 	if p == nil {
 		return nil
 	}
 	return p.UserSchedules
 }
 
-func (p *PatchedWorkflow) GetGitHubComSync() map[string]interface{} {
+func (p *PatchedWorkflow) GetGitHubComSync() *core.Optional[map[string]interface{}] {
 	if p == nil {
 		return nil
 	}
 	return p.GitHubComSync
 }
 
-func (p *PatchedWorkflow) GetMiniSteps() *MiniStepsSchema {
+func (p *PatchedWorkflow) GetMiniSteps() *core.Optional[MiniStepsSchema] {
 	if p == nil {
 		return nil
 	}
 	return p.MiniSteps
 }
 
-func (p *PatchedWorkflow) GetApprovers() []string {
+func (p *PatchedWorkflow) GetApprovers() *core.Optional[[]string] {
 	if p == nil {
 		return nil
 	}
 	return p.Approvers
 }
 
-func (p *PatchedWorkflow) GetNumberOfApprovalsRequired() *int {
+func (p *PatchedWorkflow) GetNumberOfApprovalsRequired() *core.Optional[int] {
 	if p == nil {
 		return nil
 	}
 	return p.NumberOfApprovalsRequired
 }
 
-func (p *PatchedWorkflow) GetRunnerConstraints() *RunnerConstraints {
+func (p *PatchedWorkflow) GetRunnerConstraints() *core.Optional[RunnerConstraints] {
 	if p == nil {
 		return nil
 	}
 	return p.RunnerConstraints
 }
 
-func (p *PatchedWorkflow) GetUserJobCpu() *int {
+func (p *PatchedWorkflow) GetUserJobCpu() *core.Optional[int] {
 	if p == nil {
 		return nil
 	}
 	return p.UserJobCpu
 }
 
-func (p *PatchedWorkflow) GetUserJobMemory() *int {
+func (p *PatchedWorkflow) GetUserJobMemory() *core.Optional[int] {
 	if p == nil {
 		return nil
 	}
 	return p.UserJobMemory
 }
 
-func (p *PatchedWorkflow) GetCacheConfig() *CacheConfig {
+func (p *PatchedWorkflow) GetParallelExecution() *core.Optional[ParallelExecutionEnum] {
+	if p == nil {
+		return nil
+	}
+	return p.ParallelExecution
+}
+
+func (p *PatchedWorkflow) GetNumResources() *core.Optional[int] {
+	if p == nil {
+		return nil
+	}
+	return p.NumResources
+}
+
+func (p *PatchedWorkflow) GetCacheConfig() *core.Optional[CacheConfig] {
 	if p == nil {
 		return nil
 	}
 	return p.CacheConfig
 }
 
-func (p *PatchedWorkflow) GetTfStateCleaned() map[string]interface{} {
+func (p *PatchedWorkflow) GetTfStateCleaned() *core.Optional[map[string]interface{}] {
 	if p == nil {
 		return nil
 	}
 	return p.TfStateCleaned
 }
 
-func (p *PatchedWorkflow) GetInfracostBreakdown() map[string]interface{} {
+func (p *PatchedWorkflow) GetInfracostBreakdown() *core.Optional[map[string]interface{}] {
 	if p == nil {
 		return nil
 	}
 	return p.InfracostBreakdown
 }
 
-func (p *PatchedWorkflow) GetPolicyEvalResults() map[string]interface{} {
+func (p *PatchedWorkflow) GetPolicyEvalResults() *core.Optional[map[string]interface{}] {
 	if p == nil {
 		return nil
 	}
 	return p.PolicyEvalResults
 }
 
-func (p *PatchedWorkflow) GetInfracostBreakdownPreApply() map[string]interface{} {
+func (p *PatchedWorkflow) GetInfracostBreakdownPreApply() *core.Optional[map[string]interface{}] {
 	if p == nil {
 		return nil
 	}
 	return p.InfracostBreakdownPreApply
 }
 
-func (p *PatchedWorkflow) GetInfracostBreakdownPostApply() map[string]interface{} {
+func (p *PatchedWorkflow) GetInfracostBreakdownPostApply() *core.Optional[map[string]interface{}] {
 	if p == nil {
 		return nil
 	}
 	return p.InfracostBreakdownPostApply
 }
 
-func (p *PatchedWorkflow) GetTfDrift() map[string]interface{} {
+func (p *PatchedWorkflow) GetTfDrift() *core.Optional[map[string]interface{}] {
 	if p == nil {
 		return nil
 	}
 	return p.TfDrift
 }
 
-func (p *PatchedWorkflow) GetCfStateCleaned() map[string]interface{} {
+func (p *PatchedWorkflow) GetCfStateCleaned() *core.Optional[map[string]interface{}] {
 	if p == nil {
 		return nil
 	}
 	return p.CfStateCleaned
 }
 
-func (p *PatchedWorkflow) GetCfStackPlan() map[string]interface{} {
+func (p *PatchedWorkflow) GetCfStackPlan() *core.Optional[map[string]interface{}] {
 	if p == nil {
 		return nil
 	}
 	return p.CfStackPlan
 }
 
-func (p *PatchedWorkflow) GetCfDrift() map[string]interface{} {
+func (p *PatchedWorkflow) GetCfDrift() *core.Optional[map[string]interface{}] {
 	if p == nil {
 		return nil
 	}
 	return p.CfDrift
 }
 
-func (p *PatchedWorkflow) GetK8SResources() map[string]interface{} {
+func (p *PatchedWorkflow) GetK8SResources() *core.Optional[map[string]interface{}] {
 	if p == nil {
 		return nil
 	}
 	return p.K8SResources
 }
 
-func (p *PatchedWorkflow) GetK8SDrift() map[string]interface{} {
+func (p *PatchedWorkflow) GetK8SDrift() *core.Optional[map[string]interface{}] {
 	if p == nil {
 		return nil
 	}
 	return p.K8SDrift
 }
 
-func (p *PatchedWorkflow) GetTerragruntDrift() map[string]interface{} {
+func (p *PatchedWorkflow) GetTerragruntDrift() *core.Optional[map[string]interface{}] {
 	if p == nil {
 		return nil
 	}
 	return p.TerragruntDrift
 }
 
-func (p *PatchedWorkflow) GetAnsibleOutputs() map[string]interface{} {
+func (p *PatchedWorkflow) GetAnsibleOutputs() *core.Optional[map[string]interface{}] {
 	if p == nil {
 		return nil
 	}
 	return p.AnsibleOutputs
 }
 
-func (p *PatchedWorkflow) GetAnsiblePlan() map[string]interface{} {
+func (p *PatchedWorkflow) GetAnsiblePlan() *core.Optional[map[string]interface{}] {
 	if p == nil {
 		return nil
 	}
 	return p.AnsiblePlan
 }
 
-func (p *PatchedWorkflow) GetAnsibleDrift() map[string]interface{} {
+func (p *PatchedWorkflow) GetAnsibleDrift() *core.Optional[map[string]interface{}] {
 	if p == nil {
 		return nil
 	}
 	return p.AnsibleDrift
 }
 
-func (p *PatchedWorkflow) GetBicepResources() map[string]interface{} {
+func (p *PatchedWorkflow) GetBicepResources() *core.Optional[map[string]interface{}] {
 	if p == nil {
 		return nil
 	}
 	return p.BicepResources
 }
 
-func (p *PatchedWorkflow) GetSgCustomWorkflowRunFacts() map[string]interface{} {
+func (p *PatchedWorkflow) GetSgCustomWorkflowRunFacts() *core.Optional[map[string]interface{}] {
 	if p == nil {
 		return nil
 	}
 	return p.SgCustomWorkflowRunFacts
 }
 
-func (p *PatchedWorkflow) GetContextTags() map[string]*string {
+func (p *PatchedWorkflow) GetContextTags() *core.Optional[map[string]*string] {
 	if p == nil {
 		return nil
 	}

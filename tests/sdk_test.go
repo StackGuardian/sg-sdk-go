@@ -34,50 +34,7 @@ func TestSDK(t *testing.T) {
 		)
 		dummyResourceName := "sdk-test-workflow-create-delete"
 		createWorkflowRequest := sggosdk.Workflow{
-			ResourceName: sggosdk.Optional(dummyResourceName),
-			DeploymentPlatformConfig: sggosdk.Optional([]*sggosdk.DeploymentPlatformConfig{{
-				Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
-				Config: map[string]interface{}{
-					"profileName":   "DummyConnectorForGoSDK",
-					"integrationId": "/integrations/DummyConnectorForGoSDK"}}}),
-			WfType: sggosdk.Optional(*sggosdk.WfTypeEnumCustom.Ptr()),
-			EnvironmentVariables: sggosdk.Optional([]*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
-				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}}),
-			VcsConfig: sggosdk.Optional(sggosdk.VcsConfig{
-				IacVcsConfig: &sggosdk.IacvcsConfig{
-					IacTemplateId:          sggosdk.String("/demo-org/ansible-dummy:3"),
-					UseMarketplaceTemplate: true,
-				},
-				IacInputData: &sggosdk.IacInputData{
-					SchemaType: sggosdk.IacInputDataSchemaTypeEnumFormJsonschema,
-					Data: map[string]interface{}{
-						"bucket_region": "eu-central-1",
-					},
-				},
-			}),
-			UserJobCpu:    sggosdk.Optional(512),
-			UserJobMemory: sggosdk.Optional(1024),
-			RunnerConstraints: sggosdk.Optional(sggosdk.RunnerConstraints{
-				Type: "shared",
-			}),
-			Description: sggosdk.Optional("Dummy Workflow for GoSDK"),
-		}
-		createResponse, err := c.Workflows.CreateWorkflow(context.Background(), SG_ORG, SG_WF_GROUP, &createWorkflowRequest)
-		assert.Empty(t, err)
-		assert.NotEmpty(t, createResponse.Data.ResourceName)
-		assert.Equal(t, dummyResourceName, createResponse.Data.ResourceName)
-
-		deleteResposnse, err := c.Workflows.DeleteWorkflow(context.Background(), SG_ORG, createResponse.Data.ResourceName, SG_WF_GROUP)
-		assert.Equal(t, "Workflow "+createResponse.Data.ResourceName+" deleted", deleteResposnse.Msg)
-		assert.Empty(t, err)
-	})
-
-	t.Run("Update_workflow", func(t *testing.T) {
-		c := client.NewClient(
-			option.WithApiKey(API_KEY),
-			option.WithBaseURL(SG_BASE_URL),
-		)
-		UpdateWorkflowRequest := sggosdk.PatchedWorkflow{
+			ResourceName: &dummyResourceName,
 			DeploymentPlatformConfig: []*sggosdk.DeploymentPlatformConfig{{
 				Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
 				Config: map[string]interface{}{
@@ -104,6 +61,49 @@ func TestSDK(t *testing.T) {
 				Type: "shared",
 			},
 			Description: sggosdk.String("Dummy Workflow for GoSDK"),
+		}
+		createResponse, err := c.Workflows.CreateWorkflow(context.Background(), SG_ORG, SG_WF_GROUP, &createWorkflowRequest)
+		assert.Empty(t, err)
+		assert.NotEmpty(t, createResponse.Data.ResourceName)
+		assert.Equal(t, dummyResourceName, createResponse.Data.ResourceName)
+
+		deleteResposnse, err := c.Workflows.DeleteWorkflow(context.Background(), SG_ORG, createResponse.Data.ResourceName, SG_WF_GROUP)
+		assert.Equal(t, "Workflow "+createResponse.Data.ResourceName+" deleted", deleteResposnse.Msg)
+		assert.Empty(t, err)
+	})
+
+	t.Run("Update_workflow", func(t *testing.T) {
+		c := client.NewClient(
+			option.WithApiKey(API_KEY),
+			option.WithBaseURL(SG_BASE_URL),
+		)
+		UpdateWorkflowRequest := sggosdk.PatchedWorkflow{
+			DeploymentPlatformConfig: sggosdk.Optional([]*sggosdk.DeploymentPlatformConfig{{
+				Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
+				Config: map[string]interface{}{
+					"profileName":   "DummyConnectorForGoSDK",
+					"integrationId": "/integrations/DummyConnectorForGoSDK"}}}),
+			WfType: sggosdk.Optional(*sggosdk.WfTypeEnumCustom.Ptr()),
+			EnvironmentVariables: sggosdk.Optional([]*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
+				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}}),
+			VcsConfig: sggosdk.Optional(sggosdk.VcsConfig{
+				IacVcsConfig: &sggosdk.IacvcsConfig{
+					IacTemplateId:          sggosdk.String("/demo-org/ansible-dummy:3"),
+					UseMarketplaceTemplate: true,
+				},
+				IacInputData: &sggosdk.IacInputData{
+					SchemaType: sggosdk.IacInputDataSchemaTypeEnumFormJsonschema,
+					Data: map[string]interface{}{
+						"bucket_region": "eu-central-1",
+					},
+				},
+			}),
+			UserJobCpu:    sggosdk.Optional(512),
+			UserJobMemory: sggosdk.Optional(1024),
+			RunnerConstraints: sggosdk.Optional(sggosdk.RunnerConstraints{
+				Type: "shared",
+			}),
+			Description: sggosdk.Optional("Dummy Workflow for GoSDK"),
 		}
 		updateWorkflowResponse, err := c.Workflows.UpdateWorkflow(context.Background(), SG_ORG, SG_WF, SG_WF_GROUP, &UpdateWorkflowRequest)
 		assert.Empty(t, err)
@@ -158,15 +158,15 @@ func TestSDK(t *testing.T) {
 			option.WithBaseURL(SG_BASE_URL),
 		)
 		UpdateWorkflowRequest := sggosdk.PatchedWorkflow{
-			DeploymentPlatformConfig: []*sggosdk.DeploymentPlatformConfig{{
+			DeploymentPlatformConfig: sggosdk.Optional([]*sggosdk.DeploymentPlatformConfig{{
 				Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
 				Config: map[string]interface{}{
 					"profileName":   "DummyConnectorForGoSDK",
-					"integrationId": "/integrations/DummyConnectorForGoSDK"}}},
-			WfType: sggosdk.WfTypeEnumCustom.Ptr(),
-			EnvironmentVariables: []*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
-				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}},
-			VcsConfig: &sggosdk.VcsConfig{
+					"integrationId": "/integrations/DummyConnectorForGoSDK"}}}),
+			WfType: sggosdk.Optional(*sggosdk.WfTypeEnumCustom.Ptr()),
+			EnvironmentVariables: sggosdk.Optional([]*sggosdk.EnvVars{{Kind: sggosdk.EnvVarsKindEnumPlainText,
+				Config: &sggosdk.EnvVarConfig{VarName: "test", TextValue: sggosdk.String("testValue")}}}),
+			VcsConfig: sggosdk.Optional(sggosdk.VcsConfig{
 				IacVcsConfig: &sggosdk.IacvcsConfig{
 					IacTemplateId:          sggosdk.String("/demo-org/ansible-dummy:3"),
 					UseMarketplaceTemplate: true,
@@ -177,13 +177,13 @@ func TestSDK(t *testing.T) {
 						"bucket_region": "eu-central-1",
 					},
 				},
-			},
-			UserJobCpu:    sggosdk.Int(512),
-			UserJobMemory: sggosdk.Int(1024),
-			RunnerConstraints: &sggosdk.RunnerConstraints{
+			}),
+			UserJobCpu:    sggosdk.Optional(512),
+			UserJobMemory: sggosdk.Optional(1024),
+			RunnerConstraints: sggosdk.Optional(sggosdk.RunnerConstraints{
 				Type: "shared",
-			},
-			Description: sggosdk.String("Dummy Workflow for GoSDK"),
+			}),
+			Description: sggosdk.Optional("Dummy Workflow for GoSDK"),
 		}
 		updateWorkflowResponse, err := c.StackWorkflows.UpdateStackWorkflow(context.Background(), SG_ORG, SG_STACK, SG_STACK_WF, SG_WF_GROUP, &UpdateWorkflowRequest)
 		assert.Empty(t, err)

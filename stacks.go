@@ -13,7 +13,6 @@ import (
 type Stack struct {
 	// Triggers immediate stack creation process if true.
 	Id           *string                  `json:"Id,omitempty" url:"-"`
-	RunOnCreate  *bool                    `json:"-" url:"runOnCreate,omitempty"`
 	ResourceName *core.Optional[string]   `json:"ResourceName,omitempty" url:"-"`
 	Description  *core.Optional[string]   `json:"Description,omitempty" url:"-"`
 	Tags         *core.Optional[[]string] `json:"Tags,omitempty" url:"-"`
@@ -26,7 +25,6 @@ type Stack struct {
 	// The ID of the template group that this Stack is mapped to. Null if the Stack is not mapped to any template group.
 	TemplateGroupId *core.Optional[string]                `json:"TemplateGroupId,omitempty" url:"-"`
 	WorkflowsConfig *core.Optional[WorkflowsConfig]       `json:"WorkflowsConfig,omitempty" url:"-"`
-	TemplatesConfig *core.Optional[TemplatesConfig]       `json:"TemplatesConfig,omitempty" url:"-"`
 	UserSchedules   *core.Optional[[]*StackUserSchedules] `json:"UserSchedules,omitempty" url:"-"`
 	// Used only when upgrading Stack.
 	Operations *core.Optional[map[string]interface{}] `json:"Operations,omitempty" url:"-"`
@@ -61,7 +59,6 @@ type PatchedStack struct {
 	// The ID of the template group that this Stack is mapped to. Null if the Stack is not mapped to any template group.
 	TemplateGroupId *core.Optional[string]                `json:"TemplateGroupId,omitempty" url:"-"`
 	WorkflowsConfig *core.Optional[WorkflowsConfig]       `json:"WorkflowsConfig,omitempty" url:"-"`
-	TemplatesConfig *core.Optional[TemplatesConfig]       `json:"TemplatesConfig,omitempty" url:"-"`
 	UserSchedules   *core.Optional[[]*StackUserSchedules] `json:"UserSchedules,omitempty" url:"-"`
 	// Used only when upgrading Stack.
 	Operations *core.Optional[map[string]interface{}] `json:"Operations,omitempty" url:"-"`
@@ -181,6 +178,7 @@ func (g *GeneratedStackCreateResponseData) String() string {
 }
 
 type GeneratedStackCreateResponseDataStack struct {
+	Id           string   `json:"Id,omitempty" url:"Id,omitempty"`
 	ResourceName *string  `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
 	Description  *string  `json:"Description,omitempty" url:"Description,omitempty"`
 	Tags         []string `json:"Tags,omitempty" url:"Tags,omitempty"`
@@ -193,7 +191,6 @@ type GeneratedStackCreateResponseDataStack struct {
 	// The ID of the template group that this Stack is mapped to. Null if the Stack is not mapped to any template group.
 	TemplateGroupId *string               `json:"TemplateGroupId,omitempty" url:"TemplateGroupId,omitempty"`
 	WorkflowsConfig *WorkflowsConfig      `json:"WorkflowsConfig,omitempty" url:"WorkflowsConfig,omitempty"`
-	TemplatesConfig *TemplatesConfig      `json:"TemplatesConfig,omitempty" url:"TemplatesConfig,omitempty"`
 	UserSchedules   []*StackUserSchedules `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
 	// Used only when upgrading Stack.
 	Operations map[string]interface{} `json:"Operations,omitempty" url:"Operations,omitempty"`
@@ -274,13 +271,6 @@ func (g *GeneratedStackCreateResponseDataStack) GetWorkflowsConfig() *WorkflowsC
 		return nil
 	}
 	return g.WorkflowsConfig
-}
-
-func (g *GeneratedStackCreateResponseDataStack) GetTemplatesConfig() *TemplatesConfig {
-	if g == nil {
-		return nil
-	}
-	return g.TemplatesConfig
 }
 
 func (g *GeneratedStackCreateResponseDataStack) GetUserSchedules() []*StackUserSchedules {
@@ -808,7 +798,6 @@ type GeneratedStackGetResponseMsg struct {
 	// The ID of the template group that this Stack is mapped to. Null if the Stack is not mapped to any template group.
 	TemplateGroupId *string               `json:"TemplateGroupId,omitempty" url:"TemplateGroupId,omitempty"`
 	WorkflowsConfig *WorkflowsConfig      `json:"WorkflowsConfig,omitempty" url:"WorkflowsConfig,omitempty"`
-	TemplatesConfig *TemplatesConfig      `json:"TemplatesConfig,omitempty" url:"TemplatesConfig,omitempty"`
 	UserSchedules   []*StackUserSchedules `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
 	// Used only when upgrading Stack.
 	Operations map[string]interface{} `json:"Operations,omitempty" url:"Operations,omitempty"`
@@ -898,13 +887,6 @@ func (g *GeneratedStackGetResponseMsg) GetWorkflowsConfig() *WorkflowsConfig {
 		return nil
 	}
 	return g.WorkflowsConfig
-}
-
-func (g *GeneratedStackGetResponseMsg) GetTemplatesConfig() *TemplatesConfig {
-	if g == nil {
-		return nil
-	}
-	return g.TemplatesConfig
 }
 
 func (g *GeneratedStackGetResponseMsg) GetUserSchedules() []*StackUserSchedules {

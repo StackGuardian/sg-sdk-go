@@ -428,7 +428,6 @@ func TestSDK(t *testing.T) {
 		dummyResourceName := "sdk-test-stack-create-delete"
 		createStackRequest := sggosdk.Stack{
 			ResourceName: sggosdk.Optional(dummyResourceName),
-			RunOnCreate:  sggosdk.Bool(false),
 			DeploymentPlatformConfig: sggosdk.Optional([]*sggosdk.DeploymentPlatformConfig{
 				{
 					Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
@@ -1134,8 +1133,6 @@ func TestSDK(t *testing.T) {
 			payload,
 			&createStackRequest)
 		assert.Empty(t, err)
-
-		createStackRequest.RunOnCreate = sggosdk.Bool(false)
 
 		createStackResponse, err := c.Stacks.CreateStack(context.Background(), SG_ORG, SG_WF_GROUP, createStackRequest)
 		assert.Empty(t, err)

@@ -12,25 +12,25 @@ import (
 
 type Stack struct {
 	// Triggers immediate stack creation process if true.
-	Id           *string                  `json:"Id,omitempty" url:"-"`
-	ResourceName *core.Optional[string]   `json:"ResourceName,omitempty" url:"-"`
-	Description  *core.Optional[string]   `json:"Description,omitempty" url:"-"`
-	Tags         *core.Optional[[]string] `json:"Tags,omitempty" url:"-"`
+	Id                       *string                   `json:"Id,omitempty" url:"-"`
+	ResourceName             *string                   `json:"ResourceName,omitempty" url:"-"`
+	Description              *string                   `json:"Description,omitempty" url:"-"`
+	Tags                     []string                  `json:"Tags,omitempty" url:"-"`
 	// Used when one or all templates specified in the IAC Group are not supplied in TemplatesConfig.
-	EnvironmentVariables *core.Optional[[]*EnvVars] `json:"EnvironmentVariables,omitempty" url:"-"`
+	EnvironmentVariables []*EnvVars `json:"EnvironmentVariables,omitempty" url:"-"`
 	// Defines the default deployment config when the workflows in WorkflowConfig do not set this key.
-	DeploymentPlatformConfig *core.Optional[[]*DeploymentPlatformConfig] `json:"DeploymentPlatformConfig,omitempty" url:"-"`
+	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"-"`
 	// Actions define the sequence in which the workflows in the Stack are to be executed along with the run configuration for each workflow. Each key in an action is the name of the action for example `apply`, `destroy`.
-	Actions *core.Optional[map[string]*Actions] `json:"Actions,omitempty" url:"-"`
+	Actions map[string]*Actions `json:"Actions,omitempty" url:"-"`
 	// The ID of the template group that this Stack is mapped to. Null if the Stack is not mapped to any template group.
-	TemplateGroupId *core.Optional[string]                `json:"TemplateGroupId,omitempty" url:"-"`
-	WorkflowsConfig *core.Optional[WorkflowsConfig]       `json:"WorkflowsConfig,omitempty" url:"-"`
-	UserSchedules   *core.Optional[[]*StackUserSchedules] `json:"UserSchedules,omitempty" url:"-"`
+	TemplateGroupId  *string               `json:"TemplateGroupId,omitempty" url:"-"`
+	WorkflowsConfig  *WorkflowsConfig      `json:"WorkflowsConfig,omitempty" url:"-"`
+	UserSchedules    []*StackUserSchedules `json:"UserSchedules,omitempty" url:"-"`
 	// Used only when upgrading Stack.
-	Operations *core.Optional[map[string]interface{}] `json:"Operations,omitempty" url:"-"`
+	Operations map[string]interface{} `json:"Operations,omitempty" url:"-"`
 	// Contextual tags to give meanings to your tags
-	ContextTags *core.Optional[map[string]*string] `json:"ContextTags,omitempty" url:"-"`
-	MiniSteps   *core.Optional[MiniStepsSchema]    `json:"MiniSteps,omitempty" url:"-"`
+	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"-"`
+	MiniSteps   *MiniStepsSchema   `json:"MiniSteps,omitempty" url:"-"`
 }
 
 type ListAllStacksRequest struct {

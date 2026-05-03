@@ -42,7 +42,7 @@ func (c *Client) CreateWorkflow(
 	ctx context.Context,
 	org string,
 	wfGrp string,
-	request *sgsdkgo.Workflow,
+	request *Workflow,
 	opts ...option.RequestOption,
 ) (*sgsdkgo.GeneratedWorkflowCreateResponse, error) {
 	options := core.NewRequestOptions(opts...)
@@ -89,7 +89,7 @@ func (c *Client) ReadWorkflow(
 	wf string,
 	wfGrp string,
 	opts ...option.RequestOption,
-) (*sgsdkgo.WorkflowGetResponse, error) {
+) (*WorkflowReadResponse, error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -107,7 +107,7 @@ func (c *Client) ReadWorkflow(
 		options.ToHeader(),
 	)
 
-	var response *sgsdkgo.WorkflowGetResponse
+	var response *WorkflowReadResponse
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{
@@ -176,7 +176,7 @@ func (c *Client) UpdateWorkflow(
 	org string,
 	wf string,
 	wfGrp string,
-	request *sgsdkgo.PatchedWorkflow,
+	request *PatchedWorkflow,
 	opts ...option.RequestOption,
 ) (*sgsdkgo.GeneratedWorkflowUpdateResponse, error) {
 	options := core.NewRequestOptions(opts...)

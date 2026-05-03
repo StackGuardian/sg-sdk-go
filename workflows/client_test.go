@@ -75,7 +75,7 @@ func TestCreateWorkflowWithId(t *testing.T) {
 	description := "Test workflow description"
 	tags := []string{"test", "automation"}
 
-	request := &sgsdkgo.Workflow{
+	request := &workflows.Workflow{
 		Id:           &workflowId,
 		ResourceName: &resourceName,
 		Description:  &description,
@@ -116,7 +116,7 @@ func TestCreateWorkflow(t *testing.T) {
 	description := "Test workflow description"
 	tags := []string{"test", "automation"}
 
-	request := &sgsdkgo.Workflow{
+	request := &workflows.Workflow{
 		ResourceName: &resourceName,
 		Description:  &description,
 		Tags:         tags,
@@ -156,7 +156,7 @@ func TestCreateWorkflowWithParallelExecution(t *testing.T) {
 	resourceName := "test-workflow-parallel"
 	description := "Workflow with parallel execution"
 
-	request := &sgsdkgo.Workflow{
+	request := &workflows.Workflow{
 		Id:                &workflowId,
 		ResourceName:      &resourceName,
 		Description:       &description,
@@ -194,7 +194,7 @@ func TestCreateWorkflowMinimalConfig(t *testing.T) {
 	workflowId := "test-workflow-minimal"
 	resourceName := "test-workflow-minimal"
 
-	request := &sgsdkgo.Workflow{
+	request := &workflows.Workflow{
 		Id:           &workflowId,
 		ResourceName: &resourceName,
 		IsActive:     sgsdkgo.IsPublicEnumOne.Ptr(),
@@ -230,7 +230,7 @@ func TestReadWorkflow(t *testing.T) {
 	workflowId := "test-read-workflow"
 	resourceName := "test-read-workflow"
 	description := "Workflow for testing read operation"
-	createRequest := &sgsdkgo.Workflow{
+	createRequest := &workflows.Workflow{
 		Id:           &workflowId,
 		ResourceName: &resourceName,
 		Description:  &description,
@@ -262,7 +262,7 @@ func TestReadWorkflow(t *testing.T) {
 	require.NotNil(t, readResp)
 	require.NotNil(t, readResp.Msg)
 	assert.NotEmpty(t, readResp.Msg.Id)
-	assert.Equal(t, resourceName, readResp.Msg.ResourceName)
+	assert.Equal(t, resourceName, *readResp.Msg.ResourceName)
 }
 
 // TestUpdateWorkflow tests updating an existing workflow
@@ -277,7 +277,7 @@ func TestUpdateWorkflow(t *testing.T) {
 	workflowId := "test-update-workflow"
 	resourceName := "test-update-workflow"
 	originalDesc := "Original description"
-	createRequest := &sgsdkgo.Workflow{
+	createRequest := &workflows.Workflow{
 		Id:           &workflowId,
 		ResourceName: &resourceName,
 		Description:  &originalDesc,
@@ -304,7 +304,7 @@ func TestUpdateWorkflow(t *testing.T) {
 	updatedDescription := "Updated description"
 	updatedTags := []string{"updated", "test"}
 
-	updateRequest := &sgsdkgo.PatchedWorkflow{
+	updateRequest := &workflows.PatchedWorkflow{
 		Description: sgsdkgo.Optional(updatedDescription),
 		Tags:        sgsdkgo.Optional(updatedTags),
 	}
@@ -330,7 +330,7 @@ func TestUpdateWorkflowParallelExecution(t *testing.T) {
 	// Create a workflow
 	workflowId := "test-update-parallel-workflow"
 	resourceName := "test-update-parallel-workflow"
-	createRequest := &sgsdkgo.Workflow{
+	createRequest := &workflows.Workflow{
 		Id:           &workflowId,
 		ResourceName: &resourceName,
 		IsActive:     sgsdkgo.IsPublicEnumOne.Ptr(),
@@ -353,7 +353,7 @@ func TestUpdateWorkflowParallelExecution(t *testing.T) {
 	}()
 
 	// Update parallel execution
-	updateRequest := &sgsdkgo.PatchedWorkflow{
+	updateRequest := &workflows.PatchedWorkflow{
 		ParallelExecution: sgsdkgo.Optional(sgsdkgo.ParallelExecutionEnumEnabled),
 	}
 
@@ -378,7 +378,7 @@ func TestDeleteWorkflow(t *testing.T) {
 	workflowId := "test-delete-workflow"
 	resourceName := "test-delete-workflow"
 	deleteDesc := "Workflow to be deleted"
-	createRequest := &sgsdkgo.Workflow{
+	createRequest := &workflows.Workflow{
 		Id:           &workflowId,
 		ResourceName: &resourceName,
 		Description:  &deleteDesc,
@@ -424,7 +424,7 @@ func TestWorkflowCRUDCycle(t *testing.T) {
 	resourceName := "test-crud-workflow"
 	description := "Original description"
 	crudTags := []string{"crud-test"}
-	createRequest := &sgsdkgo.Workflow{
+	createRequest := &workflows.Workflow{
 		Id:           &workflowId,
 		ResourceName: &resourceName,
 		Description:  &description,
@@ -457,7 +457,7 @@ func TestWorkflowCRUDCycle(t *testing.T) {
 
 	// UPDATE
 	updatedDescription := "Updated description in CRUD test"
-	updateRequest := &sgsdkgo.PatchedWorkflow{
+	updateRequest := &workflows.PatchedWorkflow{
 		Description: sgsdkgo.Optional(updatedDescription),
 	}
 

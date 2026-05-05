@@ -50,7 +50,7 @@ type Workflow struct {
 	BicepResources              map[string]interface{}                                `json:"BicepResources,omitempty" url:"-"`
 	SgCustomWorkflowRunFacts    map[string]interface{}                                `json:"SGCustomWorkflowRunFacts,omitempty" url:"-"`
 	// Contextual tags to give context to your tags
-	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"-"`
+	ContextTags map[string]string `json:"ContextTags,omitempty" url:"-"`
 }
 
 type WorkflowReadResponse struct {
@@ -98,7 +98,7 @@ type WorkflowRead struct {
 	BicepResources              map[string]interface{}                                `json:"BicepResources,omitempty" url:"-"`
 	SgCustomWorkflowRunFacts    map[string]interface{}                                `json:"SGCustomWorkflowRunFacts,omitempty" url:"-"`
 	// Contextual tags to give context to your tags
-	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"-"`
+	ContextTags map[string]string `json:"ContextTags,omitempty" url:"-"`
 }
 
 type PatchedWorkflow struct {
@@ -141,7 +141,7 @@ type PatchedWorkflow struct {
 	BicepResources              *core.Optional[map[string]interface{}]                                `json:"BicepResources,omitempty" url:"BicepResources,omitempty"`
 	SgCustomWorkflowRunFacts    *core.Optional[map[string]interface{}]                                `json:"SGCustomWorkflowRunFacts,omitempty" url:"SGCustomWorkflowRunFacts,omitempty"`
 	// Contextual tags to give context to your tags
-	ContextTags *core.Optional[map[string]*string] `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	ContextTags *core.Optional[map[string]string] `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
 }
 
 type GeneratedWorkflowCreateResponse struct {

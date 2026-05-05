@@ -124,7 +124,7 @@ type CreateWorkflowTemplateRevisionsRequest struct {
 	Alias                     string                                                  `json:"Alias,omitempty" url:"Alias,omitempty"`
 	Approvers                 []string                                                `json:"Approvers,omitempty" url:"Approvers,omitempty"`
 	ContextTags               map[string]string                                       `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
-	DeploymentPlatformConfig  *DeploymentPlatformConfig                               `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	DeploymentPlatformConfig  []*DeploymentPlatformConfig                             `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
 	Deprecation               *Deprecation                                            `json:"Deprecation,omitempty" url:"Deprecation,omitempty"`
 	EnvironmentVariables      []sgsdkgo.EnvVars                                       `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
 	InputSchemas              []sgsdkgo.InputSchemas                                  `json:"InputSchemas,omitempty" url:"InputSchemas,omitempty"`
@@ -173,7 +173,7 @@ type UpdateWorkflowTemplateRevisionRequest struct {
 	Approvers                 *core.Optional[[]string]                                               `json:"Approvers,omitempty" url:"Approvers,omitempty"`
 	LongDescription           *core.Optional[string]                                                 `json:"LongDescription,omitempty" url:"LongDescription,omitempty"`
 	ContextTags               *core.Optional[map[string]string]                                      `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
-	DeploymentPlatformConfig  *core.Optional[DeploymentPlatformConfig]                               `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	DeploymentPlatformConfig  *core.Optional[[]*DeploymentPlatformConfig]                            `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
 	Deprecation               *core.Optional[Deprecation]                                            `json:"Deprecation,omitempty" url:"Deprecation,omitempty"`
 	EnvironmentVariables      *core.Optional[[]sgsdkgo.EnvVars]                                      `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
 	InputSchemas              *core.Optional[[]sgsdkgo.InputSchemas]                                 `json:"InputSchemas,omitempty" url:"InputSchemas,omitempty"`

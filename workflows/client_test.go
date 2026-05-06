@@ -309,7 +309,7 @@ func TestUpdateWorkflow(t *testing.T) {
 		Tags:        sgsdkgo.Optional(updatedTags),
 	}
 
-	updateResp, err := client.UpdateWorkflow(context.Background(), testOrg, createdWorkflowId, wfgName, updateRequest)
+	updateResp, err := client.UpdateWorkflow(context.Background(), testOrg, createdWorkflowId, wfgName, nil, updateRequest)
 	if err != nil {
 		t.Fatalf("UpdateWorkflow failed: %v", err)
 	}
@@ -357,7 +357,7 @@ func TestUpdateWorkflowParallelExecution(t *testing.T) {
 		ParallelExecution: sgsdkgo.Optional(sgsdkgo.ParallelExecutionEnumEnabled),
 	}
 
-	updateResp, err := client.UpdateWorkflow(context.Background(), testOrg, createdWorkflowId, wfgName, updateRequest)
+	updateResp, err := client.UpdateWorkflow(context.Background(), testOrg, createdWorkflowId, wfgName, nil, updateRequest)
 	if err != nil {
 		t.Fatalf("UpdateWorkflow with parallel execution failed: %v", err)
 	}
@@ -461,7 +461,7 @@ func TestWorkflowCRUDCycle(t *testing.T) {
 		Description: sgsdkgo.Optional(updatedDescription),
 	}
 
-	updateResp, err := client.UpdateWorkflow(context.Background(), testOrg, createdWorkflowId, wfgName, updateRequest)
+	updateResp, err := client.UpdateWorkflow(context.Background(), testOrg, createdWorkflowId, wfgName, nil, updateRequest)
 	require.NoError(t, err)
 	require.NotNil(t, updateResp)
 	assert.Equal(t, updatedDescription, updateResp.Data.Description)

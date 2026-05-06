@@ -4597,7 +4597,7 @@ func (g *GeneratedWorkflowsListAllMsg) String() string {
 type IacInputData struct {
 	SchemaId   *string                    `json:"schemaId,omitempty" url:"schemaId,omitempty"`
 	SchemaType IacInputDataSchemaTypeEnum `json:"schemaType" url:"schemaType"`
-	Data       map[string]interface{}     `json:"data,omitempty" url:"data,omitempty"`
+	Data       map[string]interface{}     `json:"data" url:"data"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage

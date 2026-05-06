@@ -176,6 +176,7 @@ func (c *Client) UpdateWorkflow(
 	org string,
 	wf string,
 	wfGrp string,
+	upgradeMode *UpgradeModeEnum,
 	request *PatchedWorkflow,
 	opts ...option.RequestOption,
 ) (*sgsdkgo.GeneratedWorkflowUpdateResponse, error) {
@@ -191,6 +192,11 @@ func (c *Client) UpdateWorkflow(
 		wfGrp,
 		wf,
 	)
+
+	if upgradeMode != nil {
+		options.QueryParameters.Set("upgradeMode", string(*upgradeMode))
+	}
+
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
 		options.ToHeader(),

@@ -3,6 +3,7 @@ package workflows
 
 import (
 	json "encoding/json"
+	fmt "fmt"
 
 	sgsdkgo "github.com/StackGuardian/sg-sdk-go"
 	core "github.com/StackGuardian/sg-sdk-go/core"
@@ -142,6 +143,28 @@ type PatchedWorkflow struct {
 	SgCustomWorkflowRunFacts    *core.Optional[map[string]interface{}]                                `json:"SGCustomWorkflowRunFacts,omitempty" url:"SGCustomWorkflowRunFacts,omitempty"`
 	// Contextual tags to give context to your tags
 	ContextTags *core.Optional[map[string]string] `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+}
+
+type UpgradeModeEnum string
+
+const (
+	UpgradeModeEnumPreserveSettings UpgradeModeEnum = "PRESERVE_SETTINGS"
+	UpgradeModeEnumResetToTemplate  UpgradeModeEnum = "RESET_TO_TEMPLATE"
+)
+
+func NewUpgradeModeEnumFromString(s string) (UpgradeModeEnum, error) {
+	switch s {
+	case "PRESERVE_SETTINGS":
+		return UpgradeModeEnumPreserveSettings, nil
+	case "RESET_TO_TEMPLATE":
+		return UpgradeModeEnumResetToTemplate, nil
+	}
+	var u UpgradeModeEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, u)
+}
+
+func (u UpgradeModeEnum) Ptr() *UpgradeModeEnum {
+	return &u
 }
 
 type GeneratedWorkflowCreateResponse struct {

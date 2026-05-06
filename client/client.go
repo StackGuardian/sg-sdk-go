@@ -18,6 +18,8 @@ import (
 	secrets "github.com/StackGuardian/sg-sdk-go/secrets"
 	stackruns "github.com/StackGuardian/sg-sdk-go/stackruns"
 	stacks "github.com/StackGuardian/sg-sdk-go/stacks"
+	stacktemplaterevisions "github.com/StackGuardian/sg-sdk-go/stacktemplaterevisions"
+	stacktemplates "github.com/StackGuardian/sg-sdk-go/stacktemplates"
 	stackworkflowrunfacts "github.com/StackGuardian/sg-sdk-go/stackworkflowrunfacts"
 	stackworkflowruns "github.com/StackGuardian/sg-sdk-go/stackworkflowruns"
 	stackworkflows "github.com/StackGuardian/sg-sdk-go/stackworkflows"
@@ -28,8 +30,6 @@ import (
 	workflows "github.com/StackGuardian/sg-sdk-go/workflows"
 	workflowsteptemplate "github.com/StackGuardian/sg-sdk-go/workflowsteptemplate"
 	workflowsteptemplaterevision "github.com/StackGuardian/sg-sdk-go/workflowsteptemplaterevision"
-	stacktemplaterevisions "github.com/StackGuardian/sg-sdk-go/stacktemplaterevisions"
-	stacktemplates "github.com/StackGuardian/sg-sdk-go/stacktemplates"
 	workflowtemplaterevisions "github.com/StackGuardian/sg-sdk-go/workflowtemplaterevisions"
 	workflowtemplates "github.com/StackGuardian/sg-sdk-go/workflowtemplates"
 )

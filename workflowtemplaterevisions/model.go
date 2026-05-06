@@ -38,7 +38,7 @@ type Deprecation struct {
 }
 
 type MinistepsNotificationRecepients struct {
-	Recipients []string `json:"recipients,omitempty" url:"recipients,omitempty"`
+	Recipients []string `json:"recipients" url:"recipients,omitempty"`
 }
 
 type MinistepsWebhooksSchema struct {
@@ -48,19 +48,21 @@ type MinistepsWebhooksSchema struct {
 }
 
 type MinistepsWfChainingSchema struct {
-	WorkflowGroupId    string  `json:"workflowGroupId,omitempty" url:"workflowGroupId,omitempty"`
-	StackId            *string `json:"stackId,omitempty" url:"stackId,omitempty"`
-	WorkflowId         *string `json:"workflowId,omitempty" url:"workflowId,omitempty"`
-	WorkflowRunPayload *string `json:"workflowRunPayload,omitempty" url:"workflowRunPayload,omitempty"`
-	StackRunPayload    *string `json:"stackRunPayload,omitempty" url:"stackRunPayload,omitempty"`
+	WorkflowGroupId    string      `json:"workflowGroupId,omitempty" url:"workflowGroupId,omitempty"`
+	StackId            *string     `json:"stackId,omitempty" url:"stackId,omitempty"`
+	WorkflowId         *string     `json:"workflowId,omitempty" url:"workflowId,omitempty"`
+	WorkflowRunPayload interface{} `json:"workflowRunPayload,omitempty" url:"workflowRunPayload,omitempty"`
+	StackRunPayload    interface{} `json:"stackRunPayload,omitempty" url:"stackRunPayload,omitempty"`
 }
 
+// removing omitempty since [] are not valid values in go while json marshalling
+// We need to send the values as []
 type MinistepsNotificationsEmail struct {
-	APPROVAL_REQUIRED []MinistepsNotificationRecepients `json:"APPROVAL_REQUIRED,omitempty" url:"APPROVAL_REQUIRED,omitempty"`
-	CANCELLED         []MinistepsNotificationRecepients `json:"CANCELLED,omitempty" url:"CANCELLED,omitempty"`
-	COMPLETED         []MinistepsNotificationRecepients `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
-	DRIFT_DETECTED    []MinistepsNotificationRecepients `json:"DRIFT_DETECTED,omitempty" url:"DRIFT_DETECTED,omitempty"`
-	ERRORED           []MinistepsNotificationRecepients `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
+	APPROVAL_REQUIRED []MinistepsNotificationRecepients `json:"APPROVAL_REQUIRED" url:"APPROVAL_REQUIRED,omitempty"`
+	CANCELLED         []MinistepsNotificationRecepients `json:"CANCELLED" url:"CANCELLED,omitempty"`
+	COMPLETED         []MinistepsNotificationRecepients `json:"COMPLETED" url:"COMPLETED,omitempty"`
+	DRIFT_DETECTED    []MinistepsNotificationRecepients `json:"DRIFT_DETECTED" url:"DRIFT_DETECTED,omitempty"`
+	ERRORED           []MinistepsNotificationRecepients `json:"ERRORED" url:"ERRORED,omitempty"`
 }
 
 type MinistepsNotifications struct {
@@ -68,16 +70,16 @@ type MinistepsNotifications struct {
 }
 
 type MinistepsWebhooks struct {
-	APPROVAL_REQUIRED []MinistepsWebhooksSchema `json:"APPROVAL_REQUIRED,omitempty" url:"APPROVAL_REQUIRED,omitempty"`
-	CANCELLED         []MinistepsWebhooksSchema `json:"CANCELLED,omitempty" url:"CANCELLED,omitempty"`
-	COMPLETED         []MinistepsWebhooksSchema `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
-	DRIFT_DETECTED    []MinistepsWebhooksSchema `json:"DRIFT_DETECTED,omitempty" url:"DRIFT_DETECTED,omitempty"`
-	ERRORED           []MinistepsWebhooksSchema `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
+	APPROVAL_REQUIRED []MinistepsWebhooksSchema `json:"APPROVAL_REQUIRED" url:"APPROVAL_REQUIRED,omitempty"`
+	CANCELLED         []MinistepsWebhooksSchema `json:"CANCELLED" url:"CANCELLED,omitempty"`
+	COMPLETED         []MinistepsWebhooksSchema `json:"COMPLETED" url:"COMPLETED,omitempty"`
+	DRIFT_DETECTED    []MinistepsWebhooksSchema `json:"DRIFT_DETECTED" url:"DRIFT_DETECTED,omitempty"`
+	ERRORED           []MinistepsWebhooksSchema `json:"ERRORED" url:"ERRORED,omitempty"`
 }
 
 type MinistepsWorkflowChaining struct {
-	COMPLETED []MinistepsWfChainingSchema `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
-	ERRORED   []MinistepsWfChainingSchema `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
+	COMPLETED []MinistepsWfChainingSchema `json:"COMPLETED" url:"COMPLETED,omitempty"`
+	ERRORED   []MinistepsWfChainingSchema `json:"ERRORED" url:"ERRORED,omitempty"`
 }
 
 type Ministeps struct {
@@ -124,7 +126,7 @@ type CreateWorkflowTemplateRevisionsRequest struct {
 	Alias                     string                                                  `json:"Alias,omitempty" url:"Alias,omitempty"`
 	Approvers                 []string                                                `json:"Approvers,omitempty" url:"Approvers,omitempty"`
 	ContextTags               map[string]string                                       `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
-	DeploymentPlatformConfig  *DeploymentPlatformConfig                               `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	DeploymentPlatformConfig  []*DeploymentPlatformConfig                             `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
 	Deprecation               *Deprecation                                            `json:"Deprecation,omitempty" url:"Deprecation,omitempty"`
 	EnvironmentVariables      []sgsdkgo.EnvVars                                       `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
 	InputSchemas              []sgsdkgo.InputSchemas                                  `json:"InputSchemas,omitempty" url:"InputSchemas,omitempty"`
@@ -173,7 +175,7 @@ type UpdateWorkflowTemplateRevisionRequest struct {
 	Approvers                 *core.Optional[[]string]                                               `json:"Approvers,omitempty" url:"Approvers,omitempty"`
 	LongDescription           *core.Optional[string]                                                 `json:"LongDescription,omitempty" url:"LongDescription,omitempty"`
 	ContextTags               *core.Optional[map[string]string]                                      `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
-	DeploymentPlatformConfig  *core.Optional[DeploymentPlatformConfig]                               `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	DeploymentPlatformConfig  *core.Optional[[]*DeploymentPlatformConfig]                            `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
 	Deprecation               *core.Optional[Deprecation]                                            `json:"Deprecation,omitempty" url:"Deprecation,omitempty"`
 	EnvironmentVariables      *core.Optional[[]sgsdkgo.EnvVars]                                      `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
 	InputSchemas              *core.Optional[[]sgsdkgo.InputSchemas]                                 `json:"InputSchemas,omitempty" url:"InputSchemas,omitempty"`

@@ -399,7 +399,7 @@ func (c *CacheConfig) String() string {
 }
 
 type CustomSource struct {
-	SourceConfigDestKind *CustomSourceSourceConfigDestKindEnum `json:"sourceConfigDestKind" url:"sourceConfigDestKind"`
+	SourceConfigDestKind *CustomSourceSourceConfigDestKindEnum `json:"sourceConfigDestKind,omitempty" url:"sourceConfigDestKind,omitempty"`
 	Config               *CustomSourceConfig                   `json:"config,omitempty" url:"config,omitempty"`
 }
 
@@ -4481,7 +4481,7 @@ func (g *GeneratedWorkflowsListAllMsg) String() string {
 
 type IacInputData struct {
 	SchemaId   *string                     `json:"schemaId,omitempty" url:"schemaId,omitempty"`
-	SchemaType *IacInputDataSchemaTypeEnum `json:"schemaType,omitempty" url:"schemaType"`
+	SchemaType *IacInputDataSchemaTypeEnum `json:"schemaType,omitempty" url:"schemaType,omitempty"`
 	Data       map[string]interface{}      `json:"data,omitempty" url:"data"`
 }
 
@@ -4518,7 +4518,7 @@ func (i IacInputDataSchemaTypeEnum) Ptr() *IacInputDataSchemaTypeEnum {
 }
 
 type IacvcsConfig struct {
-	UseMarketplaceTemplate *bool         `json:"useMarketplaceTemplate" url:"useMarketplaceTemplate"`
+	UseMarketplaceTemplate *bool         `json:"useMarketplaceTemplate,omitempty" url:"useMarketplaceTemplate,omitempty"`
 	IacTemplateId          *string       `json:"iacTemplateId,omitempty" url:"iacTemplateId,omitempty"`
 	CustomSource           *CustomSource `json:"customSource,omitempty" url:"customSource,omitempty"`
 }

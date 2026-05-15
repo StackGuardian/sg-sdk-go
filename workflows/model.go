@@ -22,7 +22,7 @@ type Workflow struct {
 	EnvironmentVariables        []*sgsdkgo.EnvVars                                    `json:"EnvironmentVariables,omitempty" url:"-"`
 	DeploymentPlatformConfig    []*workflowtemplaterevisions.DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"-"`
 	VcsConfig                   *sgsdkgo.VcsConfig                                    `json:"VCSConfig,omitempty" url:"-"`
-	UserSchedules               []workflowtemplaterevisions.UserSchedules             `json:"UserSchedules,omitempty" url:"-"`
+	UserSchedules               []sgsdkgo.UserSchedules                               `json:"UserSchedules,omitempty" url:"-"`
 	GitHubComSync               map[string]interface{}                                `json:"GitHubComSync,omitempty" url:"-"`
 	MiniSteps                   *workflowtemplaterevisions.Ministeps                  `json:"MiniSteps,omitempty" url:"-"`
 	Approvers                   []string                                              `json:"Approvers,omitempty" url:"-"`
@@ -70,7 +70,7 @@ type WorkflowRead struct {
 	EnvironmentVariables        []*sgsdkgo.EnvVars                                    `json:"EnvironmentVariables,omitempty" url:"-"`
 	DeploymentPlatformConfig    []*workflowtemplaterevisions.DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"-"`
 	VcsConfig                   *sgsdkgo.VcsConfig                                    `json:"VCSConfig,omitempty" url:"-"`
-	UserSchedules               []workflowtemplaterevisions.UserSchedules             `json:"UserSchedules,omitempty" url:"-"`
+	UserSchedules               []sgsdkgo.UserSchedules                               `json:"UserSchedules,omitempty" url:"-"`
 	GitHubComSync               map[string]interface{}                                `json:"GitHubComSync,omitempty" url:"-"`
 	MiniSteps                   *workflowtemplaterevisions.Ministeps                  `json:"MiniSteps,omitempty" url:"-"`
 	Approvers                   []string                                              `json:"Approvers,omitempty" url:"-"`
@@ -113,7 +113,7 @@ type PatchedWorkflow struct {
 	EnvironmentVariables        *core.Optional[[]*sgsdkgo.EnvVars]                                    `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
 	DeploymentPlatformConfig    *core.Optional[[]*workflowtemplaterevisions.DeploymentPlatformConfig] `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
 	VcsConfig                   *core.Optional[sgsdkgo.VcsConfig]                                     `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
-	UserSchedules               *core.Optional[[]*workflowtemplaterevisions.UserSchedules]            `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
+	UserSchedules               *core.Optional[[]*sgsdkgo.UserSchedules]                              `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
 	GitHubComSync               *core.Optional[map[string]interface{}]                                `json:"GitHubComSync,omitempty" url:"GitHubComSync,omitempty"`
 	MiniSteps                   *core.Optional[workflowtemplaterevisions.Ministeps]                   `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
 	Approvers                   *core.Optional[[]string]                                              `json:"Approvers,omitempty" url:"Approvers,omitempty"`

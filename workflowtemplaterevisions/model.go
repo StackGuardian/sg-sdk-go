@@ -38,7 +38,7 @@ type Deprecation struct {
 }
 
 type MinistepsNotificationRecepients struct {
-	Recipients []string `json:"recipients" url:"recipients,omitempty"`
+	Recipients []string `json:"recipients,omitempty" url:"recipients,omitempty"`
 }
 
 type MinistepsWebhooksSchema struct {
@@ -55,14 +55,12 @@ type MinistepsWfChainingSchema struct {
 	StackRunPayload    interface{} `json:"stackRunPayload,omitempty" url:"stackRunPayload,omitempty"`
 }
 
-// removing omitempty since [] are not valid values in go while json marshalling
-// We need to send the values as []
 type MinistepsNotificationsEmail struct {
-	APPROVAL_REQUIRED []MinistepsNotificationRecepients `json:"APPROVAL_REQUIRED" url:"APPROVAL_REQUIRED,omitempty"`
-	CANCELLED         []MinistepsNotificationRecepients `json:"CANCELLED" url:"CANCELLED,omitempty"`
-	COMPLETED         []MinistepsNotificationRecepients `json:"COMPLETED" url:"COMPLETED,omitempty"`
-	DRIFT_DETECTED    []MinistepsNotificationRecepients `json:"DRIFT_DETECTED" url:"DRIFT_DETECTED,omitempty"`
-	ERRORED           []MinistepsNotificationRecepients `json:"ERRORED" url:"ERRORED,omitempty"`
+	APPROVAL_REQUIRED []MinistepsNotificationRecepients `json:"APPROVAL_REQUIRED,omitempty" url:"APPROVAL_REQUIRED,omitempty"`
+	CANCELLED         []MinistepsNotificationRecepients `json:"CANCELLED,omitempty" url:"CANCELLED,omitempty"`
+	COMPLETED         []MinistepsNotificationRecepients `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
+	DRIFT_DETECTED    []MinistepsNotificationRecepients `json:"DRIFT_DETECTED,omitempty" url:"DRIFT_DETECTED,omitempty"`
+	ERRORED           []MinistepsNotificationRecepients `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
 }
 
 type MinistepsNotifications struct {
@@ -70,16 +68,16 @@ type MinistepsNotifications struct {
 }
 
 type MinistepsWebhooks struct {
-	APPROVAL_REQUIRED []MinistepsWebhooksSchema `json:"APPROVAL_REQUIRED" url:"APPROVAL_REQUIRED,omitempty"`
-	CANCELLED         []MinistepsWebhooksSchema `json:"CANCELLED" url:"CANCELLED,omitempty"`
-	COMPLETED         []MinistepsWebhooksSchema `json:"COMPLETED" url:"COMPLETED,omitempty"`
-	DRIFT_DETECTED    []MinistepsWebhooksSchema `json:"DRIFT_DETECTED" url:"DRIFT_DETECTED,omitempty"`
-	ERRORED           []MinistepsWebhooksSchema `json:"ERRORED" url:"ERRORED,omitempty"`
+	APPROVAL_REQUIRED []MinistepsWebhooksSchema `json:"APPROVAL_REQUIRED,omitempty" url:"APPROVAL_REQUIRED,omitempty"`
+	CANCELLED         []MinistepsWebhooksSchema `json:"CANCELLED,omitempty" url:"CANCELLED,omitempty"`
+	COMPLETED         []MinistepsWebhooksSchema `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
+	DRIFT_DETECTED    []MinistepsWebhooksSchema `json:"DRIFT_DETECTED,omitempty" url:"DRIFT_DETECTED,omitempty"`
+	ERRORED           []MinistepsWebhooksSchema `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
 }
 
 type MinistepsWorkflowChaining struct {
-	COMPLETED []MinistepsWfChainingSchema `json:"COMPLETED" url:"COMPLETED,omitempty"`
-	ERRORED   []MinistepsWfChainingSchema `json:"ERRORED" url:"ERRORED,omitempty"`
+	COMPLETED []MinistepsWfChainingSchema `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
+	ERRORED   []MinistepsWfChainingSchema `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
 }
 
 type Ministeps struct {

@@ -399,32 +399,8 @@ func (c *CacheConfig) String() string {
 }
 
 type CustomSource struct {
-	SourceConfigDestKind CustomSourceSourceConfigDestKindEnum `json:"sourceConfigDestKind" url:"sourceConfigDestKind"`
-	Config               *CustomSourceConfig                  `json:"config,omitempty" url:"config,omitempty"`
-}
-
-func (c *CustomSource) GetSourceConfigDestKind() CustomSourceSourceConfigDestKindEnum {
-	if c == nil {
-		return ""
-	}
-	return c.SourceConfigDestKind
-}
-
-func (c *CustomSource) GetConfig() *CustomSourceConfig {
-	if c == nil {
-		return nil
-	}
-	return c.Config
-}
-
-func (c *CustomSource) UnmarshalJSON(data []byte) error {
-	type unmarshaler CustomSource
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*c = CustomSource(value)
-	return nil
+	SourceConfigDestKind *CustomSourceSourceConfigDestKindEnum `json:"sourceConfigDestKind,omitempty" url:"sourceConfigDestKind,omitempty"`
+	Config               *CustomSourceConfig                   `json:"config,omitempty" url:"config,omitempty"`
 }
 
 type CustomSourceConfig struct {
@@ -436,97 +412,6 @@ type CustomSourceConfig struct {
 	Ref                     *string `json:"ref,omitempty" url:"ref,omitempty"`
 	Repo                    *string `json:"repo,omitempty" url:"repo,omitempty"`
 	IncludeSubModule        *bool   `json:"includeSubModule,omitempty" url:"includeSubModule,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (c *CustomSourceConfig) GetIsPrivate() *bool {
-	if c == nil {
-		return nil
-	}
-	return c.IsPrivate
-}
-
-func (c *CustomSourceConfig) GetAuth() *string {
-	if c == nil {
-		return nil
-	}
-	return c.Auth
-}
-
-func (c *CustomSourceConfig) GetWorkingDir() *string {
-	if c == nil {
-		return nil
-	}
-	return c.WorkingDir
-}
-
-func (c *CustomSourceConfig) GetGitSparseCheckoutConfig() *string {
-	if c == nil {
-		return nil
-	}
-	return c.GitSparseCheckoutConfig
-}
-
-func (c *CustomSourceConfig) GetGitCoreAutoCrlf() *bool {
-	if c == nil {
-		return nil
-	}
-	return c.GitCoreAutoCrlf
-}
-
-func (c *CustomSourceConfig) GetRef() *string {
-	if c == nil {
-		return nil
-	}
-	return c.Ref
-}
-
-func (c *CustomSourceConfig) GetRepo() *string {
-	if c == nil {
-		return nil
-	}
-	return c.Repo
-}
-
-func (c *CustomSourceConfig) GetIncludeSubModule() *bool {
-	if c == nil {
-		return nil
-	}
-	return c.IncludeSubModule
-}
-
-func (c *CustomSourceConfig) GetExtraProperties() map[string]interface{} {
-	return c.extraProperties
-}
-
-func (c *CustomSourceConfig) UnmarshalJSON(data []byte) error {
-	type unmarshaler CustomSourceConfig
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*c = CustomSourceConfig(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *c)
-	if err != nil {
-		return err
-	}
-	c.extraProperties = extraProperties
-	c.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (c *CustomSourceConfig) String() string {
-	if len(c.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(c.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(c); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", c)
 }
 
 // * `GITHUB_COM` - GITHUB_COM
@@ -4595,65 +4480,9 @@ func (g *GeneratedWorkflowsListAllMsg) String() string {
 }
 
 type IacInputData struct {
-	SchemaId   *string                    `json:"schemaId,omitempty" url:"schemaId,omitempty"`
-	SchemaType IacInputDataSchemaTypeEnum `json:"schemaType" url:"schemaType"`
-	Data       map[string]interface{}     `json:"data" url:"data"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (i *IacInputData) GetSchemaId() *string {
-	if i == nil {
-		return nil
-	}
-	return i.SchemaId
-}
-
-func (i *IacInputData) GetSchemaType() IacInputDataSchemaTypeEnum {
-	if i == nil {
-		return ""
-	}
-	return i.SchemaType
-}
-
-func (i *IacInputData) GetData() map[string]interface{} {
-	if i == nil {
-		return nil
-	}
-	return i.Data
-}
-
-func (i *IacInputData) GetExtraProperties() map[string]interface{} {
-	return i.extraProperties
-}
-
-func (i *IacInputData) UnmarshalJSON(data []byte) error {
-	type unmarshaler IacInputData
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*i = IacInputData(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *i)
-	if err != nil {
-		return err
-	}
-	i.extraProperties = extraProperties
-	i.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (i *IacInputData) String() string {
-	if len(i.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(i); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", i)
+	SchemaId   *string                     `json:"schemaId,omitempty" url:"schemaId,omitempty"`
+	SchemaType *IacInputDataSchemaTypeEnum `json:"schemaType,omitempty" url:"schemaType,omitempty"`
+	Data       map[string]interface{}      `json:"data,omitempty" url:"data"`
 }
 
 // * `FORM_JSONSCHEMA` - FORM_JSONSCHEMA
@@ -4689,65 +4518,9 @@ func (i IacInputDataSchemaTypeEnum) Ptr() *IacInputDataSchemaTypeEnum {
 }
 
 type IacvcsConfig struct {
-	UseMarketplaceTemplate bool          `json:"useMarketplaceTemplate" url:"useMarketplaceTemplate"`
+	UseMarketplaceTemplate *bool         `json:"useMarketplaceTemplate,omitempty" url:"useMarketplaceTemplate,omitempty"`
 	IacTemplateId          *string       `json:"iacTemplateId,omitempty" url:"iacTemplateId,omitempty"`
 	CustomSource           *CustomSource `json:"customSource,omitempty" url:"customSource,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (i *IacvcsConfig) GetUseMarketplaceTemplate() bool {
-	if i == nil {
-		return false
-	}
-	return i.UseMarketplaceTemplate
-}
-
-func (i *IacvcsConfig) GetIacTemplateId() *string {
-	if i == nil {
-		return nil
-	}
-	return i.IacTemplateId
-}
-
-func (i *IacvcsConfig) GetCustomSource() *CustomSource {
-	if i == nil {
-		return nil
-	}
-	return i.CustomSource
-}
-
-func (i *IacvcsConfig) GetExtraProperties() map[string]interface{} {
-	return i.extraProperties
-}
-
-func (i *IacvcsConfig) UnmarshalJSON(data []byte) error {
-	type unmarshaler IacvcsConfig
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*i = IacvcsConfig(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *i)
-	if err != nil {
-		return err
-	}
-	i.extraProperties = extraProperties
-	i.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (i *IacvcsConfig) String() string {
-	if len(i.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(i.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(i); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", i)
 }
 
 type InputSchemas struct {
@@ -6027,22 +5800,8 @@ func (p PolicyTypeEnum) Ptr() *PolicyTypeEnum {
 }
 
 type RunnerConstraints struct {
-	Type  RunnerConstraintsTypeEnum `json:"type" url:"type"`
-	Names []string                  `json:"names,omitempty" url:"names,omitempty"`
-}
-
-func (r *RunnerConstraints) GetType() RunnerConstraintsTypeEnum {
-	if r == nil {
-		return ""
-	}
-	return r.Type
-}
-
-func (r *RunnerConstraints) GetNames() []string {
-	if r == nil {
-		return nil
-	}
-	return r.Names
+	Type  *RunnerConstraintsTypeEnum `json:"type,omitempty" url:"type,omitempty"`
+	Names []string                   `json:"names,omitempty" url:"names,omitempty"`
 }
 
 func (r *RunnerConstraints) UnmarshalJSON(data []byte) error {
@@ -7186,56 +6945,7 @@ func (t *TemplatesConfig) String() string {
 
 type TemplatesIacInputData struct {
 	Data       map[string]interface{} `json:"data,omitempty" url:"data,omitempty"`
-	SchemaType string                 `json:"schemaType" url:"schemaType"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (t *TemplatesIacInputData) GetData() map[string]interface{} {
-	if t == nil {
-		return nil
-	}
-	return t.Data
-}
-
-func (t *TemplatesIacInputData) GetSchemaType() string {
-	if t == nil {
-		return ""
-	}
-	return t.SchemaType
-}
-
-func (t *TemplatesIacInputData) GetExtraProperties() map[string]interface{} {
-	return t.extraProperties
-}
-
-func (t *TemplatesIacInputData) UnmarshalJSON(data []byte) error {
-	type unmarshaler TemplatesIacInputData
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*t = TemplatesIacInputData(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *t)
-	if err != nil {
-		return err
-	}
-	t.extraProperties = extraProperties
-	t.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (t *TemplatesIacInputData) String() string {
-	if len(t.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(t.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(t); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", t)
+	SchemaType *string                `json:"schemaType,omitempty" url:"schemaType,omitempty"`
 }
 
 type TerraformAction struct {
@@ -7470,12 +7180,8 @@ type UserSchedules struct {
 	Name *string `json:"name,omitempty" url:"name,omitempty"`
 	Desc *string `json:"desc,omitempty" url:"desc,omitempty"`
 	// Cron expression for scheduled workflow run. Docs on how to create the cron expression: https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-scheduled-rule-pattern.html
-	Cron   string       `json:"cron" url:"cron"`
-	State  StateEnum    `json:"state" url:"state"`
-	Inputs *WorkflowRun `json:"inputs,omitempty" url:"inputs,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
+	Cron  *string    `json:"cron,omitempty" url:"cron"`
+	State *StateEnum `json:"state,omitempty" url:"state"`
 }
 
 func (u *UserSchedules) GetName() *string {
@@ -7490,59 +7196,6 @@ func (u *UserSchedules) GetDesc() *string {
 		return nil
 	}
 	return u.Desc
-}
-
-func (u *UserSchedules) GetCron() string {
-	if u == nil {
-		return ""
-	}
-	return u.Cron
-}
-
-func (u *UserSchedules) GetState() StateEnum {
-	if u == nil {
-		return ""
-	}
-	return u.State
-}
-
-func (u *UserSchedules) GetInputs() *WorkflowRun {
-	if u == nil {
-		return nil
-	}
-	return u.Inputs
-}
-
-func (u *UserSchedules) GetExtraProperties() map[string]interface{} {
-	return u.extraProperties
-}
-
-func (u *UserSchedules) UnmarshalJSON(data []byte) error {
-	type unmarshaler UserSchedules
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*u = UserSchedules(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *u)
-	if err != nil {
-		return err
-	}
-	u.extraProperties = extraProperties
-	u.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (u *UserSchedules) String() string {
-	if len(u.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(u.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(u); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", u)
 }
 
 type VcsConfig struct {
@@ -7732,8 +7385,8 @@ func (w *WfChainingPayloadPayload) String() string {
 }
 
 type WfStepInputData struct {
-	SchemaType WfStepInputDataSchemaTypeEnum `json:"schemaType,omitempty" url:"schemaType,omitempty"`
-	Data       map[string]interface{}        `json:"data,omitempty" url:"data,omitempty"`
+	SchemaType *WfStepInputDataSchemaTypeEnum `json:"schemaType,omitempty" url:"schemaType,omitempty"`
+	Data       map[string]interface{}         `json:"data,omitempty" url:"data,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -7779,10 +7432,27 @@ func (w *WfStepInputData) String() string {
 }
 
 // * `FORM_JSONSCHEMA` - FORM_JSONSCHEMA
-type WfStepInputDataSchemaTypeEnum = string
+type WfStepInputDataSchemaTypeEnum string
+
+const (
+	WfStepInputDataSchemaTypeEnumFormJSONSchema WfStepInputDataSchemaTypeEnum = "FORM_JSONSCHEMA"
+)
+
+func NewWfStepInputDataSchemaTypeEnumFromString(s string) (WfStepInputDataSchemaTypeEnum, error) {
+	switch s {
+	case "FORM_JSONSCHEMA":
+		return WfStepInputDataSchemaTypeEnumFormJSONSchema, nil
+	}
+	var t WfStepInputDataSchemaTypeEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (s WfStepInputDataSchemaTypeEnum) Ptr() *WfStepInputDataSchemaTypeEnum {
+	return &s
+}
 
 type WfStepsConfig struct {
-	Name                 string           `json:"name" url:"name"`
+	Name                 *string          `json:"name,omitempty" url:"name,omitempty"`
 	EnvironmentVariables []EnvVars        `json:"environmentVariables,omitempty" url:"environmentVariables,omitempty"`
 	Approval             *bool            `json:"approval,omitempty" url:"approval,omitempty"`
 	Timeout              *int             `json:"timeout,omitempty" url:"timeout,omitempty"`
@@ -7790,97 +7460,6 @@ type WfStepsConfig struct {
 	MountPoints          []MountPoint     `json:"mountPoints,omitempty" url:"mountPoints,omitempty"`
 	WfStepTemplateId     *string          `json:"wfStepTemplateId,omitempty" url:"wfStepTemplateId,omitempty"`
 	WfStepInputData      *WfStepInputData `json:"wfStepInputData,omitempty" url:"wfStepInputData,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (w *WfStepsConfig) GetName() string {
-	if w == nil {
-		return ""
-	}
-	return w.Name
-}
-
-func (w *WfStepsConfig) GetEnvironmentVariables() []EnvVars {
-	if w == nil {
-		return nil
-	}
-	return w.EnvironmentVariables
-}
-
-func (w *WfStepsConfig) GetApproval() *bool {
-	if w == nil {
-		return nil
-	}
-	return w.Approval
-}
-
-func (w *WfStepsConfig) GetTimeout() *int {
-	if w == nil {
-		return nil
-	}
-	return w.Timeout
-}
-
-func (w *WfStepsConfig) GetCmdOverride() interface{} {
-	if w == nil {
-		return nil
-	}
-	return w.CmdOverride
-}
-
-func (w *WfStepsConfig) GetMountPoints() []MountPoint {
-	if w == nil {
-		return nil
-	}
-	return w.MountPoints
-}
-
-func (w *WfStepsConfig) GetWfStepTemplateId() *string {
-	if w == nil {
-		return nil
-	}
-	return w.WfStepTemplateId
-}
-
-func (w *WfStepsConfig) GetWfStepInputData() *WfStepInputData {
-	if w == nil {
-		return nil
-	}
-	return w.WfStepInputData
-}
-
-func (w *WfStepsConfig) GetExtraProperties() map[string]interface{} {
-	return w.extraProperties
-}
-
-func (w *WfStepsConfig) UnmarshalJSON(data []byte) error {
-	type unmarshaler WfStepsConfig
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*w = WfStepsConfig(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *w)
-	if err != nil {
-		return err
-	}
-	w.extraProperties = extraProperties
-	w.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (w *WfStepsConfig) String() string {
-	if len(w.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(w); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", w)
 }
 
 // * `TERRAFORM` - TERRAFORM

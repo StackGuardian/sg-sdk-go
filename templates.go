@@ -1485,194 +1485,31 @@ func (t *TemplateGetResponse) String() string {
 }
 
 type VcsTriggers struct {
-	Type                    VcsTriggersTypeEnum `json:"type" url:"type"`
-	GlHookId                *string             `json:"gl_hook_id,omitempty" url:"gl_hook_id,omitempty"`
-	GhWebhookUrl            *string             `json:"gh_webhook_url,omitempty" url:"gh_webhook_url,omitempty"`
-	GithubAppInstallationId *int                `json:"github_app_installation_id,omitempty" url:"github_app_installation_id,omitempty"`
-	TrackedBranch           *string             `json:"tracked_branch,omitempty" url:"tracked_branch,omitempty"`
-	PostComments            *bool               `json:"post_comments,omitempty" url:"post_comments,omitempty"`
-	ApprovalPreApply        *bool               `json:"approval_pre_apply,omitempty" url:"approval_pre_apply,omitempty"`
-	GhCheck                 *bool               `json:"gh_check,omitempty" url:"gh_check,omitempty"`
-	GlPipeline              *bool               `json:"gl_pipeline,omitempty" url:"gl_pipeline,omitempty"`
-	PlanOnly                *bool               `json:"plan_only,omitempty" url:"plan_only,omitempty"`
-	FileTriggersEnabled     *bool               `json:"file_triggers_enabled,omitempty" url:"file_triggers_enabled,omitempty"`
+	Type                    *VcsTriggersTypeEnum `json:"type" url:"type"`
+	GlHookId                *string              `json:"gl_hook_id,omitempty" url:"gl_hook_id,omitempty"`
+	AdoHooksId              map[string]string    `json:"ado_hooks_id,omitempty" url:"ado_hooks_id,omitempty"`
+	BbHookId                *string              `json:"bb_hook_id,omitempty" url:"bb_hook_id,omitempty"`
+	GhWebhookUrl            *string              `json:"gh_webhook_url,omitempty" url:"gh_webhook_url,omitempty"`
+	GithubAppInstallationId *int                 `json:"github_app_installation_id,omitempty" url:"github_app_installation_id,omitempty"`
+	TrackedBranch           *string              `json:"tracked_branch,omitempty" url:"tracked_branch,omitempty"`
+	PostComments            *bool                `json:"post_comments,omitempty" url:"post_comments,omitempty"`
+	ApprovalPreApply        *bool                `json:"approval_pre_apply,omitempty" url:"approval_pre_apply,omitempty"`
+	GhCheck                 *bool                `json:"gh_check,omitempty" url:"gh_check,omitempty"`
+	GlPipeline              *bool                `json:"gl_pipeline,omitempty" url:"gl_pipeline,omitempty"`
+	PlanOnly                *bool                `json:"plan_only,omitempty" url:"plan_only,omitempty"`
+	FileTriggersEnabled     *bool                `json:"file_triggers_enabled,omitempty" url:"file_triggers_enabled,omitempty"`
 	// For example: ["*.tf", "*.hcl"]
-	FileTriggerPatterns  []string                   `json:"file_trigger_patterns,omitempty" url:"file_trigger_patterns,omitempty"`
-	TagsRegex            *string                    `json:"tags_regex,omitempty" url:"tags_regex,omitempty"`
-	GenerateNoCodeSchema *bool                      `json:"generate_no_code_schema,omitempty" url:"generate_no_code_schema,omitempty"`
-	AllPullRequests      map[string]map[string]bool `json:"all_pull_requests,omitempty" url:"all_pull_requests,omitempty"`
-	PullRequestOpened    map[string]map[string]bool `json:"pull_request_opened,omitempty" url:"pull_request_opened,omitempty"`
-	PullRequestModified  map[string]map[string]bool `json:"pull_request_modified,omitempty" url:"pull_request_modified,omitempty"`
-	CreateTag            map[string]map[string]bool `json:"create_tag,omitempty" url:"create_tag,omitempty"`
-	Push                 map[string]map[string]bool `json:"push,omitempty" url:"push,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
+	FileTriggerPatterns []string                   `json:"file_trigger_patterns,omitempty" url:"file_trigger_patterns,omitempty"`
+	TagsRegex           *string                    `json:"tags_regex,omitempty" url:"tags_regex,omitempty"`
+	AllPullRequests     map[string]VcsTriggerActionConfig `json:"all_pull_requests,omitempty" url:"all_pull_requests,omitempty"`
+	PullRequestOpened   map[string]VcsTriggerActionConfig `json:"pull_request_opened,omitempty" url:"pull_request_opened,omitempty"`
+	PullRequestModified map[string]VcsTriggerActionConfig `json:"pull_request_modified,omitempty" url:"pull_request_modified,omitempty"`
+	CreateTag           map[string]VcsTriggerActionConfig `json:"create_tag,omitempty" url:"create_tag,omitempty"`
+	Push                map[string]VcsTriggerActionConfig `json:"push,omitempty" url:"push,omitempty"`
 }
 
-func (v *VcsTriggers) GetType() VcsTriggersTypeEnum {
-	if v == nil {
-		return ""
-	}
-	return v.Type
-}
-
-func (v *VcsTriggers) GetGlHookId() *string {
-	if v == nil {
-		return nil
-	}
-	return v.GlHookId
-}
-
-func (v *VcsTriggers) GetGhWebhookUrl() *string {
-	if v == nil {
-		return nil
-	}
-	return v.GhWebhookUrl
-}
-
-func (v *VcsTriggers) GetGithubAppInstallationId() *int {
-	if v == nil {
-		return nil
-	}
-	return v.GithubAppInstallationId
-}
-
-func (v *VcsTriggers) GetTrackedBranch() *string {
-	if v == nil {
-		return nil
-	}
-	return v.TrackedBranch
-}
-
-func (v *VcsTriggers) GetPostComments() *bool {
-	if v == nil {
-		return nil
-	}
-	return v.PostComments
-}
-
-func (v *VcsTriggers) GetApprovalPreApply() *bool {
-	if v == nil {
-		return nil
-	}
-	return v.ApprovalPreApply
-}
-
-func (v *VcsTriggers) GetGhCheck() *bool {
-	if v == nil {
-		return nil
-	}
-	return v.GhCheck
-}
-
-func (v *VcsTriggers) GetGlPipeline() *bool {
-	if v == nil {
-		return nil
-	}
-	return v.GlPipeline
-}
-
-func (v *VcsTriggers) GetPlanOnly() *bool {
-	if v == nil {
-		return nil
-	}
-	return v.PlanOnly
-}
-
-func (v *VcsTriggers) GetFileTriggersEnabled() *bool {
-	if v == nil {
-		return nil
-	}
-	return v.FileTriggersEnabled
-}
-
-func (v *VcsTriggers) GetFileTriggerPatterns() []string {
-	if v == nil {
-		return nil
-	}
-	return v.FileTriggerPatterns
-}
-
-func (v *VcsTriggers) GetTagsRegex() *string {
-	if v == nil {
-		return nil
-	}
-	return v.TagsRegex
-}
-
-func (v *VcsTriggers) GetGenerateNoCodeSchema() *bool {
-	if v == nil {
-		return nil
-	}
-	return v.GenerateNoCodeSchema
-}
-
-func (v *VcsTriggers) GetAllPullRequests() map[string]map[string]bool {
-	if v == nil {
-		return nil
-	}
-	return v.AllPullRequests
-}
-
-func (v *VcsTriggers) GetPullRequestOpened() map[string]map[string]bool {
-	if v == nil {
-		return nil
-	}
-	return v.PullRequestOpened
-}
-
-func (v *VcsTriggers) GetPullRequestModified() map[string]map[string]bool {
-	if v == nil {
-		return nil
-	}
-	return v.PullRequestModified
-}
-
-func (v *VcsTriggers) GetCreateTag() map[string]map[string]bool {
-	if v == nil {
-		return nil
-	}
-	return v.CreateTag
-}
-
-func (v *VcsTriggers) GetPush() map[string]map[string]bool {
-	if v == nil {
-		return nil
-	}
-	return v.Push
-}
-
-func (v *VcsTriggers) GetExtraProperties() map[string]interface{} {
-	return v.extraProperties
-}
-
-func (v *VcsTriggers) UnmarshalJSON(data []byte) error {
-	type unmarshaler VcsTriggers
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*v = VcsTriggers(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *v)
-	if err != nil {
-		return err
-	}
-	v.extraProperties = extraProperties
-	v.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (v *VcsTriggers) String() string {
-	if len(v.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(v.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(v); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", v)
+type VcsTriggerActionConfig struct {
+	Enabled bool `json:"enabled" url:"enabled"`
 }
 
 // * `GITHUB_COM` - GITHUB_COM
@@ -1681,6 +1518,7 @@ func (v *VcsTriggers) String() string {
 // * `BITBUCKET_ORG` - BITBUCKET_ORG
 // * `GITLAB_COM` - GITLAB_COM
 // * `AZURE_DEVOPS` - AZURE_DEVOPS
+// * `AZURE_DEVOPS_SP` - AZURE_DEVOPS_SP
 type VcsTriggersTypeEnum string
 
 const (
@@ -1690,6 +1528,7 @@ const (
 	VcsTriggersTypeEnumBitbucketOrg    VcsTriggersTypeEnum = "BITBUCKET_ORG"
 	VcsTriggersTypeEnumGitlabCom       VcsTriggersTypeEnum = "GITLAB_COM"
 	VcsTriggersTypeEnumAzureDevops     VcsTriggersTypeEnum = "AZURE_DEVOPS"
+	VcsTriggersTypeEnumAzureDevopsSp   VcsTriggersTypeEnum = "AZURE_DEVOPS_SP"
 )
 
 func NewVcsTriggersTypeEnumFromString(s string) (VcsTriggersTypeEnum, error) {
@@ -1706,6 +1545,8 @@ func NewVcsTriggersTypeEnumFromString(s string) (VcsTriggersTypeEnum, error) {
 		return VcsTriggersTypeEnumGitlabCom, nil
 	case "AZURE_DEVOPS":
 		return VcsTriggersTypeEnumAzureDevops, nil
+	case "AZURE_DEVOPS_SP":
+		return VcsTriggersTypeEnumAzureDevopsSp, nil
 	}
 	var t VcsTriggersTypeEnum
 	return "", fmt.Errorf("%s is not a valid %T", s, t)

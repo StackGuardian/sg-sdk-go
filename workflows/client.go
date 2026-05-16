@@ -375,6 +375,53 @@ func (c *Client) GetSignedUrlToUploadTfstateFile(
 	return response, nil
 }
 
+// Create VCS triggers (webhook) for an existing workflow.
+func (c *Client) CreateVcsTriggers(
+	ctx context.Context,
+	org string,
+	wfGrp string,
+	wf string,
+	request *CreateVcsTriggersRequest,
+	opts ...option.RequestOption,
+) (*CreateVcsTriggersResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/webhooks/vcs_triggers/",
+		org,
+		wfGrp,
+		wf,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+
+	var response *CreateVcsTriggersResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
 // Retrieve a list of all workflows in a workflow group. Supports Pagination and Filtering using query parameters.
 func (c *Client) ListAllWorkflows(
 	ctx context.Context,

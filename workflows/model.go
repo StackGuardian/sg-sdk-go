@@ -22,6 +22,7 @@ type Workflow struct {
 	EnvironmentVariables        []*sgsdkgo.EnvVars                                    `json:"EnvironmentVariables,omitempty" url:"-"`
 	DeploymentPlatformConfig    []*workflowtemplaterevisions.DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"-"`
 	VcsConfig                   *sgsdkgo.VcsConfig                                    `json:"VCSConfig,omitempty" url:"-"`
+	VcsTriggers                 *sgsdkgo.VcsTriggers                                  `json:"VCSTriggers,omitempty" url:"-"`
 	UserSchedules               []sgsdkgo.UserSchedules                               `json:"UserSchedules,omitempty" url:"-"`
 	GitHubComSync               map[string]interface{}                                `json:"GitHubComSync,omitempty" url:"-"`
 	MiniSteps                   *workflowtemplaterevisions.Ministeps                  `json:"MiniSteps,omitempty" url:"-"`
@@ -70,6 +71,7 @@ type WorkflowRead struct {
 	EnvironmentVariables        []*sgsdkgo.EnvVars                                    `json:"EnvironmentVariables,omitempty" url:"-"`
 	DeploymentPlatformConfig    []*workflowtemplaterevisions.DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"-"`
 	VcsConfig                   *sgsdkgo.VcsConfig                                    `json:"VCSConfig,omitempty" url:"-"`
+	VcsTriggers                 *sgsdkgo.VcsTriggers                                  `json:"VCSTriggers,omitempty" url:"-"`
 	UserSchedules               []sgsdkgo.UserSchedules                               `json:"UserSchedules,omitempty" url:"-"`
 	GitHubComSync               map[string]interface{}                                `json:"GitHubComSync,omitempty" url:"-"`
 	MiniSteps                   *workflowtemplaterevisions.Ministeps                  `json:"MiniSteps,omitempty" url:"-"`
@@ -113,6 +115,7 @@ type PatchedWorkflow struct {
 	EnvironmentVariables        *core.Optional[[]*sgsdkgo.EnvVars]                                    `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
 	DeploymentPlatformConfig    *core.Optional[[]*workflowtemplaterevisions.DeploymentPlatformConfig] `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
 	VcsConfig                   *core.Optional[sgsdkgo.VcsConfig]                                     `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
+	VcsTriggers                 *core.Optional[sgsdkgo.VcsTriggers]                                   `json:"VCSTriggers,omitempty" url:"VCSTriggers,omitempty"`
 	UserSchedules               *core.Optional[[]*sgsdkgo.UserSchedules]                              `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
 	GitHubComSync               *core.Optional[map[string]interface{}]                                `json:"GitHubComSync,omitempty" url:"GitHubComSync,omitempty"`
 	MiniSteps                   *core.Optional[workflowtemplaterevisions.Ministeps]                   `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
@@ -230,4 +233,21 @@ type GeneratedWorkflowCreateResponseDataVcsconfigIacvcsconfig struct {
 
 type GeneratedWorkflowDeleteResponse struct {
 	Msg string `json:"msg" url:"msg"`
+}
+
+type CreateVcsTriggersRequest struct {
+	VcsConfig   *sgsdkgo.VcsConfig   `json:"VCSConfig" url:"-"`
+	VcsTriggers *sgsdkgo.VcsTriggers `json:"VCSTriggers" url:"-"`
+}
+
+type CreateVcsTriggersResponse struct {
+	Msg  *string                        `json:"msg,omitempty" url:"msg,omitempty"`
+	Data *CreateVcsTriggersResponseData `json:"data,omitempty" url:"data,omitempty"`
+}
+
+type CreateVcsTriggersResponseData struct {
+	ModifiedAt  *int64               `json:"ModifiedAt,omitempty" url:"ModifiedAt,omitempty"`
+	VcsTriggers *sgsdkgo.VcsTriggers `json:"VCSTriggers,omitempty" url:"VCSTriggers,omitempty"`
+	DocVersion  *string              `json:"DocVersion,omitempty" url:"DocVersion,omitempty"`
+	Id          *string              `json:"Id,omitempty" url:"Id,omitempty"`
 }

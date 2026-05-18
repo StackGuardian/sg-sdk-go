@@ -1499,8 +1499,8 @@ type VcsTriggers struct {
 	PlanOnly                *bool                `json:"plan_only,omitempty" url:"plan_only,omitempty"`
 	FileTriggersEnabled     *bool                `json:"file_triggers_enabled,omitempty" url:"file_triggers_enabled,omitempty"`
 	// For example: ["*.tf", "*.hcl"]
-	FileTriggerPatterns []string                   `json:"file_trigger_patterns,omitempty" url:"file_trigger_patterns,omitempty"`
-	TagsRegex           *string                    `json:"tags_regex,omitempty" url:"tags_regex,omitempty"`
+	FileTriggerPatterns []string                          `json:"file_trigger_patterns,omitempty" url:"file_trigger_patterns,omitempty"`
+	TagsRegex           *string                           `json:"tags_regex,omitempty" url:"tags_regex,omitempty"`
 	AllPullRequests     map[string]VcsTriggerActionConfig `json:"all_pull_requests,omitempty" url:"all_pull_requests,omitempty"`
 	PullRequestOpened   map[string]VcsTriggerActionConfig `json:"pull_request_opened,omitempty" url:"pull_request_opened,omitempty"`
 	PullRequestModified map[string]VcsTriggerActionConfig `json:"pull_request_modified,omitempty" url:"pull_request_modified,omitempty"`

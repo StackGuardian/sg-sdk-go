@@ -5,6 +5,8 @@ package workflows
 import (
 	context "context"
 	http "net/http"
+	"net/url"
+	"strings"
 
 	sgsdkgo "github.com/StackGuardian/sg-sdk-go"
 	core "github.com/StackGuardian/sg-sdk-go/core"
@@ -51,11 +53,7 @@ func (c *Client) CreateWorkflow(
 		c.baseURL,
 		"https://api.app.stackguardian.io",
 	)
-	endpointURL := internal.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/",
-		org,
-		wfGrp,
-	)
+	endpointURL := buildWfEndpointURL(baseURL, org, wfGrp)
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
 		options.ToHeader(),
@@ -96,12 +94,7 @@ func (c *Client) ReadWorkflow(
 		c.baseURL,
 		"https://api.app.stackguardian.io",
 	)
-	endpointURL := internal.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/",
-		org,
-		wfGrp,
-		wf,
-	)
+	endpointURL := buildWfURL(baseURL, org, wfGrp, wf)
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
 		options.ToHeader(),
@@ -140,12 +133,7 @@ func (c *Client) DeleteWorkflow(
 		c.baseURL,
 		"https://api.app.stackguardian.io",
 	)
-	endpointURL := internal.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/",
-		org,
-		wfGrp,
-		wf,
-	)
+	endpointURL := buildWfURL(baseURL, org, wfGrp, wf)
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
 		options.ToHeader(),
@@ -186,12 +174,7 @@ func (c *Client) UpdateWorkflow(
 		c.baseURL,
 		"https://api.app.stackguardian.io",
 	)
-	endpointURL := internal.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/",
-		org,
-		wfGrp,
-		wf,
-	)
+	endpointURL := buildWfURL(baseURL, org, wfGrp, wf)
 
 	if upgradeMode != nil {
 		options.QueryParameters.Set("upgradeMode", string(*upgradeMode))
@@ -237,12 +220,7 @@ func (c *Client) ListAllWorkflowArtifacts(
 		c.baseURL,
 		"https://api.app.stackguardian.io",
 	)
-	endpointURL := internal.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/listall_artifacts/",
-		org,
-		wfGrp,
-		wf,
-	)
+	endpointURL := buildWfURL(baseURL, org, wfGrp, wf) + "listall_artifacts/"
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
 		options.ToHeader(),
@@ -281,12 +259,7 @@ func (c *Client) Outputs(
 		c.baseURL,
 		"https://api.app.stackguardian.io",
 	)
-	endpointURL := internal.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/outputs/",
-		org,
-		wfGrp,
-		wf,
-	)
+	endpointURL := buildWfURL(baseURL, org, wfGrp, wf) + "outputs/"
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
 		options.ToHeader(),
@@ -338,12 +311,7 @@ func (c *Client) GetSignedUrlToUploadTfstateFile(
 		c.baseURL,
 		"https://api.app.stackguardian.io",
 	)
-	endpointURL := internal.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/tfstate_upload_url/",
-		org,
-		wfGrp,
-		wf,
-	)
+	endpointURL := buildWfURL(baseURL, org, wfGrp, wf) + "tfstate_upload_url/"
 	queryParams, err := internal.QueryValues(request)
 	if err != nil {
 		return nil, err
@@ -390,12 +358,7 @@ func (c *Client) CreateVcsTriggers(
 		c.baseURL,
 		"https://api.app.stackguardian.io",
 	)
-	endpointURL := internal.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/webhooks/vcs_triggers/",
-		org,
-		wfGrp,
-		wf,
-	)
+	endpointURL := buildWfURL(baseURL, org, wfGrp, wf) + "webhooks/vcs_triggers/"
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
 		options.ToHeader(),
@@ -436,11 +399,7 @@ func (c *Client) ListAllWorkflows(
 		c.baseURL,
 		"https://api.app.stackguardian.io",
 	)
-	endpointURL := internal.EncodeURL(
-		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/listall/",
-		org,
-		wfGrp,
-	)
+	endpointURL := buildWfEndpointURL(baseURL, org, wfGrp) + "listall/"
 	queryParams, err := internal.QueryValues(request)
 	if err != nil {
 		return nil, err
@@ -470,4 +429,26 @@ func (c *Client) ListAllWorkflows(
 		return nil, err
 	}
 	return response, nil
+}
+
+// escapeWfGrp encodes each segment of wfGrp individually while preserving "/" as a path separator.
+// DO NOT REVERT - Needed to support nested workflow groups; slashes must not be percent-encoded.
+func escapeWfGrp(wfGrp string) string {
+	segments := strings.Split(wfGrp, "/")
+	for i, s := range segments {
+		segments[i] = url.PathEscape(s)
+	}
+	return strings.Join(segments, "/")
+}
+
+// buildWfEndpointURL builds the base URL up to /wfs/ for a given org and wfGrp.
+func buildWfEndpointURL(baseURL, org, wfGrp string) string {
+	base := internal.EncodeURL(baseURL+"/api/v1/orgs/%v/wfgrps/", org)
+	return base + escapeWfGrp(wfGrp) + "/wfs/"
+}
+
+// buildWfURL builds the URL for a specific workflow under a wfGrp, returning a trailing-slash path.
+func buildWfURL(baseURL, org, wfGrp, wf string) string {
+	base := internal.EncodeURL(baseURL+"/api/v1/orgs/%v/wfgrps/", org)
+	return base + escapeWfGrp(wfGrp) + "/wfs/" + url.PathEscape(wf) + "/"
 }

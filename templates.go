@@ -1486,7 +1486,7 @@ func (t *TemplateGetResponse) String() string {
 
 type VcsTriggers struct {
 	Type                    *VcsTriggersTypeEnum `json:"type" url:"type"`
-	GlHookId                *string              `json:"gl_hook_id,omitempty" url:"gl_hook_id,omitempty"`
+	GlHookId                *int                 `json:"gl_hook_id,omitempty" url:"gl_hook_id,omitempty"`
 	AdoHooksId              map[string]string    `json:"ado_hooks_id,omitempty" url:"ado_hooks_id,omitempty"`
 	BbHookId                *string              `json:"bb_hook_id,omitempty" url:"bb_hook_id,omitempty"`
 	GhWebhookUrl            *string              `json:"gh_webhook_url,omitempty" url:"gh_webhook_url,omitempty"`

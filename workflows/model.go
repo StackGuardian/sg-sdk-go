@@ -153,6 +153,7 @@ type UpgradeModeEnum string
 const (
 	UpgradeModeEnumPreserveSettings UpgradeModeEnum = "PRESERVE_SETTINGS"
 	UpgradeModeEnumResetToTemplate  UpgradeModeEnum = "RESET_TO_TEMPLATE"
+	UpgradeModeEnumManual           UpgradeModeEnum = "MANUAL"
 )
 
 func NewUpgradeModeEnumFromString(s string) (UpgradeModeEnum, error) {

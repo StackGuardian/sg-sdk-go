@@ -79,7 +79,7 @@ func TestCreateWorkflowWithId(t *testing.T) {
 		Id:           &workflowId,
 		ResourceName: &resourceName,
 		Description:  &description,
-		Tags:         tags,
+		Tags:         sgsdkgo.Optional(tags),
 		IsActive:     sgsdkgo.IsPublicEnumOne.Ptr(),
 		WfType:       sgsdkgo.WfTypeEnumCustom.Ptr(),
 	}
@@ -119,7 +119,7 @@ func TestCreateWorkflow(t *testing.T) {
 	request := &workflows.Workflow{
 		ResourceName: &resourceName,
 		Description:  &description,
-		Tags:         tags,
+		Tags:         sgsdkgo.Optional(tags),
 		IsActive:     sgsdkgo.IsPublicEnumOne.Ptr(),
 		WfType:       sgsdkgo.WfTypeEnumCustom.Ptr(),
 	}
@@ -430,7 +430,7 @@ func TestWorkflowCRUDCycle(t *testing.T) {
 		Description:  &description,
 		IsActive:     sgsdkgo.IsPublicEnumOne.Ptr(),
 		WfType:       sgsdkgo.WfTypeEnumCustom.Ptr(),
-		Tags:         crudTags,
+		Tags:         sgsdkgo.Optional(crudTags),
 	}
 
 	createResp, err := client.CreateWorkflow(context.Background(), testOrg, wfgName, createRequest)

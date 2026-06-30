@@ -6992,6 +6992,9 @@ type TerraformConfig struct {
 	RunPreInitHooksOnDrift  *bool           `json:"runPreInitHooksOnDrift,omitempty" url:"runPreInitHooksOnDrift,omitempty"`
 	RunPrePlanHooksOnDrift  *bool           `json:"runPrePlanHooksOnDrift,omitempty" url:"runPrePlanHooksOnDrift,omitempty"`
 	RunPostPlanHooksOnDrift *bool           `json:"runPostPlanHooksOnDrift,omitempty" url:"runPostPlanHooksOnDrift,omitempty"`
+	// Fully-qualified workflow step template revision id pinned for this terraform config
+	// (e.g. "/<org>/<name>:<rev>").
+	WfStepTemplateRevisionId *string `json:"wfStepTemplateRevisionId,omitempty" url:"wfStepTemplateRevisionId,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -7142,6 +7145,13 @@ func (t *TerraformConfig) GetRunPostPlanHooksOnDrift() *bool {
 		return nil
 	}
 	return t.RunPostPlanHooksOnDrift
+}
+
+func (t *TerraformConfig) GetWfStepTemplateRevisionId() *string {
+	if t == nil {
+		return nil
+	}
+	return t.WfStepTemplateRevisionId
 }
 
 func (t *TerraformConfig) GetExtraProperties() map[string]interface{} {

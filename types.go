@@ -4482,7 +4482,12 @@ func (g *GeneratedWorkflowsListAllMsg) String() string {
 type IacInputData struct {
 	SchemaId   *string                     `json:"schemaId,omitempty" url:"schemaId,omitempty"`
 	SchemaType *IacInputDataSchemaTypeEnum `json:"schemaType,omitempty" url:"schemaType,omitempty"`
-	Data       map[string]interface{}      `json:"data,omitempty" url:"data"`
+	// Data is a pointer so an EXPLICIT empty object can be sent: a nil pointer omits the
+	// key entirely, while a pointer to an empty map serializes as "data": {}. With a plain
+	// map, json omitempty silently dropped an empty map from the payload, making it
+	// impossible to clear a template's default input data (the API requires the data key
+	// whenever iacInputData is present).
+	Data *map[string]interface{} `json:"data,omitempty" url:"data"`
 }
 
 // * `FORM_JSONSCHEMA` - FORM_JSONSCHEMA

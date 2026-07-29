@@ -7179,6 +7179,30 @@ func (t *TerraformConfig) String() string {
 	return fmt.Sprintf("%#v", t)
 }
 
+// * `PRESERVE_SETTINGS` - PRESERVE_SETTINGS
+// * `RESET_TO_TEMPLATE` - RESET_TO_TEMPLATE
+type UpgradeModeEnum string
+
+const (
+	UpgradeModeEnumPreserveSettings UpgradeModeEnum = "PRESERVE_SETTINGS"
+	UpgradeModeEnumResetToTemplate  UpgradeModeEnum = "RESET_TO_TEMPLATE"
+)
+
+func NewUpgradeModeEnumFromString(s string) (UpgradeModeEnum, error) {
+	switch s {
+	case "PRESERVE_SETTINGS":
+		return UpgradeModeEnumPreserveSettings, nil
+	case "RESET_TO_TEMPLATE":
+		return UpgradeModeEnumResetToTemplate, nil
+	}
+	var t UpgradeModeEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UpgradeModeEnum) Ptr() *UpgradeModeEnum {
+	return &u
+}
+
 type UserSchedules struct {
 	Name *string `json:"name,omitempty" url:"name,omitempty"`
 	Desc *string `json:"desc,omitempty" url:"desc,omitempty"`
@@ -7821,28 +7845,6 @@ func (w *WorkflowsConfig) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", w)
-}
-
-type ParallelExecutionEnum string
-
-const (
-	ParallelExecutionEnumEnabled  ParallelExecutionEnum = "enabled"
-	ParallelExecutionEnumDisabled ParallelExecutionEnum = "disabled"
-)
-
-func NewParallelExecutionEnumFromString(s string) (ParallelExecutionEnum, error) {
-	switch s {
-	case "enabled":
-		return ParallelExecutionEnumEnabled, nil
-	case "disabled":
-		return ParallelExecutionEnumDisabled, nil
-	}
-	var t ParallelExecutionEnum
-	return "", fmt.Errorf("%s is not a valid %T", s, t)
-}
-
-func (p ParallelExecutionEnum) Ptr() *ParallelExecutionEnum {
-	return &p
 }
 
 type WorkflowsConfigWorkflow struct {

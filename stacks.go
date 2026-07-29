@@ -11,11 +11,15 @@ import (
 )
 
 type Stack struct {
+	Id *string `json:"Id,omitempty" url:"-"`
+	// If a stack with the same ID previously existed at this path and was moved, this endpoint returns `409` with the new location of the moved resource. Set this flag to `true` to overwrite the move-tombstone and create a fresh stack at this path anyway. Has no effect when no tombstone exists, and does not affect collisions with live (non-moved) resources. Defaults to `false`.
+	ReplaceMovedResource *bool `json:"-" url:"replace-moved-resource,omitempty"`
 	// Triggers immediate stack creation process if true.
-	Id                       *string                   `json:"Id,omitempty" url:"-"`
-	ResourceName             *string                   `json:"ResourceName,omitempty" url:"-"`
-	Description              *string                   `json:"Description,omitempty" url:"-"`
-	Tags                     []string                  `json:"Tags,omitempty" url:"-"`
+	RunOnCreate  *bool         `json:"-" url:"runOnCreate,omitempty"`
+	ResourceName *string       `json:"ResourceName,omitempty" url:"-"`
+	Description  *string       `json:"Description,omitempty" url:"-"`
+	Tags         []string      `json:"Tags,omitempty" url:"-"`
+	IsActive     *IsPublicEnum `json:"IsActive,omitempty" url:"-"`
 	// Used when one or all templates specified in the IAC Group are not supplied in TemplatesConfig.
 	EnvironmentVariables []*EnvVars `json:"EnvironmentVariables,omitempty" url:"-"`
 	// Defines the default deployment config when the workflows in WorkflowConfig do not set this key.
@@ -23,14 +27,19 @@ type Stack struct {
 	// Actions define the sequence in which the workflows in the Stack are to be executed along with the run configuration for each workflow. Each key in an action is the name of the action for example `apply`, `destroy`.
 	Actions map[string]*Actions `json:"Actions,omitempty" url:"-"`
 	// The ID of the template group that this Stack is mapped to. Null if the Stack is not mapped to any template group.
-	TemplateGroupId  *string               `json:"TemplateGroupId,omitempty" url:"-"`
-	WorkflowsConfig  *WorkflowsConfig      `json:"WorkflowsConfig,omitempty" url:"-"`
-	UserSchedules    []*StackUserSchedules `json:"UserSchedules,omitempty" url:"-"`
+	TemplateGroupId *string               `json:"TemplateGroupId,omitempty" url:"-"`
+	WorkflowsConfig *StackWorkflowsConfig `json:"WorkflowsConfig,omitempty" url:"-"`
+	UserSchedules   []*StackUserSchedules `json:"UserSchedules,omitempty" url:"-"`
 	// Used only when upgrading Stack.
 	Operations map[string]interface{} `json:"Operations,omitempty" url:"-"`
 	// Contextual tags to give meanings to your tags
 	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"-"`
 	MiniSteps   *MiniStepsSchema   `json:"MiniSteps,omitempty" url:"-"`
+}
+
+type DeleteStackRequest struct {
+	// Force delete the stack. Setting this to 'True' will delete the stack along with all the workflows within it. Use with caution since any deployed infrastructure or running jobs will be orphaned if not cleaned up properly before force deletion.
+	ForceDelete *bool `json:"-" url:"force_delete,omitempty"`
 }
 
 type ListAllStacksRequest struct {
@@ -47,9 +56,13 @@ type ListAllStacksRequest struct {
 }
 
 type PatchedStack struct {
-	ResourceName *core.Optional[string]   `json:"ResourceName,omitempty" url:"-"`
-	Description  *core.Optional[string]   `json:"Description,omitempty" url:"-"`
-	Tags         *core.Optional[[]string] `json:"Tags,omitempty" url:"-"`
+	// Stack template upgrade mode. When omitted, backwards-compatible behavior applies (no automatic template defaults). PRESERVE_SETTINGS keeps current settings and reconciles with new template. RESET_TO_TEMPLATE resets all settings to template defaults.
+	UpgradeMode               *UpgradeModeEnum             `json:"-" url:"upgradeMode,omitempty"`
+	UpdateWorkflowsFromConfig *bool                        `json:"-" url:"updateWorkflowsFromConfig,omitempty"`
+	ResourceName              *core.Optional[string]       `json:"ResourceName,omitempty" url:"-"`
+	Description               *core.Optional[string]       `json:"Description,omitempty" url:"-"`
+	Tags                      *core.Optional[[]string]     `json:"Tags,omitempty" url:"-"`
+	IsActive                  *core.Optional[IsPublicEnum] `json:"IsActive,omitempty" url:"-"`
 	// Used when one or all templates specified in the IAC Group are not supplied in TemplatesConfig.
 	EnvironmentVariables *core.Optional[[]*EnvVars] `json:"EnvironmentVariables,omitempty" url:"-"`
 	// Defines the default deployment config when the workflows in WorkflowConfig do not set this key.
@@ -58,7 +71,7 @@ type PatchedStack struct {
 	Actions *core.Optional[map[string]*Actions] `json:"Actions,omitempty" url:"-"`
 	// The ID of the template group that this Stack is mapped to. Null if the Stack is not mapped to any template group.
 	TemplateGroupId *core.Optional[string]                `json:"TemplateGroupId,omitempty" url:"-"`
-	WorkflowsConfig *core.Optional[WorkflowsConfig]       `json:"WorkflowsConfig,omitempty" url:"-"`
+	WorkflowsConfig *core.Optional[StackWorkflowsConfig]  `json:"WorkflowsConfig,omitempty" url:"-"`
 	UserSchedules   *core.Optional[[]*StackUserSchedules] `json:"UserSchedules,omitempty" url:"-"`
 	// Used only when upgrading Stack.
 	Operations *core.Optional[map[string]interface{}] `json:"Operations,omitempty" url:"-"`
@@ -67,6 +80,222 @@ type PatchedStack struct {
 	MiniSteps   *core.Optional[MiniStepsSchema]    `json:"MiniSteps,omitempty" url:"-"`
 	// Taints are issues that are affecting this Stack. A Taint may be purely informational or may require action to remove the taint.
 	Taints *core.Optional[[]string] `json:"Taints,omitempty" url:"-"`
+}
+
+// StackWorkflowsConfig is the WorkflowsConfig shape used by the Stack resource
+// (Create/Read/Update). It differs from the plain WorkflowsConfig used by Stack
+// Templates: its entries carry a few extra fields a stack workflow needs.
+type StackWorkflowsConfig struct {
+	Workflows []*StackWorkflowsConfigWorkflow `json:"workflows,omitempty" url:"workflows,omitempty"`
+}
+
+func (s *StackWorkflowsConfig) GetWorkflows() []*StackWorkflowsConfigWorkflow {
+	if s == nil {
+		return nil
+	}
+	return s.Workflows
+}
+
+// StackWorkflowsConfigWorkflow subclasses WorkflowsConfigWorkflow with the extra
+// fields a stack workflow needs, minus system-stamped run/scan output (drift
+// results, security scan, repo insights, etc.) that doesn't belong on a stack's
+// WorkflowsConfig, which describes desired config, not run history.
+type StackWorkflowsConfigWorkflow struct {
+	WfStepsConfig             []*WfStepsConfig            `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
+	TerraformConfig           *TerraformConfig            `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
+	EnvironmentVariables      []*EnvVars                  `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
+	DeploymentPlatformConfig  []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	UserSchedules             []*UserSchedules            `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
+	MiniSteps                 *MiniStepsSchema            `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	Approvers                 []string                    `json:"Approvers,omitempty" url:"Approvers,omitempty"`
+	NumberOfApprovalsRequired *int                        `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
+	RunnerConstraints         *RunnerConstraints          `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
+	UserJobCpu                *int                        `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
+	UserJobMemory             *int                        `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
+	ParallelExecution         *ParallelExecutionEnum      `json:"ParallelExecution,omitempty" url:"ParallelExecution,omitempty"`
+	// The ID of the workflow. This is the ID of the workflow defined in the Stack Template.
+	Id           *string                `json:"id,omitempty" url:"id,omitempty"`
+	ResourceName *string                `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	WfType       *WfTypeEnum            `json:"WfType,omitempty" url:"WfType,omitempty"`
+	VcsConfig    *VcsConfig             `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
+	TemplateId   *string                `json:"templateId,omitempty" url:"templateId,omitempty"`
+	IacInputData *TemplatesIacInputData `json:"iacInputData,omitempty" url:"iacInputData,omitempty"`
+	InputSchemas []*InputSchemas        `json:"inputSchemas,omitempty" url:"inputSchemas,omitempty"`
+	// WorkflowId is the workflow's own resource ID (JSON key "Id"), distinct from Id
+	// above (JSON key "id"), which is the template-defined workflow slot this entry fills.
+	WorkflowId  *string            `json:"Id,omitempty" url:"Id,omitempty"`
+	Description *string            `json:"Description,omitempty" url:"Description,omitempty"`
+	Tags        []string           `json:"Tags,omitempty" url:"Tags,omitempty"`
+	IsActive    *IsPublicEnum      `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetWfStepsConfig() []*WfStepsConfig {
+	if s == nil {
+		return nil
+	}
+	return s.WfStepsConfig
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetTerraformConfig() *TerraformConfig {
+	if s == nil {
+		return nil
+	}
+	return s.TerraformConfig
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetEnvironmentVariables() []*EnvVars {
+	if s == nil {
+		return nil
+	}
+	return s.EnvironmentVariables
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetDeploymentPlatformConfig() []*DeploymentPlatformConfig {
+	if s == nil {
+		return nil
+	}
+	return s.DeploymentPlatformConfig
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetUserSchedules() []*UserSchedules {
+	if s == nil {
+		return nil
+	}
+	return s.UserSchedules
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetMiniSteps() *MiniStepsSchema {
+	if s == nil {
+		return nil
+	}
+	return s.MiniSteps
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetApprovers() []string {
+	if s == nil {
+		return nil
+	}
+	return s.Approvers
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetNumberOfApprovalsRequired() *int {
+	if s == nil {
+		return nil
+	}
+	return s.NumberOfApprovalsRequired
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetRunnerConstraints() *RunnerConstraints {
+	if s == nil {
+		return nil
+	}
+	return s.RunnerConstraints
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetUserJobCpu() *int {
+	if s == nil {
+		return nil
+	}
+	return s.UserJobCpu
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetUserJobMemory() *int {
+	if s == nil {
+		return nil
+	}
+	return s.UserJobMemory
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetParallelExecution() *ParallelExecutionEnum {
+	if s == nil {
+		return nil
+	}
+	return s.ParallelExecution
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetId() *string {
+	if s == nil {
+		return nil
+	}
+	return s.Id
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetResourceName() *string {
+	if s == nil {
+		return nil
+	}
+	return s.ResourceName
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetWfType() *WfTypeEnum {
+	if s == nil {
+		return nil
+	}
+	return s.WfType
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetVcsConfig() *VcsConfig {
+	if s == nil {
+		return nil
+	}
+	return s.VcsConfig
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetTemplateId() *string {
+	if s == nil {
+		return nil
+	}
+	return s.TemplateId
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetIacInputData() *TemplatesIacInputData {
+	if s == nil {
+		return nil
+	}
+	return s.IacInputData
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetInputSchemas() []*InputSchemas {
+	if s == nil {
+		return nil
+	}
+	return s.InputSchemas
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetWorkflowId() *string {
+	if s == nil {
+		return nil
+	}
+	return s.WorkflowId
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetDescription() *string {
+	if s == nil {
+		return nil
+	}
+	return s.Description
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetTags() []string {
+	if s == nil {
+		return nil
+	}
+	return s.Tags
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetIsActive() *IsPublicEnum {
+	if s == nil {
+		return nil
+	}
+	return s.IsActive
+}
+
+func (s *StackWorkflowsConfigWorkflow) GetContextTags() map[string]*string {
+	if s == nil {
+		return nil
+	}
+	return s.ContextTags
 }
 
 type GeneratedStackCreateResponse struct {
@@ -123,15 +352,75 @@ func (g *GeneratedStackCreateResponse) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
+// GeneratedStackUpdateResponse is Update Stack's response shape: unlike
+// Create, data holds the stack's attributes directly - no nested "stack" key
+// and no "workflows" array, since updating a stack doesn't create workflows.
+type GeneratedStackUpdateResponse struct {
+	Msg  string     `json:"msg" url:"msg"`
+	Data *StackData `json:"data,omitempty" url:"data,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (g *GeneratedStackUpdateResponse) GetMsg() string {
+	if g == nil {
+		return ""
+	}
+	return g.Msg
+}
+
+func (g *GeneratedStackUpdateResponse) GetData() *StackData {
+	if g == nil {
+		return nil
+	}
+	return g.Data
+}
+
+func (g *GeneratedStackUpdateResponse) GetExtraProperties() map[string]interface{} {
+	return g.extraProperties
+}
+
+func (g *GeneratedStackUpdateResponse) UnmarshalJSON(data []byte) error {
+	type unmarshaler GeneratedStackUpdateResponse
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*g = GeneratedStackUpdateResponse(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	if err != nil {
+		return err
+	}
+	g.extraProperties = extraProperties
+	g.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (g *GeneratedStackUpdateResponse) String() string {
+	if len(g.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(g); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", g)
+}
+
+// GeneratedStackCreateResponseData mirrors the API's actual shape: data
+// wraps stack and workflows as sibling keys. Stack uses the same StackData
+// type as the Read response, rather than a separate near-duplicate type.
 type GeneratedStackCreateResponseData struct {
-	Stack     *GeneratedStackCreateResponseDataStack       `json:"stack,omitempty" url:"stack,omitempty"`
+	Stack     *StackData                                   `json:"stack,omitempty" url:"stack,omitempty"`
 	Workflows []*GeneratedStackCreateResponseDataWorkflows `json:"workflows,omitempty" url:"workflows,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (g *GeneratedStackCreateResponseData) GetStack() *GeneratedStackCreateResponseDataStack {
+func (g *GeneratedStackCreateResponseData) GetStack() *StackData {
 	if g == nil {
 		return nil
 	}
@@ -177,8 +466,12 @@ func (g *GeneratedStackCreateResponseData) String() string {
 	return fmt.Sprintf("%#v", g)
 }
 
-type GeneratedStackCreateResponseDataStack struct {
-	Id           string   `json:"Id,omitempty" url:"Id,omitempty"`
+// StackData is the shape of a Stack resource shared by the Create, Update,
+// and Read responses. Fields only meaningful in one context (e.g. VcsConfig
+// on create/update, or StackFullId/StackIndexId on read) are simply absent
+// or zero-valued on the others.
+type StackData struct {
+	Id           string   `json:"Id" url:"Id"`
 	ResourceName *string  `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
 	Description  *string  `json:"Description,omitempty" url:"Description,omitempty"`
 	Tags         []string `json:"Tags,omitempty" url:"Tags,omitempty"`
@@ -190,7 +483,7 @@ type GeneratedStackCreateResponseDataStack struct {
 	Actions map[string]*Actions `json:"Actions,omitempty" url:"Actions,omitempty"`
 	// The ID of the template group that this Stack is mapped to. Null if the Stack is not mapped to any template group.
 	TemplateGroupId *string               `json:"TemplateGroupId,omitempty" url:"TemplateGroupId,omitempty"`
-	WorkflowsConfig *WorkflowsConfig      `json:"WorkflowsConfig,omitempty" url:"WorkflowsConfig,omitempty"`
+	WorkflowsConfig *StackWorkflowsConfig `json:"WorkflowsConfig,omitempty" url:"WorkflowsConfig,omitempty"`
 	UserSchedules   []*StackUserSchedules `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
 	// Used only when upgrading Stack.
 	Operations map[string]interface{} `json:"Operations,omitempty" url:"Operations,omitempty"`
@@ -199,258 +492,355 @@ type GeneratedStackCreateResponseDataStack struct {
 	MiniSteps   *MiniStepsSchema   `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
 	// Taints are issues that are affecting this Stack. A Taint may be purely informational or may require action to remove the taint.
 	Taints               []string                          `json:"Taints,omitempty" url:"Taints,omitempty"`
-	OrgId                string                            `json:"OrgId" url:"OrgId"`
-	SubResourceId        string                            `json:"SubResourceId" url:"SubResourceId"`
-	CreatedAt            int                               `json:"CreatedAt" url:"CreatedAt"`
-	Authors              []string                          `json:"Authors,omitempty" url:"Authors,omitempty"`
-	DocVersion           string                            `json:"DocVersion" url:"DocVersion"`
+	StackFullId          string                            `json:"StackFullId" url:"StackFullId"`
+	WorkflowRelationsMap map[string]interface{}            `json:"WorkflowRelationsMap,omitempty" url:"WorkflowRelationsMap,omitempty"`
 	IsActive             string                            `json:"IsActive" url:"IsActive"`
-	IsArchive            string                            `json:"IsArchive" url:"IsArchive"`
+	Discrepancies        map[string]interface{}            `json:"Discrepancies,omitempty" url:"Discrepancies,omitempty"`
+	Authors              []string                          `json:"Authors,omitempty" url:"Authors,omitempty"`
 	ActivitySubscribers  []string                          `json:"ActivitySubscribers,omitempty" url:"ActivitySubscribers,omitempty"`
+	SubResourceId        string                            `json:"SubResourceId" url:"SubResourceId"`
+	OrgId                string                            `json:"OrgId" url:"OrgId"`
+	CreatedAt            float64                           `json:"CreatedAt" url:"CreatedAt"`
+	IsArchive            string                            `json:"IsArchive" url:"IsArchive"`
+	CreationOrder        []string                          `json:"CreationOrder,omitempty" url:"CreationOrder,omitempty"`
+	StackParentId        string                            `json:"StackParentId" url:"StackParentId"`
+	ResourceId           string                            `json:"ResourceId" url:"ResourceId"`
+	ModifiedAt           float64                           `json:"ModifiedAt" url:"ModifiedAt"`
+	ParentId             string                            `json:"ParentId" url:"ParentId"`
+	ResourceType         string                            `json:"ResourceType" url:"ResourceType"`
+	CreatorEnv           string                            `json:"CreatorEnv" url:"CreatorEnv"`
 	LatestWfStatus       string                            `json:"LatestWfStatus" url:"LatestWfStatus"`
 	VcsConfig            *GeneratedStackWorkflowsVcsconfig `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
-	ResourceType         string                            `json:"ResourceType" url:"ResourceType"`
-	ModifiedAt           int                               `json:"ModifiedAt" url:"ModifiedAt"`
-	WorkflowRelationsMap map[string]interface{}            `json:"WorkflowRelationsMap,omitempty" url:"WorkflowRelationsMap,omitempty"`
+	DeletionOrder        []string                          `json:"DeletionOrder,omitempty" url:"DeletionOrder,omitempty"`
+	StackIndexId         string                            `json:"StackIndexId" url:"StackIndexId"`
+	DocVersion           string                            `json:"DocVersion" url:"DocVersion"`
+	EnforcedPolicies     []interface{}                     `json:"EnforcedPolicies,omitempty" url:"EnforcedPolicies,omitempty"`
+	SgInternals          map[string]interface{}            `json:"_SGInternals,omitempty" url:"_SGInternals,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (g *GeneratedStackCreateResponseDataStack) GetResourceName() *string {
-	if g == nil {
-		return nil
-	}
-	return g.ResourceName
-}
-
-func (g *GeneratedStackCreateResponseDataStack) GetDescription() *string {
-	if g == nil {
-		return nil
-	}
-	return g.Description
-}
-
-func (g *GeneratedStackCreateResponseDataStack) GetTags() []string {
-	if g == nil {
-		return nil
-	}
-	return g.Tags
-}
-
-func (g *GeneratedStackCreateResponseDataStack) GetEnvironmentVariables() []*EnvVars {
-	if g == nil {
-		return nil
-	}
-	return g.EnvironmentVariables
-}
-
-func (g *GeneratedStackCreateResponseDataStack) GetDeploymentPlatformConfig() []*DeploymentPlatformConfig {
-	if g == nil {
-		return nil
-	}
-	return g.DeploymentPlatformConfig
-}
-
-func (g *GeneratedStackCreateResponseDataStack) GetActions() map[string]*Actions {
-	if g == nil {
-		return nil
-	}
-	return g.Actions
-}
-
-func (g *GeneratedStackCreateResponseDataStack) GetTemplateGroupId() *string {
-	if g == nil {
-		return nil
-	}
-	return g.TemplateGroupId
-}
-
-func (g *GeneratedStackCreateResponseDataStack) GetWorkflowsConfig() *WorkflowsConfig {
-	if g == nil {
-		return nil
-	}
-	return g.WorkflowsConfig
-}
-
-func (g *GeneratedStackCreateResponseDataStack) GetUserSchedules() []*StackUserSchedules {
-	if g == nil {
-		return nil
-	}
-	return g.UserSchedules
-}
-
-func (g *GeneratedStackCreateResponseDataStack) GetOperations() map[string]interface{} {
-	if g == nil {
-		return nil
-	}
-	return g.Operations
-}
-
-func (g *GeneratedStackCreateResponseDataStack) GetContextTags() map[string]*string {
-	if g == nil {
-		return nil
-	}
-	return g.ContextTags
-}
-
-func (g *GeneratedStackCreateResponseDataStack) GetMiniSteps() *MiniStepsSchema {
-	if g == nil {
-		return nil
-	}
-	return g.MiniSteps
-}
-
-func (g *GeneratedStackCreateResponseDataStack) GetTaints() []string {
-	if g == nil {
-		return nil
-	}
-	return g.Taints
-}
-
-func (g *GeneratedStackCreateResponseDataStack) GetOrgId() string {
-	if g == nil {
+func (s *StackData) GetId() string {
+	if s == nil {
 		return ""
 	}
-	return g.OrgId
+	return s.Id
 }
 
-func (g *GeneratedStackCreateResponseDataStack) GetSubResourceId() string {
-	if g == nil {
+func (s *StackData) GetResourceName() *string {
+	if s == nil {
+		return nil
+	}
+	return s.ResourceName
+}
+
+func (s *StackData) GetDescription() *string {
+	if s == nil {
+		return nil
+	}
+	return s.Description
+}
+
+func (s *StackData) GetTags() []string {
+	if s == nil {
+		return nil
+	}
+	return s.Tags
+}
+
+func (s *StackData) GetEnvironmentVariables() []*EnvVars {
+	if s == nil {
+		return nil
+	}
+	return s.EnvironmentVariables
+}
+
+func (s *StackData) GetDeploymentPlatformConfig() []*DeploymentPlatformConfig {
+	if s == nil {
+		return nil
+	}
+	return s.DeploymentPlatformConfig
+}
+
+func (s *StackData) GetActions() map[string]*Actions {
+	if s == nil {
+		return nil
+	}
+	return s.Actions
+}
+
+func (s *StackData) GetTemplateGroupId() *string {
+	if s == nil {
+		return nil
+	}
+	return s.TemplateGroupId
+}
+
+func (s *StackData) GetWorkflowsConfig() *StackWorkflowsConfig {
+	if s == nil {
+		return nil
+	}
+	return s.WorkflowsConfig
+}
+
+func (s *StackData) GetUserSchedules() []*StackUserSchedules {
+	if s == nil {
+		return nil
+	}
+	return s.UserSchedules
+}
+
+func (s *StackData) GetOperations() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.Operations
+}
+
+func (s *StackData) GetContextTags() map[string]*string {
+	if s == nil {
+		return nil
+	}
+	return s.ContextTags
+}
+
+func (s *StackData) GetMiniSteps() *MiniStepsSchema {
+	if s == nil {
+		return nil
+	}
+	return s.MiniSteps
+}
+
+func (s *StackData) GetTaints() []string {
+	if s == nil {
+		return nil
+	}
+	return s.Taints
+}
+
+func (s *StackData) GetStackFullId() string {
+	if s == nil {
 		return ""
 	}
-	return g.SubResourceId
+	return s.StackFullId
 }
 
-func (g *GeneratedStackCreateResponseDataStack) GetCreatedAt() int {
-	if g == nil {
+func (s *StackData) GetWorkflowRelationsMap() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.WorkflowRelationsMap
+}
+
+func (s *StackData) GetIsActive() string {
+	if s == nil {
+		return ""
+	}
+	return s.IsActive
+}
+
+func (s *StackData) GetDiscrepancies() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.Discrepancies
+}
+
+func (s *StackData) GetAuthors() []string {
+	if s == nil {
+		return nil
+	}
+	return s.Authors
+}
+
+func (s *StackData) GetActivitySubscribers() []string {
+	if s == nil {
+		return nil
+	}
+	return s.ActivitySubscribers
+}
+
+func (s *StackData) GetSubResourceId() string {
+	if s == nil {
+		return ""
+	}
+	return s.SubResourceId
+}
+
+func (s *StackData) GetOrgId() string {
+	if s == nil {
+		return ""
+	}
+	return s.OrgId
+}
+
+func (s *StackData) GetCreatedAt() float64 {
+	if s == nil {
 		return 0
 	}
-	return g.CreatedAt
+	return s.CreatedAt
 }
 
-func (g *GeneratedStackCreateResponseDataStack) GetAuthors() []string {
-	if g == nil {
+func (s *StackData) GetIsArchive() string {
+	if s == nil {
+		return ""
+	}
+	return s.IsArchive
+}
+
+func (s *StackData) GetCreationOrder() []string {
+	if s == nil {
 		return nil
 	}
-	return g.Authors
+	return s.CreationOrder
 }
 
-func (g *GeneratedStackCreateResponseDataStack) GetDocVersion() string {
-	if g == nil {
+func (s *StackData) GetStackParentId() string {
+	if s == nil {
 		return ""
 	}
-	return g.DocVersion
+	return s.StackParentId
 }
 
-func (g *GeneratedStackCreateResponseDataStack) GetIsActive() string {
-	if g == nil {
+func (s *StackData) GetResourceId() string {
+	if s == nil {
 		return ""
 	}
-	return g.IsActive
+	return s.ResourceId
 }
 
-func (g *GeneratedStackCreateResponseDataStack) GetIsArchive() string {
-	if g == nil {
-		return ""
-	}
-	return g.IsArchive
-}
-
-func (g *GeneratedStackCreateResponseDataStack) GetActivitySubscribers() []string {
-	if g == nil {
-		return nil
-	}
-	return g.ActivitySubscribers
-}
-
-func (g *GeneratedStackCreateResponseDataStack) GetLatestWfStatus() string {
-	if g == nil {
-		return ""
-	}
-	return g.LatestWfStatus
-}
-
-func (g *GeneratedStackCreateResponseDataStack) GetVcsConfig() *GeneratedStackWorkflowsVcsconfig {
-	if g == nil {
-		return nil
-	}
-	return g.VcsConfig
-}
-
-func (g *GeneratedStackCreateResponseDataStack) GetResourceType() string {
-	if g == nil {
-		return ""
-	}
-	return g.ResourceType
-}
-
-func (g *GeneratedStackCreateResponseDataStack) GetModifiedAt() int {
-	if g == nil {
+func (s *StackData) GetModifiedAt() float64 {
+	if s == nil {
 		return 0
 	}
-	return g.ModifiedAt
+	return s.ModifiedAt
 }
 
-func (g *GeneratedStackCreateResponseDataStack) GetWorkflowRelationsMap() map[string]interface{} {
-	if g == nil {
+func (s *StackData) GetParentId() string {
+	if s == nil {
+		return ""
+	}
+	return s.ParentId
+}
+
+func (s *StackData) GetResourceType() string {
+	if s == nil {
+		return ""
+	}
+	return s.ResourceType
+}
+
+func (s *StackData) GetCreatorEnv() string {
+	if s == nil {
+		return ""
+	}
+	return s.CreatorEnv
+}
+
+func (s *StackData) GetLatestWfStatus() string {
+	if s == nil {
+		return ""
+	}
+	return s.LatestWfStatus
+}
+
+func (s *StackData) GetVcsConfig() *GeneratedStackWorkflowsVcsconfig {
+	if s == nil {
 		return nil
 	}
-	return g.WorkflowRelationsMap
+	return s.VcsConfig
 }
 
-func (g *GeneratedStackCreateResponseDataStack) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
+func (s *StackData) GetDeletionOrder() []string {
+	if s == nil {
+		return nil
+	}
+	return s.DeletionOrder
 }
 
-func (g *GeneratedStackCreateResponseDataStack) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedStackCreateResponseDataStack
+func (s *StackData) GetStackIndexId() string {
+	if s == nil {
+		return ""
+	}
+	return s.StackIndexId
+}
+
+func (s *StackData) GetDocVersion() string {
+	if s == nil {
+		return ""
+	}
+	return s.DocVersion
+}
+
+func (s *StackData) GetEnforcedPolicies() []interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.EnforcedPolicies
+}
+
+func (s *StackData) GetSgInternals() map[string]interface{} {
+	if s == nil {
+		return nil
+	}
+	return s.SgInternals
+}
+
+func (s *StackData) GetExtraProperties() map[string]interface{} {
+	return s.extraProperties
+}
+
+func (s *StackData) UnmarshalJSON(data []byte) error {
+	type unmarshaler StackData
 	var value unmarshaler
 	if err := json.Unmarshal(data, &value); err != nil {
 		return err
 	}
-	*g = GeneratedStackCreateResponseDataStack(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *g)
+	*s = StackData(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *s)
 	if err != nil {
 		return err
 	}
-	g.extraProperties = extraProperties
-	g.rawJSON = json.RawMessage(data)
+	s.extraProperties = extraProperties
+	s.rawJSON = json.RawMessage(data)
 	return nil
 }
 
-func (g *GeneratedStackCreateResponseDataStack) String() string {
-	if len(g.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
+func (s *StackData) String() string {
+	if len(s.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(s.rawJSON); err == nil {
 			return value
 		}
 	}
-	if value, err := internal.StringifyJSON(g); err == nil {
+	if value, err := internal.StringifyJSON(s); err == nil {
 		return value
 	}
-	return fmt.Sprintf("%#v", g)
+	return fmt.Sprintf("%#v", s)
 }
 
 type GeneratedStackCreateResponseDataWorkflows struct {
-	OrgId                     string                                                      `json:"OrgId" url:"OrgId"`
-	SubResourceId             string                                                      `json:"SubResourceId" url:"SubResourceId"`
-	ResourceId                string                                                      `json:"ResourceId" url:"ResourceId"`
-	ContextTags               map[string]string                                           `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
-	CreatedAt                 int                                                         `json:"CreatedAt" url:"CreatedAt"`
-	ResourceName              string                                                      `json:"ResourceName" url:"ResourceName"`
-	EnforcedPolicies          string                                                      `json:"EnforcedPolicies" url:"EnforcedPolicies"`
-	Description               string                                                      `json:"Description" url:"Description"`
-	Tags                      []interface{}                                               `json:"Tags,omitempty" url:"Tags,omitempty"`
-	Authors                   []string                                                    `json:"Authors,omitempty" url:"Authors,omitempty"`
-	DocVersion                string                                                      `json:"DocVersion" url:"DocVersion"`
-	IsActive                  string                                                      `json:"IsActive" url:"IsActive"`
-	IsArchive                 string                                                      `json:"IsArchive" url:"IsArchive"`
-	ActivitySubscribers       []string                                                    `json:"ActivitySubscribers,omitempty" url:"ActivitySubscribers,omitempty"`
-	LatestWfrunStatus         string                                                      `json:"LatestWfrunStatus" url:"LatestWfrunStatus"`
-	WfStepsConfig             []interface{}                                               `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
-	ResourceType              string                                                      `json:"ResourceType" url:"ResourceType"`
-	ModifiedAt                int                                                         `json:"ModifiedAt" url:"ModifiedAt"`
-	EnvironmentVariables      []interface{}                                               `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
+	OrgId               string            `json:"OrgId" url:"OrgId"`
+	SubResourceId       string            `json:"SubResourceId" url:"SubResourceId"`
+	ResourceId          string            `json:"ResourceId" url:"ResourceId"`
+	ContextTags         map[string]string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	CreatedAt           int               `json:"CreatedAt" url:"CreatedAt"`
+	ResourceName        string            `json:"ResourceName" url:"ResourceName"`
+	EnforcedPolicies    string            `json:"EnforcedPolicies" url:"EnforcedPolicies"`
+	Description         string            `json:"Description" url:"Description"`
+	Tags                []interface{}     `json:"Tags,omitempty" url:"Tags,omitempty"`
+	Authors             []string          `json:"Authors,omitempty" url:"Authors,omitempty"`
+	DocVersion          string            `json:"DocVersion" url:"DocVersion"`
+	IsActive            string            `json:"IsActive" url:"IsActive"`
+	IsArchive           string            `json:"IsArchive" url:"IsArchive"`
+	ActivitySubscribers []string          `json:"ActivitySubscribers,omitempty" url:"ActivitySubscribers,omitempty"`
+	LatestWfrunStatus   string            `json:"LatestWfrunStatus" url:"LatestWfrunStatus"`
+	WfStepsConfig       []interface{}     `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
+	ResourceType        string            `json:"ResourceType" url:"ResourceType"`
+	ModifiedAt          int               `json:"ModifiedAt" url:"ModifiedAt"`
+	// EnvironmentVariables is untyped because the API serializes it as an array
+	// when populated but as an empty object ({}) when there are none.
+	EnvironmentVariables      interface{}                                                 `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
 	DeploymentPlatformConfig  []*DeploymentPlatformConfig                                 `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
 	CacheConfig               map[string]interface{}                                      `json:"CacheConfig,omitempty" url:"CacheConfig,omitempty"`
 	WfType                    string                                                      `json:"WfType" url:"WfType"`
@@ -590,7 +980,7 @@ func (g *GeneratedStackCreateResponseDataWorkflows) GetModifiedAt() int {
 	return g.ModifiedAt
 }
 
-func (g *GeneratedStackCreateResponseDataWorkflows) GetEnvironmentVariables() []interface{} {
+func (g *GeneratedStackCreateResponseDataWorkflows) GetEnvironmentVariables() interface{} {
 	if g == nil {
 		return nil
 	}
@@ -740,13 +1130,13 @@ func (g *GeneratedStackCreateResponseDataWorkflowsRunnerconstraints) String() st
 }
 
 type GeneratedStackGetResponse struct {
-	Msg *GeneratedStackGetResponseMsg `json:"msg,omitempty" url:"msg,omitempty"`
+	Msg *StackData `json:"msg,omitempty" url:"msg,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (g *GeneratedStackGetResponse) GetMsg() *GeneratedStackGetResponseMsg {
+func (g *GeneratedStackGetResponse) GetMsg() *StackData {
 	if g == nil {
 		return nil
 	}
@@ -774,331 +1164,6 @@ func (g *GeneratedStackGetResponse) UnmarshalJSON(data []byte) error {
 }
 
 func (g *GeneratedStackGetResponse) String() string {
-	if len(g.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(g); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", g)
-}
-
-type GeneratedStackGetResponseMsg struct {
-	ResourceName *string  `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
-	Description  *string  `json:"Description,omitempty" url:"Description,omitempty"`
-	Tags         []string `json:"Tags,omitempty" url:"Tags,omitempty"`
-	// Used when one or all templates specified in the IAC Group are not supplied in TemplatesConfig.
-	EnvironmentVariables []*EnvVars `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
-	// Defines the default deployment config when the workflows in WorkflowConfig do not set this key.
-	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
-	// Actions define the sequence in which the workflows in the Stack are to be executed along with the run configuration for each workflow. Each key in an action is the name of the action for example `apply`, `destroy`.
-	Actions map[string]*Actions `json:"Actions,omitempty" url:"Actions,omitempty"`
-	// The ID of the template group that this Stack is mapped to. Null if the Stack is not mapped to any template group.
-	TemplateGroupId *string               `json:"TemplateGroupId,omitempty" url:"TemplateGroupId,omitempty"`
-	WorkflowsConfig *WorkflowsConfig      `json:"WorkflowsConfig,omitempty" url:"WorkflowsConfig,omitempty"`
-	UserSchedules   []*StackUserSchedules `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
-	// Used only when upgrading Stack.
-	Operations map[string]interface{} `json:"Operations,omitempty" url:"Operations,omitempty"`
-	// Contextual tags to give meanings to your tags
-	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
-	MiniSteps   *MiniStepsSchema   `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
-	// Taints are issues that are affecting this Stack. A Taint may be purely informational or may require action to remove the taint.
-	Taints               []string               `json:"Taints,omitempty" url:"Taints,omitempty"`
-	StackFullId          string                 `json:"StackFullId" url:"StackFullId"`
-	WorkflowRelationsMap map[string]interface{} `json:"WorkflowRelationsMap,omitempty" url:"WorkflowRelationsMap,omitempty"`
-	IsActive             string                 `json:"IsActive" url:"IsActive"`
-	Discrepancies        map[string]interface{} `json:"Discrepancies,omitempty" url:"Discrepancies,omitempty"`
-	Authors              []string               `json:"Authors,omitempty" url:"Authors,omitempty"`
-	ActivitySubscribers  []string               `json:"ActivitySubscribers,omitempty" url:"ActivitySubscribers,omitempty"`
-	SubResourceId        string                 `json:"SubResourceId" url:"SubResourceId"`
-	OrgId                string                 `json:"OrgId" url:"OrgId"`
-	CreatedAt            float64                `json:"CreatedAt" url:"CreatedAt"`
-	IsArchive            string                 `json:"IsArchive" url:"IsArchive"`
-	CreationOrder        []string               `json:"CreationOrder,omitempty" url:"CreationOrder,omitempty"`
-	StackParentId        string                 `json:"StackParentId" url:"StackParentId"`
-	ResourceId           string                 `json:"ResourceId" url:"ResourceId"`
-	ModifiedAt           float64                `json:"ModifiedAt" url:"ModifiedAt"`
-	ParentId             string                 `json:"ParentId" url:"ParentId"`
-	ResourceType         string                 `json:"ResourceType" url:"ResourceType"`
-	CreatorEnv           string                 `json:"CreatorEnv" url:"CreatorEnv"`
-	LatestWfStatus       string                 `json:"LatestWfStatus" url:"LatestWfStatus"`
-	DeletionOrder        []string               `json:"DeletionOrder,omitempty" url:"DeletionOrder,omitempty"`
-	StackIndexId         string                 `json:"StackIndexId" url:"StackIndexId"`
-	DocVersion           string                 `json:"DocVersion" url:"DocVersion"`
-	SgInternals          map[string]interface{} `json:"_SGInternals,omitempty" url:"_SGInternals,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
-}
-
-func (g *GeneratedStackGetResponseMsg) GetResourceName() *string {
-	if g == nil {
-		return nil
-	}
-	return g.ResourceName
-}
-
-func (g *GeneratedStackGetResponseMsg) GetDescription() *string {
-	if g == nil {
-		return nil
-	}
-	return g.Description
-}
-
-func (g *GeneratedStackGetResponseMsg) GetTags() []string {
-	if g == nil {
-		return nil
-	}
-	return g.Tags
-}
-
-func (g *GeneratedStackGetResponseMsg) GetEnvironmentVariables() []*EnvVars {
-	if g == nil {
-		return nil
-	}
-	return g.EnvironmentVariables
-}
-
-func (g *GeneratedStackGetResponseMsg) GetDeploymentPlatformConfig() []*DeploymentPlatformConfig {
-	if g == nil {
-		return nil
-	}
-	return g.DeploymentPlatformConfig
-}
-
-func (g *GeneratedStackGetResponseMsg) GetActions() map[string]*Actions {
-	if g == nil {
-		return nil
-	}
-	return g.Actions
-}
-
-func (g *GeneratedStackGetResponseMsg) GetTemplateGroupId() *string {
-	if g == nil {
-		return nil
-	}
-	return g.TemplateGroupId
-}
-
-func (g *GeneratedStackGetResponseMsg) GetWorkflowsConfig() *WorkflowsConfig {
-	if g == nil {
-		return nil
-	}
-	return g.WorkflowsConfig
-}
-
-func (g *GeneratedStackGetResponseMsg) GetUserSchedules() []*StackUserSchedules {
-	if g == nil {
-		return nil
-	}
-	return g.UserSchedules
-}
-
-func (g *GeneratedStackGetResponseMsg) GetOperations() map[string]interface{} {
-	if g == nil {
-		return nil
-	}
-	return g.Operations
-}
-
-func (g *GeneratedStackGetResponseMsg) GetContextTags() map[string]*string {
-	if g == nil {
-		return nil
-	}
-	return g.ContextTags
-}
-
-func (g *GeneratedStackGetResponseMsg) GetMiniSteps() *MiniStepsSchema {
-	if g == nil {
-		return nil
-	}
-	return g.MiniSteps
-}
-
-func (g *GeneratedStackGetResponseMsg) GetTaints() []string {
-	if g == nil {
-		return nil
-	}
-	return g.Taints
-}
-
-func (g *GeneratedStackGetResponseMsg) GetStackFullId() string {
-	if g == nil {
-		return ""
-	}
-	return g.StackFullId
-}
-
-func (g *GeneratedStackGetResponseMsg) GetWorkflowRelationsMap() map[string]interface{} {
-	if g == nil {
-		return nil
-	}
-	return g.WorkflowRelationsMap
-}
-
-func (g *GeneratedStackGetResponseMsg) GetIsActive() string {
-	if g == nil {
-		return ""
-	}
-	return g.IsActive
-}
-
-func (g *GeneratedStackGetResponseMsg) GetDiscrepancies() map[string]interface{} {
-	if g == nil {
-		return nil
-	}
-	return g.Discrepancies
-}
-
-func (g *GeneratedStackGetResponseMsg) GetAuthors() []string {
-	if g == nil {
-		return nil
-	}
-	return g.Authors
-}
-
-func (g *GeneratedStackGetResponseMsg) GetActivitySubscribers() []string {
-	if g == nil {
-		return nil
-	}
-	return g.ActivitySubscribers
-}
-
-func (g *GeneratedStackGetResponseMsg) GetSubResourceId() string {
-	if g == nil {
-		return ""
-	}
-	return g.SubResourceId
-}
-
-func (g *GeneratedStackGetResponseMsg) GetOrgId() string {
-	if g == nil {
-		return ""
-	}
-	return g.OrgId
-}
-
-func (g *GeneratedStackGetResponseMsg) GetCreatedAt() float64 {
-	if g == nil {
-		return 0
-	}
-	return g.CreatedAt
-}
-
-func (g *GeneratedStackGetResponseMsg) GetIsArchive() string {
-	if g == nil {
-		return ""
-	}
-	return g.IsArchive
-}
-
-func (g *GeneratedStackGetResponseMsg) GetCreationOrder() []string {
-	if g == nil {
-		return nil
-	}
-	return g.CreationOrder
-}
-
-func (g *GeneratedStackGetResponseMsg) GetStackParentId() string {
-	if g == nil {
-		return ""
-	}
-	return g.StackParentId
-}
-
-func (g *GeneratedStackGetResponseMsg) GetResourceId() string {
-	if g == nil {
-		return ""
-	}
-	return g.ResourceId
-}
-
-func (g *GeneratedStackGetResponseMsg) GetModifiedAt() float64 {
-	if g == nil {
-		return 0
-	}
-	return g.ModifiedAt
-}
-
-func (g *GeneratedStackGetResponseMsg) GetParentId() string {
-	if g == nil {
-		return ""
-	}
-	return g.ParentId
-}
-
-func (g *GeneratedStackGetResponseMsg) GetResourceType() string {
-	if g == nil {
-		return ""
-	}
-	return g.ResourceType
-}
-
-func (g *GeneratedStackGetResponseMsg) GetCreatorEnv() string {
-	if g == nil {
-		return ""
-	}
-	return g.CreatorEnv
-}
-
-func (g *GeneratedStackGetResponseMsg) GetLatestWfStatus() string {
-	if g == nil {
-		return ""
-	}
-	return g.LatestWfStatus
-}
-
-func (g *GeneratedStackGetResponseMsg) GetDeletionOrder() []string {
-	if g == nil {
-		return nil
-	}
-	return g.DeletionOrder
-}
-
-func (g *GeneratedStackGetResponseMsg) GetStackIndexId() string {
-	if g == nil {
-		return ""
-	}
-	return g.StackIndexId
-}
-
-func (g *GeneratedStackGetResponseMsg) GetDocVersion() string {
-	if g == nil {
-		return ""
-	}
-	return g.DocVersion
-}
-
-func (g *GeneratedStackGetResponseMsg) GetSgInternals() map[string]interface{} {
-	if g == nil {
-		return nil
-	}
-	return g.SgInternals
-}
-
-func (g *GeneratedStackGetResponseMsg) GetExtraProperties() map[string]interface{} {
-	return g.extraProperties
-}
-
-func (g *GeneratedStackGetResponseMsg) UnmarshalJSON(data []byte) error {
-	type unmarshaler GeneratedStackGetResponseMsg
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*g = GeneratedStackGetResponseMsg(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *g)
-	if err != nil {
-		return err
-	}
-	g.extraProperties = extraProperties
-	g.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (g *GeneratedStackGetResponseMsg) String() string {
 	if len(g.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(g.rawJSON); err == nil {
 			return value

@@ -143,6 +143,7 @@ func (c *Client) DeleteStack(
 	org string,
 	stack string,
 	wfGrp string,
+	request *sgsdkgo.DeleteStackRequest,
 	opts ...option.RequestOption,
 ) (*sgsdkgo.StackDeleteResponse, error) {
 	options := core.NewRequestOptions(opts...)
@@ -161,6 +162,13 @@ func (c *Client) DeleteStack(
 		wfGrpPath,
 		stack,
 	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
 		options.ToHeader(),
@@ -193,7 +201,7 @@ func (c *Client) UpdateStack(
 	wfGrp string,
 	request *sgsdkgo.PatchedStack,
 	opts ...option.RequestOption,
-) (*sgsdkgo.GeneratedStackCreateResponse, error) {
+) (*sgsdkgo.GeneratedStackUpdateResponse, error) {
 	options := core.NewRequestOptions(opts...)
 	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
 	if err != nil {
@@ -210,13 +218,20 @@ func (c *Client) UpdateStack(
 		wfGrpPath,
 		stack,
 	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
 	headers := internal.MergeHeaders(
 		c.header.Clone(),
 		options.ToHeader(),
 	)
 	headers.Set("Content-Type", "application/json")
 
-	var response *sgsdkgo.GeneratedStackCreateResponse
+	var response *sgsdkgo.GeneratedStackUpdateResponse
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{

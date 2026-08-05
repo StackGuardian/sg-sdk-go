@@ -6,8 +6,8 @@ import (
 	"net/url"
 )
 
-// HTTPClient is an interface for a subset of the *http.Client.
-type HTTPClient interface {
+// HTTPDoer is an interface for a subset of the *http.Client.
+type HTTPDoer interface {
 	Do(*http.Request) (*http.Response, error)
 }
 

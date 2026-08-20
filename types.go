@@ -4870,18 +4870,19 @@ func (i *IntegrationsSettings) String() string {
 type IntegrationsSettingsKindEnum string
 
 const (
-	IntegrationsSettingsKindEnumGithubCom       IntegrationsSettingsKindEnum = "GITHUB_COM"
-	IntegrationsSettingsKindEnumGithubAppCustom IntegrationsSettingsKindEnum = "GITHUB_APP_CUSTOM"
-	IntegrationsSettingsKindEnumAwsStatic       IntegrationsSettingsKindEnum = "AWS_STATIC"
-	IntegrationsSettingsKindEnumGcpStatic       IntegrationsSettingsKindEnum = "GCP_STATIC"
-	IntegrationsSettingsKindEnumGcpOidc         IntegrationsSettingsKindEnum = "GCP_OIDC"
-	IntegrationsSettingsKindEnumAwsRbac         IntegrationsSettingsKindEnum = "AWS_RBAC"
-	IntegrationsSettingsKindEnumAwsOidc         IntegrationsSettingsKindEnum = "AWS_OIDC"
-	IntegrationsSettingsKindEnumAzureStatic     IntegrationsSettingsKindEnum = "AZURE_STATIC"
-	IntegrationsSettingsKindEnumAzureOidc       IntegrationsSettingsKindEnum = "AZURE_OIDC"
-	IntegrationsSettingsKindEnumBitbucketOrg    IntegrationsSettingsKindEnum = "BITBUCKET_ORG"
-	IntegrationsSettingsKindEnumGitlabCom       IntegrationsSettingsKindEnum = "GITLAB_COM"
-	IntegrationsSettingsKindEnumAzureDevops     IntegrationsSettingsKindEnum = "AZURE_DEVOPS"
+	IntegrationsSettingsKindEnumGithubCom          IntegrationsSettingsKindEnum = "GITHUB_COM"
+	IntegrationsSettingsKindEnumGithubAppCustom    IntegrationsSettingsKindEnum = "GITHUB_APP_CUSTOM"
+	IntegrationsSettingsKindEnumAwsStatic          IntegrationsSettingsKindEnum = "AWS_STATIC"
+	IntegrationsSettingsKindEnumGcpStatic          IntegrationsSettingsKindEnum = "GCP_STATIC"
+	IntegrationsSettingsKindEnumGcpOidc            IntegrationsSettingsKindEnum = "GCP_OIDC"
+	IntegrationsSettingsKindEnumAwsRbac            IntegrationsSettingsKindEnum = "AWS_RBAC"
+	IntegrationsSettingsKindEnumAwsOidc            IntegrationsSettingsKindEnum = "AWS_OIDC"
+	IntegrationsSettingsKindEnumAzureStatic        IntegrationsSettingsKindEnum = "AZURE_STATIC"
+	IntegrationsSettingsKindEnumAzureOidc          IntegrationsSettingsKindEnum = "AZURE_OIDC"
+	IntegrationsSettingsKindEnumAzureManagedIdOidc IntegrationsSettingsKindEnum = "AZURE_MANAGED_ID_OIDC"
+	IntegrationsSettingsKindEnumBitbucketOrg       IntegrationsSettingsKindEnum = "BITBUCKET_ORG"
+	IntegrationsSettingsKindEnumGitlabCom          IntegrationsSettingsKindEnum = "GITLAB_COM"
+	IntegrationsSettingsKindEnumAzureDevops        IntegrationsSettingsKindEnum = "AZURE_DEVOPS"
 )
 
 func NewIntegrationsSettingsKindEnumFromString(s string) (IntegrationsSettingsKindEnum, error) {
@@ -4904,6 +4905,8 @@ func NewIntegrationsSettingsKindEnumFromString(s string) (IntegrationsSettingsKi
 		return IntegrationsSettingsKindEnumAzureStatic, nil
 	case "AZURE_OIDC":
 		return IntegrationsSettingsKindEnumAzureOidc, nil
+	case "AZURE_MANAGED_ID_OIDC":
+		return IntegrationsSettingsKindEnumAzureManagedIdOidc, nil
 	case "BITBUCKET_ORG":
 		return IntegrationsSettingsKindEnumBitbucketOrg, nil
 	case "GITLAB_COM":

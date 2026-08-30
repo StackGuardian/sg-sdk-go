@@ -23,6 +23,7 @@ type StackTemplateRevisionWorkflow struct {
 	Id                        *string                             `json:"id,omitempty" url:"id,omitempty"`
 	TemplateId                *string                             `json:"templateId,omitempty" url:"templateId,omitempty"`
 	ResourceName              *string                             `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	WfType                    *sgsdkgo.WfTypeEnum                 `json:"WfType,omitempty" url:"WfType,omitempty"`
 	WfStepsConfig             []*sgsdkgo.WfStepsConfig            `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
 	TerraformConfig           *sgsdkgo.TerraformConfig            `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
 	EnvironmentVariables      []*sgsdkgo.EnvVars                  `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
@@ -34,6 +35,7 @@ type StackTemplateRevisionWorkflow struct {
 	RunnerConstraints         *sgsdkgo.RunnerConstraints          `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
 	UserJobCpu                *int                                `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
 	UserJobMemory             *int                                `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
+	ParallelExecution         *sgsdkgo.ParallelExecutionEnum      `json:"ParallelExecution,omitempty" url:"ParallelExecution,omitempty"`
 	VcsConfig                 *sgsdkgo.VcsConfig                  `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
 	IacInputData              *sgsdkgo.TemplatesIacInputData      `json:"iacInputData,omitempty" url:"iacInputData,omitempty"`
 	InputSchemas              []*sgsdkgo.InputSchemas             `json:"inputSchemas,omitempty" url:"inputSchemas,omitempty"`

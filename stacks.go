@@ -45,10 +45,14 @@ type DeleteStackRequest struct {
 type ListAllStacksRequest struct {
 	// Filter stacks by description.
 	Description *string `json:"-" url:"Description,omitempty"`
+	// Filter stacks by Parent Template Group ID.
+	ParentTemplateGroupId *string `json:"-" url:"ParentTemplateGroupId,omitempty"`
 	// Filter stacks by resource names.
 	ResourceNames *string `json:"-" url:"ResourceNames,omitempty"`
 	// Filter stacks by tags.
 	Tags *string `json:"-" url:"Tags,omitempty"`
+	// Filter stacks by Template Group ID.
+	TemplateGroupId *string `json:"-" url:"TemplateGroupId,omitempty"`
 	// Pagination token to retrieve the next set of results
 	Lastevaluatedkey *string `json:"-" url:"lastevaluatedkey,omitempty"`
 	// Limit the number of results returned. Default is 50. Maximum is 500.
@@ -59,6 +63,7 @@ type PatchedStack struct {
 	// Stack template upgrade mode. When omitted, backwards-compatible behavior applies (no automatic template defaults). PRESERVE_SETTINGS keeps current settings and reconciles with new template. RESET_TO_TEMPLATE resets all settings to template defaults.
 	UpgradeMode               *UpgradeModeEnum             `json:"-" url:"upgradeMode,omitempty"`
 	UpdateWorkflowsFromConfig *bool                        `json:"-" url:"updateWorkflowsFromConfig,omitempty"`
+	Id                        *core.Optional[string]       `json:"Id,omitempty" url:"-"`
 	ResourceName              *core.Optional[string]       `json:"ResourceName,omitempty" url:"-"`
 	Description               *core.Optional[string]       `json:"Description,omitempty" url:"-"`
 	Tags                      *core.Optional[[]string]     `json:"Tags,omitempty" url:"-"`
@@ -121,13 +126,10 @@ type StackWorkflowsConfigWorkflow struct {
 	TemplateId   *string                `json:"templateId,omitempty" url:"templateId,omitempty"`
 	IacInputData *TemplatesIacInputData `json:"iacInputData,omitempty" url:"iacInputData,omitempty"`
 	InputSchemas []*InputSchemas        `json:"inputSchemas,omitempty" url:"inputSchemas,omitempty"`
-	// WorkflowId is the workflow's own resource ID (JSON key "Id"), distinct from Id
-	// above (JSON key "id"), which is the template-defined workflow slot this entry fills.
-	WorkflowId  *string            `json:"Id,omitempty" url:"Id,omitempty"`
-	Description *string            `json:"Description,omitempty" url:"Description,omitempty"`
-	Tags        []string           `json:"Tags,omitempty" url:"Tags,omitempty"`
-	IsActive    *IsPublicEnum      `json:"IsActive,omitempty" url:"IsActive,omitempty"`
-	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	Description  *string                `json:"Description,omitempty" url:"Description,omitempty"`
+	Tags         []string               `json:"Tags,omitempty" url:"Tags,omitempty"`
+	IsActive     *IsPublicEnum          `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	ContextTags  map[string]*string     `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
 }
 
 func (s *StackWorkflowsConfigWorkflow) GetWfStepsConfig() []*WfStepsConfig {
@@ -261,13 +263,6 @@ func (s *StackWorkflowsConfigWorkflow) GetInputSchemas() []*InputSchemas {
 		return nil
 	}
 	return s.InputSchemas
-}
-
-func (s *StackWorkflowsConfigWorkflow) GetWorkflowId() *string {
-	if s == nil {
-		return nil
-	}
-	return s.WorkflowId
 }
 
 func (s *StackWorkflowsConfigWorkflow) GetDescription() *string {

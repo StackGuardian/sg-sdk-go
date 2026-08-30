@@ -4517,23 +4517,13 @@ type IacvcsConfig struct {
 }
 
 type InputSchemas struct {
-	Id           *string              `json:"id,omitempty" url:"id,omitempty"`
 	Name         *string              `json:"name,omitempty" url:"name,omitempty"`
-	Description  *string              `json:"description,omitempty" url:"description,omitempty"`
 	Type         InputSchemasTypeEnum `json:"type" url:"type"`
 	EncodedData  *string              `json:"encodedData,omitempty" url:"encodedData,omitempty"`
 	UiSchemaData *string              `json:"uiSchemaData,omitempty" url:"uiSchemaData,omitempty"`
-	IsCommitted  *bool                `json:"isCommitted,omitempty" url:"isCommitted,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
-}
-
-func (i *InputSchemas) GetId() *string {
-	if i == nil {
-		return nil
-	}
-	return i.Id
 }
 
 func (i *InputSchemas) GetName() *string {
@@ -4541,13 +4531,6 @@ func (i *InputSchemas) GetName() *string {
 		return nil
 	}
 	return i.Name
-}
-
-func (i *InputSchemas) GetDescription() *string {
-	if i == nil {
-		return nil
-	}
-	return i.Description
 }
 
 func (i *InputSchemas) GetType() InputSchemasTypeEnum {
@@ -4569,13 +4552,6 @@ func (i *InputSchemas) GetUiSchemaData() *string {
 		return nil
 	}
 	return i.UiSchemaData
-}
-
-func (i *InputSchemas) GetIsCommitted() *bool {
-	if i == nil {
-		return nil
-	}
-	return i.IsCommitted
 }
 
 func (i *InputSchemas) GetExtraProperties() map[string]interface{} {
@@ -4612,6 +4588,7 @@ func (i *InputSchemas) String() string {
 
 // * `FORM_JSONSCHEMA` - FORM_JSONSCHEMA
 // * `RAW_JSON` - RAW_JSON
+// * `NO_CODE_JSON` - NO_CODE_JSON
 // * `TIRITH_JSON` - TIRITH_JSON
 type InputSchemasTypeEnum string
 
@@ -4628,6 +4605,8 @@ func NewInputSchemasTypeEnumFromString(s string) (InputSchemasTypeEnum, error) {
 		return InputSchemasTypeEnumFormJsonschema, nil
 	case "RAW_JSON":
 		return InputSchemasTypeEnumRawJson, nil
+	case "NO_CODE_JSON":
+		return InputSchemasTypeEnumNoCodeJson, nil
 	case "TIRITH_JSON":
 		return InputSchemasTypeEnumTirithJson, nil
 	}
@@ -7283,45 +7262,45 @@ func (v *VcsConfig) String() string {
 }
 
 type WebhookTypes struct {
-	ApprovalRequired []map[string]interface{} `json:"APPROVAL_REQUIRED,omitempty" url:"APPROVAL_REQUIRED,omitempty"`
-	Cancelled        []map[string]interface{} `json:"CANCELLED,omitempty" url:"CANCELLED,omitempty"`
-	Completed        []map[string]interface{} `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
-	Errored          []map[string]interface{} `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
-	DriftDetected    []map[string]interface{} `json:"DRIFT_DETECTED,omitempty" url:"DRIFT_DETECTED,omitempty"`
+	ApprovalRequired []*Webhook `json:"APPROVAL_REQUIRED,omitempty" url:"APPROVAL_REQUIRED,omitempty"`
+	Cancelled        []*Webhook `json:"CANCELLED,omitempty" url:"CANCELLED,omitempty"`
+	Completed        []*Webhook `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
+	Errored          []*Webhook `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
+	DriftDetected    []*Webhook `json:"DRIFT_DETECTED,omitempty" url:"DRIFT_DETECTED,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (w *WebhookTypes) GetApprovalRequired() []map[string]interface{} {
+func (w *WebhookTypes) GetApprovalRequired() []*Webhook {
 	if w == nil {
 		return nil
 	}
 	return w.ApprovalRequired
 }
 
-func (w *WebhookTypes) GetCancelled() []map[string]interface{} {
+func (w *WebhookTypes) GetCancelled() []*Webhook {
 	if w == nil {
 		return nil
 	}
 	return w.Cancelled
 }
 
-func (w *WebhookTypes) GetCompleted() []map[string]interface{} {
+func (w *WebhookTypes) GetCompleted() []*Webhook {
 	if w == nil {
 		return nil
 	}
 	return w.Completed
 }
 
-func (w *WebhookTypes) GetErrored() []map[string]interface{} {
+func (w *WebhookTypes) GetErrored() []*Webhook {
 	if w == nil {
 		return nil
 	}
 	return w.Errored
 }
 
-func (w *WebhookTypes) GetDriftDetected() []map[string]interface{} {
+func (w *WebhookTypes) GetDriftDetected() []*Webhook {
 	if w == nil {
 		return nil
 	}
@@ -7349,6 +7328,68 @@ func (w *WebhookTypes) UnmarshalJSON(data []byte) error {
 }
 
 func (w *WebhookTypes) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type Webhook struct {
+	WebhookName   string  `json:"webhookName,omitempty" url:"webhookName,omitempty"`
+	WebhookUrl    string  `json:"webhookUrl,omitempty" url:"webhookUrl,omitempty"`
+	WebhookSecret *string `json:"webhookSecret,omitempty" url:"webhookSecret,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *Webhook) GetWebhookName() string {
+	if w == nil {
+		return ""
+	}
+	return w.WebhookName
+}
+
+func (w *Webhook) GetWebhookUrl() string {
+	if w == nil {
+		return ""
+	}
+	return w.WebhookUrl
+}
+
+func (w *Webhook) GetWebhookSecret() *string {
+	if w == nil {
+		return nil
+	}
+	return w.WebhookSecret
+}
+
+func (w *Webhook) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *Webhook) UnmarshalJSON(data []byte) error {
+	type unmarshaler Webhook
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = Webhook(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *Webhook) String() string {
 	if len(w.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
 			return value

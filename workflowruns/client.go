@@ -354,6 +354,97 @@ func (c *Client) ListAllWorkflowRuns(
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{
+			URL:                endpointURL,
+			Method:             http.MethodGet,
+			Headers:            headers,
+			MaxAttempts:        options.MaxAttempts,
+			BodyProperties:     options.BodyProperties,
+			QueryParameters:    options.QueryParameters,
+			Client:             options.HTTPClient,
+			Response:           &response,
+			ResponseIsOptional: true,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Cancel a workflow run (the API implements DELETE as a cancel).
+func (c *Client) DeleteWorkflowRun(
+	ctx context.Context,
+	org string,
+	wf string,
+	wfGrp string,
+	wfRun string,
+	opts ...option.RequestOption,
+) (*WorkflowRunDeleteResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/wfruns/%v/",
+		org,
+		wfGrp,
+		wf,
+		wfRun,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *WorkflowRunDeleteResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodDelete,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Read a workflow run by the KSUIDs of its workflow and itself. Internal: only runner tokens and machine tokens are authorized.
+func (c *Client) ReadWorkflowRunByKsuid(
+	ctx context.Context,
+	org string,
+	parentKsuid string,
+	resourceKsuid string,
+	opts ...option.RequestOption,
+) (*sgsdkgo.GeneratedWorkflowRunsGet, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfs/%v/wfruns/%v/",
+		org,
+		parentKsuid,
+		resourceKsuid,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *sgsdkgo.GeneratedWorkflowRunsGet
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodGet,
 			Headers:         headers,
@@ -361,6 +452,53 @@ func (c *Client) ListAllWorkflowRuns(
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Update a workflow run by the KSUIDs of its workflow and itself. Internal: only runner tokens and machine tokens are authorized.
+func (c *Client) UpdateWorkflowRunByKsuid(
+	ctx context.Context,
+	org string,
+	parentKsuid string,
+	resourceKsuid string,
+	request *sgsdkgo.PatchedWorkflowRun,
+	opts ...option.RequestOption,
+) (*sgsdkgo.GeneratedWorkfkowRunsUpdateResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfs/%v/wfruns/%v/",
+		org,
+		parentKsuid,
+		resourceKsuid,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+
+	var response *sgsdkgo.GeneratedWorkfkowRunsUpdateResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPatch,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
 			Response:        &response,
 		},
 	); err != nil {

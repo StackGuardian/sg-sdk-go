@@ -130,6 +130,7 @@ type PatchedApiAccessPatch struct {
 	OidcTrust *core.Optional[OidcTrust] `json:"OIDCTrust,omitempty" url:"-"`
 }
 
+// PatchedRole updates a role. The API requires ResourceName in the body.
 type PatchedRole struct {
 	ResourceName *core.Optional[string]   `json:"ResourceName,omitempty" url:"-"`
 	Description  *core.Optional[string]   `json:"Description,omitempty" url:"-"`
@@ -486,6 +487,8 @@ type ApiAccessDataResponse struct {
 	// Generated API key (only in create/regenerate responses)
 	ApiKey *string `json:"APIKey,omitempty" url:"APIKey,omitempty"`
 
+	Id *string `json:"Id,omitempty" url:"Id,omitempty"`
+
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
@@ -720,7 +723,7 @@ func (a *ApiAccessDeleteResponse) String() string {
 // Serializer for API Access get response
 type ApiAccessGetResponse struct {
 	// (Deprecated) Use 'data' field. Previously contained API access data.
-	Msg *ApiAccessDataResponse `json:"msg,omitempty" url:"msg,omitempty"`
+	Msg *string `json:"msg,omitempty" url:"msg,omitempty"`
 	// Details of the requested API access
 	Data *ApiAccessDataResponse `json:"data,omitempty" url:"data,omitempty"`
 
@@ -728,7 +731,7 @@ type ApiAccessGetResponse struct {
 	rawJSON         json.RawMessage
 }
 
-func (a *ApiAccessGetResponse) GetMsg() *ApiAccessDataResponse {
+func (a *ApiAccessGetResponse) GetMsg() *string {
 	if a == nil {
 		return nil
 	}
@@ -777,7 +780,8 @@ func (a *ApiAccessGetResponse) String() string {
 // Serializer for API Access list response
 type ApiAccessListResponse struct {
 	// List of API accesses
-	Msg []*ApiAccessDataResponse `json:"msg,omitempty" url:"msg,omitempty"`
+	Msg  *string                  `json:"msg,omitempty" url:"msg,omitempty"`
+	Data []*ApiAccessDataResponse `json:"data,omitempty" url:"data,omitempty"`
 	// Base64 encoded pagination token for next page
 	Lastevaluatedkey *string `json:"lastevaluatedkey,omitempty" url:"lastevaluatedkey,omitempty"`
 
@@ -785,11 +789,18 @@ type ApiAccessListResponse struct {
 	rawJSON         json.RawMessage
 }
 
-func (a *ApiAccessListResponse) GetMsg() []*ApiAccessDataResponse {
+func (a *ApiAccessListResponse) GetMsg() *string {
 	if a == nil {
 		return nil
 	}
 	return a.Msg
+}
+
+func (a *ApiAccessListResponse) GetData() []*ApiAccessDataResponse {
+	if a == nil {
+		return nil
+	}
+	return a.Data
 }
 
 func (a *ApiAccessListResponse) GetLastevaluatedkey() *string {
@@ -1152,6 +1163,9 @@ type ListUserItem struct {
 	LoginMethod string   `json:"loginMethod" url:"loginMethod"`
 	Roles       []string `json:"roles,omitempty" url:"roles,omitempty"`
 
+	FullUserId *string `json:"fullUserId,omitempty" url:"fullUserId,omitempty"`
+	Alias      *string `json:"alias,omitempty" url:"alias,omitempty"`
+
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
@@ -1473,6 +1487,8 @@ type RoleDataResponse struct {
 	ModifiedAt int           `json:"ModifiedAt" url:"ModifiedAt"`
 	IsActive   *IsPublicEnum `json:"IsActive,omitempty" url:"IsActive,omitempty"`
 	IsArchive  IsPublicEnum  `json:"IsArchive" url:"IsArchive"`
+
+	OrgId *string `json:"OrgId,omitempty" url:"OrgId,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage

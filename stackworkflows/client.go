@@ -10,6 +10,7 @@ import (
 	core "github.com/StackGuardian/sg-sdk-go/core"
 	internal "github.com/StackGuardian/sg-sdk-go/internal"
 	option "github.com/StackGuardian/sg-sdk-go/option"
+	workflows "github.com/StackGuardian/sg-sdk-go/workflows"
 )
 
 type Client struct {
@@ -202,14 +203,15 @@ func (c *Client) ListAllStackWorkflowsArtifacts(
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{
-			URL:             endpointURL,
-			Method:          http.MethodGet,
-			Headers:         headers,
-			MaxAttempts:     options.MaxAttempts,
-			BodyProperties:  options.BodyProperties,
-			QueryParameters: options.QueryParameters,
-			Client:          options.HTTPClient,
-			Response:        &response,
+			URL:                endpointURL,
+			Method:             http.MethodGet,
+			Headers:            headers,
+			MaxAttempts:        options.MaxAttempts,
+			BodyProperties:     options.BodyProperties,
+			QueryParameters:    options.QueryParameters,
+			Client:             options.HTTPClient,
+			Response:           &response,
+			ResponseIsOptional: true,
 		},
 	); err != nil {
 		return nil, err
@@ -363,6 +365,61 @@ func (c *Client) ListAllStackWorkflows(
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{
+			URL:                endpointURL,
+			Method:             http.MethodGet,
+			Headers:            headers,
+			MaxAttempts:        options.MaxAttempts,
+			BodyProperties:     options.BodyProperties,
+			QueryParameters:    options.QueryParameters,
+			Client:             options.HTTPClient,
+			Response:           &response,
+			ResponseIsOptional: true,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Get a signed URL to download a stack workflow artifact.
+func (c *Client) GetStackWorkflowArtifactUrl(
+	ctx context.Context,
+	org string,
+	stack string,
+	wf string,
+	wfGrp string,
+	request *workflows.GetWorkflowArtifactRequest,
+	opts ...option.RequestOption,
+) (*workflows.SignedUrlResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/get_artifact/",
+		org,
+		wfGrp,
+		stack,
+		wf,
+	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *workflows.SignedUrlResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodGet,
 			Headers:         headers,
@@ -371,6 +428,451 @@ func (c *Client) ListAllStackWorkflows(
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
 			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Get a signed URL to upload a file to a stack workflow.
+func (c *Client) GetFileUploadUrlForStackWorkflow(
+	ctx context.Context,
+	org string,
+	stack string,
+	wf string,
+	wfGrp string,
+	request *workflows.GetFileUploadUrlRequest,
+	opts ...option.RequestOption,
+) (*workflows.FileUploadUrlResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/file_upload_url/",
+		org,
+		wfGrp,
+		stack,
+		wf,
+	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *workflows.FileUploadUrlResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Compare a stack workflow against a template without applying changes (dry run).
+func (c *Client) CompareStackWorkflow(
+	ctx context.Context,
+	org string,
+	stack string,
+	wf string,
+	wfGrp string,
+	request *workflows.CompareWorkflowRequest,
+	opts ...option.RequestOption,
+) (*workflows.CompareWorkflowResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/compare/",
+		org,
+		wfGrp,
+		stack,
+		wf,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+
+	var response *workflows.CompareWorkflowResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Lock a stack workflow on an artifact (for example a Terraform state file).
+func (c *Client) LockStackWorkflowArtifact(
+	ctx context.Context,
+	org string,
+	stack string,
+	wf string,
+	wfGrp string,
+	artifactId string,
+	opts ...option.RequestOption,
+) (*workflows.ArtifactLockResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/artifacts/%v/lock/",
+		org,
+		wfGrp,
+		stack,
+		wf,
+		artifactId,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *workflows.ArtifactLockResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Release the lock a stack workflow holds on an artifact.
+func (c *Client) UnlockStackWorkflowArtifact(
+	ctx context.Context,
+	org string,
+	stack string,
+	wf string,
+	wfGrp string,
+	artifactId string,
+	opts ...option.RequestOption,
+) (*workflows.ArtifactLockResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/artifacts/%v/lock/",
+		org,
+		wfGrp,
+		stack,
+		wf,
+		artifactId,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *workflows.ArtifactLockResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodDelete,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Create a workflow inside a stack. Pass option.WithQueryParameters to set replace-moved-resource.
+func (c *Client) CreateStackWorkflow(
+	ctx context.Context,
+	org string,
+	stack string,
+	wfGrp string,
+	request *workflows.Workflow,
+	opts ...option.RequestOption,
+) (*sgsdkgo.GeneratedWorkflowCreateResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/",
+		org,
+		wfGrp,
+		stack,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+
+	var response *sgsdkgo.GeneratedWorkflowCreateResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Create VCS webhook triggers for a stack workflow.
+func (c *Client) CreateVcsTriggersForStackWorkflow(
+	ctx context.Context,
+	org string,
+	stack string,
+	wf string,
+	wfGrp string,
+	request *workflows.CreateVcsTriggersRequest,
+	opts ...option.RequestOption,
+) (*workflows.CreateVcsTriggersResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/webhooks/vcs_triggers/",
+		org,
+		wfGrp,
+		stack,
+		wf,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+
+	var response *workflows.CreateVcsTriggersResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Read an artifact of a stack workflow. Returns the artifact's JSON content for shared runners, or {"artifacts_signed_url": ...} for private runners.
+func (c *Client) ReadStackWorkflowArtifact(
+	ctx context.Context,
+	org string,
+	stack string,
+	wf string,
+	wfGrp string,
+	artifactId string,
+	opts ...option.RequestOption,
+) (interface{}, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/artifacts/%v/",
+		org,
+		wfGrp,
+		stack,
+		wf,
+		artifactId,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response interface{}
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:                endpointURL,
+			Method:             http.MethodGet,
+			Headers:            headers,
+			MaxAttempts:        options.MaxAttempts,
+			BodyProperties:     options.BodyProperties,
+			QueryParameters:    options.QueryParameters,
+			Client:             options.HTTPClient,
+			Response:           &response,
+			ResponseIsOptional: true,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Create or replace an artifact of a stack workflow; content is stored as the request body's JSON.
+func (c *Client) CreateStackWorkflowArtifact(
+	ctx context.Context,
+	org string,
+	stack string,
+	wf string,
+	wfGrp string,
+	artifactId string,
+	content interface{},
+	opts ...option.RequestOption,
+) (*workflows.ArtifactActionResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/artifacts/%v/",
+		org,
+		wfGrp,
+		stack,
+		wf,
+		artifactId,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+
+	var response *workflows.ArtifactActionResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:                endpointURL,
+			Method:             http.MethodPost,
+			Headers:            headers,
+			MaxAttempts:        options.MaxAttempts,
+			BodyProperties:     options.BodyProperties,
+			QueryParameters:    options.QueryParameters,
+			Client:             options.HTTPClient,
+			Request:            content,
+			Response:           &response,
+			ResponseIsOptional: true,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Delete an artifact of a stack workflow.
+func (c *Client) DeleteStackWorkflowArtifact(
+	ctx context.Context,
+	org string,
+	stack string,
+	wf string,
+	wfGrp string,
+	artifactId string,
+	opts ...option.RequestOption,
+) (*workflows.ArtifactActionResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/artifacts/%v/",
+		org,
+		wfGrp,
+		stack,
+		wf,
+		artifactId,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *workflows.ArtifactActionResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:                endpointURL,
+			Method:             http.MethodDelete,
+			Headers:            headers,
+			MaxAttempts:        options.MaxAttempts,
+			BodyProperties:     options.BodyProperties,
+			QueryParameters:    options.QueryParameters,
+			Client:             options.HTTPClient,
+			Response:           &response,
+			ResponseIsOptional: true,
 		},
 	); err != nil {
 		return nil, err

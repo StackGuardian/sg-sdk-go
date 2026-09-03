@@ -924,6 +924,14 @@ type GeneratedConnectorReadResponseMsg struct {
 	Authentication    *GeneratedConnectorReadResponseMsgAuthentication    `json:"Authentication,omitempty" url:"Authentication,omitempty"`
 	Settings          *GeneratedConnectorReadResponseMsgSettings          `json:"Settings,omitempty" url:"Settings,omitempty"`
 
+	CreatorEnv            *string `json:"CreatorEnv,omitempty" url:"CreatorEnv,omitempty"`
+	IntegrationFullId     *string `json:"IntegrationFullId,omitempty" url:"IntegrationFullId,omitempty"`
+	IntegrationIndexId    *string `json:"IntegrationIndexId,omitempty" url:"IntegrationIndexId,omitempty"`
+	IntegrationParentId   *string `json:"IntegrationParentId,omitempty" url:"IntegrationParentId,omitempty"`
+	LowercaseResourceId   *string `json:"LowercaseResourceId,omitempty" url:"LowercaseResourceId,omitempty"`
+	LowercaseResourceName *string `json:"LowercaseResourceName,omitempty" url:"LowercaseResourceName,omitempty"`
+	ResourceKSUID         *string `json:"ResourceKSUID,omitempty" url:"ResourceKSUID,omitempty"`
+
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
@@ -3482,6 +3490,8 @@ func (g *GeneratedWorkflowListAllArtifactsResponse) String() string {
 type GeneratedWorkflowListAllArtifactsResponseData struct {
 	Artifacts map[string]*GeneratedWorkflowListAllArtifactsResponseDataArtifacts `json:"artifacts,omitempty" url:"artifacts,omitempty"`
 
+	SignedUrl *string `json:"signedUrl,omitempty" url:"signedUrl,omitempty"`
+
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
@@ -4351,6 +4361,12 @@ type GeneratedWorkflowsListAllMsg struct {
 	ResourceName      string        `json:"ResourceName" url:"ResourceName"`
 	SubResourceId     string        `json:"SubResourceId" url:"SubResourceId"`
 	CreatedAt         float64       `json:"CreatedAt" url:"CreatedAt"`
+
+	LatestTerraformAction *string      `json:"LatestTerraformAction,omitempty" url:"LatestTerraformAction,omitempty"`
+	LatestWfrunStatusKey  *string      `json:"LatestWfrunStatusKey,omitempty" url:"LatestWfrunStatusKey,omitempty"`
+	ParallelExecution     *string      `json:"ParallelExecution,omitempty" url:"ParallelExecution,omitempty"`
+	ResourceKSUID         *string      `json:"ResourceKSUID,omitempty" url:"ResourceKSUID,omitempty"`
+	VcsTriggers           *VcsTriggers `json:"VCSTriggers,omitempty" url:"VCSTriggers,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage

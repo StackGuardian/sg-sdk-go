@@ -101,7 +101,24 @@ type WorkflowRead struct {
 	BicepResources              map[string]interface{}                                `json:"BicepResources,omitempty" url:"-"`
 	SgCustomWorkflowRunFacts    map[string]interface{}                                `json:"SGCustomWorkflowRunFacts,omitempty" url:"-"`
 	// Contextual tags to give context to your tags
-	ContextTags map[string]string `json:"ContextTags,omitempty" url:"-"`
+	ContextTags           map[string]string      `json:"ContextTags,omitempty" url:"-"`
+	ActivitySubscribers   []string               `json:"ActivitySubscribers,omitempty" url:"-"`
+	Authors               []string               `json:"Authors,omitempty" url:"-"`
+	CreatedAt             *int64                 `json:"CreatedAt,omitempty" url:"-"`
+	ModifiedAt            *int64                 `json:"ModifiedAt,omitempty" url:"-"`
+	DocVersion            *string                `json:"DocVersion,omitempty" url:"-"`
+	IsArchive             *string                `json:"IsArchive,omitempty" url:"-"`
+	LatestTerraformAction *string                `json:"LatestTerraformAction,omitempty" url:"-"`
+	LatestWfrunStatus     *string                `json:"LatestWfrunStatus,omitempty" url:"-"`
+	LatestWfrunStatusKey  *string                `json:"LatestWfrunStatusKey,omitempty" url:"-"`
+	OrgId                 *string                `json:"OrgId,omitempty" url:"-"`
+	ParentId              *string                `json:"ParentId,omitempty" url:"-"`
+	ResourceId            *string                `json:"ResourceId,omitempty" url:"-"`
+	ResourceKSUID         *string                `json:"ResourceKSUID,omitempty" url:"-"`
+	ResourceType          *string                `json:"ResourceType,omitempty" url:"-"`
+	SubResourceId         *string                `json:"SubResourceId,omitempty" url:"-"`
+	RepoInsights          map[string]interface{} `json:"RepoInsights,omitempty" url:"-"`
+	SecurityScan          map[string]interface{} `json:"SecurityScan,omitempty" url:"-"`
 }
 
 type PatchedWorkflow struct {
@@ -251,4 +268,79 @@ type CreateVcsTriggersResponseData struct {
 	VcsTriggers *sgsdkgo.VcsTriggers `json:"VCSTriggers,omitempty" url:"VCSTriggers,omitempty"`
 	DocVersion  *string              `json:"DocVersion,omitempty" url:"DocVersion,omitempty"`
 	Id          *string              `json:"Id,omitempty" url:"Id,omitempty"`
+}
+
+type GetWorkflowArtifactRequest struct {
+	// Path of the artifact inside the workflow's artifact store
+	ArtifactPath string `json:"-" url:"artifactPath"`
+	// Specific version of the artifact
+	VersionId *string `json:"-" url:"versionId,omitempty"`
+}
+
+type SignedUrl struct {
+	SignedUrl string `json:"signedUrl" url:"-"`
+}
+
+type SignedUrlResponse struct {
+	Msg  *string    `json:"msg,omitempty" url:"-"`
+	Data *SignedUrl `json:"data,omitempty" url:"-"`
+}
+
+type GetFileUploadUrlRequest struct {
+	// Name of the file to upload
+	Filename string `json:"-" url:"filename"`
+	// Folder to upload the file into
+	Folder *string `json:"-" url:"folder,omitempty"`
+}
+
+type FileUploadUrlResponse struct {
+	Msg *string `json:"msg,omitempty" url:"-"`
+}
+
+// CompareWorkflowRequest is the body for a dry-run comparison of a workflow against a template.
+type CompareWorkflowRequest struct {
+	TargetTemplateId string                 `json:"targetTemplateId" url:"-"`
+	UpgradeMode      *string                `json:"upgradeMode,omitempty" url:"-"`
+	PatchData        map[string]interface{} `json:"patchData,omitempty" url:"-"`
+}
+
+type CompareWorkflowResponse struct {
+	Msg  *string                `json:"msg,omitempty" url:"-"`
+	Data map[string]interface{} `json:"data,omitempty" url:"-"`
+}
+
+type ListArtifactVersionsRequest struct {
+	// Pagination token to retrieve the next set of results
+	Lastevaluatedkey *string `json:"-" url:"lastevaluatedkey,omitempty"`
+	// Limit the number of results returned
+	Limit *int `json:"-" url:"limit,omitempty"`
+}
+
+type ArtifactVersions struct {
+	Versions         []map[string]interface{} `json:"Versions,omitempty" url:"-"`
+	Lastevaluatedkey *string                  `json:"lastevaluatedkey,omitempty" url:"-"`
+}
+
+type ArtifactVersionsResponse struct {
+	Msg  *string           `json:"msg,omitempty" url:"-"`
+	Data *ArtifactVersions `json:"data,omitempty" url:"-"`
+}
+
+type RollbackArtifactVersionRequest struct {
+	VersionId string `json:"VersionId" url:"-"`
+}
+
+type RollbackArtifactVersionResponse struct {
+	Msg *string `json:"msg,omitempty" url:"-"`
+}
+
+// ArtifactLockResponse is returned when locking or unlocking a workflow on an artifact.
+type ArtifactLockResponse struct {
+	ID string `json:"ID" url:"-"`
+}
+
+// ArtifactActionResponse is returned after creating or deleting an artifact. Msg is a string
+// for workflows on shared runners and an opaque value for private runners.
+type ArtifactActionResponse struct {
+	Msg interface{} `json:"msg,omitempty" url:"-"`
 }

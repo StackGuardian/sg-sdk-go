@@ -45,7 +45,7 @@ func (c *Client) GetStackWorkflowRunFacts(
 	wfRun string,
 	wfRunFacts string,
 	opts ...option.RequestOption,
-) error {
+) (map[string]interface{}, error) {
 	options := core.NewRequestOptions(opts...)
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
@@ -66,19 +66,128 @@ func (c *Client) GetStackWorkflowRunFacts(
 		options.ToHeader(),
 	)
 
+	var response map[string]interface{}
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:                endpointURL,
+			Method:             http.MethodGet,
+			Headers:            headers,
+			MaxAttempts:        options.MaxAttempts,
+			BodyProperties:     options.BodyProperties,
+			QueryParameters:    options.QueryParameters,
+			Client:             options.HTTPClient,
+			Response:           &response,
+			ResponseIsOptional: true,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Create or replace the facts of a stack workflow run (upsert; nested objects are replaced).
+func (c *Client) CreateStackWorkflowRunFacts(
+	ctx context.Context,
+	org string,
+	stack string,
+	wf string,
+	wfGrp string,
+	wfRun string,
+	wfRunFacts string,
+	request map[string]interface{},
+	opts ...option.RequestOption,
+) (map[string]interface{}, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/wfruns/%v/wfrunfacts/%v/",
+		org,
+		wfGrp,
+		stack,
+		wf,
+		wfRun,
+		wfRunFacts,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+
+	var response map[string]interface{}
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{
 			URL:             endpointURL,
-			Method:          http.MethodGet,
+			Method:          http.MethodPost,
 			Headers:         headers,
 			MaxAttempts:     options.MaxAttempts,
 			BodyProperties:  options.BodyProperties,
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
 		},
 	); err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return response, nil
+}
+
+// Update the facts of a stack workflow run (nested objects are merged).
+func (c *Client) UpdateStackWorkflowRunFacts(
+	ctx context.Context,
+	org string,
+	stack string,
+	wf string,
+	wfGrp string,
+	wfRun string,
+	wfRunFacts string,
+	request map[string]interface{},
+	opts ...option.RequestOption,
+) (map[string]interface{}, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/wfruns/%v/wfrunfacts/%v/",
+		org,
+		wfGrp,
+		stack,
+		wf,
+		wfRun,
+		wfRunFacts,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+
+	var response map[string]interface{}
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPatch,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
 }

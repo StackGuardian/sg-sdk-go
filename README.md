@@ -100,6 +100,45 @@ func main() {
 ```
 
 
+### Command-line interface
+
+The module also ships `sg`, a command-line interface that exposes every SDK operation (one subcommand per API method).
+
+```
+go install github.com/StackGuardian/sg-sdk-go/cmd/sg@latest
+# or, from a checkout:
+make cli        # builds bin/sg
+```
+
+Configure it with flags or environment variables:
+
+| Flag         | Environment variable | Description                                                   |
+|--------------|----------------------|---------------------------------------------------------------|
+| `--api-key`  | `SG_API_TOKEN`       | API token (the `apikey ` prefix is added if missing)          |
+| `--base-url` | `SG_BASE_URL`        | API base URL (default `https://api.app.stackguardian.io`)      |
+| `--org`      | `SG_ORG`             | Organization name used by every command                       |
+
+```
+export SG_API_TOKEN=... SG_ORG=demo-org
+
+sg workflow-groups list --limit 10
+sg workflows get my-wf --wfgrp my-group
+sg workflow-runs create --wfgrp my-group --wf my-wf
+sg workflow-runs logs <run-id> --wfgrp my-group --wf my-wf
+sg workflow-runs approve <run-id> --wfgrp my-group --wf my-wf --reject --message "not now"
+sg workflows create --wfgrp my-group --body-file workflow.json
+echo '{"Description":"updated"}' | sg stacks update my-stack --wfgrp my-group -f -
+sg templates get my-template:5 --type IAC --owner-org stackguardian
+sg stack-workflow-runs get <run-id> --wfgrp my-group --stack my-stack --wf my-wf
+```
+
+- Create and update commands take the request body as JSON (`--body`/`-b` inline, or `--body-file`/`-f` with a path or `-` for stdin). Field names match the API schema; a JSON `null` is sent as an explicit null, and omitted fields are omitted from the request.
+- Resources nested under workflow groups, stacks and workflows are scoped with `--wfgrp`, `--stack` and `--wf`; nested workflow groups are written `parent/child`.
+- Responses are printed as the API returned them (pretty-printed JSON; `--compact` for one line). Errors go to stderr with exit code 1.
+- `--verbose` logs each request and response status, `--timeout` and `--max-attempts` control the HTTP behaviour, and `sg completion <shell>` generates shell completions.
+- Run `sg --help` or `sg <resource> --help` for the full command list. The response types were validated against a live organization; `SG_API_TOKEN=... SG_ORG=... go test ./tests/live/` repeats that check. Every SDK method has exactly one subcommand, so the CLI covers the whole API surface: organizations, users, roles, role bindings, API accesses and legacy API tokens, audit logs, benchmark reports, connectors and connector groups, policies, runner groups, secrets, state backends, templates (including artifacts, subscriptions and the public marketplace), workflow groups, stacks and stack runs, workflows and stack workflows (including artifacts, locks and comparisons), workflow runs and run facts, resource search and move, billing, and AI chats.
+- Some endpoints only accept a user (Cognito) token rather than an API key, for example creating or listing organizations and the public template listing; the command help says so.
+
 ### Reporting bugs
 If you encounter a bug with the SG SDK for Go we would like to hear about it. Please search the [existing issues](https://github.com/StackGuardian/sg-sdk-go/issues) and see if others are experiencing the same issue before opening a new one. 
 

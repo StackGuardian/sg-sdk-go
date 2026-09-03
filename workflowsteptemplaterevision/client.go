@@ -59,6 +59,8 @@ func (c *Client) CreateWorkflowStepTemplateRevision(
 	headers.Set("Content-Type", "application/json")
 	headers.Add("x-sg-orgid", org)
 
+	request.TemplateType = workflowsteptemplate.TemplateType
+
 	var response *CreateWorkflowStepTemplateRevisionResponseModel
 	if err := c.caller.Call(
 		ctx,

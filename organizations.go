@@ -390,6 +390,10 @@ type Organization struct {
 	// The creation timestamp of the organization
 	CreatedAt *int `json:"CreatedAt,omitempty" url:"CreatedAt,omitempty"`
 
+	EmailRecipients map[string]interface{} `json:"EmailRecipients,omitempty" url:"EmailRecipients,omitempty"`
+	Entitlements    map[string]interface{} `json:"Entitlements,omitempty" url:"Entitlements,omitempty"`
+	SgCredits       map[string]interface{} `json:"SgCredits,omitempty" url:"SgCredits,omitempty"`
+
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }

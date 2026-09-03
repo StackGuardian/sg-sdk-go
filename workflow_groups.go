@@ -194,6 +194,9 @@ type WorkflowGroupDataResponse struct {
 	IsActive      *IsPublicEnum      `json:"IsActive,omitempty" url:"IsActive,omitempty"`
 	Id            string             `json:"Id" url:"Id"`
 
+	CreatedAt  *int64 `json:"CreatedAt,omitempty" url:"CreatedAt,omitempty"`
+	ModifiedAt *int64 `json:"ModifiedAt,omitempty" url:"ModifiedAt,omitempty"`
+
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }

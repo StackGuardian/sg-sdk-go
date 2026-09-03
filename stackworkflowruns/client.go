@@ -227,3 +227,157 @@ func (c *Client) ApproveStackWorkflowRun(
 	}
 	return nil
 }
+
+// List the runs of a stack workflow. The API answers 204 with no body when there are none.
+func (c *Client) ListAllStackWorkflowRuns(
+	ctx context.Context,
+	org string,
+	stack string,
+	wf string,
+	wfGrp string,
+	request *ListAllStackWorkflowRunsRequest,
+	opts ...option.RequestOption,
+) (*sgsdkgo.GeneratedWorkflowRunListAll, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/wfruns/listall/",
+		org,
+		wfGrp,
+		stack,
+		wf,
+	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *sgsdkgo.GeneratedWorkflowRunListAll
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:                endpointURL,
+			Method:             http.MethodGet,
+			Headers:            headers,
+			MaxAttempts:        options.MaxAttempts,
+			BodyProperties:     options.BodyProperties,
+			QueryParameters:    options.QueryParameters,
+			Client:             options.HTTPClient,
+			Response:           &response,
+			ResponseIsOptional: true,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Update a stack workflow run.
+func (c *Client) UpdateStackWorkflowRun(
+	ctx context.Context,
+	org string,
+	stack string,
+	wf string,
+	wfGrp string,
+	wfRun string,
+	request *sgsdkgo.PatchedWorkflowRun,
+	opts ...option.RequestOption,
+) (*sgsdkgo.GeneratedWorkfkowRunsUpdateResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/wfruns/%v/",
+		org,
+		wfGrp,
+		stack,
+		wf,
+		wfRun,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+
+	var response *sgsdkgo.GeneratedWorkfkowRunsUpdateResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPatch,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Cancel a stack workflow run (the API implements DELETE as a cancel).
+func (c *Client) DeleteStackWorkflowRun(
+	ctx context.Context,
+	org string,
+	stack string,
+	wf string,
+	wfGrp string,
+	wfRun string,
+	opts ...option.RequestOption,
+) (*StackWorkflowRunDeleteResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/wfruns/%v/",
+		org,
+		wfGrp,
+		stack,
+		wf,
+		wfRun,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *StackWorkflowRunDeleteResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodDelete,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}

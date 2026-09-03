@@ -17,6 +17,7 @@ type Secret struct {
 	ResourceValue string `json:"ResourceValue" url:"-"`
 }
 
+// PatchedSecret updates a secret. The API requires ResourceName in the body.
 type PatchedSecret struct {
 	// Secret name
 	ResourceName *core.Optional[string] `json:"ResourceName,omitempty" url:"-"`

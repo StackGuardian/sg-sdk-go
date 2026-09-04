@@ -209,3 +209,43 @@ var expectedRetryDurations = []time.Duration{
 	5000 * time.Millisecond,
 	5000 * time.Millisecond,
 }
+
+// TestRetrierResendsBody verifies that a retried request carries the same body
+// as the first attempt instead of an empty one.
+func TestRetrierResendsBody(t *testing.T) {
+	var bodies []string
+	server := httptest.NewServer(
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			body, err := io.ReadAll(r.Body)
+			require.NoError(t, err)
+			bodies = append(bodies, string(body))
+			if len(bodies) == 1 {
+				// Proxies typically close the connection after a 5xx; on a
+				// fresh connection the client cannot replay the body itself.
+				w.Header().Set("Connection", "close")
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+			_ = json.NewEncoder(w).Encode(&Response{Id: "1"})
+		}),
+	)
+	defer server.Close()
+
+	caller := NewCaller(&CallerParams{Client: server.Client()})
+	var response *Response
+	err := caller.Call(
+		context.Background(),
+		&CallParams{
+			URL:         server.URL,
+			Method:      http.MethodPost,
+			Request:     &Request{Id: "payload"},
+			Response:    &response,
+			MaxAttempts: 2,
+		},
+	)
+	require.NoError(t, err)
+	require.Len(t, bodies, 2)
+	assert.Equal(t, bodies[0], bodies[1])
+	assert.Contains(t, bodies[1], "payload")
+}

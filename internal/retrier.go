@@ -112,6 +112,16 @@ func (r *Retrier) run(
 
 		time.Sleep(delay)
 
+		// The body of the previous attempt has been consumed; rewind it so
+		// the retry sends the full payload instead of an empty body.
+		if request.GetBody != nil {
+			body, err := request.GetBody()
+			if err != nil {
+				return nil, err
+			}
+			request.Body = body
+		}
+
 		return r.run(
 			fn,
 			request,

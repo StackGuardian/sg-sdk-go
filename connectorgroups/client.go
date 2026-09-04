@@ -53,7 +53,7 @@ func (c *Client) CreateConnectorGroup(
 		c.header.Clone(),
 		options.ToHeader(),
 	)
-	headers.Set("Content-Type", "application/x-www-form-urlencoded")
+	headers.Set("Content-Type", "application/json")
 
 	var response *sgsdkgo.IntegrationGroupsCreateResponse
 	if err := c.caller.Call(
@@ -182,7 +182,7 @@ func (c *Client) UpdateConnectorGroup(
 		c.header.Clone(),
 		options.ToHeader(),
 	)
-	headers.Set("Content-Type", "application/x-www-form-urlencoded")
+	headers.Set("Content-Type", "application/json")
 
 	var response *sgsdkgo.IntegrationGroupsCreateResponse
 	if err := c.caller.Call(

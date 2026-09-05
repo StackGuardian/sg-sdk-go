@@ -105,19 +105,23 @@ func (s *StackWorkflowsConfig) GetWorkflows() []*StackWorkflowsConfigWorkflow {
 // fields a stack workflow needs, minus system-stamped run/scan output (drift
 // results, security scan, repo insights, etc.) that doesn't belong on a stack's
 // WorkflowsConfig, which describes desired config, not run history.
+// Slice/map fields are pointers, not bare slice/map: encoding/json's
+// omitempty on a bare slice/map checks len() == 0, which drops an explicit
+// empty value the same as nil — a pointer's omitempty only checks the
+// pointer, so a non-nil pointer to an empty slice/map still serializes.
 type StackWorkflowsConfigWorkflow struct {
-	WfStepsConfig             []*WfStepsConfig            `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
-	TerraformConfig           *TerraformConfig            `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
-	EnvironmentVariables      []*EnvVars                  `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
-	DeploymentPlatformConfig  []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
-	UserSchedules             []*UserSchedules            `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
-	MiniSteps                 *MiniStepsSchema            `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
-	Approvers                 []string                    `json:"Approvers,omitempty" url:"Approvers,omitempty"`
-	NumberOfApprovalsRequired *int                        `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
-	RunnerConstraints         *RunnerConstraints          `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
-	UserJobCpu                *int                        `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
-	UserJobMemory             *int                        `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
-	ParallelExecution         *ParallelExecutionEnum      `json:"ParallelExecution,omitempty" url:"ParallelExecution,omitempty"`
+	WfStepsConfig             *[]*WfStepsConfig           `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
+	TerraformConfig           *TerraformConfig             `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
+	EnvironmentVariables      *[]*EnvVars                  `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
+	DeploymentPlatformConfig  *[]*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	UserSchedules             *[]*UserSchedules            `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
+	MiniSteps                 *MiniStepsSchema             `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	Approvers                 *[]string                    `json:"Approvers,omitempty" url:"Approvers,omitempty"`
+	NumberOfApprovalsRequired *int                         `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
+	RunnerConstraints         *RunnerConstraints           `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
+	UserJobCpu                *int                         `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
+	UserJobMemory             *int                         `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
+	ParallelExecution         *ParallelExecutionEnum       `json:"ParallelExecution,omitempty" url:"ParallelExecution,omitempty"`
 	// The ID of the workflow. This is the ID of the workflow defined in the Stack Template.
 	Id           *string                `json:"id,omitempty" url:"id,omitempty"`
 	ResourceName *string                `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
@@ -125,14 +129,14 @@ type StackWorkflowsConfigWorkflow struct {
 	VcsConfig    *VcsConfig             `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
 	TemplateId   *string                `json:"templateId,omitempty" url:"templateId,omitempty"`
 	IacInputData *TemplatesIacInputData `json:"iacInputData,omitempty" url:"iacInputData,omitempty"`
-	InputSchemas []*InputSchemas        `json:"inputSchemas,omitempty" url:"inputSchemas,omitempty"`
+	InputSchemas *[]*InputSchemas       `json:"inputSchemas,omitempty" url:"inputSchemas,omitempty"`
 	Description  *string                `json:"Description,omitempty" url:"Description,omitempty"`
-	Tags         []string               `json:"Tags,omitempty" url:"Tags,omitempty"`
+	Tags         *[]string              `json:"Tags,omitempty" url:"Tags,omitempty"`
 	IsActive     *IsPublicEnum          `json:"IsActive,omitempty" url:"IsActive,omitempty"`
-	ContextTags  map[string]*string     `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	ContextTags  *map[string]*string    `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
 }
 
-func (s *StackWorkflowsConfigWorkflow) GetWfStepsConfig() []*WfStepsConfig {
+func (s *StackWorkflowsConfigWorkflow) GetWfStepsConfig() *[]*WfStepsConfig {
 	if s == nil {
 		return nil
 	}
@@ -146,21 +150,21 @@ func (s *StackWorkflowsConfigWorkflow) GetTerraformConfig() *TerraformConfig {
 	return s.TerraformConfig
 }
 
-func (s *StackWorkflowsConfigWorkflow) GetEnvironmentVariables() []*EnvVars {
+func (s *StackWorkflowsConfigWorkflow) GetEnvironmentVariables() *[]*EnvVars {
 	if s == nil {
 		return nil
 	}
 	return s.EnvironmentVariables
 }
 
-func (s *StackWorkflowsConfigWorkflow) GetDeploymentPlatformConfig() []*DeploymentPlatformConfig {
+func (s *StackWorkflowsConfigWorkflow) GetDeploymentPlatformConfig() *[]*DeploymentPlatformConfig {
 	if s == nil {
 		return nil
 	}
 	return s.DeploymentPlatformConfig
 }
 
-func (s *StackWorkflowsConfigWorkflow) GetUserSchedules() []*UserSchedules {
+func (s *StackWorkflowsConfigWorkflow) GetUserSchedules() *[]*UserSchedules {
 	if s == nil {
 		return nil
 	}
@@ -174,7 +178,7 @@ func (s *StackWorkflowsConfigWorkflow) GetMiniSteps() *MiniStepsSchema {
 	return s.MiniSteps
 }
 
-func (s *StackWorkflowsConfigWorkflow) GetApprovers() []string {
+func (s *StackWorkflowsConfigWorkflow) GetApprovers() *[]string {
 	if s == nil {
 		return nil
 	}
@@ -258,7 +262,7 @@ func (s *StackWorkflowsConfigWorkflow) GetIacInputData() *TemplatesIacInputData 
 	return s.IacInputData
 }
 
-func (s *StackWorkflowsConfigWorkflow) GetInputSchemas() []*InputSchemas {
+func (s *StackWorkflowsConfigWorkflow) GetInputSchemas() *[]*InputSchemas {
 	if s == nil {
 		return nil
 	}
@@ -272,7 +276,7 @@ func (s *StackWorkflowsConfigWorkflow) GetDescription() *string {
 	return s.Description
 }
 
-func (s *StackWorkflowsConfigWorkflow) GetTags() []string {
+func (s *StackWorkflowsConfigWorkflow) GetTags() *[]string {
 	if s == nil {
 		return nil
 	}
@@ -286,7 +290,7 @@ func (s *StackWorkflowsConfigWorkflow) GetIsActive() *IsPublicEnum {
 	return s.IsActive
 }
 
-func (s *StackWorkflowsConfigWorkflow) GetContextTags() map[string]*string {
+func (s *StackWorkflowsConfigWorkflow) GetContextTags() *map[string]*string {
 	if s == nil {
 		return nil
 	}

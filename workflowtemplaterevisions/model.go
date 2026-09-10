@@ -106,7 +106,7 @@ type UserSchedules struct {
 		ContextTags          map[string]string        `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
 		EnableChaining       *bool                    `json:"EnableChaining,omitempty" url:"EnableChaining,omitempty"`
 		EnvironmentVariables []sgsdkgo.EnvVars        `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
-		Ministeps            Ministeps                `json:"Ministeps,omitempty" url:"Ministeps,omitempty"`
+		Ministeps            Ministeps                `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
 		ScheduledAt          *string                  `json:"ScheduledAt,omitempty" url:"ScheduledAt,omitempty"`
 		TerraformAction      *sgsdkgo.TerraformAction `json:"TerraformAction,omitempty" url:"TerraformAction,omitempty"`
 		TerraformConfig      *sgsdkgo.TerraformConfig `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
@@ -130,7 +130,7 @@ type CreateWorkflowTemplateRevisionsRequest struct {
 	InputSchemas              []sgsdkgo.InputSchemas                                  `json:"InputSchemas,omitempty" url:"InputSchemas,omitempty"`
 	IsActive                  *sgsdkgo.IsPublicEnum                                   `json:"IsActive,omitempty" url:"IsActive,omitempty"`
 	IsPublic                  *sgsdkgo.IsPublicEnum                                   `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
-	Ministeps                 *Ministeps                                              `json:"Ministeps,omitempty" url:"Ministeps,omitempty"`
+	Ministeps                 *Ministeps                                              `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
 	Notes                     string                                                  `json:"Notes,omitempty" url:"Notes,omitempty"`
 	NumberOfApprovalsRequired *int                                                    `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
 	RunnerConstraints         *sgsdkgo.RunnerConstraints                              `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
@@ -179,7 +179,7 @@ type UpdateWorkflowTemplateRevisionRequest struct {
 	InputSchemas              *core.Optional[[]sgsdkgo.InputSchemas]                                 `json:"InputSchemas,omitempty" url:"InputSchemas,omitempty"`
 	IsActive                  *core.Optional[sgsdkgo.IsPublicEnum]                                   `json:"IsActive,omitempty" url:"IsActive,omitempty"`
 	IsPublic                  *core.Optional[sgsdkgo.IsPublicEnum]                                   `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
-	Ministeps                 *core.Optional[Ministeps]                                              `json:"Ministeps,omitempty" url:"Ministeps,omitempty"`
+	Ministeps                 *core.Optional[Ministeps]                                              `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
 	Notes                     *core.Optional[string]                                                 `json:"Notes,omitempty" url:"Notes,omitempty"`
 	NumberOfApprovalsRequired *core.Optional[int]                                                    `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
 	RunnerConstraints         *core.Optional[sgsdkgo.RunnerConstraints]                              `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`

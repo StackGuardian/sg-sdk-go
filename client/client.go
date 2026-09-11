@@ -7,6 +7,8 @@ import (
 
 	accessmanagement "github.com/StackGuardian/sg-sdk-go/accessmanagement"
 	benchmarkreports "github.com/StackGuardian/sg-sdk-go/benchmarkreports"
+	billing "github.com/StackGuardian/sg-sdk-go/billing"
+	chats "github.com/StackGuardian/sg-sdk-go/chats"
 	connectorgroups "github.com/StackGuardian/sg-sdk-go/connectorgroups"
 	connectors "github.com/StackGuardian/sg-sdk-go/connectors"
 	core "github.com/StackGuardian/sg-sdk-go/core"
@@ -14,6 +16,7 @@ import (
 	option "github.com/StackGuardian/sg-sdk-go/option"
 	organizations "github.com/StackGuardian/sg-sdk-go/organizations"
 	policies "github.com/StackGuardian/sg-sdk-go/policies"
+	resources "github.com/StackGuardian/sg-sdk-go/resources"
 	runnergroups "github.com/StackGuardian/sg-sdk-go/runnergroups"
 	secrets "github.com/StackGuardian/sg-sdk-go/secrets"
 	stackruns "github.com/StackGuardian/sg-sdk-go/stackruns"
@@ -23,6 +26,7 @@ import (
 	stackworkflowrunfacts "github.com/StackGuardian/sg-sdk-go/stackworkflowrunfacts"
 	stackworkflowruns "github.com/StackGuardian/sg-sdk-go/stackworkflowruns"
 	stackworkflows "github.com/StackGuardian/sg-sdk-go/stackworkflows"
+	statebackends "github.com/StackGuardian/sg-sdk-go/statebackends"
 	templates "github.com/StackGuardian/sg-sdk-go/templates"
 	workflowgroups "github.com/StackGuardian/sg-sdk-go/workflowgroups"
 	workflowrunfacts "github.com/StackGuardian/sg-sdk-go/workflowrunfacts"
@@ -63,6 +67,10 @@ type Client struct {
 	WorkflowTemplatesRevisions   *workflowtemplaterevisions.Client
 	StackTemplates               *stacktemplates.Client
 	StackTemplateRevisions       *stacktemplaterevisions.Client
+	StateBackends                *statebackends.Client
+	Resources                    *resources.Client
+	Billing                      *billing.Client
+	Chats                        *chats.Client
 }
 
 func NewClient(opts ...option.RequestOption) *Client {
@@ -100,5 +108,9 @@ func NewClient(opts ...option.RequestOption) *Client {
 		WorkflowTemplatesRevisions:   workflowtemplaterevisions.NewClient(opts...),
 		StackTemplates:               stacktemplates.NewClient(opts...),
 		StackTemplateRevisions:       stacktemplaterevisions.NewClient(opts...),
+		StateBackends:                statebackends.NewClient(opts...),
+		Resources:                    resources.NewClient(opts...),
+		Billing:                      billing.NewClient(opts...),
+		Chats:                        chats.NewClient(opts...),
 	}
 }

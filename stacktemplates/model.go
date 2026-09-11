@@ -75,17 +75,29 @@ type CreateStackTemplateResponseModel struct {
 
 // ReadStackTemplateResponse holds the data returned when reading a stack template.
 type ReadStackTemplateResponse struct {
-	Id               *string                            `json:"Id,omitempty" url:"Id,omitempty"`
-	TemplateName     *string                            `json:"TemplateName,omitempty" url:"TemplateName,omitempty"`
-	TemplateType     *sgsdkgo.TemplateTypeEnum          `json:"TemplateType,omitempty" url:"TemplateType,omitempty"`
-	OwnerOrg         *string                            `json:"OwnerOrg,omitempty" url:"OwnerOrg,omitempty"`
-	ShortDescription *string                            `json:"ShortDescription,omitempty" url:"ShortDescription,omitempty"`
-	SourceConfigKind *StackTemplateSourceConfigKindEnum `json:"SourceConfigKind,omitempty" url:"SourceConfigKind,omitempty"`
-	IsActive         *sgsdkgo.IsPublicEnum              `json:"IsActive,omitempty" url:"IsActive,omitempty"`
-	IsPublic         *sgsdkgo.IsPublicEnum              `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
-	SharedOrgsList   []string                           `json:"SharedOrgsList,omitempty" url:"SharedOrgsList,omitempty"`
-	Tags             []string                           `json:"Tags,omitempty" url:"Tags,omitempty"`
-	ContextTags      map[string]string                  `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	Id                    *string                            `json:"Id,omitempty" url:"Id,omitempty"`
+	TemplateName          *string                            `json:"TemplateName,omitempty" url:"TemplateName,omitempty"`
+	TemplateType          *sgsdkgo.TemplateTypeEnum          `json:"TemplateType,omitempty" url:"TemplateType,omitempty"`
+	OwnerOrg              *string                            `json:"OwnerOrg,omitempty" url:"OwnerOrg,omitempty"`
+	ShortDescription      *string                            `json:"ShortDescription,omitempty" url:"ShortDescription,omitempty"`
+	SourceConfigKind      *StackTemplateSourceConfigKindEnum `json:"SourceConfigKind,omitempty" url:"SourceConfigKind,omitempty"`
+	IsActive              *sgsdkgo.IsPublicEnum              `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	IsPublic              *sgsdkgo.IsPublicEnum              `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
+	SharedOrgsList        []string                           `json:"SharedOrgsList,omitempty" url:"SharedOrgsList,omitempty"`
+	Tags                  []string                           `json:"Tags,omitempty" url:"Tags,omitempty"`
+	ContextTags           map[string]string                  `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	TemplateId            *string                            `json:"TemplateId,omitempty" url:"-"`
+	ResourceName          *string                            `json:"ResourceName,omitempty" url:"-"`
+	CreatorEnv            *string                            `json:"CreatorEnv,omitempty" url:"-"`
+	DocVersion            *string                            `json:"DocVersion,omitempty" url:"-"`
+	CreatedAt             *int64                             `json:"CreatedAt,omitempty" url:"-"`
+	ModifiedAt            *int64                             `json:"ModifiedAt,omitempty" url:"-"`
+	LatestRevision        *int                               `json:"LatestRevision,omitempty" url:"-"`
+	NextRevision          *int                               `json:"NextRevision,omitempty" url:"-"`
+	Contributors          []string                           `json:"Contributors,omitempty" url:"-"`
+	Actions               map[string]interface{}             `json:"Actions,omitempty" url:"-"`
+	WorkflowsConfig       map[string]interface{}             `json:"WorkflowsConfig,omitempty" url:"-"`
+	ChildSourceConfigKind []map[string]interface{}           `json:"ChildSourceConfigKind,omitempty" url:"-"`
 }
 
 type ReadStackTemplateResponseModel struct {

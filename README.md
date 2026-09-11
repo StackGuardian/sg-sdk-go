@@ -100,6 +100,10 @@ func main() {
 ```
 
 
+### Integration tests
+
+`go test ./tests/live/` decodes every read endpoint of a real organization into the SDK's typed responses and fails on undeclared fields. It needs `SG_API_TOKEN` and `SG_ORG` and is skipped otherwise.
+
 ### Reporting bugs
 If you encounter a bug with the SG SDK for Go we would like to hear about it. Please search the [existing issues](https://github.com/StackGuardian/sg-sdk-go/issues) and see if others are experiencing the same issue before opening a new one. 
 

@@ -71,3 +71,308 @@ func (c *Client) ReadOrganization(
 	}
 	return response, nil
 }
+
+// Create an organization. Requires a user (Cognito) token; API keys are rejected.
+func (c *Client) CreateOrganization(
+	ctx context.Context,
+	request *CreateOrganizationRequest,
+	opts ...option.RequestOption,
+) (*OrganizationCreateResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := baseURL + "/api/v1/orgs/"
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+
+	var response *OrganizationCreateResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// List the organizations the caller belongs to. Requires a user (Cognito) token; the API answers 204 with no body when there are none.
+func (c *Client) ListAllOrganizations(
+	ctx context.Context,
+	opts ...option.RequestOption,
+) (*OrganizationListAllResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := baseURL + "/api/v1/orgs/listall/"
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *OrganizationListAllResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:                endpointURL,
+			Method:             http.MethodGet,
+			Headers:            headers,
+			MaxAttempts:        options.MaxAttempts,
+			BodyProperties:     options.BodyProperties,
+			QueryParameters:    options.QueryParameters,
+			Client:             options.HTTPClient,
+			Response:           &response,
+			ResponseIsOptional: true,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Update an organization's settings. Requires a user (Cognito) token.
+func (c *Client) UpdateOrganization(
+	ctx context.Context,
+	org string,
+	request *PatchedOrganization,
+	opts ...option.RequestOption,
+) (*OrganizationUpdateResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/",
+		org,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+
+	var response *OrganizationUpdateResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPatch,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Archive an organization and all of its resources. Requires a user (Cognito) token.
+func (c *Client) DeleteOrganization(
+	ctx context.Context,
+	org string,
+	opts ...option.RequestOption,
+) (*OrganizationDeleteResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/",
+		org,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *OrganizationDeleteResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodDelete,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// List workflows across every workflow group of an organization. The API answers 204 with no body when there are none.
+func (c *Client) ListAllWorkflows(
+	ctx context.Context,
+	org string,
+	request *ListAllOrganizationWorkflowsRequest,
+	opts ...option.RequestOption,
+) (*OrganizationWorkflowsListAllResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfs/listall/",
+		org,
+	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *OrganizationWorkflowsListAllResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:                endpointURL,
+			Method:             http.MethodGet,
+			Headers:            headers,
+			MaxAttempts:        options.MaxAttempts,
+			BodyProperties:     options.BodyProperties,
+			QueryParameters:    options.QueryParameters,
+			Client:             options.HTTPClient,
+			Response:           &response,
+			ResponseIsOptional: true,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Activate or deactivate workflows and stacks in bulk. The API answers 207 when some batches failed.
+func (c *Client) BulkActionWorkflows(
+	ctx context.Context,
+	org string,
+	request *WorkflowsBulkActionRequest,
+	opts ...option.RequestOption,
+) (*WorkflowsBulkActionResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfs/bulk-action/",
+		org,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+
+	var response *WorkflowsBulkActionResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// CountWorkflows returns the number of workflows matching request instead of listing them.
+func (c *Client) CountWorkflows(
+	ctx context.Context,
+	org string,
+	request *ListAllOrganizationWorkflowsRequest,
+	opts ...option.RequestOption,
+) (*OrganizationWorkflowsCountResponse, error) {
+	if request == nil {
+		request = &ListAllOrganizationWorkflowsRequest{}
+	}
+	counted := *request
+	onlyCount := "1"
+	counted.OnlyCount = &onlyCount
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfs/listall/",
+		org,
+	)
+	queryParams, err := internal.QueryValues(&counted)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *OrganizationWorkflowsCountResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodGet,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}

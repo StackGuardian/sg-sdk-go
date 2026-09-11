@@ -67,8 +67,8 @@ func (g *GeneratedConnectorDeleteResponse) String() string {
 }
 
 type GeneratedConnectorListAllResponseMsg struct {
-	Lastevaluatedkey string                            `json:"lastevaluatedkey" url:"lastevaluatedkey"`
-	Msg              []*GeneratedConnectorReadResponse `json:"msg,omitempty" url:"msg,omitempty"`
+	Lastevaluatedkey string                               `json:"lastevaluatedkey" url:"lastevaluatedkey"`
+	Msg              []*GeneratedConnectorReadResponseMsg `json:"msg,omitempty" url:"msg,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -81,7 +81,7 @@ func (g *GeneratedConnectorListAllResponseMsg) GetLastevaluatedkey() string {
 	return g.Lastevaluatedkey
 }
 
-func (g *GeneratedConnectorListAllResponseMsg) GetMsg() []*GeneratedConnectorReadResponse {
+func (g *GeneratedConnectorListAllResponseMsg) GetMsg() []*GeneratedConnectorReadResponseMsg {
 	if g == nil {
 		return nil
 	}

@@ -1114,6 +1114,18 @@ type Subscription struct {
 	PolicySubscriptions   map[string]map[string]interface{} `json:"PolicySubscriptions,omitempty" url:"PolicySubscriptions,omitempty"`
 	IacGroupSubscriptions map[string]map[string]interface{} `json:"IACGroupSubscriptions,omitempty" url:"IACGroupSubscriptions,omitempty"`
 
+	Authors      []string `json:"Authors,omitempty" url:"Authors,omitempty"`
+	CreatedAt    *int64   `json:"CreatedAt,omitempty" url:"CreatedAt,omitempty"`
+	ModifiedAt   *int64   `json:"ModifiedAt,omitempty" url:"ModifiedAt,omitempty"`
+	Description  *string  `json:"Description,omitempty" url:"Description,omitempty"`
+	DocVersion   *string  `json:"DocVersion,omitempty" url:"DocVersion,omitempty"`
+	IsActive     *string  `json:"IsActive,omitempty" url:"IsActive,omitempty"`
+	IsArchive    *string  `json:"IsArchive,omitempty" url:"IsArchive,omitempty"`
+	OrgId        *string  `json:"OrgId,omitempty" url:"OrgId,omitempty"`
+	ParentId     *string  `json:"ParentId,omitempty" url:"ParentId,omitempty"`
+	ResourceId   *string  `json:"ResourceId,omitempty" url:"ResourceId,omitempty"`
+	ResourceType *string  `json:"ResourceType,omitempty" url:"ResourceType,omitempty"`
+
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
@@ -1207,6 +1219,23 @@ type Template struct {
 	IsPublic              *IsPublicEnum          `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
 	TerraformIntelligence map[string]interface{} `json:"TerraformIntelligence,omitempty" url:"TerraformIntelligence,omitempty"`
 	DefaultSchema         *string                `json:"DefaultSchema,omitempty" url:"DefaultSchema,omitempty"`
+
+	Id                    *string                  `json:"Id,omitempty" url:"Id,omitempty"`
+	ResourceName          *string                  `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	TemplateType          *string                  `json:"TemplateType,omitempty" url:"TemplateType,omitempty"`
+	CreatorEnv            *string                  `json:"CreatorEnv,omitempty" url:"CreatorEnv,omitempty"`
+	DocVersion            *string                  `json:"DocVersion,omitempty" url:"DocVersion,omitempty"`
+	CreatedAt             *int64                   `json:"CreatedAt,omitempty" url:"CreatedAt,omitempty"`
+	ModifiedAt            *int64                   `json:"ModifiedAt,omitempty" url:"ModifiedAt,omitempty"`
+	LatestRevision        *int                     `json:"LatestRevision,omitempty" url:"LatestRevision,omitempty"`
+	NextRevision          *int                     `json:"NextRevision,omitempty" url:"NextRevision,omitempty"`
+	UserJobCpu            *int                     `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
+	UserJobMemory         *int                     `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
+	Contributors          []string                 `json:"Contributors,omitempty" url:"Contributors,omitempty"`
+	ChildSourceConfigKind []map[string]interface{} `json:"ChildSourceConfigKind,omitempty" url:"ChildSourceConfigKind,omitempty"`
+
+	GitHubComRepoId *string `json:"GitHubComRepoID,omitempty" url:"GitHubComRepoID,omitempty"`
+	WfType          *string `json:"WfType,omitempty" url:"WfType,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -1506,6 +1535,8 @@ type VcsTriggers struct {
 	PullRequestModified map[string]VcsTriggerActionConfig `json:"pull_request_modified,omitempty" url:"pull_request_modified,omitempty"`
 	CreateTag           map[string]VcsTriggerActionConfig `json:"create_tag,omitempty" url:"create_tag,omitempty"`
 	Push                map[string]VcsTriggerActionConfig `json:"push,omitempty" url:"push,omitempty"`
+	AdoCommitStatus     *bool                             `json:"ado_commit_status,omitempty" url:"ado_commit_status,omitempty"`
+	BbCommitStatus      *bool                             `json:"bb_commit_status,omitempty" url:"bb_commit_status,omitempty"`
 }
 
 type VcsTriggerActionConfig struct {

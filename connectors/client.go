@@ -237,6 +237,49 @@ func (c *Client) ListAllConnectors(
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{
+			URL:                endpointURL,
+			Method:             http.MethodGet,
+			Headers:            headers,
+			MaxAttempts:        options.MaxAttempts,
+			BodyProperties:     options.BodyProperties,
+			QueryParameters:    options.QueryParameters,
+			Client:             options.HTTPClient,
+			Response:           &response,
+			ResponseIsOptional: true,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Verify that a connector can authenticate against its provider.
+func (c *Client) AuthenticateConnector(
+	ctx context.Context,
+	integration string,
+	org string,
+	opts ...option.RequestOption,
+) (*sgsdkgo.IntegrationGroupsAuthenticationResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/integrations/%v/authenticate/",
+		org,
+		integration,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *sgsdkgo.IntegrationGroupsAuthenticationResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
 			URL:             endpointURL,
 			Method:          http.MethodGet,
 			Headers:         headers,
@@ -245,6 +288,144 @@ func (c *Client) ListAllConnectors(
 			QueryParameters: options.QueryParameters,
 			Client:          options.HTTPClient,
 			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// List the cloud accounts or subscriptions reachable with a connector's credentials. The request carries Settings.kind and Settings.config; ResourceId may name a connector group whose stored config is merged in.
+func (c *Client) ListAccounts(
+	ctx context.Context,
+	org string,
+	request *ListAccountsRequest,
+	opts ...option.RequestOption,
+) (*ListAccountsResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/integrations/list_accounts/",
+		org,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+
+	var response *ListAccountsResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:                endpointURL,
+			Method:             http.MethodPost,
+			Headers:            headers,
+			MaxAttempts:        options.MaxAttempts,
+			BodyProperties:     options.BodyProperties,
+			QueryParameters:    options.QueryParameters,
+			Client:             options.HTTPClient,
+			Request:            request,
+			Response:           &response,
+			ResponseIsOptional: true,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// List the repositories accessible to a GITHUB_COM connector as owner/repo names.
+func (c *Client) GetGithubComRepos(
+	ctx context.Context,
+	integration string,
+	org string,
+	opts ...option.RequestOption,
+) (*GithubComReposResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/integrations/%v/get_githubcom_repos/",
+		org,
+		integration,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *GithubComReposResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:                endpointURL,
+			Method:             http.MethodGet,
+			Headers:            headers,
+			MaxAttempts:        options.MaxAttempts,
+			BodyProperties:     options.BodyProperties,
+			QueryParameters:    options.QueryParameters,
+			Client:             options.HTTPClient,
+			Response:           &response,
+			ResponseIsOptional: true,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// List the repositories reachable through a VCS connector. The API answers 204 with no body when there are none.
+func (c *Client) ListRepositories(
+	ctx context.Context,
+	integration string,
+	org string,
+	request *ListRepositoriesRequest,
+	opts ...option.RequestOption,
+) (*RepositoriesResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/integrations/%v/repos/",
+		org,
+		integration,
+	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *RepositoriesResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:                endpointURL,
+			Method:             http.MethodGet,
+			Headers:            headers,
+			MaxAttempts:        options.MaxAttempts,
+			BodyProperties:     options.BodyProperties,
+			QueryParameters:    options.QueryParameters,
+			Client:             options.HTTPClient,
+			Response:           &response,
+			ResponseIsOptional: true,
 		},
 	); err != nil {
 		return nil, err

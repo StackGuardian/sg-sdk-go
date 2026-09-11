@@ -187,14 +187,59 @@ func (c *Client) ListAllSecrets(
 	if err := c.caller.Call(
 		ctx,
 		&internal.CallParams{
-			URL:             endpointURL,
-			Method:          http.MethodGet,
-			Headers:         headers,
-			MaxAttempts:     options.MaxAttempts,
-			BodyProperties:  options.BodyProperties,
-			QueryParameters: options.QueryParameters,
-			Client:          options.HTTPClient,
-			Response:        &response,
+			URL:                endpointURL,
+			Method:             http.MethodGet,
+			Headers:            headers,
+			MaxAttempts:        options.MaxAttempts,
+			BodyProperties:     options.BodyProperties,
+			QueryParameters:    options.QueryParameters,
+			Client:             options.HTTPClient,
+			Response:           &response,
+			ResponseIsOptional: true,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Read several secrets by name in one call. The API answers 204 with no body when none match.
+func (c *Client) ReadSecretsInBulk(
+	ctx context.Context,
+	org string,
+	request *ReadSecretsInBulkRequest,
+	opts ...option.RequestOption,
+) (*SecretsBulkResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/secrets/listall/",
+		org,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+
+	var response *SecretsBulkResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:                endpointURL,
+			Method:             http.MethodPost,
+			Headers:            headers,
+			MaxAttempts:        options.MaxAttempts,
+			BodyProperties:     options.BodyProperties,
+			QueryParameters:    options.QueryParameters,
+			Client:             options.HTTPClient,
+			Request:            request,
+			Response:           &response,
+			ResponseIsOptional: true,
 		},
 	); err != nil {
 		return nil, err

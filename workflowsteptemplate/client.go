@@ -108,6 +108,8 @@ func (c *Client) CreateWorkflowStepTemplate(
 		options.QueryParameters.Set("createFirstRevision", "false")
 	}
 
+	request.TemplateType = TemplateType
+
 	var response *CreateWorkflowStepTemplateResponseModel
 	if err := c.caller.Call(
 		ctx,

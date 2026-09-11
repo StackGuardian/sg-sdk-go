@@ -297,3 +297,136 @@ func (c *Client) UpdateRunnerState(
 	}
 	return nil
 }
+
+// List the runner groups in an organization. The API answers 204 with no body when there are none.
+func (c *Client) ListAllRunnerGroups(
+	ctx context.Context,
+	org string,
+	request *ListAllRunnerGroupsRequest,
+	opts ...option.RequestOption,
+) (*RunnerGroupListAllResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/runnergroups/listall/",
+		org,
+	)
+	queryParams, err := internal.QueryValues(request)
+	if err != nil {
+		return nil, err
+	}
+	if len(queryParams) > 0 {
+		endpointURL += "?" + queryParams.Encode()
+	}
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *RunnerGroupListAllResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:                endpointURL,
+			Method:             http.MethodGet,
+			Headers:            headers,
+			MaxAttempts:        options.MaxAttempts,
+			BodyProperties:     options.BodyProperties,
+			QueryParameters:    options.QueryParameters,
+			Client:             options.HTTPClient,
+			Response:           &response,
+			ResponseIsOptional: true,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Register a runner node with a runner group. Call it with the runner group's own token (sgr_...) as the API key.
+func (c *Client) RegisterRunner(
+	ctx context.Context,
+	org string,
+	runnerGroup string,
+	opts ...option.RequestOption,
+) (*RegisterRunnerResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/runnergroups/%v/register/",
+		org,
+		runnerGroup,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *RegisterRunnerResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Generate short-lived credentials for a runner group's storage backend.
+func (c *Client) GenerateStorageBackendAuth(
+	ctx context.Context,
+	org string,
+	runnerGroup string,
+	opts ...option.RequestOption,
+) (*StorageBackendAuthResponse, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/runnergroups/%v/storage-backend-auth/",
+		org,
+		runnerGroup,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+
+	var response *StorageBackendAuthResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}

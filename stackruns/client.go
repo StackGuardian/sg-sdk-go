@@ -50,7 +50,7 @@ func (c *Client) CreateStackRun(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/stackruns/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		stack,
 	)
 	headers := internal.MergeHeaders(
@@ -97,7 +97,7 @@ func (c *Client) ReadStackRun(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/stackruns/%v/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		stack,
 		stackRun,
 	)
@@ -143,7 +143,7 @@ func (c *Client) ListAllStackRuns(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/stackruns/listall/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		stack,
 	)
 	queryParams, err := internal.QueryValues(request)

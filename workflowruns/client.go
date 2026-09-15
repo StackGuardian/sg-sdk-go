@@ -50,7 +50,7 @@ func (c *Client) CreateWorkflowRun(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/wfruns/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		wf,
 	)
 	headers := internal.MergeHeaders(
@@ -97,7 +97,7 @@ func (c *Client) ReadWorkflowRun(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/wfruns/%v/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		wf,
 		wfRun,
 	)
@@ -144,7 +144,7 @@ func (c *Client) UpdateWorkflowRun(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/wfruns/%v/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		wf,
 		wfRun,
 	)
@@ -192,7 +192,7 @@ func (c *Client) CancelWorkflowRun(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/wfruns/%v/cancel/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		wf,
 		wfRun,
 	)
@@ -240,7 +240,7 @@ func (c *Client) ReadWorkflowRunLogs(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/wfruns/%v/logs/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		wf,
 		wfRun,
 	)
@@ -287,7 +287,7 @@ func (c *Client) ApproveWorkflowRun(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/wfruns/%v/resume/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		wf,
 		wfRun,
 	)
@@ -335,7 +335,7 @@ func (c *Client) ListAllWorkflowRuns(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/wfruns/listall/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		wf,
 	)
 	queryParams, err := internal.QueryValues(request)

@@ -55,7 +55,7 @@ func (c *Client) GetStackWorkflowRunFacts(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/wfruns/%v/wfrunfacts/%v/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		stack,
 		wf,
 		wfRun,

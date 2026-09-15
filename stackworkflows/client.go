@@ -50,7 +50,7 @@ func (c *Client) ReadStackWorkflow(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		stack,
 		wf,
 	)
@@ -96,7 +96,7 @@ func (c *Client) DeleteStackWorkflow(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		stack,
 		wf,
 	)
@@ -141,7 +141,7 @@ func (c *Client) UpdateStackWorkflow(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		stack,
 		wf,
 	)
@@ -189,7 +189,7 @@ func (c *Client) ListAllStackWorkflowsArtifacts(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/listall_artifacts/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		stack,
 		wf,
 	)
@@ -235,7 +235,7 @@ func (c *Client) StackWorkflowOutputs(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/outputs/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		stack,
 		wf,
 	)
@@ -291,7 +291,7 @@ func (c *Client) GetSignedUrlToUploadTfstateFileForStackWorkflow(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/tfstate_upload_url/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		stack,
 		wf,
 	)
@@ -344,7 +344,7 @@ func (c *Client) ListAllStackWorkflows(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/listall/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		stack,
 	)
 	queryParams, err := internal.QueryValues(request)

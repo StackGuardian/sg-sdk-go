@@ -54,7 +54,7 @@ func (c *Client) ReadWorkflowRunFacts(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/wfruns/%v/wfrunfacts/%v/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		wf,
 		wfRun,
 		wfRunFacts,

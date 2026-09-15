@@ -255,7 +255,7 @@ func (c *Client) ListAllChildWorkflowGroups(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfgrps/listall/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 	)
 	queryParams, err := internal.QueryValues(request)
 	if err != nil {

@@ -49,7 +49,7 @@ func (c *Client) CreateStack(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 	)
 	queryParams, err := internal.QueryValues(request)
 	if err != nil {
@@ -101,7 +101,7 @@ func (c *Client) ReadStack(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		stack,
 	)
 	headers := internal.MergeHeaders(
@@ -145,7 +145,7 @@ func (c *Client) DeleteStack(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		stack,
 	)
 	headers := internal.MergeHeaders(
@@ -190,7 +190,7 @@ func (c *Client) UpdateStack(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		stack,
 	)
 	headers := internal.MergeHeaders(
@@ -236,7 +236,7 @@ func (c *Client) ReadStackOutputs(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/outputs/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		stack,
 	)
 	headers := internal.MergeHeaders(
@@ -280,7 +280,7 @@ func (c *Client) ListAllStacks(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/listall/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 	)
 	queryParams, err := internal.QueryValues(request)
 	if err != nil {

@@ -51,7 +51,7 @@ func (c *Client) CreateStackWorkflowRun(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/wfruns/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		stack,
 		wf,
 	)
@@ -100,7 +100,7 @@ func (c *Client) ReadStackWorkflowRun(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/wfruns/%v/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		stack,
 		wf,
 		wfRun,
@@ -150,7 +150,7 @@ func (c *Client) ReadStackWorkflowRunLogs(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/wfruns/%v/logs/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		stack,
 		wf,
 		wfRun,
@@ -199,7 +199,7 @@ func (c *Client) ApproveStackWorkflowRun(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/wfruns/%v/resume/",
 		org,
-		wfGrp,
+		internal.PathWithSlashes(wfGrp),
 		stack,
 		wf,
 		wfRun,

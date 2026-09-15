@@ -4,6 +4,7 @@ package workflowruns
 
 import (
 	context "context"
+	fmt "fmt"
 	http "net/http"
 
 	sgsdkgo "github.com/StackGuardian/sg-sdk-go"
@@ -42,6 +43,10 @@ func (c *Client) CreateWorkflowRun(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.WorkflowRunCreatePatchResponse, error) {
 	options := core.NewRequestOptions(opts...)
+	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
+	if err != nil {
+		return nil, fmt.Errorf("workflow group: %w", err)
+	}
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
@@ -50,7 +55,7 @@ func (c *Client) CreateWorkflowRun(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/wfruns/",
 		org,
-		wfGrp,
+		wfGrpPath,
 		wf,
 	)
 	headers := internal.MergeHeaders(
@@ -89,6 +94,10 @@ func (c *Client) ReadWorkflowRun(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.GeneratedWorkflowRunsGet, error) {
 	options := core.NewRequestOptions(opts...)
+	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
+	if err != nil {
+		return nil, fmt.Errorf("workflow group: %w", err)
+	}
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
@@ -97,7 +106,7 @@ func (c *Client) ReadWorkflowRun(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/wfruns/%v/",
 		org,
-		wfGrp,
+		wfGrpPath,
 		wf,
 		wfRun,
 	)
@@ -136,6 +145,10 @@ func (c *Client) UpdateWorkflowRun(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.GeneratedWorkfkowRunsUpdateResponse, error) {
 	options := core.NewRequestOptions(opts...)
+	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
+	if err != nil {
+		return nil, fmt.Errorf("workflow group: %w", err)
+	}
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
@@ -144,7 +157,7 @@ func (c *Client) UpdateWorkflowRun(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/wfruns/%v/",
 		org,
-		wfGrp,
+		wfGrpPath,
 		wf,
 		wfRun,
 	)
@@ -184,6 +197,10 @@ func (c *Client) CancelWorkflowRun(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.WorkflowRunsCancelResponse, error) {
 	options := core.NewRequestOptions(opts...)
+	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
+	if err != nil {
+		return nil, fmt.Errorf("workflow group: %w", err)
+	}
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
@@ -192,7 +209,7 @@ func (c *Client) CancelWorkflowRun(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/wfruns/%v/cancel/",
 		org,
-		wfGrp,
+		wfGrpPath,
 		wf,
 		wfRun,
 	)
@@ -232,6 +249,10 @@ func (c *Client) ReadWorkflowRunLogs(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.GeneratedWorkflowRunLogs, error) {
 	options := core.NewRequestOptions(opts...)
+	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
+	if err != nil {
+		return nil, fmt.Errorf("workflow group: %w", err)
+	}
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
@@ -240,7 +261,7 @@ func (c *Client) ReadWorkflowRunLogs(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/wfruns/%v/logs/",
 		org,
-		wfGrp,
+		wfGrpPath,
 		wf,
 		wfRun,
 	)
@@ -279,6 +300,10 @@ func (c *Client) ApproveWorkflowRun(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.WorkflowRunApprovalResponse, error) {
 	options := core.NewRequestOptions(opts...)
+	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
+	if err != nil {
+		return nil, fmt.Errorf("workflow group: %w", err)
+	}
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
@@ -287,7 +312,7 @@ func (c *Client) ApproveWorkflowRun(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/wfruns/%v/resume/",
 		org,
-		wfGrp,
+		wfGrpPath,
 		wf,
 		wfRun,
 	)
@@ -327,6 +352,10 @@ func (c *Client) ListAllWorkflowRuns(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.GeneratedWorkflowRunListAll, error) {
 	options := core.NewRequestOptions(opts...)
+	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
+	if err != nil {
+		return nil, fmt.Errorf("workflow group: %w", err)
+	}
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
@@ -335,7 +364,7 @@ func (c *Client) ListAllWorkflowRuns(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/wfruns/listall/",
 		org,
-		wfGrp,
+		wfGrpPath,
 		wf,
 	)
 	queryParams, err := internal.QueryValues(request)

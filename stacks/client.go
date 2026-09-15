@@ -4,6 +4,7 @@ package stacks
 
 import (
 	context "context"
+	fmt "fmt"
 	http "net/http"
 
 	sgsdkgo "github.com/StackGuardian/sg-sdk-go"
@@ -41,6 +42,10 @@ func (c *Client) CreateStack(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.GeneratedStackCreateResponse, error) {
 	options := core.NewRequestOptions(opts...)
+	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
+	if err != nil {
+		return nil, fmt.Errorf("workflow group: %w", err)
+	}
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
@@ -49,7 +54,7 @@ func (c *Client) CreateStack(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/",
 		org,
-		internal.PathWithSlashes(wfGrp),
+		wfGrpPath,
 	)
 	queryParams, err := internal.QueryValues(request)
 	if err != nil {
@@ -93,6 +98,10 @@ func (c *Client) ReadStack(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.GeneratedStackGetResponse, error) {
 	options := core.NewRequestOptions(opts...)
+	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
+	if err != nil {
+		return nil, fmt.Errorf("workflow group: %w", err)
+	}
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
@@ -101,7 +110,7 @@ func (c *Client) ReadStack(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/",
 		org,
-		internal.PathWithSlashes(wfGrp),
+		wfGrpPath,
 		stack,
 	)
 	headers := internal.MergeHeaders(
@@ -137,6 +146,10 @@ func (c *Client) DeleteStack(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.StackDeleteResponse, error) {
 	options := core.NewRequestOptions(opts...)
+	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
+	if err != nil {
+		return nil, fmt.Errorf("workflow group: %w", err)
+	}
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
@@ -145,7 +158,7 @@ func (c *Client) DeleteStack(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/",
 		org,
-		internal.PathWithSlashes(wfGrp),
+		wfGrpPath,
 		stack,
 	)
 	headers := internal.MergeHeaders(
@@ -182,6 +195,10 @@ func (c *Client) UpdateStack(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.GeneratedStackCreateResponse, error) {
 	options := core.NewRequestOptions(opts...)
+	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
+	if err != nil {
+		return nil, fmt.Errorf("workflow group: %w", err)
+	}
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
@@ -190,7 +207,7 @@ func (c *Client) UpdateStack(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/",
 		org,
-		internal.PathWithSlashes(wfGrp),
+		wfGrpPath,
 		stack,
 	)
 	headers := internal.MergeHeaders(
@@ -228,6 +245,10 @@ func (c *Client) ReadStackOutputs(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.GeneratedStackOutputsResponse, error) {
 	options := core.NewRequestOptions(opts...)
+	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
+	if err != nil {
+		return nil, fmt.Errorf("workflow group: %w", err)
+	}
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
@@ -236,7 +257,7 @@ func (c *Client) ReadStackOutputs(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/outputs/",
 		org,
-		internal.PathWithSlashes(wfGrp),
+		wfGrpPath,
 		stack,
 	)
 	headers := internal.MergeHeaders(
@@ -272,6 +293,10 @@ func (c *Client) ListAllStacks(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.GeneratedStackListAllResponse, error) {
 	options := core.NewRequestOptions(opts...)
+	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
+	if err != nil {
+		return nil, fmt.Errorf("workflow group: %w", err)
+	}
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
@@ -280,7 +305,7 @@ func (c *Client) ListAllStacks(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/listall/",
 		org,
-		internal.PathWithSlashes(wfGrp),
+		wfGrpPath,
 	)
 	queryParams, err := internal.QueryValues(request)
 	if err != nil {

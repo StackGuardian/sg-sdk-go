@@ -4,6 +4,7 @@ package stackruns
 
 import (
 	context "context"
+	fmt "fmt"
 	http "net/http"
 
 	sgsdkgo "github.com/StackGuardian/sg-sdk-go"
@@ -42,6 +43,10 @@ func (c *Client) CreateStackRun(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.GeneratedStackRunsResponse, error) {
 	options := core.NewRequestOptions(opts...)
+	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
+	if err != nil {
+		return nil, fmt.Errorf("workflow group: %w", err)
+	}
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
@@ -50,7 +55,7 @@ func (c *Client) CreateStackRun(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/stackruns/",
 		org,
-		internal.PathWithSlashes(wfGrp),
+		wfGrpPath,
 		stack,
 	)
 	headers := internal.MergeHeaders(
@@ -89,6 +94,10 @@ func (c *Client) ReadStackRun(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.GeneratedStackRunsGetResponse, error) {
 	options := core.NewRequestOptions(opts...)
+	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
+	if err != nil {
+		return nil, fmt.Errorf("workflow group: %w", err)
+	}
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
@@ -97,7 +106,7 @@ func (c *Client) ReadStackRun(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/stackruns/%v/",
 		org,
-		internal.PathWithSlashes(wfGrp),
+		wfGrpPath,
 		stack,
 		stackRun,
 	)
@@ -135,6 +144,10 @@ func (c *Client) ListAllStackRuns(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.GeneratedStackRunsListAllResponse, error) {
 	options := core.NewRequestOptions(opts...)
+	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
+	if err != nil {
+		return nil, fmt.Errorf("workflow group: %w", err)
+	}
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
@@ -143,7 +156,7 @@ func (c *Client) ListAllStackRuns(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/stackruns/listall/",
 		org,
-		internal.PathWithSlashes(wfGrp),
+		wfGrpPath,
 		stack,
 	)
 	queryParams, err := internal.QueryValues(request)

@@ -4,6 +4,7 @@ package workflowrunfacts
 
 import (
 	context "context"
+	fmt "fmt"
 	http "net/http"
 
 	core "github.com/StackGuardian/sg-sdk-go/core"
@@ -46,6 +47,10 @@ func (c *Client) ReadWorkflowRunFacts(
 	opts ...option.RequestOption,
 ) (map[string]interface{}, error) {
 	options := core.NewRequestOptions(opts...)
+	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
+	if err != nil {
+		return nil, fmt.Errorf("workflow group: %w", err)
+	}
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
@@ -54,7 +59,7 @@ func (c *Client) ReadWorkflowRunFacts(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/wfruns/%v/wfrunfacts/%v/",
 		org,
-		internal.PathWithSlashes(wfGrp),
+		wfGrpPath,
 		wf,
 		wfRun,
 		wfRunFacts,

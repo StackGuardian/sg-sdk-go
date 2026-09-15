@@ -4,6 +4,7 @@ package stackworkflowruns
 
 import (
 	context "context"
+	fmt "fmt"
 	http "net/http"
 
 	sgsdkgo "github.com/StackGuardian/sg-sdk-go"
@@ -43,6 +44,10 @@ func (c *Client) CreateStackWorkflowRun(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.GeneratedWorkflowRunsStackCreateResponse, error) {
 	options := core.NewRequestOptions(opts...)
+	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
+	if err != nil {
+		return nil, fmt.Errorf("workflow group: %w", err)
+	}
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
@@ -51,7 +56,7 @@ func (c *Client) CreateStackWorkflowRun(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/wfruns/",
 		org,
-		internal.PathWithSlashes(wfGrp),
+		wfGrpPath,
 		stack,
 		wf,
 	)
@@ -92,6 +97,10 @@ func (c *Client) ReadStackWorkflowRun(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.GeneratedWorkflowRunStackGet, error) {
 	options := core.NewRequestOptions(opts...)
+	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
+	if err != nil {
+		return nil, fmt.Errorf("workflow group: %w", err)
+	}
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
@@ -100,7 +109,7 @@ func (c *Client) ReadStackWorkflowRun(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/wfruns/%v/",
 		org,
-		internal.PathWithSlashes(wfGrp),
+		wfGrpPath,
 		stack,
 		wf,
 		wfRun,
@@ -142,6 +151,10 @@ func (c *Client) ReadStackWorkflowRunLogs(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.GeneratedWorkflowRunLogs, error) {
 	options := core.NewRequestOptions(opts...)
+	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
+	if err != nil {
+		return nil, fmt.Errorf("workflow group: %w", err)
+	}
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
@@ -150,7 +163,7 @@ func (c *Client) ReadStackWorkflowRunLogs(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/wfruns/%v/logs/",
 		org,
-		internal.PathWithSlashes(wfGrp),
+		wfGrpPath,
 		stack,
 		wf,
 		wfRun,
@@ -191,6 +204,10 @@ func (c *Client) ApproveStackWorkflowRun(
 	opts ...option.RequestOption,
 ) error {
 	options := core.NewRequestOptions(opts...)
+	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
+	if err != nil {
+		return fmt.Errorf("workflow group: %w", err)
+	}
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
@@ -199,7 +216,7 @@ func (c *Client) ApproveStackWorkflowRun(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/stacks/%v/wfs/%v/wfruns/%v/resume/",
 		org,
-		internal.PathWithSlashes(wfGrp),
+		wfGrpPath,
 		stack,
 		wf,
 		wfRun,

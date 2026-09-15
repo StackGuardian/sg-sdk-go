@@ -23,17 +23,45 @@ func ResolveBaseURL(values ...string) string {
 	return ""
 }
 
-// PathWithSlashes is a path parameter whose "/" are kept as separators
+// pathWithSlashes is a path parameter whose "/" are kept as separators
 // (e.g. nested workflow groups); each segment is still escaped.
 // DO NOT REVERT - the API cannot resolve nested workflow groups sent as %2F.
-type PathWithSlashes string
+//
+// Unexported on purpose: the only way to obtain one is NewPathWithSlashes,
+// which validates. A bare conversion from outside this package isn't
+// possible, so validation can't be bypassed by accident.
+type pathWithSlashes string
+
+// NewPathWithSlashes validates value and returns it as a pathWithSlashes,
+// or an error if invalid. This is the only way to construct one.
+func NewPathWithSlashes(value string) (pathWithSlashes, error) {
+	p := pathWithSlashes(value)
+	if err := p.Validate(); err != nil {
+		return "", err
+	}
+	return p, nil
+}
+
+// Validate returns an error if p contains an empty segment - an empty
+// value, or a leading, trailing, or doubled "/" - which would otherwise
+// silently escape to a malformed request URL instead of a clear failure.
+// The error doesn't name the field being validated; callers know which
+// parameter they're validating and should add that context themselves.
+func (p pathWithSlashes) Validate() error {
+	for _, s := range strings.Split(string(p), "/") {
+		if s == "" {
+			return fmt.Errorf("invalid value %q: can't be empty or contain a leading, trailing, or doubled \"/\"", string(p))
+		}
+	}
+	return nil
+}
 
 // EncodeURL encodes the given arguments into the URL, escaping
 // values as needed.
 func EncodeURL(urlFormat string, args ...interface{}) string {
 	escapedArgs := make([]interface{}, 0, len(args))
 	for _, arg := range args {
-		if p, ok := arg.(PathWithSlashes); ok {
+		if p, ok := arg.(pathWithSlashes); ok {
 			escapedArgs = append(escapedArgs, escapePathWithSlashes(string(p)))
 			continue
 		}

@@ -4,6 +4,7 @@ package workflowgroups
 
 import (
 	context "context"
+	fmt "fmt"
 	http "net/http"
 	"strings"
 
@@ -247,6 +248,10 @@ func (c *Client) ListAllChildWorkflowGroups(
 	opts ...option.RequestOption,
 ) (*sgsdkgo.WorkflowGroupListAllResponse, error) {
 	options := core.NewRequestOptions(opts...)
+	wfGrpPath, err := internal.NewPathWithSlashes(wfGrp)
+	if err != nil {
+		return nil, fmt.Errorf("workflow group: %w", err)
+	}
 	baseURL := internal.ResolveBaseURL(
 		options.BaseURL,
 		c.baseURL,
@@ -255,7 +260,7 @@ func (c *Client) ListAllChildWorkflowGroups(
 	endpointURL := internal.EncodeURL(
 		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfgrps/listall/",
 		org,
-		wfGrp,
+		wfGrpPath,
 	)
 	queryParams, err := internal.QueryValues(request)
 	if err != nil {

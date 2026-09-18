@@ -168,11 +168,13 @@ type UpdateWorkflowTemplateResponseModel struct {
 }
 
 type RuntimeSourceConfigUpdate struct {
+	Auth                    *string `json:"auth,omitempty" url:"auth,omitempty"`
 	GitCoreAutoCRLF         *bool   `json:"gitCoreAutoCRLF,omitempty" url:"gitCoreAutoCRLF,omitempty"`
 	GitSparseCheckoutConfig *string `json:"gitSparseCheckoutConfig,omitempty" url:"gitSparseCheckoutConfig,omitempty"`
 	IncludeSubModule        *bool   `json:"includeSubModule,omitempty" url:"includeSubModule,omitempty"`
 	IsPrivate               *bool   `json:"isPrivate,omitempty" url:"isPrivate,omitempty"`
 	Ref                     *string `json:"ref,omitempty" url:"ref,omitempty"`
+	Repo                    *string `json:"repo,omitempty" url:"repo,omitempty"`
 	WorkingDir              *string `json:"workingDir,omitempty" url:"workingDir,omitempty"`
 }
 

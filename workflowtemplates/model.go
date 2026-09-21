@@ -174,7 +174,6 @@ type RuntimeSourceConfigUpdate struct {
 	IncludeSubModule        *bool   `json:"includeSubModule,omitempty" url:"includeSubModule,omitempty"`
 	IsPrivate               *bool   `json:"isPrivate,omitempty" url:"isPrivate,omitempty"`
 	Ref                     *string `json:"ref,omitempty" url:"ref,omitempty"`
-	Repo                    *string `json:"repo,omitempty" url:"repo,omitempty"`
 	WorkingDir              *string `json:"workingDir,omitempty" url:"workingDir,omitempty"`
 }
 

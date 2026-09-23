@@ -168,6 +168,7 @@ type UpdateWorkflowTemplateResponseModel struct {
 }
 
 type RuntimeSourceConfigUpdate struct {
+	Auth                    *string `json:"auth,omitempty" url:"auth,omitempty"`
 	GitCoreAutoCRLF         *bool   `json:"gitCoreAutoCRLF,omitempty" url:"gitCoreAutoCRLF,omitempty"`
 	GitSparseCheckoutConfig *string `json:"gitSparseCheckoutConfig,omitempty" url:"gitSparseCheckoutConfig,omitempty"`
 	IncludeSubModule        *bool   `json:"includeSubModule,omitempty" url:"includeSubModule,omitempty"`

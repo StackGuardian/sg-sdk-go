@@ -123,8 +123,8 @@ type ReadWorkflowTemplateResponseModel struct {
 }
 
 // CreateWorkflowTemplateRequest is the body of POST /api/v1/templates/. SharedOrgsList and
-// Tags are pointers so an explicit empty list is sent as [] (omitempty only drops a nil
-// pointer); a nil pointer leaves the field out and core applies its default.
+// Tags use `omitzero` rather than `omitempty`: a nil slice leaves the field out and core
+// applies its default, while an explicit empty slice is sent as []. omitzero needs Go 1.24+.
 type CreateWorkflowTemplateRequest struct {
 	Id               *string                               `json:"Id,omitempty" url:"Id,omitempty"`
 	TemplateName     string                                `json:"TemplateName,omitempty" url:"TemplateName,omitempty"`
@@ -134,8 +134,8 @@ type CreateWorkflowTemplateRequest struct {
 	IsActive         *sgsdkgo.IsPublicEnum                 `json:"IsActive,omitempty" url:"IsActive,omitempty"`
 	IsPublic         *sgsdkgo.IsPublicEnum                 `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
 	RuntimeSource    *RuntimeSource                        `json:"RuntimeSource,omitempty" url:"RuntimeSource,omitempty"`
-	SharedOrgsList   *[]string                             `json:"SharedOrgsList,omitempty" url:"SharedOrgsList,omitempty"`
-	Tags             *[]string                             `json:"Tags,omitempty" url:"Tags,omitempty"`
+	SharedOrgsList   []string                              `json:"SharedOrgsList,omitzero" url:"SharedOrgsList,omitempty"`
+	Tags             []string                              `json:"Tags,omitzero" url:"Tags,omitempty"`
 	VCSTriggers      *VCSTriggers                          `json:"VCSTriggers,omitempty" url:"VCSTriggers,omitempty"`
 	ContextTags      map[string]string                     `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
 	ShortDescription *string                               `json:"ShortDescription,omitempty" url:"ShortDescription,omitempty"`

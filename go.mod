@@ -1,6 +1,6 @@
 module github.com/StackGuardian/sg-sdk-go
 
-go 1.19
+go 1.24
 
 require (
 	github.com/google/uuid v1.4.0

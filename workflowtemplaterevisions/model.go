@@ -56,11 +56,11 @@ type MinistepsWfChainingSchema struct {
 }
 
 type MinistepsNotificationsEmail struct {
-	APPROVAL_REQUIRED []MinistepsNotificationRecepients `json:"APPROVAL_REQUIRED,omitempty" url:"APPROVAL_REQUIRED,omitempty"`
-	CANCELLED         []MinistepsNotificationRecepients `json:"CANCELLED,omitempty" url:"CANCELLED,omitempty"`
-	COMPLETED         []MinistepsNotificationRecepients `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
-	DRIFT_DETECTED    []MinistepsNotificationRecepients `json:"DRIFT_DETECTED,omitempty" url:"DRIFT_DETECTED,omitempty"`
-	ERRORED           []MinistepsNotificationRecepients `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
+	APPROVAL_REQUIRED []MinistepsNotificationRecepients `json:"APPROVAL_REQUIRED,omitzero" url:"APPROVAL_REQUIRED,omitempty"`
+	CANCELLED         []MinistepsNotificationRecepients `json:"CANCELLED,omitzero" url:"CANCELLED,omitempty"`
+	COMPLETED         []MinistepsNotificationRecepients `json:"COMPLETED,omitzero" url:"COMPLETED,omitempty"`
+	DRIFT_DETECTED    []MinistepsNotificationRecepients `json:"DRIFT_DETECTED,omitzero" url:"DRIFT_DETECTED,omitempty"`
+	ERRORED           []MinistepsNotificationRecepients `json:"ERRORED,omitzero" url:"ERRORED,omitempty"`
 }
 
 type MinistepsNotifications struct {
@@ -68,16 +68,16 @@ type MinistepsNotifications struct {
 }
 
 type MinistepsWebhooks struct {
-	APPROVAL_REQUIRED []MinistepsWebhooksSchema `json:"APPROVAL_REQUIRED,omitempty" url:"APPROVAL_REQUIRED,omitempty"`
-	CANCELLED         []MinistepsWebhooksSchema `json:"CANCELLED,omitempty" url:"CANCELLED,omitempty"`
-	COMPLETED         []MinistepsWebhooksSchema `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
-	DRIFT_DETECTED    []MinistepsWebhooksSchema `json:"DRIFT_DETECTED,omitempty" url:"DRIFT_DETECTED,omitempty"`
-	ERRORED           []MinistepsWebhooksSchema `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
+	APPROVAL_REQUIRED []MinistepsWebhooksSchema `json:"APPROVAL_REQUIRED,omitzero" url:"APPROVAL_REQUIRED,omitempty"`
+	CANCELLED         []MinistepsWebhooksSchema `json:"CANCELLED,omitzero" url:"CANCELLED,omitempty"`
+	COMPLETED         []MinistepsWebhooksSchema `json:"COMPLETED,omitzero" url:"COMPLETED,omitempty"`
+	DRIFT_DETECTED    []MinistepsWebhooksSchema `json:"DRIFT_DETECTED,omitzero" url:"DRIFT_DETECTED,omitempty"`
+	ERRORED           []MinistepsWebhooksSchema `json:"ERRORED,omitzero" url:"ERRORED,omitempty"`
 }
 
 type MinistepsWorkflowChaining struct {
-	COMPLETED []MinistepsWfChainingSchema `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
-	ERRORED   []MinistepsWfChainingSchema `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
+	COMPLETED []MinistepsWfChainingSchema `json:"COMPLETED,omitzero" url:"COMPLETED,omitempty"`
+	ERRORED   []MinistepsWfChainingSchema `json:"ERRORED,omitzero" url:"ERRORED,omitempty"`
 }
 
 type Ministeps struct {
@@ -116,18 +116,21 @@ type UserSchedules struct {
 	} `json:"inputs,omitempty" url:"inputs,omitempty"`
 }
 
+// CreateWorkflowTemplateRevisionsRequest is the body of the create revision call. Its list
+// fields use `omitzero` rather than `omitempty`: a nil slice leaves the field out, while an
+// explicit empty slice is sent as []. omitzero needs Go 1.24+.
 type CreateWorkflowTemplateRevisionsRequest struct {
 	TemplateType              string                                                  `json:"TemplateType,omitempty" url:"TemplateType,omitempty"`
 	OwnerOrg                  string                                                  `json:"OwnerOrg,omitempty" url:"OwnerOrg,omitempty"`
 	LongDescription           *string                                                 `json:"LongDescription,omitempty" url:"LongDescription,omitempty"`
 	SourceConfigKind          *workflowtemplates.WorkflowTemplateSourceConfigKindEnum `json:"SourceConfigKind,omitempty" url:"SourceConfigKind,omitempty"`
 	Alias                     string                                                  `json:"Alias,omitempty" url:"Alias,omitempty"`
-	Approvers                 []string                                                `json:"Approvers,omitempty" url:"Approvers,omitempty"`
+	Approvers                 []string                                                `json:"Approvers,omitzero" url:"Approvers,omitempty"`
 	ContextTags               map[string]string                                       `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
-	DeploymentPlatformConfig  []*DeploymentPlatformConfig                             `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	DeploymentPlatformConfig  []*DeploymentPlatformConfig                             `json:"DeploymentPlatformConfig,omitzero" url:"DeploymentPlatformConfig,omitempty"`
 	Deprecation               *Deprecation                                            `json:"Deprecation,omitempty" url:"Deprecation,omitempty"`
-	EnvironmentVariables      []sgsdkgo.EnvVars                                       `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
-	InputSchemas              []sgsdkgo.InputSchemas                                  `json:"InputSchemas,omitempty" url:"InputSchemas,omitempty"`
+	EnvironmentVariables      []sgsdkgo.EnvVars                                       `json:"EnvironmentVariables,omitzero" url:"EnvironmentVariables,omitempty"`
+	InputSchemas              []sgsdkgo.InputSchemas                                  `json:"InputSchemas,omitzero" url:"InputSchemas,omitempty"`
 	IsActive                  *sgsdkgo.IsPublicEnum                                   `json:"IsActive,omitempty" url:"IsActive,omitempty"`
 	IsPublic                  *sgsdkgo.IsPublicEnum                                   `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
 	Ministeps                 *Ministeps                                              `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
@@ -135,12 +138,12 @@ type CreateWorkflowTemplateRevisionsRequest struct {
 	NumberOfApprovalsRequired *int                                                    `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
 	RunnerConstraints         *sgsdkgo.RunnerConstraints                              `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
 	RuntimeSource             *workflowtemplates.RuntimeSource                        `json:"RuntimeSource,omitempty" url:"RuntimeSource,omitempty"`
-	Tags                      []string                                                `json:"Tags,omitempty" url:"Tags,omitempty"`
+	Tags                      []string                                                `json:"Tags,omitzero" url:"Tags,omitempty"`
 	TerraformConfig           *sgsdkgo.TerraformConfig                                `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
 	UserJobCPU                *int                                                    `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
 	UserJobMemory             *int                                                    `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
-	UserSchedules             []UserSchedules                                         `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
-	WfStepsConfig             []sgsdkgo.WfStepsConfig                                 `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
+	UserSchedules             []UserSchedules                                         `json:"UserSchedules,omitzero" url:"UserSchedules,omitempty"`
+	WfStepsConfig             []sgsdkgo.WfStepsConfig                                 `json:"WfStepsConfig,omitzero" url:"WfStepsConfig,omitempty"`
 }
 
 type CreateWorkflowTemplateRevisionResponse struct {

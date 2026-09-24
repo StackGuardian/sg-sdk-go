@@ -5,7 +5,7 @@
 # StackGuardian SDK For Go (sg-sdk-go)
 `sg-sdk-go` is the StackGuardian SDK for the Go Programming language.
 
-The SG SDK requires a minimum version of `Go 1.19`.
+The SG SDK requires a minimum version of `Go 1.24`.
 
 Check out the notes in the release for information about the latest bug fixes, updates and features added to the SDK.
 

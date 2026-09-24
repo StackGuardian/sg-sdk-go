@@ -5809,7 +5809,7 @@ func (p PolicyTypeEnum) Ptr() *PolicyTypeEnum {
 
 type RunnerConstraints struct {
 	Type  *RunnerConstraintsTypeEnum `json:"type,omitempty" url:"type,omitempty"`
-	Names []string                   `json:"names,omitempty" url:"names,omitempty"`
+	Names []string                   `json:"names,omitzero" url:"names,omitempty"`
 }
 
 func (r *RunnerConstraints) UnmarshalJSON(data []byte) error {
@@ -6986,17 +6986,17 @@ type TerraformConfig struct {
 	ApprovalPreApply        *bool           `json:"approvalPreApply,omitempty" url:"approvalPreApply,omitempty"`
 	TerraformPlanOptions    *string         `json:"terraformPlanOptions,omitempty" url:"terraformPlanOptions,omitempty"`
 	TerraformInitOptions    *string         `json:"terraformInitOptions,omitempty" url:"terraformInitOptions,omitempty"`
-	TerraformBinPath        []MountPoint    `json:"terraformBinPath,omitempty" url:"terraformBinPath,omitempty"`
+	TerraformBinPath        []MountPoint    `json:"terraformBinPath,omitzero" url:"terraformBinPath,omitempty"`
 	Timeout                 *int            `json:"timeout,omitempty" url:"timeout,omitempty"`
-	PostApplyWfStepsConfig  []WfStepsConfig `json:"postApplyWfStepsConfig,omitempty" url:"postApplyWfStepsConfig,omitempty"`
-	PreApplyWfStepsConfig   []WfStepsConfig `json:"preApplyWfStepsConfig,omitempty" url:"preApplyWfStepsConfig,omitempty"`
-	PrePlanWfStepsConfig    []WfStepsConfig `json:"prePlanWfStepsConfig,omitempty" url:"prePlanWfStepsConfig,omitempty"`
-	PostPlanWfStepsConfig   []WfStepsConfig `json:"postPlanWfStepsConfig,omitempty" url:"postPlanWfStepsConfig,omitempty"`
-	PreInitHooks            []string        `json:"preInitHooks,omitempty" url:"preInitHooks,omitempty"`
-	PrePlanHooks            []string        `json:"prePlanHooks,omitempty" url:"prePlanHooks,omitempty"`
-	PostPlanHooks           []string        `json:"postPlanHooks,omitempty" url:"postPlanHooks,omitempty"`
-	PreApplyHooks           []string        `json:"preApplyHooks,omitempty" url:"preApplyHooks,omitempty"`
-	PostApplyHooks          []string        `json:"postApplyHooks,omitempty" url:"postApplyHooks,omitempty"`
+	PostApplyWfStepsConfig  []WfStepsConfig `json:"postApplyWfStepsConfig,omitzero" url:"postApplyWfStepsConfig,omitempty"`
+	PreApplyWfStepsConfig   []WfStepsConfig `json:"preApplyWfStepsConfig,omitzero" url:"preApplyWfStepsConfig,omitempty"`
+	PrePlanWfStepsConfig    []WfStepsConfig `json:"prePlanWfStepsConfig,omitzero" url:"prePlanWfStepsConfig,omitempty"`
+	PostPlanWfStepsConfig   []WfStepsConfig `json:"postPlanWfStepsConfig,omitzero" url:"postPlanWfStepsConfig,omitempty"`
+	PreInitHooks            []string        `json:"preInitHooks,omitzero" url:"preInitHooks,omitempty"`
+	PrePlanHooks            []string        `json:"prePlanHooks,omitzero" url:"prePlanHooks,omitempty"`
+	PostPlanHooks           []string        `json:"postPlanHooks,omitzero" url:"postPlanHooks,omitempty"`
+	PreApplyHooks           []string        `json:"preApplyHooks,omitzero" url:"preApplyHooks,omitempty"`
+	PostApplyHooks          []string        `json:"postApplyHooks,omitzero" url:"postApplyHooks,omitempty"`
 	RunPreInitHooksOnDrift  *bool           `json:"runPreInitHooksOnDrift,omitempty" url:"runPreInitHooksOnDrift,omitempty"`
 	RunPrePlanHooksOnDrift  *bool           `json:"runPrePlanHooksOnDrift,omitempty" url:"runPrePlanHooksOnDrift,omitempty"`
 	RunPostPlanHooksOnDrift *bool           `json:"runPostPlanHooksOnDrift,omitempty" url:"runPostPlanHooksOnDrift,omitempty"`

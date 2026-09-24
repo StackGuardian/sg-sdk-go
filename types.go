@@ -5809,7 +5809,7 @@ func (p PolicyTypeEnum) Ptr() *PolicyTypeEnum {
 
 type RunnerConstraints struct {
 	Type  *RunnerConstraintsTypeEnum `json:"type,omitempty" url:"type,omitempty"`
-	Names []string                   `json:"names,omitempty" url:"names,omitempty"`
+	Names *[]string                  `json:"names,omitempty" url:"names,omitempty"`
 }
 
 func (r *RunnerConstraints) UnmarshalJSON(data []byte) error {
@@ -6981,25 +6981,25 @@ type TerraformConfig struct {
 	TerraformVersion *string `json:"terraformVersion,omitempty" url:"terraformVersion,omitempty"`
 	DriftCheck       *bool   `json:"driftCheck,omitempty" url:"driftCheck,omitempty"`
 	// Cron expression for drift check. Docs on how to create the cron expression: https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-scheduled-rule-pattern.html
-	DriftCron               *string         `json:"driftCron,omitempty" url:"driftCron,omitempty"`
-	ManagedTerraformState   *bool           `json:"managedTerraformState,omitempty" url:"managedTerraformState,omitempty"`
-	ApprovalPreApply        *bool           `json:"approvalPreApply,omitempty" url:"approvalPreApply,omitempty"`
-	TerraformPlanOptions    *string         `json:"terraformPlanOptions,omitempty" url:"terraformPlanOptions,omitempty"`
-	TerraformInitOptions    *string         `json:"terraformInitOptions,omitempty" url:"terraformInitOptions,omitempty"`
-	TerraformBinPath        []MountPoint    `json:"terraformBinPath,omitempty" url:"terraformBinPath,omitempty"`
-	Timeout                 *int            `json:"timeout,omitempty" url:"timeout,omitempty"`
-	PostApplyWfStepsConfig  []WfStepsConfig `json:"postApplyWfStepsConfig,omitempty" url:"postApplyWfStepsConfig,omitempty"`
-	PreApplyWfStepsConfig   []WfStepsConfig `json:"preApplyWfStepsConfig,omitempty" url:"preApplyWfStepsConfig,omitempty"`
-	PrePlanWfStepsConfig    []WfStepsConfig `json:"prePlanWfStepsConfig,omitempty" url:"prePlanWfStepsConfig,omitempty"`
-	PostPlanWfStepsConfig   []WfStepsConfig `json:"postPlanWfStepsConfig,omitempty" url:"postPlanWfStepsConfig,omitempty"`
-	PreInitHooks            []string        `json:"preInitHooks,omitempty" url:"preInitHooks,omitempty"`
-	PrePlanHooks            []string        `json:"prePlanHooks,omitempty" url:"prePlanHooks,omitempty"`
-	PostPlanHooks           []string        `json:"postPlanHooks,omitempty" url:"postPlanHooks,omitempty"`
-	PreApplyHooks           []string        `json:"preApplyHooks,omitempty" url:"preApplyHooks,omitempty"`
-	PostApplyHooks          []string        `json:"postApplyHooks,omitempty" url:"postApplyHooks,omitempty"`
-	RunPreInitHooksOnDrift  *bool           `json:"runPreInitHooksOnDrift,omitempty" url:"runPreInitHooksOnDrift,omitempty"`
-	RunPrePlanHooksOnDrift  *bool           `json:"runPrePlanHooksOnDrift,omitempty" url:"runPrePlanHooksOnDrift,omitempty"`
-	RunPostPlanHooksOnDrift *bool           `json:"runPostPlanHooksOnDrift,omitempty" url:"runPostPlanHooksOnDrift,omitempty"`
+	DriftCron               *string          `json:"driftCron,omitempty" url:"driftCron,omitempty"`
+	ManagedTerraformState   *bool            `json:"managedTerraformState,omitempty" url:"managedTerraformState,omitempty"`
+	ApprovalPreApply        *bool            `json:"approvalPreApply,omitempty" url:"approvalPreApply,omitempty"`
+	TerraformPlanOptions    *string          `json:"terraformPlanOptions,omitempty" url:"terraformPlanOptions,omitempty"`
+	TerraformInitOptions    *string          `json:"terraformInitOptions,omitempty" url:"terraformInitOptions,omitempty"`
+	TerraformBinPath        *[]MountPoint    `json:"terraformBinPath,omitempty" url:"terraformBinPath,omitempty"`
+	Timeout                 *int             `json:"timeout,omitempty" url:"timeout,omitempty"`
+	PostApplyWfStepsConfig  *[]WfStepsConfig `json:"postApplyWfStepsConfig,omitempty" url:"postApplyWfStepsConfig,omitempty"`
+	PreApplyWfStepsConfig   *[]WfStepsConfig `json:"preApplyWfStepsConfig,omitempty" url:"preApplyWfStepsConfig,omitempty"`
+	PrePlanWfStepsConfig    *[]WfStepsConfig `json:"prePlanWfStepsConfig,omitempty" url:"prePlanWfStepsConfig,omitempty"`
+	PostPlanWfStepsConfig   *[]WfStepsConfig `json:"postPlanWfStepsConfig,omitempty" url:"postPlanWfStepsConfig,omitempty"`
+	PreInitHooks            *[]string        `json:"preInitHooks,omitempty" url:"preInitHooks,omitempty"`
+	PrePlanHooks            *[]string        `json:"prePlanHooks,omitempty" url:"prePlanHooks,omitempty"`
+	PostPlanHooks           *[]string        `json:"postPlanHooks,omitempty" url:"postPlanHooks,omitempty"`
+	PreApplyHooks           *[]string        `json:"preApplyHooks,omitempty" url:"preApplyHooks,omitempty"`
+	PostApplyHooks          *[]string        `json:"postApplyHooks,omitempty" url:"postApplyHooks,omitempty"`
+	RunPreInitHooksOnDrift  *bool            `json:"runPreInitHooksOnDrift,omitempty" url:"runPreInitHooksOnDrift,omitempty"`
+	RunPrePlanHooksOnDrift  *bool            `json:"runPrePlanHooksOnDrift,omitempty" url:"runPrePlanHooksOnDrift,omitempty"`
+	RunPostPlanHooksOnDrift *bool            `json:"runPostPlanHooksOnDrift,omitempty" url:"runPostPlanHooksOnDrift,omitempty"`
 	// Fully-qualified workflow step template revision id pinned for this terraform config
 	// (e.g. "/<org>/<name>:<rev>").
 	WfStepTemplateRevisionId *string `json:"wfStepTemplateRevisionId,omitempty" url:"wfStepTemplateRevisionId,omitempty"`
@@ -7058,10 +7058,10 @@ func (t *TerraformConfig) GetTerraformInitOptions() *string {
 }
 
 func (t *TerraformConfig) GetTerraformBinPath() []MountPoint {
-	if t == nil {
+	if t == nil || t.TerraformBinPath == nil {
 		return nil
 	}
-	return t.TerraformBinPath
+	return *t.TerraformBinPath
 }
 
 func (t *TerraformConfig) GetTimeout() *int {
@@ -7072,66 +7072,66 @@ func (t *TerraformConfig) GetTimeout() *int {
 }
 
 func (t *TerraformConfig) GetPostApplyWfStepsConfig() []WfStepsConfig {
-	if t == nil {
+	if t == nil || t.PostApplyWfStepsConfig == nil {
 		return nil
 	}
-	return t.PostApplyWfStepsConfig
+	return *t.PostApplyWfStepsConfig
 }
 
 func (t *TerraformConfig) GetPreApplyWfStepsConfig() []WfStepsConfig {
-	if t == nil {
+	if t == nil || t.PreApplyWfStepsConfig == nil {
 		return nil
 	}
-	return t.PreApplyWfStepsConfig
+	return *t.PreApplyWfStepsConfig
 }
 
 func (t *TerraformConfig) GetPrePlanWfStepsConfig() []WfStepsConfig {
-	if t == nil {
+	if t == nil || t.PrePlanWfStepsConfig == nil {
 		return nil
 	}
-	return t.PrePlanWfStepsConfig
+	return *t.PrePlanWfStepsConfig
 }
 
 func (t *TerraformConfig) GetPostPlanWfStepsConfig() []WfStepsConfig {
-	if t == nil {
+	if t == nil || t.PostPlanWfStepsConfig == nil {
 		return nil
 	}
-	return t.PostPlanWfStepsConfig
+	return *t.PostPlanWfStepsConfig
 }
 
 func (t *TerraformConfig) GetPreInitHooks() []string {
-	if t == nil {
+	if t == nil || t.PreInitHooks == nil {
 		return nil
 	}
-	return t.PreInitHooks
+	return *t.PreInitHooks
 }
 
 func (t *TerraformConfig) GetPrePlanHooks() []string {
-	if t == nil {
+	if t == nil || t.PrePlanHooks == nil {
 		return nil
 	}
-	return t.PrePlanHooks
+	return *t.PrePlanHooks
 }
 
 func (t *TerraformConfig) GetPostPlanHooks() []string {
-	if t == nil {
+	if t == nil || t.PostPlanHooks == nil {
 		return nil
 	}
-	return t.PostPlanHooks
+	return *t.PostPlanHooks
 }
 
 func (t *TerraformConfig) GetPreApplyHooks() []string {
-	if t == nil {
+	if t == nil || t.PreApplyHooks == nil {
 		return nil
 	}
-	return t.PreApplyHooks
+	return *t.PreApplyHooks
 }
 
 func (t *TerraformConfig) GetPostApplyHooks() []string {
-	if t == nil {
+	if t == nil || t.PostApplyHooks == nil {
 		return nil
 	}
-	return t.PostApplyHooks
+	return *t.PostApplyHooks
 }
 
 func (t *TerraformConfig) GetRunPreInitHooksOnDrift() *bool {

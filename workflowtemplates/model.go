@@ -116,6 +116,19 @@ type ReadWorkflowTemplateResponse struct {
 	Tags             []string                              `json:"Tags,omitempty" url:"Tags,omitempty"`
 	VCSTriggers      *VCSTriggers                          `json:"VCSTriggers,omitempty" url:"VCSTriggers,omitempty"`
 	ContextTags      map[string]string                     `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	TemplateId       *string                               `json:"TemplateId,omitempty" url:"-"`
+	ResourceName     *string                               `json:"ResourceName,omitempty" url:"-"`
+	CreatorEnv       *string                               `json:"CreatorEnv,omitempty" url:"-"`
+	DocVersion       *string                               `json:"DocVersion,omitempty" url:"-"`
+	CreatedAt        *int64                                `json:"CreatedAt,omitempty" url:"-"`
+	ModifiedAt       *int64                                `json:"ModifiedAt,omitempty" url:"-"`
+	LatestRevision   *int                                  `json:"LatestRevision,omitempty" url:"-"`
+	NextRevision     *int                                  `json:"NextRevision,omitempty" url:"-"`
+	UserJobCpu       *int                                  `json:"UserJobCPU,omitempty" url:"-"`
+	UserJobMemory    *int                                  `json:"UserJobMemory,omitempty" url:"-"`
+	Contributors     []string                              `json:"Contributors,omitempty" url:"-"`
+	GitHubComRepoId  *string                               `json:"GitHubComRepoID,omitempty" url:"-"`
+	WfType           *string                               `json:"WfType,omitempty" url:"-"`
 }
 
 type ReadWorkflowTemplateResponseModel struct {

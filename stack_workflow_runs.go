@@ -854,6 +854,11 @@ type GeneratedWorkflowRunStackGetMsg struct {
 	CreatedAt          float64                                         `json:"CreatedAt" url:"CreatedAt"`
 	SgInternals        *GeneratedWorkflowRunStackGetMsgSginternals     `json:"SGInternals,omitempty" url:"SGInternals,omitempty"`
 
+	Id                *string                `json:"Id,omitempty" url:"Id,omitempty"`
+	ParentKSUID       *string                `json:"ParentKSUID,omitempty" url:"ParentKSUID,omitempty"`
+	ResourceKSUID     *string                `json:"ResourceKSUID,omitempty" url:"ResourceKSUID,omitempty"`
+	RuntimeParameters map[string]interface{} `json:"RuntimeParameters,omitempty" url:"RuntimeParameters,omitempty"`
+
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
@@ -3041,6 +3046,9 @@ func (g *GeneratedWorkflowRunStackGetMsgRuntimeparametersWfstepsconfigWfstepinpu
 
 type GeneratedWorkflowRunStackGetMsgSginternals struct {
 	ResolvedVcSconfig *GeneratedWorkflowRunStackGetMsgSginternalsResolvedvcsconfig `json:"resolvedVCSconfig,omitempty" url:"resolvedVCSconfig,omitempty"`
+
+	OtelTraceContext map[string]interface{}   `json:"OtelTraceContext,omitempty" url:"OtelTraceContext,omitempty"`
+	RuntimeErrors    []map[string]interface{} `json:"RuntimeErrors,omitempty" url:"RuntimeErrors,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage

@@ -663,6 +663,10 @@ type GeneratedWorkflowRunListAllMsg struct {
 	CreatedAt         float64                                          `json:"CreatedAt" url:"CreatedAt"`
 	RuntimeParameters *GeneratedWorkflowRunListAllMsgRuntimeparameters `json:"RuntimeParameters,omitempty" url:"RuntimeParameters,omitempty"`
 
+	ParentKSUID    *string                `json:"ParentKSUID,omitempty" url:"ParentKSUID,omitempty"`
+	ResourceKSUID  *string                `json:"ResourceKSUID,omitempty" url:"ResourceKSUID,omitempty"`
+	TriggerDetails map[string]interface{} `json:"TriggerDetails,omitempty" url:"TriggerDetails,omitempty"`
+
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
@@ -764,6 +768,9 @@ func (g *GeneratedWorkflowRunListAllMsg) String() string {
 
 type GeneratedWorkflowRunListAllMsgRuntimeparameters struct {
 	TerraformAction *GeneratedWorkflowRunListAllMsgRuntimeparametersTerraformaction `json:"terraformAction,omitempty" url:"terraformAction,omitempty"`
+
+	TerraformConfig map[string]interface{} `json:"terraformConfig,omitempty" url:"terraformConfig,omitempty"`
+	VcsConfig       map[string]interface{} `json:"vcsConfig,omitempty" url:"vcsConfig,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -1860,6 +1867,11 @@ type GeneratedWorkflowRunsGetMsg struct {
 	CreatedAt          float64                                         `json:"CreatedAt" url:"CreatedAt"`
 	SgInternals        *GeneratedWorkflowRunsGetMsgSginternals         `json:"SGInternals,omitempty" url:"SGInternals,omitempty"`
 
+	Id                *string                `json:"Id,omitempty" url:"Id,omitempty"`
+	ParentKSUID       *string                `json:"ParentKSUID,omitempty" url:"ParentKSUID,omitempty"`
+	ResourceKSUID     *string                `json:"ResourceKSUID,omitempty" url:"ResourceKSUID,omitempty"`
+	RuntimeParameters map[string]interface{} `json:"RuntimeParameters,omitempty" url:"RuntimeParameters,omitempty"`
+
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
@@ -2024,6 +2036,9 @@ func (g *GeneratedWorkflowRunsGetMsg) String() string {
 
 type GeneratedWorkflowRunsGetMsgSginternals struct {
 	ResolvedVcSconfig *string `json:"resolvedVCSconfig,omitempty" url:"resolvedVCSconfig,omitempty"`
+
+	OtelTraceContext map[string]interface{}   `json:"OtelTraceContext,omitempty" url:"OtelTraceContext,omitempty"`
+	RuntimeErrors    []map[string]interface{} `json:"RuntimeErrors,omitempty" url:"RuntimeErrors,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage

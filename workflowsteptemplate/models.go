@@ -54,7 +54,7 @@ type UpdateWorkflowStepTemplateRequestModel struct {
 	SourceConfigKind *core.Optional[WorkflowStepTemplateSourceConfigKindEnum] `json:"SourceConfigKind,omitempty" url:"SourceConfigKind,omitempty"`
 	ShortDescription *core.Optional[string]                                   `json:"ShortDescription,omitempty" url:"ShortDescription,omitempty"`
 	RuntimeSource    *core.Optional[WorkflowStepRuntimeSource]                `json:"RuntimeSource,omitempty" url:"RuntimeSource,omitempty"`
-	OwnerOrg         *core.Optional[string]                                   `json:"OwnerOrg" url:"OwnerOrg"`
+	OwnerOrg         *core.Optional[string]                                   `json:"OwnerOrg,omitempty" url:"OwnerOrg,omitempty"`
 	Tags             *core.Optional[[]string]                                 `json:"Tags,omitempty" url:"Tags,omitempty"`
 	// Contextual tags to give context to your tags
 	ContextTags    *core.Optional[map[string]string] `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
@@ -73,7 +73,7 @@ type UpdateWorkflowStepTemplateResponse struct {
 	SourceConfigKind WorkflowStepTemplateSourceConfigKindEnum `json:"SourceConfigKind,omitempty" url:"SourceConfigKind,omitempty"`
 	RuntimeSource    *WorkflowStepRuntimeSource               `json:"RuntimeSource,omitempty" url:"RuntimeSource,omitempty"`
 	TemplateId       *string                                  `json:"TemplateId,omitempty" url:"TemplateId,omitempty"`
-	OwnerOrg         string                                   `json:"OwnerOrg" url:"OwnerOrg"`
+	OwnerOrg         string                                   `json:"OwnerOrg,omitempty" url:"OwnerOrg,omitempty"`
 	Tags             []string                                 `json:"Tags,omitempty" url:"Tags,omitempty"`
 	// Contextual tags to give context to your tags
 	ContextTags    map[string]string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`

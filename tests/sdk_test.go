@@ -899,7 +899,7 @@ func TestSDK(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		err := c.AccessManagement.ListAllRoles(context.Background(), SG_ORG, &sggosdk.ListAllRolesRequest{})
+		_, err := c.AccessManagement.ListAllRoles(context.Background(), SG_ORG, &sggosdk.ListAllRolesRequest{})
 		assert.Empty(t, err)
 	})
 
@@ -1003,7 +1003,7 @@ func TestSDK(t *testing.T) {
 		)
 		//TODO: Add response
 		request := sggosdk.ListAllPoliciesRequest{}
-		err := c.Policies.ListAllPolicies(context.Background(), SG_ORG, &request)
+		_, err := c.Policies.ListAllPolicies(context.Background(), SG_ORG, &request)
 		assert.Empty(t, err)
 	})
 

@@ -87,3 +87,105 @@ func (c *Client) ReadWorkflowRunFacts(
 	}
 	return response, nil
 }
+
+// Create or replace the facts of a workflow run (upsert; nested objects are replaced).
+func (c *Client) CreateWorkflowRunFacts(
+	ctx context.Context,
+	org string,
+	wf string,
+	wfGrp string,
+	wfRun string,
+	wfRunFacts string,
+	request map[string]interface{},
+	opts ...option.RequestOption,
+) (map[string]interface{}, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/wfruns/%v/wfrunfacts/%v/",
+		org,
+		wfGrp,
+		wf,
+		wfRun,
+		wfRunFacts,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+
+	var response map[string]interface{}
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}
+
+// Update the facts of a workflow run (nested objects are merged).
+func (c *Client) UpdateWorkflowRunFacts(
+	ctx context.Context,
+	org string,
+	wf string,
+	wfGrp string,
+	wfRun string,
+	wfRunFacts string,
+	request map[string]interface{},
+	opts ...option.RequestOption,
+) (map[string]interface{}, error) {
+	options := core.NewRequestOptions(opts...)
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/orgs/%v/wfgrps/%v/wfs/%v/wfruns/%v/wfrunfacts/%v/",
+		org,
+		wfGrp,
+		wf,
+		wfRun,
+		wfRunFacts,
+	)
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Set("Content-Type", "application/json")
+
+	var response map[string]interface{}
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPatch,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+	return response, nil
+}

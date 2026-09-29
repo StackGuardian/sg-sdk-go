@@ -14,7 +14,7 @@ type Deprecation struct {
 // StackTemplateRevisionWorkflowsConfig corresponds to the WorkflowsConfig schema
 // for stack template revisions.
 type StackTemplateRevisionWorkflowsConfig struct {
-	Workflows []*StackTemplateRevisionWorkflow `json:"workflows,omitempty" url:"workflows,omitempty"`
+	Workflows []*StackTemplateRevisionWorkflow `json:"workflows,omitzero" url:"workflows,omitempty"`
 }
 
 // StackTemplateRevisionWorkflow corresponds to the WorkflowsConfigWorkflow schema
@@ -24,13 +24,13 @@ type StackTemplateRevisionWorkflow struct {
 	TemplateId                *string                             `json:"templateId,omitempty" url:"templateId,omitempty"`
 	ResourceName              *string                             `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
 	WfType                    *sgsdkgo.WfTypeEnum                 `json:"WfType,omitempty" url:"WfType,omitempty"`
-	WfStepsConfig             []*sgsdkgo.WfStepsConfig            `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
+	WfStepsConfig             []*sgsdkgo.WfStepsConfig            `json:"WfStepsConfig,omitzero" url:"WfStepsConfig,omitempty"`
 	TerraformConfig           *sgsdkgo.TerraformConfig            `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
-	EnvironmentVariables      []*sgsdkgo.EnvVars                  `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
-	DeploymentPlatformConfig  []*sgsdkgo.DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
-	UserSchedules             []*sgsdkgo.UserSchedules            `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
+	EnvironmentVariables      []*sgsdkgo.EnvVars                  `json:"EnvironmentVariables,omitzero" url:"EnvironmentVariables,omitempty"`
+	DeploymentPlatformConfig  []*sgsdkgo.DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitzero" url:"DeploymentPlatformConfig,omitempty"`
+	UserSchedules             []*sgsdkgo.UserSchedules            `json:"UserSchedules,omitzero" url:"UserSchedules,omitempty"`
 	MiniSteps                 *sgsdkgo.MiniStepsSchema            `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
-	Approvers                 []string                            `json:"Approvers,omitempty" url:"Approvers,omitempty"`
+	Approvers                 []string                            `json:"Approvers,omitzero" url:"Approvers,omitempty"`
 	NumberOfApprovalsRequired *int                                `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
 	RunnerConstraints         *sgsdkgo.RunnerConstraints          `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
 	UserJobCpu                *int                                `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
@@ -38,7 +38,7 @@ type StackTemplateRevisionWorkflow struct {
 	ParallelExecution         *sgsdkgo.ParallelExecutionEnum      `json:"ParallelExecution,omitempty" url:"ParallelExecution,omitempty"`
 	VcsConfig                 *sgsdkgo.VcsConfig                  `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
 	IacInputData              *sgsdkgo.TemplatesIacInputData      `json:"iacInputData,omitempty" url:"iacInputData,omitempty"`
-	InputSchemas              []*sgsdkgo.InputSchemas             `json:"inputSchemas,omitempty" url:"inputSchemas,omitempty"`
+	InputSchemas              []*sgsdkgo.InputSchemas             `json:"inputSchemas,omitzero" url:"inputSchemas,omitempty"`
 }
 
 // CreateStackTemplateRevisionRequest corresponds to the StackTemplateRevision schema.
@@ -46,8 +46,8 @@ type CreateStackTemplateRevisionRequest struct {
 	TemplateType     string                                            `json:"TemplateType,omitempty" url:"TemplateType,omitempty"`
 	OwnerOrg         string                                            `json:"OwnerOrg,omitempty" url:"OwnerOrg,omitempty"`
 	SourceConfigKind *stacktemplates.StackTemplateSourceConfigKindEnum `json:"SourceConfigKind,omitempty" url:"SourceConfigKind,omitempty"`
-	Tags             []string                                          `json:"Tags,omitempty" url:"Tags,omitempty"`
-	ContextTags      map[string]string                                 `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	Tags             []string                                          `json:"Tags,omitzero" url:"Tags,omitempty"`
+	ContextTags      map[string]string                                 `json:"ContextTags,omitzero" url:"ContextTags,omitempty"`
 	IsActive         *sgsdkgo.IsPublicEnum                             `json:"IsActive,omitempty" url:"IsActive,omitempty"`
 	IsPublic         *sgsdkgo.IsPublicEnum                             `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
 	Alias            string                                            `json:"Alias,omitempty" url:"Alias,omitempty"`
@@ -55,7 +55,7 @@ type CreateStackTemplateRevisionRequest struct {
 	Deprecation      *Deprecation                                      `json:"Deprecation,omitempty" url:"Deprecation,omitempty"`
 	LongDescription  *string                                           `json:"LongDescription,omitempty" url:"LongDescription,omitempty"`
 	WorkflowsConfig  *StackTemplateRevisionWorkflowsConfig             `json:"WorkflowsConfig,omitempty" url:"WorkflowsConfig,omitempty"`
-	Actions          map[string]*sgsdkgo.Actions                       `json:"Actions,omitempty" url:"Actions,omitempty"`
+	Actions          map[string]*sgsdkgo.Actions                       `json:"Actions,omitzero" url:"Actions,omitempty"`
 }
 
 type CreateStackTemplateRevisionResponse struct {

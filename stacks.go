@@ -18,22 +18,22 @@ type Stack struct {
 	RunOnCreate  *bool         `json:"-" url:"runOnCreate,omitempty"`
 	ResourceName *string       `json:"ResourceName,omitempty" url:"-"`
 	Description  *string       `json:"Description,omitempty" url:"-"`
-	Tags         []string      `json:"Tags,omitempty" url:"-"`
+	Tags         []string      `json:"Tags,omitzero" url:"-"`
 	IsActive     *IsPublicEnum `json:"IsActive,omitempty" url:"-"`
 	// Used when one or all templates specified in the IAC Group are not supplied in TemplatesConfig.
-	EnvironmentVariables []*EnvVars `json:"EnvironmentVariables,omitempty" url:"-"`
+	EnvironmentVariables []*EnvVars `json:"EnvironmentVariables,omitzero" url:"-"`
 	// Defines the default deployment config when the workflows in WorkflowConfig do not set this key.
-	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"-"`
+	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitzero" url:"-"`
 	// Actions define the sequence in which the workflows in the Stack are to be executed along with the run configuration for each workflow. Each key in an action is the name of the action for example `apply`, `destroy`.
-	Actions map[string]*Actions `json:"Actions,omitempty" url:"-"`
+	Actions map[string]*Actions `json:"Actions,omitzero" url:"-"`
 	// The ID of the template group that this Stack is mapped to. Null if the Stack is not mapped to any template group.
 	TemplateGroupId *string               `json:"TemplateGroupId,omitempty" url:"-"`
 	WorkflowsConfig *StackWorkflowsConfig `json:"WorkflowsConfig,omitempty" url:"-"`
-	UserSchedules   []*StackUserSchedules `json:"UserSchedules,omitempty" url:"-"`
+	UserSchedules   []*StackUserSchedules `json:"UserSchedules,omitzero" url:"-"`
 	// Used only when upgrading Stack.
-	Operations map[string]interface{} `json:"Operations,omitempty" url:"-"`
+	Operations map[string]interface{} `json:"Operations,omitzero" url:"-"`
 	// Contextual tags to give meanings to your tags
-	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"-"`
+	ContextTags map[string]*string `json:"ContextTags,omitzero" url:"-"`
 	MiniSteps   *MiniStepsSchema   `json:"MiniSteps,omitempty" url:"-"`
 }
 
@@ -91,7 +91,7 @@ type PatchedStack struct {
 // (Create/Read/Update). It differs from the plain WorkflowsConfig used by Stack
 // Templates: its entries carry a few extra fields a stack workflow needs.
 type StackWorkflowsConfig struct {
-	Workflows []*StackWorkflowsConfigWorkflow `json:"workflows,omitempty" url:"workflows,omitempty"`
+	Workflows []*StackWorkflowsConfigWorkflow `json:"workflows,omitzero" url:"workflows,omitempty"`
 }
 
 func (s *StackWorkflowsConfig) GetWorkflows() []*StackWorkflowsConfigWorkflow {
@@ -105,38 +105,43 @@ func (s *StackWorkflowsConfig) GetWorkflows() []*StackWorkflowsConfigWorkflow {
 // fields a stack workflow needs, minus system-stamped run/scan output (drift
 // results, security scan, repo insights, etc.) that doesn't belong on a stack's
 // WorkflowsConfig, which describes desired config, not run history.
-// Slice/map fields are pointers, not bare slice/map: encoding/json's
+// Slice/map fields use "omitzero" (Go 1.24+), not "omitempty": encoding/json's
 // omitempty on a bare slice/map checks len() == 0, which drops an explicit
-// empty value the same as nil — a pointer's omitempty only checks the
-// pointer, so a non-nil pointer to an empty slice/map still serializes.
+// empty value the same as nil, but omitzero checks reflect.Value.IsZero(),
+// which for a slice/map is nil-ness only — so a nil slice/map is omitted while
+// a non-nil empty one still serializes as []/{}, with no pointer indirection
+// needed.
 type StackWorkflowsConfigWorkflow struct {
-	WfStepsConfig             *[]*WfStepsConfig           `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
-	TerraformConfig           *TerraformConfig             `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
-	EnvironmentVariables      *[]*EnvVars                  `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
-	DeploymentPlatformConfig  *[]*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
-	UserSchedules             *[]*UserSchedules            `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
-	MiniSteps                 *MiniStepsSchema             `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
-	Approvers                 *[]string                    `json:"Approvers,omitempty" url:"Approvers,omitempty"`
-	NumberOfApprovalsRequired *int                         `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
-	RunnerConstraints         *RunnerConstraints           `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
-	UserJobCpu                *int                         `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
-	UserJobMemory             *int                         `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
-	ParallelExecution         *ParallelExecutionEnum       `json:"ParallelExecution,omitempty" url:"ParallelExecution,omitempty"`
+	WfStepsConfig             []*WfStepsConfig            `json:"WfStepsConfig,omitzero" url:"WfStepsConfig,omitempty"`
+	TerraformConfig           *TerraformConfig            `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
+	EnvironmentVariables      []*EnvVars                  `json:"EnvironmentVariables,omitzero" url:"EnvironmentVariables,omitempty"`
+	DeploymentPlatformConfig  []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitzero" url:"DeploymentPlatformConfig,omitempty"`
+	UserSchedules             []*UserSchedules            `json:"UserSchedules,omitzero" url:"UserSchedules,omitempty"`
+	MiniSteps                 *MiniStepsSchema            `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	Approvers                 []string                    `json:"Approvers,omitzero" url:"Approvers,omitempty"`
+	NumberOfApprovalsRequired *int                        `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
+	RunnerConstraints         *RunnerConstraints          `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
+	UserJobCpu                *int                        `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
+	UserJobMemory             *int                        `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
+	ParallelExecution         *ParallelExecutionEnum      `json:"ParallelExecution,omitempty" url:"ParallelExecution,omitempty"`
 	// The ID of the workflow. This is the ID of the workflow defined in the Stack Template.
-	Id           *string                `json:"id,omitempty" url:"id,omitempty"`
+	Id *string `json:"id,omitempty" url:"id,omitempty"`
+	// The resource id the platform assigns the created workflow, computed client-side so it's
+	// predictable and can be sent on create and update rather than only learned back on read.
+	WorkflowId   *string                `json:"WorkflowId,omitempty" url:"WorkflowId,omitempty"`
 	ResourceName *string                `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
 	WfType       *WfTypeEnum            `json:"WfType,omitempty" url:"WfType,omitempty"`
 	VcsConfig    *VcsConfig             `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
 	TemplateId   *string                `json:"templateId,omitempty" url:"templateId,omitempty"`
 	IacInputData *TemplatesIacInputData `json:"iacInputData,omitempty" url:"iacInputData,omitempty"`
-	InputSchemas *[]*InputSchemas       `json:"inputSchemas,omitempty" url:"inputSchemas,omitempty"`
+	InputSchemas []*InputSchemas        `json:"inputSchemas,omitzero" url:"inputSchemas,omitempty"`
 	Description  *string                `json:"Description,omitempty" url:"Description,omitempty"`
-	Tags         *[]string              `json:"Tags,omitempty" url:"Tags,omitempty"`
+	Tags         []string               `json:"Tags,omitzero" url:"Tags,omitempty"`
 	IsActive     *IsPublicEnum          `json:"IsActive,omitempty" url:"IsActive,omitempty"`
-	ContextTags  *map[string]*string    `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	ContextTags  map[string]*string     `json:"ContextTags,omitzero" url:"ContextTags,omitempty"`
 }
 
-func (s *StackWorkflowsConfigWorkflow) GetWfStepsConfig() *[]*WfStepsConfig {
+func (s *StackWorkflowsConfigWorkflow) GetWfStepsConfig() []*WfStepsConfig {
 	if s == nil {
 		return nil
 	}
@@ -150,21 +155,21 @@ func (s *StackWorkflowsConfigWorkflow) GetTerraformConfig() *TerraformConfig {
 	return s.TerraformConfig
 }
 
-func (s *StackWorkflowsConfigWorkflow) GetEnvironmentVariables() *[]*EnvVars {
+func (s *StackWorkflowsConfigWorkflow) GetEnvironmentVariables() []*EnvVars {
 	if s == nil {
 		return nil
 	}
 	return s.EnvironmentVariables
 }
 
-func (s *StackWorkflowsConfigWorkflow) GetDeploymentPlatformConfig() *[]*DeploymentPlatformConfig {
+func (s *StackWorkflowsConfigWorkflow) GetDeploymentPlatformConfig() []*DeploymentPlatformConfig {
 	if s == nil {
 		return nil
 	}
 	return s.DeploymentPlatformConfig
 }
 
-func (s *StackWorkflowsConfigWorkflow) GetUserSchedules() *[]*UserSchedules {
+func (s *StackWorkflowsConfigWorkflow) GetUserSchedules() []*UserSchedules {
 	if s == nil {
 		return nil
 	}
@@ -178,7 +183,7 @@ func (s *StackWorkflowsConfigWorkflow) GetMiniSteps() *MiniStepsSchema {
 	return s.MiniSteps
 }
 
-func (s *StackWorkflowsConfigWorkflow) GetApprovers() *[]string {
+func (s *StackWorkflowsConfigWorkflow) GetApprovers() []string {
 	if s == nil {
 		return nil
 	}
@@ -227,6 +232,13 @@ func (s *StackWorkflowsConfigWorkflow) GetId() *string {
 	return s.Id
 }
 
+func (s *StackWorkflowsConfigWorkflow) GetWorkflowId() *string {
+	if s == nil {
+		return nil
+	}
+	return s.WorkflowId
+}
+
 func (s *StackWorkflowsConfigWorkflow) GetResourceName() *string {
 	if s == nil {
 		return nil
@@ -262,7 +274,7 @@ func (s *StackWorkflowsConfigWorkflow) GetIacInputData() *TemplatesIacInputData 
 	return s.IacInputData
 }
 
-func (s *StackWorkflowsConfigWorkflow) GetInputSchemas() *[]*InputSchemas {
+func (s *StackWorkflowsConfigWorkflow) GetInputSchemas() []*InputSchemas {
 	if s == nil {
 		return nil
 	}
@@ -276,7 +288,7 @@ func (s *StackWorkflowsConfigWorkflow) GetDescription() *string {
 	return s.Description
 }
 
-func (s *StackWorkflowsConfigWorkflow) GetTags() *[]string {
+func (s *StackWorkflowsConfigWorkflow) GetTags() []string {
 	if s == nil {
 		return nil
 	}
@@ -290,7 +302,7 @@ func (s *StackWorkflowsConfigWorkflow) GetIsActive() *IsPublicEnum {
 	return s.IsActive
 }
 
-func (s *StackWorkflowsConfigWorkflow) GetContextTags() *map[string]*string {
+func (s *StackWorkflowsConfigWorkflow) GetContextTags() map[string]*string {
 	if s == nil {
 		return nil
 	}
@@ -473,35 +485,35 @@ type StackData struct {
 	Id           string   `json:"Id" url:"Id"`
 	ResourceName *string  `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
 	Description  *string  `json:"Description,omitempty" url:"Description,omitempty"`
-	Tags         []string `json:"Tags,omitempty" url:"Tags,omitempty"`
+	Tags         []string `json:"Tags,omitzero" url:"Tags,omitempty"`
 	// Used when one or all templates specified in the IAC Group are not supplied in TemplatesConfig.
-	EnvironmentVariables []*EnvVars `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
+	EnvironmentVariables []*EnvVars `json:"EnvironmentVariables,omitzero" url:"EnvironmentVariables,omitempty"`
 	// Defines the default deployment config when the workflows in WorkflowConfig do not set this key.
-	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitzero" url:"DeploymentPlatformConfig,omitempty"`
 	// Actions define the sequence in which the workflows in the Stack are to be executed along with the run configuration for each workflow. Each key in an action is the name of the action for example `apply`, `destroy`.
-	Actions map[string]*Actions `json:"Actions,omitempty" url:"Actions,omitempty"`
+	Actions map[string]*Actions `json:"Actions,omitzero" url:"Actions,omitempty"`
 	// The ID of the template group that this Stack is mapped to. Null if the Stack is not mapped to any template group.
 	TemplateGroupId *string               `json:"TemplateGroupId,omitempty" url:"TemplateGroupId,omitempty"`
 	WorkflowsConfig *StackWorkflowsConfig `json:"WorkflowsConfig,omitempty" url:"WorkflowsConfig,omitempty"`
-	UserSchedules   []*StackUserSchedules `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
+	UserSchedules   []*StackUserSchedules `json:"UserSchedules,omitzero" url:"UserSchedules,omitempty"`
 	// Used only when upgrading Stack.
-	Operations map[string]interface{} `json:"Operations,omitempty" url:"Operations,omitempty"`
+	Operations map[string]interface{} `json:"Operations,omitzero" url:"Operations,omitempty"`
 	// Contextual tags to give meanings to your tags
-	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	ContextTags map[string]*string `json:"ContextTags,omitzero" url:"ContextTags,omitempty"`
 	MiniSteps   *MiniStepsSchema   `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
 	// Taints are issues that are affecting this Stack. A Taint may be purely informational or may require action to remove the taint.
-	Taints               []string                          `json:"Taints,omitempty" url:"Taints,omitempty"`
+	Taints               []string                          `json:"Taints,omitzero" url:"Taints,omitempty"`
 	StackFullId          string                            `json:"StackFullId" url:"StackFullId"`
-	WorkflowRelationsMap map[string]interface{}            `json:"WorkflowRelationsMap,omitempty" url:"WorkflowRelationsMap,omitempty"`
+	WorkflowRelationsMap map[string]interface{}            `json:"WorkflowRelationsMap,omitzero" url:"WorkflowRelationsMap,omitempty"`
 	IsActive             string                            `json:"IsActive" url:"IsActive"`
-	Discrepancies        map[string]interface{}            `json:"Discrepancies,omitempty" url:"Discrepancies,omitempty"`
-	Authors              []string                          `json:"Authors,omitempty" url:"Authors,omitempty"`
-	ActivitySubscribers  []string                          `json:"ActivitySubscribers,omitempty" url:"ActivitySubscribers,omitempty"`
+	Discrepancies        map[string]interface{}            `json:"Discrepancies,omitzero" url:"Discrepancies,omitempty"`
+	Authors              []string                          `json:"Authors,omitzero" url:"Authors,omitempty"`
+	ActivitySubscribers  []string                          `json:"ActivitySubscribers,omitzero" url:"ActivitySubscribers,omitempty"`
 	SubResourceId        string                            `json:"SubResourceId" url:"SubResourceId"`
 	OrgId                string                            `json:"OrgId" url:"OrgId"`
 	CreatedAt            float64                           `json:"CreatedAt" url:"CreatedAt"`
 	IsArchive            string                            `json:"IsArchive" url:"IsArchive"`
-	CreationOrder        []string                          `json:"CreationOrder,omitempty" url:"CreationOrder,omitempty"`
+	CreationOrder        []string                          `json:"CreationOrder,omitzero" url:"CreationOrder,omitempty"`
 	StackParentId        string                            `json:"StackParentId" url:"StackParentId"`
 	ResourceId           string                            `json:"ResourceId" url:"ResourceId"`
 	ModifiedAt           float64                           `json:"ModifiedAt" url:"ModifiedAt"`
@@ -510,11 +522,11 @@ type StackData struct {
 	CreatorEnv           string                            `json:"CreatorEnv" url:"CreatorEnv"`
 	LatestWfStatus       string                            `json:"LatestWfStatus" url:"LatestWfStatus"`
 	VcsConfig            *GeneratedStackWorkflowsVcsconfig `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
-	DeletionOrder        []string                          `json:"DeletionOrder,omitempty" url:"DeletionOrder,omitempty"`
+	DeletionOrder        []string                          `json:"DeletionOrder,omitzero" url:"DeletionOrder,omitempty"`
 	StackIndexId         string                            `json:"StackIndexId" url:"StackIndexId"`
 	DocVersion           string                            `json:"DocVersion" url:"DocVersion"`
-	EnforcedPolicies     []interface{}                     `json:"EnforcedPolicies,omitempty" url:"EnforcedPolicies,omitempty"`
-	SgInternals          map[string]interface{}            `json:"_SGInternals,omitempty" url:"_SGInternals,omitempty"`
+	EnforcedPolicies     []interface{}                     `json:"EnforcedPolicies,omitzero" url:"EnforcedPolicies,omitempty"`
+	SgInternals          map[string]interface{}            `json:"_SGInternals,omitzero" url:"_SGInternals,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage

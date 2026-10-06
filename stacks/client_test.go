@@ -279,7 +279,7 @@ func TestReadStack(t *testing.T) {
 
 	createTestStack(t, client)
 
-	resp, err := client.ReadStack(context.TODO(), org, stackResourceName, wfGrpId)
+	resp, err := client.ReadStack(context.TODO(), org, stackResourceName, wfGrpId, nil)
 	if err != nil {
 		t.Fatalf(err.Error())
 	}

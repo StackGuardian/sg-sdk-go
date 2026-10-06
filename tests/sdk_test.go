@@ -482,7 +482,7 @@ func TestSDK(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		response, err := c.Stacks.ReadStack(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP)
+		response, err := c.Stacks.ReadStack(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP, nil)
 		assert.Empty(t, err)
 		assert.Equal(t, SG_STACK, *response.Msg.ResourceName)
 	})

@@ -42,6 +42,12 @@ type DeleteStackRequest struct {
 	ForceDelete *bool `json:"-" url:"force_delete,omitempty"`
 }
 
+// ReadStackQueryParams are the query parameters for ReadStack.
+type ReadStackQueryParams struct {
+	// Rebuild the stack's WorkflowsConfig from the current state of its workflows before returning it, instead of returning the stored copy.
+	RefreshWorkflowsConfig *bool `json:"-" url:"refresh_workflows_config,omitempty"`
+}
+
 type ListAllStacksRequest struct {
 	// Filter stacks by description.
 	Description *string `json:"-" url:"Description,omitempty"`

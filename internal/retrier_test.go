@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"sync"
 	"testing"
 	"time"
 
@@ -208,4 +209,62 @@ var expectedRetryDurations = []time.Duration{
 	2500 * time.Millisecond,
 	5000 * time.Millisecond,
 	5000 * time.Millisecond,
+}
+
+// TestRetrierResendsRequestBody covers a retried call over HTTP/2, where the
+// transport does not rewind a consumed request body on its own.
+func TestRetrierResendsRequestBody(t *testing.T) {
+	var (
+		mu     sync.Mutex
+		bodies []string
+		protos []int
+	)
+	server := httptest.NewUnstartedServer(
+		http.HandlerFunc(
+			func(w http.ResponseWriter, r *http.Request) {
+				body, _ := io.ReadAll(r.Body)
+
+				mu.Lock()
+				bodies = append(bodies, string(body))
+				protos = append(protos, r.ProtoMajor)
+				attempt := len(bodies)
+				mu.Unlock()
+
+				if attempt == 1 {
+					w.WriteHeader(http.StatusGatewayTimeout)
+					return
+				}
+				_, _ = w.Write([]byte(`{"id":"1"}`))
+			},
+		),
+	)
+	server.EnableHTTP2 = true
+	server.StartTLS()
+	defer server.Close()
+
+	caller := NewCaller(
+		&CallerParams{
+			Client: server.Client(),
+		},
+	)
+
+	var response *Response
+	err := caller.Call(
+		context.Background(),
+		&CallParams{
+			URL:         server.URL,
+			Method:      http.MethodPost,
+			Request:     &Request{Id: "1"},
+			Response:    &response,
+			MaxAttempts: 2,
+		},
+	)
+
+	require.NoError(t, err)
+	assert.Equal(t, &Response{Id: "1"}, response)
+
+	mu.Lock()
+	defer mu.Unlock()
+	assert.Equal(t, []int{2, 2}, protos)
+	assert.Equal(t, []string{`{"id":"1"}`, `{"id":"1"}`}, bodies)
 }

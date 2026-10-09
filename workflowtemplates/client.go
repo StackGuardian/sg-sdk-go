@@ -224,3 +224,55 @@ func (c *Client) DeleteWorkflowTemplate(
 
 	return nil
 }
+
+// CreateVcsTriggers registers the template's VCS webhook and stores its VCS triggers. The
+// endpoint is idempotent: an existing webhook for the same repository is reused, and the stored
+// triggers are overwritten, so it is also used to update triggers.
+func (c *Client) CreateVcsTriggers(
+	ctx context.Context,
+	org string, // org of the user making the request
+	templateId string,
+	request *CreateVcsTriggersRequest,
+	opts ...option.RequestOption,
+) (*CreateVcsTriggersResponse, error) {
+	options := core.NewRequestOptions(opts...)
+
+	baseURL := internal.ResolveBaseURL(
+		options.BaseURL,
+		c.baseURL,
+		"https://api.app.stackguardian.io",
+	)
+
+	endpointURL := internal.EncodeURL(
+		baseURL+"/api/v1/templatetypes/%v/%v/%v/webhooks/vcs_triggers/",
+		TemplateType,
+		org,
+		templateId,
+	)
+
+	headers := internal.MergeHeaders(
+		c.header.Clone(),
+		options.ToHeader(),
+	)
+	headers.Add("x-sg-orgid", fmt.Sprintf("%v", org))
+
+	var response *CreateVcsTriggersResponse
+	if err := c.caller.Call(
+		ctx,
+		&internal.CallParams{
+			URL:             endpointURL,
+			Method:          http.MethodPost,
+			Headers:         headers,
+			MaxAttempts:     options.MaxAttempts,
+			BodyProperties:  options.BodyProperties,
+			QueryParameters: options.QueryParameters,
+			Client:          options.HTTPClient,
+			Request:         request,
+			Response:        &response,
+		},
+	); err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}

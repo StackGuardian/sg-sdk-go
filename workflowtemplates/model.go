@@ -91,6 +91,9 @@ const (
 	VCSTriggersTypeEnumGithubAppCustom VCSTriggersTypeEnum = "GITHUB_APP_CUSTOM"
 	VCSTriggersTypeEnumGitlabOauthSsh  VCSTriggersTypeEnum = "GITLAB_OAUTH_SSH"
 	VCSTriggersTypeEnumGitlabCom       VCSTriggersTypeEnum = "GITLAB_COM"
+	VCSTriggersTypeEnumBitbucketOrg    VCSTriggersTypeEnum = "BITBUCKET_ORG"
+	VCSTriggersTypeEnumAzureDevops     VCSTriggersTypeEnum = "AZURE_DEVOPS"
+	VCSTriggersTypeEnumAzureDevopsSp   VCSTriggersTypeEnum = "AZURE_DEVOPS_SP"
 )
 
 func (t VCSTriggersTypeEnum) Ptr() *VCSTriggersTypeEnum {
@@ -197,4 +200,31 @@ type UpdateWorkflowTemplateRequest struct {
 	Tags             *core.Optional[[]string]                             `json:"Tags,omitempty" url:"Tags,omitempty"`
 	VCSTriggers      *core.Optional[VCSTriggers]                          `json:"VCSTriggers,omitempty" url:"VCSTriggers,omitempty"`
 	ContextTags      *core.Optional[map[string]string]                    `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+}
+
+// TemplateIacVcsConfig is the iacVCSConfig of a template VCS trigger request. CustomSource has
+// the same shape as a template's RuntimeSource: the repository the webhook is registered for.
+// The API requires UseMarketplaceTemplate; when it is false, CustomSource is required, and when
+// it is true, an iacTemplateId is required instead.
+type TemplateIacVcsConfig struct {
+	UseMarketplaceTemplate *bool          `json:"useMarketplaceTemplate,omitempty" url:"useMarketplaceTemplate,omitempty"`
+	CustomSource           *RuntimeSource `json:"customSource,omitempty" url:"customSource,omitempty"`
+}
+
+type TemplateVcsConfig struct {
+	IacVcsConfig *TemplateIacVcsConfig `json:"iacVCSConfig,omitempty" url:"iacVCSConfig,omitempty"`
+}
+
+// CreateVcsTriggersRequest is the body of
+// POST /api/v1/templatetypes/{templateType}/{org}/{template}/webhooks/vcs_triggers/. It registers
+// the webhook with the VCS provider named by VcsConfig's customSource.sourceConfigDestKind and
+// stores VcsTriggers on the template. Both fields are required.
+type CreateVcsTriggersRequest struct {
+	VcsConfig   *TemplateVcsConfig `json:"VCSConfig" url:"-"`
+	VcsTriggers *VCSTriggers       `json:"VCSTriggers" url:"-"`
+}
+
+type CreateVcsTriggersResponse struct {
+	Msg  *string     `json:"msg,omitempty" url:"msg,omitempty"`
+	Data interface{} `json:"data,omitempty" url:"data,omitempty"`
 }

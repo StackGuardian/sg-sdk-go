@@ -454,58 +454,42 @@ func (c CustomSourceSourceConfigDestKindEnum) Ptr() *CustomSourceSourceConfigDes
 	return &c
 }
 
-type DeploymentPlatformConfig struct {
-	Kind   DeploymentPlatformConfigKindEnum `json:"kind" url:"kind"`
-	Config map[string]interface{}           `json:"config,omitempty" url:"config,omitempty"`
-
-	extraProperties map[string]interface{}
-	rawJSON         json.RawMessage
+type DeploymentPlatformConfigConfig struct {
+	IntegrationId *string `json:"integrationId,omitempty" url:"integrationId,omitempty"`
+	ProfileName   *string `json:"profileName,omitempty" url:"profileName,omitempty"`
 }
 
-func (d *DeploymentPlatformConfig) GetKind() DeploymentPlatformConfigKindEnum {
+func (d *DeploymentPlatformConfigConfig) GetIntegrationId() *string {
 	if d == nil {
-		return ""
+		return nil
+	}
+	return d.IntegrationId
+}
+
+func (d *DeploymentPlatformConfigConfig) GetProfileName() *string {
+	if d == nil {
+		return nil
+	}
+	return d.ProfileName
+}
+
+type DeploymentPlatformConfig struct {
+	Kind   *DeploymentPlatformConfigKindEnum `json:"kind,omitempty" url:"kind,omitempty"`
+	Config *DeploymentPlatformConfigConfig   `json:"config,omitempty" url:"config,omitempty"`
+}
+
+func (d *DeploymentPlatformConfig) GetKind() *DeploymentPlatformConfigKindEnum {
+	if d == nil {
+		return nil
 	}
 	return d.Kind
 }
 
-func (d *DeploymentPlatformConfig) GetConfig() map[string]interface{} {
+func (d *DeploymentPlatformConfig) GetConfig() *DeploymentPlatformConfigConfig {
 	if d == nil {
 		return nil
 	}
 	return d.Config
-}
-
-func (d *DeploymentPlatformConfig) GetExtraProperties() map[string]interface{} {
-	return d.extraProperties
-}
-
-func (d *DeploymentPlatformConfig) UnmarshalJSON(data []byte) error {
-	type unmarshaler DeploymentPlatformConfig
-	var value unmarshaler
-	if err := json.Unmarshal(data, &value); err != nil {
-		return err
-	}
-	*d = DeploymentPlatformConfig(value)
-	extraProperties, err := internal.ExtractExtraProperties(data, *d)
-	if err != nil {
-		return err
-	}
-	d.extraProperties = extraProperties
-	d.rawJSON = json.RawMessage(data)
-	return nil
-}
-
-func (d *DeploymentPlatformConfig) String() string {
-	if len(d.rawJSON) > 0 {
-		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
-			return value
-		}
-	}
-	if value, err := internal.StringifyJSON(d); err == nil {
-		return value
-	}
-	return fmt.Sprintf("%#v", d)
 }
 
 // * `AWS_STATIC` - AWS_STATIC
@@ -513,18 +497,20 @@ func (d *DeploymentPlatformConfig) String() string {
 // * `AWS_OIDC` - AWS_OIDC
 // * `AZURE_STATIC` - AZURE_STATIC
 // * `AZURE_OIDC` - AZURE_OIDC
+// * `AZURE_MANAGED_ID_OIDC` - AZURE_MANAGED_ID_OIDC
 // * `GCP_STATIC` - GCP_STATIC
 // * `GCP_OIDC` - GCP_OIDC
 type DeploymentPlatformConfigKindEnum string
 
 const (
-	DeploymentPlatformConfigKindEnumAwsStatic   DeploymentPlatformConfigKindEnum = "AWS_STATIC"
-	DeploymentPlatformConfigKindEnumAwsRbac     DeploymentPlatformConfigKindEnum = "AWS_RBAC"
-	DeploymentPlatformConfigKindEnumAwsOidc     DeploymentPlatformConfigKindEnum = "AWS_OIDC"
-	DeploymentPlatformConfigKindEnumAzureStatic DeploymentPlatformConfigKindEnum = "AZURE_STATIC"
-	DeploymentPlatformConfigKindEnumAzureOidc   DeploymentPlatformConfigKindEnum = "AZURE_OIDC"
-	DeploymentPlatformConfigKindEnumGcpStatic   DeploymentPlatformConfigKindEnum = "GCP_STATIC"
-	DeploymentPlatformConfigKindEnumGcpOidc     DeploymentPlatformConfigKindEnum = "GCP_OIDC"
+	DeploymentPlatformConfigKindEnumAwsStatic          DeploymentPlatformConfigKindEnum = "AWS_STATIC"
+	DeploymentPlatformConfigKindEnumAwsRbac            DeploymentPlatformConfigKindEnum = "AWS_RBAC"
+	DeploymentPlatformConfigKindEnumAwsOidc            DeploymentPlatformConfigKindEnum = "AWS_OIDC"
+	DeploymentPlatformConfigKindEnumAzureStatic        DeploymentPlatformConfigKindEnum = "AZURE_STATIC"
+	DeploymentPlatformConfigKindEnumAzureOidc          DeploymentPlatformConfigKindEnum = "AZURE_OIDC"
+	DeploymentPlatformConfigKindEnumAzureManagedIdOidc DeploymentPlatformConfigKindEnum = "AZURE_MANAGED_ID_OIDC"
+	DeploymentPlatformConfigKindEnumGcpStatic          DeploymentPlatformConfigKindEnum = "GCP_STATIC"
+	DeploymentPlatformConfigKindEnumGcpOidc            DeploymentPlatformConfigKindEnum = "GCP_OIDC"
 )
 
 func NewDeploymentPlatformConfigKindEnumFromString(s string) (DeploymentPlatformConfigKindEnum, error) {
@@ -539,6 +525,8 @@ func NewDeploymentPlatformConfigKindEnumFromString(s string) (DeploymentPlatform
 		return DeploymentPlatformConfigKindEnumAzureStatic, nil
 	case "AZURE_OIDC":
 		return DeploymentPlatformConfigKindEnumAzureOidc, nil
+	case "AZURE_MANAGED_ID_OIDC":
+		return DeploymentPlatformConfigKindEnumAzureManagedIdOidc, nil
 	case "GCP_STATIC":
 		return DeploymentPlatformConfigKindEnumGcpStatic, nil
 	case "GCP_OIDC":
@@ -4529,23 +4517,13 @@ type IacvcsConfig struct {
 }
 
 type InputSchemas struct {
-	Id           *string              `json:"id,omitempty" url:"id,omitempty"`
 	Name         *string              `json:"name,omitempty" url:"name,omitempty"`
-	Description  *string              `json:"description,omitempty" url:"description,omitempty"`
 	Type         InputSchemasTypeEnum `json:"type" url:"type"`
 	EncodedData  *string              `json:"encodedData,omitempty" url:"encodedData,omitempty"`
 	UiSchemaData *string              `json:"uiSchemaData,omitempty" url:"uiSchemaData,omitempty"`
-	IsCommitted  *bool                `json:"isCommitted,omitempty" url:"isCommitted,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
-}
-
-func (i *InputSchemas) GetId() *string {
-	if i == nil {
-		return nil
-	}
-	return i.Id
 }
 
 func (i *InputSchemas) GetName() *string {
@@ -4553,13 +4531,6 @@ func (i *InputSchemas) GetName() *string {
 		return nil
 	}
 	return i.Name
-}
-
-func (i *InputSchemas) GetDescription() *string {
-	if i == nil {
-		return nil
-	}
-	return i.Description
 }
 
 func (i *InputSchemas) GetType() InputSchemasTypeEnum {
@@ -4581,13 +4552,6 @@ func (i *InputSchemas) GetUiSchemaData() *string {
 		return nil
 	}
 	return i.UiSchemaData
-}
-
-func (i *InputSchemas) GetIsCommitted() *bool {
-	if i == nil {
-		return nil
-	}
-	return i.IsCommitted
 }
 
 func (i *InputSchemas) GetExtraProperties() map[string]interface{} {
@@ -4624,6 +4588,7 @@ func (i *InputSchemas) String() string {
 
 // * `FORM_JSONSCHEMA` - FORM_JSONSCHEMA
 // * `RAW_JSON` - RAW_JSON
+// * `NO_CODE_JSON` - NO_CODE_JSON
 // * `TIRITH_JSON` - TIRITH_JSON
 type InputSchemasTypeEnum string
 
@@ -4640,6 +4605,8 @@ func NewInputSchemasTypeEnumFromString(s string) (InputSchemasTypeEnum, error) {
 		return InputSchemasTypeEnumFormJsonschema, nil
 	case "RAW_JSON":
 		return InputSchemasTypeEnumRawJson, nil
+	case "NO_CODE_JSON":
+		return InputSchemasTypeEnumNoCodeJson, nil
 	case "TIRITH_JSON":
 		return InputSchemasTypeEnumTirithJson, nil
 	}
@@ -7194,6 +7161,30 @@ func (t *TerraformConfig) String() string {
 	return fmt.Sprintf("%#v", t)
 }
 
+// * `PRESERVE_SETTINGS` - PRESERVE_SETTINGS
+// * `RESET_TO_TEMPLATE` - RESET_TO_TEMPLATE
+type UpgradeModeEnum string
+
+const (
+	UpgradeModeEnumPreserveSettings UpgradeModeEnum = "PRESERVE_SETTINGS"
+	UpgradeModeEnumResetToTemplate  UpgradeModeEnum = "RESET_TO_TEMPLATE"
+)
+
+func NewUpgradeModeEnumFromString(s string) (UpgradeModeEnum, error) {
+	switch s {
+	case "PRESERVE_SETTINGS":
+		return UpgradeModeEnumPreserveSettings, nil
+	case "RESET_TO_TEMPLATE":
+		return UpgradeModeEnumResetToTemplate, nil
+	}
+	var t UpgradeModeEnum
+	return "", fmt.Errorf("%s is not a valid %T", s, t)
+}
+
+func (u UpgradeModeEnum) Ptr() *UpgradeModeEnum {
+	return &u
+}
+
 type UserSchedules struct {
 	Name *string `json:"name,omitempty" url:"name,omitempty"`
 	Desc *string `json:"desc,omitempty" url:"desc,omitempty"`
@@ -7271,45 +7262,45 @@ func (v *VcsConfig) String() string {
 }
 
 type WebhookTypes struct {
-	ApprovalRequired []map[string]interface{} `json:"APPROVAL_REQUIRED,omitempty" url:"APPROVAL_REQUIRED,omitempty"`
-	Cancelled        []map[string]interface{} `json:"CANCELLED,omitempty" url:"CANCELLED,omitempty"`
-	Completed        []map[string]interface{} `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
-	Errored          []map[string]interface{} `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
-	DriftDetected    []map[string]interface{} `json:"DRIFT_DETECTED,omitempty" url:"DRIFT_DETECTED,omitempty"`
+	ApprovalRequired []*Webhook `json:"APPROVAL_REQUIRED,omitempty" url:"APPROVAL_REQUIRED,omitempty"`
+	Cancelled        []*Webhook `json:"CANCELLED,omitempty" url:"CANCELLED,omitempty"`
+	Completed        []*Webhook `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
+	Errored          []*Webhook `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
+	DriftDetected    []*Webhook `json:"DRIFT_DETECTED,omitempty" url:"DRIFT_DETECTED,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (w *WebhookTypes) GetApprovalRequired() []map[string]interface{} {
+func (w *WebhookTypes) GetApprovalRequired() []*Webhook {
 	if w == nil {
 		return nil
 	}
 	return w.ApprovalRequired
 }
 
-func (w *WebhookTypes) GetCancelled() []map[string]interface{} {
+func (w *WebhookTypes) GetCancelled() []*Webhook {
 	if w == nil {
 		return nil
 	}
 	return w.Cancelled
 }
 
-func (w *WebhookTypes) GetCompleted() []map[string]interface{} {
+func (w *WebhookTypes) GetCompleted() []*Webhook {
 	if w == nil {
 		return nil
 	}
 	return w.Completed
 }
 
-func (w *WebhookTypes) GetErrored() []map[string]interface{} {
+func (w *WebhookTypes) GetErrored() []*Webhook {
 	if w == nil {
 		return nil
 	}
 	return w.Errored
 }
 
-func (w *WebhookTypes) GetDriftDetected() []map[string]interface{} {
+func (w *WebhookTypes) GetDriftDetected() []*Webhook {
 	if w == nil {
 		return nil
 	}
@@ -7337,6 +7328,68 @@ func (w *WebhookTypes) UnmarshalJSON(data []byte) error {
 }
 
 func (w *WebhookTypes) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type Webhook struct {
+	WebhookName   string  `json:"webhookName,omitempty" url:"webhookName,omitempty"`
+	WebhookUrl    string  `json:"webhookUrl,omitempty" url:"webhookUrl,omitempty"`
+	WebhookSecret *string `json:"webhookSecret,omitempty" url:"webhookSecret,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *Webhook) GetWebhookName() string {
+	if w == nil {
+		return ""
+	}
+	return w.WebhookName
+}
+
+func (w *Webhook) GetWebhookUrl() string {
+	if w == nil {
+		return ""
+	}
+	return w.WebhookUrl
+}
+
+func (w *Webhook) GetWebhookSecret() *string {
+	if w == nil {
+		return nil
+	}
+	return w.WebhookSecret
+}
+
+func (w *Webhook) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *Webhook) UnmarshalJSON(data []byte) error {
+	type unmarshaler Webhook
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = Webhook(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *Webhook) String() string {
 	if len(w.rawJSON) > 0 {
 		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
 			return value
@@ -7845,6 +7898,7 @@ type WorkflowsConfigWorkflow struct {
 	IsActive                    *IsPublicEnum               `json:"IsActive,omitempty" url:"IsActive,omitempty"`
 	WfStepsConfig               []*WfStepsConfig            `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
 	WfType                      *WfTypeEnum                 `json:"WfType,omitempty" url:"WfType,omitempty"`
+	ParallelExecution           *ParallelExecutionEnum      `json:"ParallelExecution,omitempty" url:"ParallelExecution,omitempty"`
 	TerraformConfig             *TerraformConfig            `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
 	EnvironmentVariables        []*EnvVars                  `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
 	DeploymentPlatformConfig    []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
@@ -7877,7 +7931,7 @@ type WorkflowsConfigWorkflow struct {
 	SgCustomWorkflowRunFacts    map[string]interface{}      `json:"SGCustomWorkflowRunFacts,omitempty" url:"SGCustomWorkflowRunFacts,omitempty"`
 	// Contextual tags to give context to your tags
 	ContextTags map[string]*string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
-	// The ID of the workflow. This is the ID of the workflow defined in the Stack Template.
+	// The ID of the workflow. This is the uuid for the workflow inside a stack
 	Id           *string                `json:"id,omitempty" url:"id,omitempty"`
 	TemplateId   *string                `json:"templateId,omitempty" url:"templateId,omitempty"`
 	IacInputData *TemplatesIacInputData `json:"iacInputData,omitempty" url:"iacInputData,omitempty"`
@@ -7927,6 +7981,13 @@ func (w *WorkflowsConfigWorkflow) GetWfType() *WfTypeEnum {
 		return nil
 	}
 	return w.WfType
+}
+
+func (w *WorkflowsConfigWorkflow) GetParallelExecution() *ParallelExecutionEnum {
+	if w == nil {
+		return nil
+	}
+	return w.ParallelExecution
 }
 
 func (w *WorkflowsConfigWorkflow) GetTerraformConfig() *TerraformConfig {

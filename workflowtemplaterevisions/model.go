@@ -136,6 +136,7 @@ type CreateWorkflowTemplateRevisionsRequest struct {
 	Ministeps                 *Ministeps                                              `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
 	Notes                     string                                                  `json:"Notes,omitempty" url:"Notes,omitempty"`
 	NumberOfApprovalsRequired *int                                                    `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
+	ParallelExecution         *sgsdkgo.ParallelExecutionEnum                          `json:"ParallelExecution,omitempty" url:"ParallelExecution,omitempty"`
 	RunnerConstraints         *sgsdkgo.RunnerConstraints                              `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
 	RuntimeSource             *workflowtemplates.RuntimeSource                        `json:"RuntimeSource,omitempty" url:"RuntimeSource,omitempty"`
 	Tags                      []string                                                `json:"Tags,omitzero" url:"Tags,omitempty"`
@@ -144,6 +145,7 @@ type CreateWorkflowTemplateRevisionsRequest struct {
 	UserJobMemory             *int                                                    `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
 	UserSchedules             []UserSchedules                                         `json:"UserSchedules,omitzero" url:"UserSchedules,omitempty"`
 	WfStepsConfig             []sgsdkgo.WfStepsConfig                                 `json:"WfStepsConfig,omitzero" url:"WfStepsConfig,omitempty"`
+	WfType                    *sgsdkgo.WfTypeEnum                                     `json:"WfType,omitempty" url:"WfType,omitempty"`
 }
 
 type CreateWorkflowTemplateRevisionResponse struct {
@@ -185,6 +187,7 @@ type UpdateWorkflowTemplateRevisionRequest struct {
 	Ministeps                 *core.Optional[Ministeps]                                              `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
 	Notes                     *core.Optional[string]                                                 `json:"Notes,omitempty" url:"Notes,omitempty"`
 	NumberOfApprovalsRequired *core.Optional[int]                                                    `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
+	ParallelExecution         *core.Optional[sgsdkgo.ParallelExecutionEnum]                          `json:"ParallelExecution,omitempty" url:"ParallelExecution,omitempty"`
 	RunnerConstraints         *core.Optional[sgsdkgo.RunnerConstraints]                              `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
 	RuntimeSource             *core.Optional[workflowtemplates.RuntimeSourceUpdate]                  `json:"RuntimeSource,omitempty" url:"RuntimeSource,omitempty"`
 	Tags                      *core.Optional[[]string]                                               `json:"Tags,omitempty" url:"Tags,omitempty"`
@@ -193,6 +196,7 @@ type UpdateWorkflowTemplateRevisionRequest struct {
 	UserJobMemory             *core.Optional[int]                                                    `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
 	UserSchedules             *core.Optional[[]UserSchedules]                                        `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
 	WfStepsConfig             *core.Optional[[]sgsdkgo.WfStepsConfig]                                `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
+	WfType                    *core.Optional[sgsdkgo.WfTypeEnum]                                     `json:"WfType,omitempty" url:"WfType,omitempty"`
 }
 
 type UpdateWorkflowTemplateRevisionResponseModel struct {

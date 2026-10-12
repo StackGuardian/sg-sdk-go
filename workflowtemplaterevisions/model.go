@@ -97,23 +97,28 @@ func (t UserSchedulesStateEnum) Ptr() *UserSchedulesStateEnum {
 	return &t
 }
 
+// UserSchedulesInputs are the run inputs a user schedule uses when it triggers a run.
+// Struct fields are pointers with `omitempty`, so nil is left out of the request and an
+// explicit empty struct is sent as {}.
+type UserSchedulesInputs struct {
+	ContextTags          map[string]string        `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	EnableChaining       *bool                    `json:"EnableChaining,omitempty" url:"EnableChaining,omitempty"`
+	EnvironmentVariables []sgsdkgo.EnvVars        `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
+	Ministeps            *Ministeps               `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	ScheduledAt          *string                  `json:"ScheduledAt,omitempty" url:"ScheduledAt,omitempty"`
+	TerraformAction      *sgsdkgo.TerraformAction `json:"TerraformAction,omitempty" url:"TerraformAction,omitempty"`
+	TerraformConfig      *sgsdkgo.TerraformConfig `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
+	UserJobCPU           *int                     `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
+	UserJobMemory        *int                     `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
+	VCSConfig            *sgsdkgo.VcsConfig       `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
+}
+
 type UserSchedules struct {
 	Cron   string                 `json:"cron,omitempty" url:"cron,omitempty"`
 	State  UserSchedulesStateEnum `json:"state,omitempty" url:"state,omitempty"`
 	Desc   *string                `json:"desc,omitempty" url:"desc,omitempty"`
 	Name   *string                `json:"name,omitempty" url:"name,omitempty"`
-	Inputs struct {
-		ContextTags          map[string]string        `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
-		EnableChaining       *bool                    `json:"EnableChaining,omitempty" url:"EnableChaining,omitempty"`
-		EnvironmentVariables []sgsdkgo.EnvVars        `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
-		Ministeps            Ministeps                `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
-		ScheduledAt          *string                  `json:"ScheduledAt,omitempty" url:"ScheduledAt,omitempty"`
-		TerraformAction      *sgsdkgo.TerraformAction `json:"TerraformAction,omitempty" url:"TerraformAction,omitempty"`
-		TerraformConfig      *sgsdkgo.TerraformConfig `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
-		UserJobCPU           *int                     `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
-		UserJobMemory        *int                     `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
-		VCSConfig            *sgsdkgo.VcsConfig       `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
-	} `json:"inputs,omitempty" url:"inputs,omitempty"`
+	Inputs *UserSchedulesInputs   `json:"inputs,omitempty" url:"inputs,omitempty"`
 }
 
 // CreateWorkflowTemplateRevisionsRequest is the body of the create revision call. Its list

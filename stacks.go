@@ -431,7 +431,7 @@ func (g *GeneratedStackUpdateResponse) String() string {
 // type as the Read response, rather than a separate near-duplicate type.
 type GeneratedStackCreateResponseData struct {
 	Stack     *StackData                                   `json:"stack,omitempty" url:"stack,omitempty"`
-	Workflows []*GeneratedStackCreateResponseDataWorkflows `json:"workflows,omitempty" url:"workflows,omitempty"`
+	Workflows []*GeneratedStackCreateResponseDataWorkflows `json:"workflows,omitzero" url:"workflows,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -840,29 +840,29 @@ type GeneratedStackCreateResponseDataWorkflows struct {
 	OrgId               string            `json:"OrgId" url:"OrgId"`
 	SubResourceId       string            `json:"SubResourceId" url:"SubResourceId"`
 	ResourceId          string            `json:"ResourceId" url:"ResourceId"`
-	ContextTags         map[string]string `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	ContextTags         map[string]string `json:"ContextTags,omitzero" url:"ContextTags,omitempty"`
 	CreatedAt           int               `json:"CreatedAt" url:"CreatedAt"`
 	ResourceName        string            `json:"ResourceName" url:"ResourceName"`
 	EnforcedPolicies    string            `json:"EnforcedPolicies" url:"EnforcedPolicies"`
 	Description         string            `json:"Description" url:"Description"`
-	Tags                []interface{}     `json:"Tags,omitempty" url:"Tags,omitempty"`
-	Authors             []string          `json:"Authors,omitempty" url:"Authors,omitempty"`
+	Tags                []interface{}     `json:"Tags,omitzero" url:"Tags,omitempty"`
+	Authors             []string          `json:"Authors,omitzero" url:"Authors,omitempty"`
 	DocVersion          string            `json:"DocVersion" url:"DocVersion"`
 	IsActive            string            `json:"IsActive" url:"IsActive"`
 	IsArchive           string            `json:"IsArchive" url:"IsArchive"`
-	ActivitySubscribers []string          `json:"ActivitySubscribers,omitempty" url:"ActivitySubscribers,omitempty"`
+	ActivitySubscribers []string          `json:"ActivitySubscribers,omitzero" url:"ActivitySubscribers,omitempty"`
 	LatestWfrunStatus   string            `json:"LatestWfrunStatus" url:"LatestWfrunStatus"`
-	WfStepsConfig       []interface{}     `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
+	WfStepsConfig       []interface{}     `json:"WfStepsConfig,omitzero" url:"WfStepsConfig,omitempty"`
 	ResourceType        string            `json:"ResourceType" url:"ResourceType"`
 	ModifiedAt          int               `json:"ModifiedAt" url:"ModifiedAt"`
 	// EnvironmentVariables is untyped because the API serializes it as an array
 	// when populated but as an empty object ({}) when there are none.
 	EnvironmentVariables      interface{}                                                 `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
-	DeploymentPlatformConfig  []*DeploymentPlatformConfig                                 `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
-	CacheConfig               map[string]interface{}                                      `json:"CacheConfig,omitempty" url:"CacheConfig,omitempty"`
+	DeploymentPlatformConfig  []*DeploymentPlatformConfig                                 `json:"DeploymentPlatformConfig,omitzero" url:"DeploymentPlatformConfig,omitempty"`
+	CacheConfig               map[string]interface{}                                      `json:"CacheConfig,omitzero" url:"CacheConfig,omitempty"`
 	WfType                    string                                                      `json:"WfType" url:"WfType"`
-	TerraformConfig           map[string]interface{}                                      `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
-	UserSchedules             []interface{}                                               `json:"UserSchedules,omitempty" url:"UserSchedules,omitempty"`
+	TerraformConfig           map[string]interface{}                                      `json:"TerraformConfig,omitzero" url:"TerraformConfig,omitempty"`
+	UserSchedules             []interface{}                                               `json:"UserSchedules,omitzero" url:"UserSchedules,omitempty"`
 	NumberOfApprovalsRequired int                                                         `json:"NumberOfApprovalsRequired" url:"NumberOfApprovalsRequired"`
 	VcsConfig                 *GeneratedStackWorkflowsVcsconfig                           `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
 	RunnerConstraints         *GeneratedStackCreateResponseDataWorkflowsRunnerconstraints `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
@@ -1093,7 +1093,7 @@ func (g *GeneratedStackCreateResponseDataWorkflows) String() string {
 }
 
 type GeneratedStackCreateResponseDataWorkflowsRunnerconstraints struct {
-	Selectors []string `json:"selectors,omitempty" url:"selectors,omitempty"`
+	Selectors []string `json:"selectors,omitzero" url:"selectors,omitempty"`
 	Type      string   `json:"type" url:"type"`
 
 	extraProperties map[string]interface{}
@@ -1194,7 +1194,7 @@ func (g *GeneratedStackGetResponse) String() string {
 
 type GeneratedStackListAllResponse struct {
 	Lastevaluatedkey string                              `json:"lastevaluatedkey" url:"lastevaluatedkey"`
-	Msg              []*GeneratedStackListAllResponseMsg `json:"msg,omitempty" url:"msg,omitempty"`
+	Msg              []*GeneratedStackListAllResponseMsg `json:"msg,omitzero" url:"msg,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -1247,7 +1247,7 @@ func (g *GeneratedStackListAllResponse) String() string {
 }
 
 type GeneratedStackListAllResponseMsg struct {
-	Authors        []string      `json:"Authors,omitempty" url:"Authors,omitempty"`
+	Authors        []string      `json:"Authors,omitzero" url:"Authors,omitempty"`
 	ResourceName   string        `json:"ResourceName" url:"ResourceName"`
 	IsActive       string        `json:"IsActive" url:"IsActive"`
 	SubResourceId  string        `json:"SubResourceId" url:"SubResourceId"`
@@ -1257,7 +1257,7 @@ type GeneratedStackListAllResponseMsg struct {
 	ParentId       string        `json:"ParentId" url:"ParentId"`
 	CreatedAt      float64       `json:"CreatedAt" url:"CreatedAt"`
 	LatestWfStatus string        `json:"LatestWfStatus" url:"LatestWfStatus"`
-	Tags           []interface{} `json:"Tags,omitempty" url:"Tags,omitempty"`
+	Tags           []interface{} `json:"Tags,omitzero" url:"Tags,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
@@ -1374,7 +1374,7 @@ func (g *GeneratedStackListAllResponseMsg) String() string {
 
 type GeneratedStackOutputsResponse struct {
 	Msg  string            `json:"msg" url:"msg"`
-	Data map[string]string `json:"data,omitempty" url:"data,omitempty"`
+	Data map[string]string `json:"data,omitzero" url:"data,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage

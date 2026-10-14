@@ -39,21 +39,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
   `PatchedStack` (the update request) still uses `*core.Optional[T]`, so an update can still clear a
   field with `sgsdkgo.Null[T]()`.
+
 - `Stack.WorkflowsConfig` is now `*StackWorkflowsConfig` and `PatchedStack.WorkflowsConfig` is now
   `*core.Optional[StackWorkflowsConfig]` (both used `WorkflowsConfig`).
 - `TemplatesConfig` is removed from `Stack` and `PatchedStack`.
 - Stacks use their own types for deployment platform config and mini steps, so the shared
   `DeploymentPlatformConfig`, `MiniStepsSchema` and `WebhookTypes` are unchanged for other clients:
 
-  | Field | Now |
-  | --- | --- |
-  | `Stack.DeploymentPlatformConfig` | `[]*StackDeploymentPlatformConfig` |
-  | `Stack.MiniSteps` | `*StackMiniStepsSchema` |
-  | `PatchedStack.DeploymentPlatformConfig` | `*core.Optional[[]*StackDeploymentPlatformConfig]` |
-  | `PatchedStack.MiniSteps` | `*core.Optional[StackMiniStepsSchema]` |
-  | `StackActionParameters.DeploymentPlatformConfig` | `[]*StackDeploymentPlatformConfig` |
-  | `stacktemplaterevisions.StackTemplateRevisionWorkflow.DeploymentPlatformConfig` | `[]*sgsdkgo.StackDeploymentPlatformConfig` |
-  | `stacktemplaterevisions.StackTemplateRevisionWorkflow.MiniSteps` | `*sgsdkgo.StackMiniStepsSchema` |
+  | Field                                                                           | Now                                                |
+  | ------------------------------------------------------------------------------- | -------------------------------------------------- |
+  | `Stack.DeploymentPlatformConfig`                                                | `[]*StackDeploymentPlatformConfig`                 |
+  | `Stack.MiniSteps`                                                               | `*StackMiniStepsSchema`                            |
+  | `PatchedStack.DeploymentPlatformConfig`                                         | `*core.Optional[[]*StackDeploymentPlatformConfig]` |
+  | `PatchedStack.MiniSteps`                                                        | `*core.Optional[StackMiniStepsSchema]`             |
+  | `StackActionParameters.DeploymentPlatformConfig`                                | `[]*StackDeploymentPlatformConfig`                 |
+  | `stacktemplaterevisions.StackTemplateRevisionWorkflow.DeploymentPlatformConfig` | `[]*sgsdkgo.StackDeploymentPlatformConfig`         |
+  | `stacktemplaterevisions.StackTemplateRevisionWorkflow.MiniSteps`                | `*sgsdkgo.StackMiniStepsSchema`                    |
 
   `StackDeploymentPlatformConfig` has `Kind *DeploymentPlatformConfigKindEnum` and
   `Config *DeploymentPlatformConfigConfig` (`IntegrationId`, `ProfileName`). `StackMiniStepsSchema`
@@ -120,6 +121,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
   Code that built the old anonymous struct with a literal no longer compiles; use
   `&workflowtemplaterevisions.UserSchedulesInputs{...}` instead.
+
 - `UserSchedulesInputs.Ministeps` is now `*Ministeps` (it was a struct value). Check it for `nil`
   before reading its fields, like `Inputs`.
 

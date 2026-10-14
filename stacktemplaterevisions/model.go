@@ -20,25 +20,25 @@ type StackTemplateRevisionWorkflowsConfig struct {
 // StackTemplateRevisionWorkflow corresponds to the WorkflowsConfigWorkflow schema
 // for stack template revisions — only the fields accepted by the API are included.
 type StackTemplateRevisionWorkflow struct {
-	Id                        *string                             `json:"id,omitempty" url:"id,omitempty"`
-	TemplateId                *string                             `json:"templateId,omitempty" url:"templateId,omitempty"`
-	ResourceName              *string                             `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
-	WfType                    *sgsdkgo.WfTypeEnum                 `json:"WfType,omitempty" url:"WfType,omitempty"`
-	WfStepsConfig             []*sgsdkgo.WfStepsConfig            `json:"WfStepsConfig,omitzero" url:"WfStepsConfig,omitempty"`
-	TerraformConfig           *sgsdkgo.TerraformConfig            `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
-	EnvironmentVariables      []*sgsdkgo.EnvVars                  `json:"EnvironmentVariables,omitzero" url:"EnvironmentVariables,omitempty"`
-	DeploymentPlatformConfig  []*sgsdkgo.DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitzero" url:"DeploymentPlatformConfig,omitempty"`
-	UserSchedules             []*sgsdkgo.UserSchedules            `json:"UserSchedules,omitzero" url:"UserSchedules,omitempty"`
-	MiniSteps                 *sgsdkgo.MiniStepsSchema            `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
-	Approvers                 []string                            `json:"Approvers,omitzero" url:"Approvers,omitempty"`
-	NumberOfApprovalsRequired *int                                `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
-	RunnerConstraints         *sgsdkgo.RunnerConstraints          `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
-	UserJobCpu                *int                                `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
-	UserJobMemory             *int                                `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
-	ParallelExecution         *sgsdkgo.ParallelExecutionEnum      `json:"ParallelExecution,omitempty" url:"ParallelExecution,omitempty"`
-	VcsConfig                 *sgsdkgo.VcsConfig                  `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
-	IacInputData              *sgsdkgo.TemplatesIacInputData      `json:"iacInputData,omitempty" url:"iacInputData,omitempty"`
-	InputSchemas              []*sgsdkgo.InputSchemas             `json:"inputSchemas,omitzero" url:"inputSchemas,omitempty"`
+	Id                        *string                                  `json:"id,omitempty" url:"id,omitempty"`
+	TemplateId                *string                                  `json:"templateId,omitempty" url:"templateId,omitempty"`
+	ResourceName              *string                                  `json:"ResourceName,omitempty" url:"ResourceName,omitempty"`
+	WfType                    *sgsdkgo.WfTypeEnum                      `json:"WfType,omitempty" url:"WfType,omitempty"`
+	WfStepsConfig             []*sgsdkgo.WfStepsConfig                 `json:"WfStepsConfig,omitzero" url:"WfStepsConfig,omitempty"`
+	TerraformConfig           *sgsdkgo.TerraformConfig                 `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
+	EnvironmentVariables      []*sgsdkgo.EnvVars                       `json:"EnvironmentVariables,omitzero" url:"EnvironmentVariables,omitempty"`
+	DeploymentPlatformConfig  []*sgsdkgo.StackDeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitzero" url:"DeploymentPlatformConfig,omitempty"`
+	UserSchedules             []*sgsdkgo.UserSchedules                 `json:"UserSchedules,omitzero" url:"UserSchedules,omitempty"`
+	MiniSteps                 *sgsdkgo.StackMiniStepsSchema            `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	Approvers                 []string                                 `json:"Approvers,omitzero" url:"Approvers,omitempty"`
+	NumberOfApprovalsRequired *int                                     `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
+	RunnerConstraints         *sgsdkgo.RunnerConstraints               `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
+	UserJobCpu                *int                                     `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
+	UserJobMemory             *int                                     `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
+	ParallelExecution         *sgsdkgo.ParallelExecutionEnum           `json:"ParallelExecution,omitempty" url:"ParallelExecution,omitempty"`
+	VcsConfig                 *sgsdkgo.VcsConfig                       `json:"VCSConfig,omitempty" url:"VCSConfig,omitempty"`
+	IacInputData              *sgsdkgo.TemplatesIacInputData           `json:"iacInputData,omitempty" url:"iacInputData,omitempty"`
+	InputSchemas              []*sgsdkgo.InputSchemas                  `json:"inputSchemas,omitzero" url:"inputSchemas,omitempty"`
 }
 
 // CreateStackTemplateRevisionRequest corresponds to the StackTemplateRevision schema.

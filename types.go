@@ -154,10 +154,10 @@ func (a ActionEnum) Ptr() *ActionEnum {
 }
 
 type StackActionParameters struct {
-	TerraformAction          *TerraformAction            `json:"TerraformAction,omitempty" url:"TerraformAction,omitempty"`
-	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
-	WfStepsConfig            []*WfStepsConfig            `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
-	EnvironmentVariables     []*EnvVars                  `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
+	TerraformAction          *TerraformAction                 `json:"TerraformAction,omitempty" url:"TerraformAction,omitempty"`
+	DeploymentPlatformConfig []*StackDeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitempty" url:"DeploymentPlatformConfig,omitempty"`
+	WfStepsConfig            []*WfStepsConfig                 `json:"WfStepsConfig,omitempty" url:"WfStepsConfig,omitempty"`
+	EnvironmentVariables     []*EnvVars                       `json:"EnvironmentVariables,omitempty" url:"EnvironmentVariables,omitempty"`
 }
 
 type ActionOrder struct {
@@ -474,22 +474,57 @@ func (d *DeploymentPlatformConfigConfig) GetProfileName() *string {
 }
 
 type DeploymentPlatformConfig struct {
-	Kind   *DeploymentPlatformConfigKindEnum `json:"kind,omitempty" url:"kind,omitempty"`
-	Config *DeploymentPlatformConfigConfig   `json:"config,omitempty" url:"config,omitempty"`
+	Kind   DeploymentPlatformConfigKindEnum `json:"kind" url:"kind"`
+	Config map[string]interface{}           `json:"config,omitempty" url:"config,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
 }
 
-func (d *DeploymentPlatformConfig) GetKind() *DeploymentPlatformConfigKindEnum {
+func (d *DeploymentPlatformConfig) GetKind() DeploymentPlatformConfigKindEnum {
 	if d == nil {
-		return nil
+		return ""
 	}
 	return d.Kind
 }
 
-func (d *DeploymentPlatformConfig) GetConfig() *DeploymentPlatformConfigConfig {
+func (d *DeploymentPlatformConfig) GetConfig() map[string]interface{} {
 	if d == nil {
 		return nil
 	}
 	return d.Config
+}
+
+func (d *DeploymentPlatformConfig) GetExtraProperties() map[string]interface{} {
+	return d.extraProperties
+}
+
+func (d *DeploymentPlatformConfig) UnmarshalJSON(data []byte) error {
+	type unmarshaler DeploymentPlatformConfig
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*d = DeploymentPlatformConfig(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *d)
+	if err != nil {
+		return err
+	}
+	d.extraProperties = extraProperties
+	d.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (d *DeploymentPlatformConfig) String() string {
+	if len(d.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(d.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(d); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", d)
 }
 
 // * `AWS_STATIC` - AWS_STATIC
@@ -7262,45 +7297,45 @@ func (v *VcsConfig) String() string {
 }
 
 type WebhookTypes struct {
-	ApprovalRequired []*Webhook `json:"APPROVAL_REQUIRED,omitempty" url:"APPROVAL_REQUIRED,omitempty"`
-	Cancelled        []*Webhook `json:"CANCELLED,omitempty" url:"CANCELLED,omitempty"`
-	Completed        []*Webhook `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
-	Errored          []*Webhook `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
-	DriftDetected    []*Webhook `json:"DRIFT_DETECTED,omitempty" url:"DRIFT_DETECTED,omitempty"`
+	ApprovalRequired []map[string]interface{} `json:"APPROVAL_REQUIRED,omitempty" url:"APPROVAL_REQUIRED,omitempty"`
+	Cancelled        []map[string]interface{} `json:"CANCELLED,omitempty" url:"CANCELLED,omitempty"`
+	Completed        []map[string]interface{} `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
+	Errored          []map[string]interface{} `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
+	DriftDetected    []map[string]interface{} `json:"DRIFT_DETECTED,omitempty" url:"DRIFT_DETECTED,omitempty"`
 
 	extraProperties map[string]interface{}
 	rawJSON         json.RawMessage
 }
 
-func (w *WebhookTypes) GetApprovalRequired() []*Webhook {
+func (w *WebhookTypes) GetApprovalRequired() []map[string]interface{} {
 	if w == nil {
 		return nil
 	}
 	return w.ApprovalRequired
 }
 
-func (w *WebhookTypes) GetCancelled() []*Webhook {
+func (w *WebhookTypes) GetCancelled() []map[string]interface{} {
 	if w == nil {
 		return nil
 	}
 	return w.Cancelled
 }
 
-func (w *WebhookTypes) GetCompleted() []*Webhook {
+func (w *WebhookTypes) GetCompleted() []map[string]interface{} {
 	if w == nil {
 		return nil
 	}
 	return w.Completed
 }
 
-func (w *WebhookTypes) GetErrored() []*Webhook {
+func (w *WebhookTypes) GetErrored() []map[string]interface{} {
 	if w == nil {
 		return nil
 	}
 	return w.Errored
 }
 
-func (w *WebhookTypes) GetDriftDetected() []*Webhook {
+func (w *WebhookTypes) GetDriftDetected() []map[string]interface{} {
 	if w == nil {
 		return nil
 	}

@@ -60,6 +60,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   is `MiniStepsSchema` with `Webhooks *StackWebhookTypes`, whose lists hold typed `*Webhook` entries
   instead of `map[string]interface{}`.
 
+  `Actions` is also used by `Template`, `StackTemplate` and `StackDataResponse` (the `templates`
+  client), so `Actions[...].Order[...].Parameters.DeploymentPlatformConfig` on those types is
+  `[]*StackDeploymentPlatformConfig` as well.
+
 #### Stack response types
 
 - `GeneratedStackGetResponse.Msg` (read) and `GeneratedStackCreateResponseData.Stack` (create) are

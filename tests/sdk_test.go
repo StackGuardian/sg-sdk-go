@@ -64,11 +64,11 @@ func TestSDK(t *testing.T) {
 		}
 		createResponse, err := c.Workflows.CreateWorkflow(context.Background(), SG_ORG, SG_WF_GROUP, &createWorkflowRequest)
 		assert.Empty(t, err)
-		assert.NotEmpty(t, createResponse.Data.ResourceName)
-		assert.Equal(t, dummyResourceName, createResponse.Data.ResourceName)
+		assert.NotEmpty(t, createResponse.Data.Stack.ResourceName)
+		assert.Equal(t, dummyResourceName, createResponse.Data.Stack.ResourceName)
 
-		deleteResposnse, err := c.Workflows.DeleteWorkflow(context.Background(), SG_ORG, createResponse.Data.ResourceName, SG_WF_GROUP)
-		assert.Equal(t, "Workflow "+createResponse.Data.ResourceName+" deleted", deleteResposnse.Msg)
+		deleteResposnse, err := c.Workflows.DeleteWorkflow(context.Background(), SG_ORG, createResponse.Data.Stack.ResourceName, SG_WF_GROUP)
+		assert.Equal(t, "Workflow "+createResponse.Data.Stack.ResourceName+" deleted", deleteResposnse.Msg)
 		assert.Empty(t, err)
 	})
 
@@ -307,7 +307,7 @@ func TestSDK(t *testing.T) {
 		response, err := c.WorkflowRuns.CreateWorkflowRun(context.Background(),
 			SG_ORG, SG_WF, SG_WF_GROUP, &createWorkflowRunRequest)
 		assert.Empty(t, err)
-		newWfRunName := response.Data.ResourceName
+		newWfRunName := response.Data.Stack.ResourceName
 		assert.NotEmpty(t, newWfRunName)
 
 	})
@@ -428,7 +428,6 @@ func TestSDK(t *testing.T) {
 		dummyResourceName := "sdk-test-stack-create-delete"
 		createStackRequest := sggosdk.Stack{
 			ResourceName: sggosdk.Optional(dummyResourceName),
-			RunOnCreate:  sggosdk.Bool(false),
 			DeploymentPlatformConfig: sggosdk.Optional([]*sggosdk.DeploymentPlatformConfig{
 				{
 					Kind: sggosdk.DeploymentPlatformConfigKindEnumAwsRbac,
@@ -448,8 +447,8 @@ func TestSDK(t *testing.T) {
 			}),
 
 			Description: sggosdk.Optional("Dummy Stack for GoSDK"),
-			WorkflowsConfig: sggosdk.Optional(sggosdk.WorkflowsConfig{
-				Workflows: []*sggosdk.WorkflowsConfigWorkflow{
+			WorkflowsConfig: sggosdk.Optional(sggosdk.StackWorkflowsConfig{
+				Workflows: []*sggosdk.StackWorkflowsConfigWorkflow{
 					{
 						NumberOfApprovalsRequired: sggosdk.Int(0),
 						Description:               sggosdk.String("Dummy Workflow for GoSDK"),
@@ -472,7 +471,7 @@ func TestSDK(t *testing.T) {
 		err = c.StackWorkflows.DeleteStackWorkflow(context.Background(), SG_ORG, *createStackResponse.Data.Stack.ResourceName,
 			strings.Split(createStackResponse.Data.Workflows[0].ResourceId, "/")[2], SG_WF_GROUP)
 		assert.Empty(t, err)
-		deleteResponse, err := c.Stacks.DeleteStack(context.Background(), SG_ORG, *createStackResponse.Data.Stack.ResourceName, SG_WF_GROUP)
+		deleteResponse, err := c.Stacks.DeleteStack(context.Background(), SG_ORG, *createStackResponse.Data.Stack.ResourceName, SG_WF_GROUP, nil)
 		assert.Empty(t, err)
 		assert.Equal(t, "Stack "+*createStackResponse.Data.Stack.ResourceName+" deleted", *deleteResponse.Msg)
 		assert.Empty(t, err)
@@ -483,7 +482,7 @@ func TestSDK(t *testing.T) {
 			option.WithApiKey(API_KEY),
 			option.WithBaseURL(SG_BASE_URL),
 		)
-		response, err := c.Stacks.ReadStack(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP)
+		response, err := c.Stacks.ReadStack(context.Background(), SG_ORG, SG_STACK, SG_WF_GROUP, nil)
 		assert.Empty(t, err)
 		assert.Equal(t, SG_STACK, *response.Msg.ResourceName)
 	})
@@ -603,8 +602,8 @@ func TestSDK(t *testing.T) {
 		assert.NotEmpty(t, createConnectorResponse.Msg)
 		assert.Equal(t, "Connector "+connectorName+" created", *createConnectorResponse.Msg)
 		//Check that the response contains the resource name
-		assert.NotEmpty(t, createConnectorResponse.Data.ResourceName)
-		assert.Equal(t, connectorName, createConnectorResponse.Data.ResourceName)
+		assert.NotEmpty(t, createConnectorResponse.Data.Stack.ResourceName)
+		assert.Equal(t, connectorName, createConnectorResponse.Data.Stack.ResourceName)
 
 		deleteConnectorResponse, err := c.Connectors.DeleteConnector(context.Background(), connectorName, SG_ORG)
 		assert.Empty(t, err)
@@ -700,7 +699,7 @@ func TestSDK(t *testing.T) {
 		assert.Empty(t, err)
 		assert.NotEmpty(t, updateWorkflowGroupResponse.Msg)
 		assert.Equal(t, "Workflow Group "+workflowGroupName+" updated", *updateWorkflowGroupResponse.Msg)
-		assert.Equal(t, "updated description", *updateWorkflowGroupResponse.Data.Description)
+		assert.Equal(t, "updated description", *updateWorkflowGroupResponse.Data.Stack.Description)
 	})
 
 	t.Run("update_nested_workflow_group", func(t *testing.T) {
@@ -717,7 +716,7 @@ func TestSDK(t *testing.T) {
 		assert.Empty(t, err)
 		assert.NotEmpty(t, updateWorkflowGroupResponse.Msg)
 		assert.Equal(t, "Workflow Group 1bger5ydab697a4jxe2gu updated", *updateWorkflowGroupResponse.Msg)
-		assert.Equal(t, "updated description", *updateWorkflowGroupResponse.Data.Description)
+		assert.Equal(t, "updated description", *updateWorkflowGroupResponse.Data.Stack.Description)
 	})
 
 	t.Run("read_workflow_group", func(t *testing.T) {
@@ -786,14 +785,14 @@ func TestSDK(t *testing.T) {
 		assert.Empty(t, err)
 		assert.NotEmpty(t, createChildWorkflowGroupResponse)
 		assert.NotEmpty(t, createChildWorkflowGroupResponse.Msg)
-		assert.Equal(t, dummyResourceName, *createChildWorkflowGroupResponse.Data.ResourceName)
+		assert.Equal(t, dummyResourceName, *createChildWorkflowGroupResponse.Data.Stack.ResourceName)
 		assert.Contains(t, *createChildWorkflowGroupResponse.Msg, "created")
 
 		deleteWorkflowGroupResponse, err := c.WorkflowGroups.DeleteWorkflowGroup(context.Background(), SG_ORG,
-			parentWorkflowGroupName+"/"+*createChildWorkflowGroupResponse.Data.ResourceName)
+			parentWorkflowGroupName+"/"+*createChildWorkflowGroupResponse.Data.Stack.ResourceName)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, deleteWorkflowGroupResponse.Msg)
-		assert.Equal(t, "Workflow Group "+*createChildWorkflowGroupResponse.Data.ResourceName+" deleted",
+		assert.Equal(t, "Workflow Group "+*createChildWorkflowGroupResponse.Data.Stack.ResourceName+" deleted",
 			*deleteWorkflowGroupResponse.Msg)
 	})
 
@@ -816,14 +815,14 @@ func TestSDK(t *testing.T) {
 		assert.Empty(t, err)
 		assert.NotEmpty(t, createChildWorkflowGroupResponse)
 		assert.NotEmpty(t, createChildWorkflowGroupResponse.Msg)
-		assert.Equal(t, dummyResourceName, *createChildWorkflowGroupResponse.Data.ResourceName)
+		assert.Equal(t, dummyResourceName, *createChildWorkflowGroupResponse.Data.Stack.ResourceName)
 		assert.Contains(t, *createChildWorkflowGroupResponse.Msg, "created")
 
 		deleteWorkflowGroupResponse, err := c.WorkflowGroups.DeleteWorkflowGroup(context.Background(), SG_ORG,
-			parentWorkflowGroupName+"/"+*createChildWorkflowGroupResponse.Data.ResourceName)
+			parentWorkflowGroupName+"/"+*createChildWorkflowGroupResponse.Data.Stack.ResourceName)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, deleteWorkflowGroupResponse.Msg)
-		assert.Equal(t, "Workflow Group "+*createChildWorkflowGroupResponse.Data.ResourceName+" deleted",
+		assert.Equal(t, "Workflow Group "+*createChildWorkflowGroupResponse.Data.Stack.ResourceName+" deleted",
 			*deleteWorkflowGroupResponse.Msg)
 	})
 
@@ -850,7 +849,7 @@ func TestSDK(t *testing.T) {
 		createRoleResponse, err := c.AccessManagement.CreateRole(context.Background(), SG_ORG, &createRoleRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, createRoleResponse)
-		assert.Equal(t, "Role "+createRoleResponse.Data.ResourceName+" created", *createRoleResponse.Msg)
+		assert.Equal(t, "Role "+createRoleResponse.Data.Stack.ResourceName+" created", *createRoleResponse.Msg)
 
 		err = c.AccessManagement.DeleteRole(context.Background(), SG_ORG, roleName)
 		assert.Empty(t, err)
@@ -879,7 +878,7 @@ func TestSDK(t *testing.T) {
 		assert.Empty(t, err)
 		assert.NotEmpty(t, updateRoleResponse.Msg)
 		assert.Equal(t, "Role /roles/"+roleName+" updated", *updateRoleResponse.Msg)
-		assert.Equal(t, "updated description", *updateRoleResponse.Data.Description)
+		assert.Equal(t, "updated description", *updateRoleResponse.Data.Stack.Description)
 	})
 
 	t.Run("read_role", func(t *testing.T) {
@@ -1115,10 +1114,10 @@ func TestSDK(t *testing.T) {
 		assert.Empty(t, err)
 		createResponse, err := c.Workflows.CreateWorkflow(context.Background(), SG_ORG, SG_WF_GROUP, createWorkflowRequest)
 		assert.Empty(t, err)
-		assert.NotEmpty(t, createResponse.Data.ResourceName)
+		assert.NotEmpty(t, createResponse.Data.Stack.ResourceName)
 
-		deleteResposnse, err := c.Workflows.DeleteWorkflow(context.Background(), SG_ORG, createResponse.Data.ResourceName, SG_WF_GROUP)
-		assert.Equal(t, "Workflow "+createResponse.Data.ResourceName+" deleted", deleteResposnse.Msg)
+		deleteResposnse, err := c.Workflows.DeleteWorkflow(context.Background(), SG_ORG, createResponse.Data.Stack.ResourceName, SG_WF_GROUP)
+		assert.Equal(t, "Workflow "+createResponse.Data.Stack.ResourceName+" deleted", deleteResposnse.Msg)
 		assert.Empty(t, err)
 	})
 
@@ -1135,8 +1134,6 @@ func TestSDK(t *testing.T) {
 			&createStackRequest)
 		assert.Empty(t, err)
 
-		createStackRequest.RunOnCreate = sggosdk.Bool(false)
-
 		createStackResponse, err := c.Stacks.CreateStack(context.Background(), SG_ORG, SG_WF_GROUP, createStackRequest)
 		assert.Empty(t, err)
 		assert.NotEmpty(t, createStackResponse.Data.Stack.ResourceName)
@@ -1145,7 +1142,7 @@ func TestSDK(t *testing.T) {
 		err = c.StackWorkflows.DeleteStackWorkflow(context.Background(), SG_ORG, *createStackResponse.Data.Stack.ResourceName,
 			strings.Split(createStackResponse.Data.Workflows[0].ResourceId, "/")[2], SG_WF_GROUP)
 		assert.Empty(t, err)
-		deleteResponse, err := c.Stacks.DeleteStack(context.Background(), SG_ORG, *createStackResponse.Data.Stack.ResourceName, SG_WF_GROUP)
+		deleteResponse, err := c.Stacks.DeleteStack(context.Background(), SG_ORG, *createStackResponse.Data.Stack.ResourceName, SG_WF_GROUP, nil)
 		assert.Empty(t, err)
 		assert.Equal(t, "Stack "+*createStackResponse.Data.Stack.ResourceName+" deleted", *deleteResponse.Msg)
 		assert.Empty(t, err)

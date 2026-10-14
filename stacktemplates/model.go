@@ -55,12 +55,12 @@ type CreateStackTemplateRequest struct {
 	OwnerOrg         string                             `json:"OwnerOrg,omitempty" url:"OwnerOrg,omitempty"`
 	TemplateType     sgsdkgo.TemplateTypeEnum           `json:"TemplateType,omitempty" url:"TemplateType,omitempty"`
 	SourceConfigKind *StackTemplateSourceConfigKindEnum `json:"SourceConfigKind,omitempty" url:"SourceConfigKind,omitempty"`
-	Tags             []string                           `json:"Tags,omitempty" url:"Tags,omitempty"`
-	ContextTags      map[string]string                  `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	Tags             []string                           `json:"Tags,omitzero" url:"Tags,omitempty"`
+	ContextTags      map[string]string                  `json:"ContextTags,omitzero" url:"ContextTags,omitempty"`
 	IsActive         *sgsdkgo.IsPublicEnum              `json:"IsActive,omitempty" url:"IsActive,omitempty"`
 	IsPublic         *sgsdkgo.IsPublicEnum              `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
 	TemplateName     string                             `json:"TemplateName,omitempty" url:"TemplateName,omitempty"`
-	SharedOrgsList   []string                           `json:"SharedOrgsList,omitempty" url:"SharedOrgsList,omitempty"`
+	SharedOrgsList   []string                           `json:"SharedOrgsList,omitzero" url:"SharedOrgsList,omitempty"`
 	ShortDescription *string                            `json:"ShortDescription,omitempty" url:"ShortDescription,omitempty"`
 }
 
@@ -83,9 +83,9 @@ type ReadStackTemplateResponse struct {
 	SourceConfigKind *StackTemplateSourceConfigKindEnum `json:"SourceConfigKind,omitempty" url:"SourceConfigKind,omitempty"`
 	IsActive         *sgsdkgo.IsPublicEnum              `json:"IsActive,omitempty" url:"IsActive,omitempty"`
 	IsPublic         *sgsdkgo.IsPublicEnum              `json:"IsPublic,omitempty" url:"IsPublic,omitempty"`
-	SharedOrgsList   []string                           `json:"SharedOrgsList,omitempty" url:"SharedOrgsList,omitempty"`
-	Tags             []string                           `json:"Tags,omitempty" url:"Tags,omitempty"`
-	ContextTags      map[string]string                  `json:"ContextTags,omitempty" url:"ContextTags,omitempty"`
+	SharedOrgsList   []string                           `json:"SharedOrgsList,omitzero" url:"SharedOrgsList,omitempty"`
+	Tags             []string                           `json:"Tags,omitzero" url:"Tags,omitempty"`
+	ContextTags      map[string]string                  `json:"ContextTags,omitzero" url:"ContextTags,omitempty"`
 }
 
 type ReadStackTemplateResponseModel struct {

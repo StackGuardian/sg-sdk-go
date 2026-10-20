@@ -23,7 +23,7 @@ type Stack struct {
 	// Used when one or all templates specified in the IAC Group are not supplied in TemplatesConfig.
 	EnvironmentVariables []*EnvVars `json:"EnvironmentVariables,omitzero" url:"-"`
 	// Defines the default deployment config when the workflows in WorkflowConfig do not set this key.
-	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitzero" url:"-"`
+	DeploymentPlatformConfig []*StackDeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitzero" url:"-"`
 	// Actions define the sequence in which the workflows in the Stack are to be executed along with the run configuration for each workflow. Each key in an action is the name of the action for example `apply`, `destroy`.
 	Actions map[string]*Actions `json:"Actions,omitzero" url:"-"`
 	// The ID of the template group that this Stack is mapped to. Null if the Stack is not mapped to any template group.
@@ -33,8 +33,8 @@ type Stack struct {
 	// Used only when upgrading Stack.
 	Operations map[string]interface{} `json:"Operations,omitzero" url:"-"`
 	// Contextual tags to give meanings to your tags
-	ContextTags map[string]*string `json:"ContextTags,omitzero" url:"-"`
-	MiniSteps   *MiniStepsSchema   `json:"MiniSteps,omitempty" url:"-"`
+	ContextTags map[string]*string    `json:"ContextTags,omitzero" url:"-"`
+	MiniSteps   *StackMiniStepsSchema `json:"MiniSteps,omitempty" url:"-"`
 }
 
 type DeleteStackRequest struct {
@@ -77,7 +77,7 @@ type PatchedStack struct {
 	// Used when one or all templates specified in the IAC Group are not supplied in TemplatesConfig.
 	EnvironmentVariables *core.Optional[[]*EnvVars] `json:"EnvironmentVariables,omitempty" url:"-"`
 	// Defines the default deployment config when the workflows in WorkflowConfig do not set this key.
-	DeploymentPlatformConfig *core.Optional[[]*DeploymentPlatformConfig] `json:"DeploymentPlatformConfig,omitempty" url:"-"`
+	DeploymentPlatformConfig *core.Optional[[]*StackDeploymentPlatformConfig] `json:"DeploymentPlatformConfig,omitempty" url:"-"`
 	// Actions define the sequence in which the workflows in the Stack are to be executed along with the run configuration for each workflow. Each key in an action is the name of the action for example `apply`, `destroy`.
 	Actions *core.Optional[map[string]*Actions] `json:"Actions,omitempty" url:"-"`
 	// The ID of the template group that this Stack is mapped to. Null if the Stack is not mapped to any template group.
@@ -87,8 +87,8 @@ type PatchedStack struct {
 	// Used only when upgrading Stack.
 	Operations *core.Optional[map[string]interface{}] `json:"Operations,omitempty" url:"-"`
 	// Contextual tags to give meanings to your tags
-	ContextTags *core.Optional[map[string]*string] `json:"ContextTags,omitempty" url:"-"`
-	MiniSteps   *core.Optional[MiniStepsSchema]    `json:"MiniSteps,omitempty" url:"-"`
+	ContextTags *core.Optional[map[string]*string]   `json:"ContextTags,omitempty" url:"-"`
+	MiniSteps   *core.Optional[StackMiniStepsSchema] `json:"MiniSteps,omitempty" url:"-"`
 	// Taints are issues that are affecting this Stack. A Taint may be purely informational or may require action to remove the taint.
 	Taints *core.Optional[[]string] `json:"Taints,omitempty" url:"-"`
 }
@@ -118,18 +118,18 @@ func (s *StackWorkflowsConfig) GetWorkflows() []*StackWorkflowsConfigWorkflow {
 // a non-nil empty one still serializes as []/{}, with no pointer indirection
 // needed.
 type StackWorkflowsConfigWorkflow struct {
-	WfStepsConfig             []*WfStepsConfig            `json:"WfStepsConfig,omitzero" url:"WfStepsConfig,omitempty"`
-	TerraformConfig           *TerraformConfig            `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
-	EnvironmentVariables      []*EnvVars                  `json:"EnvironmentVariables,omitzero" url:"EnvironmentVariables,omitempty"`
-	DeploymentPlatformConfig  []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitzero" url:"DeploymentPlatformConfig,omitempty"`
-	UserSchedules             []*UserSchedules            `json:"UserSchedules,omitzero" url:"UserSchedules,omitempty"`
-	MiniSteps                 *MiniStepsSchema            `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
-	Approvers                 []string                    `json:"Approvers,omitzero" url:"Approvers,omitempty"`
-	NumberOfApprovalsRequired *int                        `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
-	RunnerConstraints         *RunnerConstraints          `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
-	UserJobCpu                *int                        `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
-	UserJobMemory             *int                        `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
-	ParallelExecution         *ParallelExecutionEnum      `json:"ParallelExecution,omitempty" url:"ParallelExecution,omitempty"`
+	WfStepsConfig             []*WfStepsConfig                 `json:"WfStepsConfig,omitzero" url:"WfStepsConfig,omitempty"`
+	TerraformConfig           *TerraformConfig                 `json:"TerraformConfig,omitempty" url:"TerraformConfig,omitempty"`
+	EnvironmentVariables      []*EnvVars                       `json:"EnvironmentVariables,omitzero" url:"EnvironmentVariables,omitempty"`
+	DeploymentPlatformConfig  []*StackDeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitzero" url:"DeploymentPlatformConfig,omitempty"`
+	UserSchedules             []*UserSchedules                 `json:"UserSchedules,omitzero" url:"UserSchedules,omitempty"`
+	MiniSteps                 *StackMiniStepsSchema            `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	Approvers                 []string                         `json:"Approvers,omitzero" url:"Approvers,omitempty"`
+	NumberOfApprovalsRequired *int                             `json:"NumberOfApprovalsRequired,omitempty" url:"NumberOfApprovalsRequired,omitempty"`
+	RunnerConstraints         *RunnerConstraints               `json:"RunnerConstraints,omitempty" url:"RunnerConstraints,omitempty"`
+	UserJobCpu                *int                             `json:"UserJobCPU,omitempty" url:"UserJobCPU,omitempty"`
+	UserJobMemory             *int                             `json:"UserJobMemory,omitempty" url:"UserJobMemory,omitempty"`
+	ParallelExecution         *ParallelExecutionEnum           `json:"ParallelExecution,omitempty" url:"ParallelExecution,omitempty"`
 	// The ID of the workflow. This is the ID of the workflow defined in the Stack Template.
 	Id *string `json:"id,omitempty" url:"id,omitempty"`
 	// The resource id the platform assigns the created workflow, computed client-side so it's
@@ -168,7 +168,7 @@ func (s *StackWorkflowsConfigWorkflow) GetEnvironmentVariables() []*EnvVars {
 	return s.EnvironmentVariables
 }
 
-func (s *StackWorkflowsConfigWorkflow) GetDeploymentPlatformConfig() []*DeploymentPlatformConfig {
+func (s *StackWorkflowsConfigWorkflow) GetDeploymentPlatformConfig() []*StackDeploymentPlatformConfig {
 	if s == nil {
 		return nil
 	}
@@ -182,7 +182,7 @@ func (s *StackWorkflowsConfigWorkflow) GetUserSchedules() []*UserSchedules {
 	return s.UserSchedules
 }
 
-func (s *StackWorkflowsConfigWorkflow) GetMiniSteps() *MiniStepsSchema {
+func (s *StackWorkflowsConfigWorkflow) GetMiniSteps() *StackMiniStepsSchema {
 	if s == nil {
 		return nil
 	}
@@ -495,7 +495,7 @@ type StackData struct {
 	// Used when one or all templates specified in the IAC Group are not supplied in TemplatesConfig.
 	EnvironmentVariables []*EnvVars `json:"EnvironmentVariables,omitzero" url:"EnvironmentVariables,omitempty"`
 	// Defines the default deployment config when the workflows in WorkflowConfig do not set this key.
-	DeploymentPlatformConfig []*DeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitzero" url:"DeploymentPlatformConfig,omitempty"`
+	DeploymentPlatformConfig []*StackDeploymentPlatformConfig `json:"DeploymentPlatformConfig,omitzero" url:"DeploymentPlatformConfig,omitempty"`
 	// Actions define the sequence in which the workflows in the Stack are to be executed along with the run configuration for each workflow. Each key in an action is the name of the action for example `apply`, `destroy`.
 	Actions map[string]*Actions `json:"Actions,omitzero" url:"Actions,omitempty"`
 	// The ID of the template group that this Stack is mapped to. Null if the Stack is not mapped to any template group.
@@ -505,8 +505,8 @@ type StackData struct {
 	// Used only when upgrading Stack.
 	Operations map[string]interface{} `json:"Operations,omitzero" url:"Operations,omitempty"`
 	// Contextual tags to give meanings to your tags
-	ContextTags map[string]*string `json:"ContextTags,omitzero" url:"ContextTags,omitempty"`
-	MiniSteps   *MiniStepsSchema   `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
+	ContextTags map[string]*string    `json:"ContextTags,omitzero" url:"ContextTags,omitempty"`
+	MiniSteps   *StackMiniStepsSchema `json:"MiniSteps,omitempty" url:"MiniSteps,omitempty"`
 	// Taints are issues that are affecting this Stack. A Taint may be purely informational or may require action to remove the taint.
 	Taints               []string                          `json:"Taints,omitzero" url:"Taints,omitempty"`
 	StackFullId          string                            `json:"StackFullId" url:"StackFullId"`
@@ -573,7 +573,7 @@ func (s *StackData) GetEnvironmentVariables() []*EnvVars {
 	return s.EnvironmentVariables
 }
 
-func (s *StackData) GetDeploymentPlatformConfig() []*DeploymentPlatformConfig {
+func (s *StackData) GetDeploymentPlatformConfig() []*StackDeploymentPlatformConfig {
 	if s == nil {
 		return nil
 	}
@@ -622,7 +622,7 @@ func (s *StackData) GetContextTags() map[string]*string {
 	return s.ContextTags
 }
 
-func (s *StackData) GetMiniSteps() *MiniStepsSchema {
+func (s *StackData) GetMiniSteps() *StackMiniStepsSchema {
 	if s == nil {
 		return nil
 	}
@@ -1570,4 +1570,163 @@ func (s *StackDeleteResponse) String() string {
 		return value
 	}
 	return fmt.Sprintf("%#v", s)
+}
+
+type StackDeploymentPlatformConfig struct {
+	Kind   *DeploymentPlatformConfigKindEnum `json:"kind,omitempty" url:"kind,omitempty"`
+	Config *DeploymentPlatformConfigConfig   `json:"config,omitempty" url:"config,omitempty"`
+}
+
+func (d *StackDeploymentPlatformConfig) GetKind() *DeploymentPlatformConfigKindEnum {
+	if d == nil {
+		return nil
+	}
+	return d.Kind
+}
+
+func (d *StackDeploymentPlatformConfig) GetConfig() *DeploymentPlatformConfigConfig {
+	if d == nil {
+		return nil
+	}
+	return d.Config
+}
+
+type StackWebhookTypes struct {
+	ApprovalRequired []*Webhook `json:"APPROVAL_REQUIRED,omitempty" url:"APPROVAL_REQUIRED,omitempty"`
+	Cancelled        []*Webhook `json:"CANCELLED,omitempty" url:"CANCELLED,omitempty"`
+	Completed        []*Webhook `json:"COMPLETED,omitempty" url:"COMPLETED,omitempty"`
+	Errored          []*Webhook `json:"ERRORED,omitempty" url:"ERRORED,omitempty"`
+	DriftDetected    []*Webhook `json:"DRIFT_DETECTED,omitempty" url:"DRIFT_DETECTED,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (w *StackWebhookTypes) GetApprovalRequired() []*Webhook {
+	if w == nil {
+		return nil
+	}
+	return w.ApprovalRequired
+}
+
+func (w *StackWebhookTypes) GetCancelled() []*Webhook {
+	if w == nil {
+		return nil
+	}
+	return w.Cancelled
+}
+
+func (w *StackWebhookTypes) GetCompleted() []*Webhook {
+	if w == nil {
+		return nil
+	}
+	return w.Completed
+}
+
+func (w *StackWebhookTypes) GetErrored() []*Webhook {
+	if w == nil {
+		return nil
+	}
+	return w.Errored
+}
+
+func (w *StackWebhookTypes) GetDriftDetected() []*Webhook {
+	if w == nil {
+		return nil
+	}
+	return w.DriftDetected
+}
+
+func (w *StackWebhookTypes) GetExtraProperties() map[string]interface{} {
+	return w.extraProperties
+}
+
+func (w *StackWebhookTypes) UnmarshalJSON(data []byte) error {
+	type unmarshaler StackWebhookTypes
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*w = StackWebhookTypes(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *w)
+	if err != nil {
+		return err
+	}
+	w.extraProperties = extraProperties
+	w.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (w *StackWebhookTypes) String() string {
+	if len(w.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(w.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(w); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", w)
+}
+
+type StackMiniStepsSchema struct {
+	WfChaining    *WfChainingPayloadPayload `json:"wfChaining,omitempty" url:"wfChaining,omitempty"`
+	Notifications *NotificationTypes        `json:"notifications,omitempty" url:"notifications,omitempty"`
+	Webhooks      *StackWebhookTypes        `json:"webhooks,omitempty" url:"webhooks,omitempty"`
+
+	extraProperties map[string]interface{}
+	rawJSON         json.RawMessage
+}
+
+func (m *StackMiniStepsSchema) GetWfChaining() *WfChainingPayloadPayload {
+	if m == nil {
+		return nil
+	}
+	return m.WfChaining
+}
+
+func (m *StackMiniStepsSchema) GetNotifications() *NotificationTypes {
+	if m == nil {
+		return nil
+	}
+	return m.Notifications
+}
+
+func (m *StackMiniStepsSchema) GetWebhooks() *StackWebhookTypes {
+	if m == nil {
+		return nil
+	}
+	return m.Webhooks
+}
+
+func (m *StackMiniStepsSchema) GetExtraProperties() map[string]interface{} {
+	return m.extraProperties
+}
+
+func (m *StackMiniStepsSchema) UnmarshalJSON(data []byte) error {
+	type unmarshaler StackMiniStepsSchema
+	var value unmarshaler
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+	*m = StackMiniStepsSchema(value)
+	extraProperties, err := internal.ExtractExtraProperties(data, *m)
+	if err != nil {
+		return err
+	}
+	m.extraProperties = extraProperties
+	m.rawJSON = json.RawMessage(data)
+	return nil
+}
+
+func (m *StackMiniStepsSchema) String() string {
+	if len(m.rawJSON) > 0 {
+		if value, err := internal.StringifyJSON(m.rawJSON); err == nil {
+			return value
+		}
+	}
+	if value, err := internal.StringifyJSON(m); err == nil {
+		return value
+	}
+	return fmt.Sprintf("%#v", m)
 }

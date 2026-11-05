@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- The minimum supported Go version is now 1.26.10 (`go 1.26.10` in `go.mod`). Building or testing
+  the SDK requires a Go toolchain of at least 1.26.10; with the default `GOTOOLCHAIN=auto`, newer
+  toolchains satisfy this automatically.
+- Added a `govulncheck` target to the `Makefile`: it installs `govulncheck` (pinned to v1.9.0) and
+  runs it over the module to report known vulnerabilities in the code and its dependencies.
+
 ## [1.8.0]
 
 ### Breaking

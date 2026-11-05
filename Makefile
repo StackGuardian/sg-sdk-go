@@ -14,3 +14,9 @@ apply-patch:
 	git apply gitPatches/basePatch-optional-for-patched-integration.patch
 # Build target to format and apply patches in sequence
 build: format apply-patch
+
+# Check the code and its dependencies for known Go vulnerabilities
+# (installs govulncheck pinned to v1.9.0)
+govulncheck:
+	go install golang.org/x/vuln/cmd/govulncheck@v1.9.0
+	govulncheck ./...

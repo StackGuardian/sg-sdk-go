@@ -54,7 +54,7 @@ func TestCreateWorkflowStepTemplate(t *testing.T) {
 	client := getNewClient()
 	resp, err := client.CreateWorkflowStepTemplate(context.TODO(), org, false, &workflowStepTemplate)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 
 	assert.Equal(t, workflowStepTemplateName, resp.Data.Parent.TemplateName)
@@ -91,7 +91,7 @@ func TestUpdateWorkflowStepTemplate(t *testing.T) {
 
 	resp, err := client.UpdateWorkflowStepTemplate(context.TODO(), org, templateId, &requestPayload)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 
 	assert.Equal(t, updatedTemplateName, resp.Data.TemplateName)
@@ -101,6 +101,6 @@ func TestDeleteWorkflowStepTemplate(t *testing.T) {
 	client := getNewClient()
 	err := client.DeleteWorkflowStepTemplate(context.TODO(), org, templateId)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 }

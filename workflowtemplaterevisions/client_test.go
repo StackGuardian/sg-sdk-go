@@ -48,7 +48,7 @@ func TestCreateWorkflowTemplateRevision(t *testing.T) {
 
 	resp, err := client.CreateWorkflowTemplateRevision(context.TODO(), org, templateId, &payload)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 
 	assert.Equal(t, revisionAlias, resp.Data.Revision.Alias)
@@ -59,7 +59,7 @@ func TestDeleteWorkflowTemplateRevision(t *testing.T) {
 	revisionId := "sgsdkgo-workflow-template:3"
 	err := client.DeleteWorkflowTemplateRevision(context.TODO(), org, revisionId, true)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 }
 
@@ -90,7 +90,7 @@ func TestUpdateWorkflowTemplateRevision(t *testing.T) {
 	revisionId := templateId + ":1"
 	resp, err := client.UpdateWorkflowTemplateRevision(context.TODO(), org, revisionId, &payload)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 
 	assert.Equal(t, revisionAlias, resp.Data.Alias)

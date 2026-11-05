@@ -61,7 +61,7 @@ func TestCreateStackTemplate(t *testing.T) {
 	client := getNewClient()
 	resp, err := client.CreateStackTemplate(context.TODO(), org, false, &request)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 
 	assert.Equal(t, stackTemplateName, resp.Data.Parent.TemplateName)
@@ -80,7 +80,7 @@ func TestUpdateStackTemplate(t *testing.T) {
 
 	resp, err := client.UpdateStackTemplate(context.TODO(), org, templateId, &requestPayload)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 
 	assert.Equal(t, updatedTemplateName, *resp.Data.TemplateName)
@@ -90,6 +90,6 @@ func TestDeleteStackTemplate(t *testing.T) {
 	client := getNewClient()
 	err := client.DeleteStackTemplate(context.TODO(), org, templateId)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 }

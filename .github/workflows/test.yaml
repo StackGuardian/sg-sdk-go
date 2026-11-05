@@ -1,0 +1,53 @@
+name: "Go SDK check"  # hermetic PR gate: build, vulnerabilities, unit tests
+
+# Runs on pull requests targeting the main branch. Every check here is
+# hermetic: no API credentials, no StackGuardian resources created, so it is
+# safe on fork pull requests and cheap enough to run on every push to an open
+# PR.
+#
+# The integration tests in tests/ and the per-resource client_test.go files
+# hit the live StackGuardian API and need SG_API_TOKEN / SG_BASE_URL, so they
+# are not run here. `go vet ./...` still type-checks them on every PR — the
+# tests package once drifted behind the SDK types and stopped compiling
+# without anyone noticing, and vet is the check that catches that.
+
+on:
+  pull_request:
+    branches:
+      - "main"
+    types: [ opened, reopened, synchronize ]
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+
+  build-and-test:
+    name: "Build, vulnerability scan and unit tests"
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: "Checkout code"
+        uses: actions/checkout@v4
+
+      # go.mod pins the toolchain (go 1.26.10), so CI builds with exactly the
+      # version the SDK requires.
+      - name: "Install Go"
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: "go.mod"
+
+      - name: "Build SDK"
+        run: go build ./...
+
+      - name: "Vet"
+        run: go vet ./...
+
+      # Runs before the unit tests on purpose. The scan needs no credentials
+      # and finishes in about a minute; a PR with a known vulnerability in the
+      # code or its dependencies should fail the job before anything slower
+      # runs.
+      - name: "Vulnerability scan"
+        run: make govulncheck
+
+      - name: "Unit tests"
+        run: make test

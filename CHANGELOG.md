@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- The minimum supported Go version is now 1.26.10 (`go 1.26.10` in `go.mod`). Building or testing
+  the SDK requires a Go toolchain of at least 1.26.10; with the default `GOTOOLCHAIN=auto`, newer
+  toolchains satisfy this automatically.
+- Added a `govulncheck` target to the `Makefile`: it installs `govulncheck` (pinned to v1.9.0) and
+  runs it over the module to report known vulnerabilities in the code and its dependencies.
+- Added a GitHub Actions CI workflow (`.github/workflows/test.yaml`) that runs on every pull request
+  to `main`: a build check (`go build ./...` + `go vet ./...`), the vulnerability scan
+  (`make govulncheck`) and the offline unit tests (`make test`, a new `Makefile` target covering
+  `./internal/...` and `./core/...`). The integration tests are not run in CI — they need
+  `SG_API_TOKEN` / `SG_BASE_URL` — but `go vet ./...` still type-checks them on every PR.
+
+### Fixed
+
+- The `README.md` sample compiles again: `IacvcsConfig.UseMarketplaceTemplate` is a `*bool`
+  (`sggosdk.Bool(true)`), `IacInputData.SchemaType` is a `*IacInputDataSchemaTypeEnum` (`.Ptr()`),
+  `IacInputData.Data` is a `*map[string]interface{}` and `RunnerConstraints.Type` is a
+  `*RunnerConstraintsTypeEnum` (`sggosdk.RunnerConstraintsTypeEnumShared.Ptr()`).
+- The `tests/` integration tests compile again and `go vet ./...` passes. The tests now use the
+  `workflows.Workflow` / `workflows.PatchedWorkflow` request types,
+  `*StackDeploymentPlatformConfig` (with `*DeploymentPlatformConfigKindEnum` /
+  `*DeploymentPlatformConfigConfig`), no longer set the removed `PatchedStack.TemplatesConfig`,
+  pass `nil` for the new `UpdateWorkflow` `upgradeMode` argument, and read created resources from
+  `.Data.ResourceName` / `.Data.Description` instead of the removed `.Data.Stack` (stack responses
+  still use `.Data.Stack`, which is `*StackData`). Test failure messages use `t.Fatal(err)`
+  instead of the non-constant format string `t.Fatalf(err.Error())`.
+
 ## [1.8.0]
 
 ### Breaking

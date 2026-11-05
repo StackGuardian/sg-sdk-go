@@ -281,7 +281,7 @@ func TestReadStack(t *testing.T) {
 
 	resp, err := client.ReadStack(context.TODO(), org, stackResourceName, wfGrpId, nil)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 
 	assert.Equal(t, stackResourceName, *resp.Msg.ResourceName)
@@ -298,7 +298,7 @@ func TestUpdateStack(t *testing.T) {
 		&sgsdkgo.PatchedStack{Description: sgsdkgo.Optional(updatedDescription)},
 	)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 
 	assert.Equal(t, updatedDescription, *resp.Data.Description)
@@ -312,7 +312,7 @@ func TestDeleteStack(t *testing.T) {
 
 	resp, err := deleteTestStack(client)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 
 	assert.Contains(t, *resp.Msg, "deleted")

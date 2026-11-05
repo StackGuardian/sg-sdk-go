@@ -132,7 +132,7 @@ func TestReadWorkflowStepTemplateRevision(t *testing.T) {
 
 	resp, err := client.ReadWorkflowStepTemplateRevision(context.TODO(), org, fmt.Sprintf("%v:1", templateId))
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 
 	assert.Equal(t, revisionAlias, *resp.Msg.Alias)
@@ -143,6 +143,6 @@ func TestDeleteWorkflowStepTemplateRevision(t *testing.T) {
 
 	err := client.DeleteWorkflowStepTemplateRevision(context.TODO(), org, fmt.Sprintf("%v:1", templateId), true)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 }

@@ -74,7 +74,7 @@ func createWorkflowTemplate() error {
 func deleteWorkflowTemplate() error {
 	err := newWorkflowTemplateClient().DeleteWorkflowTemplate(context.TODO(), org, wfTemplateId)
 	if err != nil {
-		fmt.Printf(err.Error())
+		fmt.Println(err.Error())
 		return err
 	}
 	return nil
@@ -128,7 +128,7 @@ func TestCreateStackTemplateRevision(t *testing.T) {
 		},
 	)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 
 	assert.Equal(t, alias, resp.Data.Revision.Alias)
@@ -212,7 +212,7 @@ func TestUpdateStackTemplateRevision(t *testing.T) {
 		},
 	)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 
 	assert.Equal(t, revisionAlias, resp.Data.Alias.Value)
@@ -248,6 +248,6 @@ func TestDeleteStackTemplateRevision(t *testing.T) {
 
 	revisionId := stackTemplateId + ":1"
 	if err := client.DeleteStackTemplateRevision(context.TODO(), org, revisionId, true); err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err)
 	}
 }

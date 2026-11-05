@@ -15,6 +15,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a `govulncheck` target to the `Makefile`: it installs `govulncheck` (pinned to v1.9.0) and
   runs it over the module to report known vulnerabilities in the code and its dependencies.
 
+### Fixed
+
+- The `README.md` sample compiles again: `IacvcsConfig.UseMarketplaceTemplate` is a `*bool`
+  (`sggosdk.Bool(true)`), `IacInputData.SchemaType` is a `*IacInputDataSchemaTypeEnum` (`.Ptr()`),
+  `IacInputData.Data` is a `*map[string]interface{}` and `RunnerConstraints.Type` is a
+  `*RunnerConstraintsTypeEnum` (`sggosdk.RunnerConstraintsTypeEnumShared.Ptr()`).
+- The `tests/` integration tests compile again and `go vet ./...` passes. The tests now use the
+  `workflows.Workflow` / `workflows.PatchedWorkflow` request types,
+  `*StackDeploymentPlatformConfig` (with `*DeploymentPlatformConfigKindEnum` /
+  `*DeploymentPlatformConfigConfig`), no longer set the removed `PatchedStack.TemplatesConfig`,
+  pass `nil` for the new `UpdateWorkflow` `upgradeMode` argument, and read created resources from
+  `.Data.ResourceName` / `.Data.Description` instead of the removed `.Data.Stack` (stack responses
+  still use `.Data.Stack`, which is `*StackData`). Test failure messages use `t.Fatal(err)`
+  instead of the non-constant format string `t.Fatalf(err.Error())`.
+
 ## [1.8.0]
 
 ### Breaking

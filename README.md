@@ -64,11 +64,11 @@ func main() {
 		VcsConfig: &sggosdk.VcsConfig{
 			IacVcsConfig: &sggosdk.IacvcsConfig{
 				IacTemplateId:          sggosdk.String("/stackguardian/aws-s3-demo-website:16"),
-				UseMarketplaceTemplate: true,
+				UseMarketplaceTemplate: sggosdk.Bool(true),
 			},
 			IacInputData: &sggosdk.IacInputData{
-				SchemaType: sggosdk.IacInputDataSchemaTypeEnumFormJsonschema,
-				Data: map[string]interface{}{
+				SchemaType: sggosdk.IacInputDataSchemaTypeEnumFormJsonschema.Ptr(),
+				Data: &map[string]interface{}{
 					"bucket_region": "eu-central-1",
 				},
 			},
@@ -76,7 +76,7 @@ func main() {
 		UserJobCpu:    sggosdk.Int(512),
 		UserJobMemory: sggosdk.Int(1024),
 		RunnerConstraints: &sggosdk.RunnerConstraints{
-			Type: "shared",
+			Type: sggosdk.RunnerConstraintsTypeEnumShared.Ptr(),
 		},
 	}
 

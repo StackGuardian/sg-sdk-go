@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   toolchains satisfy this automatically.
 - Added a `govulncheck` target to the `Makefile`: it installs `govulncheck` (pinned to v1.9.0) and
   runs it over the module to report known vulnerabilities in the code and its dependencies.
+- Added a GitHub Actions CI workflow (`.github/workflows/test.yaml`) that runs on every pull request
+  to `main`: a build check (`go build ./...` + `go vet ./...`), the vulnerability scan
+  (`make govulncheck`) and the offline unit tests (`make test`, a new `Makefile` target covering
+  `./internal/...` and `./core/...`). The integration tests are not run in CI — they need
+  `SG_API_TOKEN` / `SG_BASE_URL` — but `go vet ./...` still type-checks them on every PR.
 
 ### Fixed
 

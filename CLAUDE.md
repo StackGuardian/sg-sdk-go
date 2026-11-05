@@ -13,6 +13,7 @@ go build ./...        # compile everything
 make format           # gofmt -w . && goimports -w .
 make apply-patch      # historical: apply all gitPatches/*.patch in order (only relevant after a Fern regeneration, which no longer happens)
 make build            # format + apply-patch
+make test             # offline unit tests (./internal/... ./core/...); the integration tests need SG_API_TOKEN / SG_BASE_URL
 make govulncheck      # install and run govulncheck (pinned to v1.9.0) to check the code and its dependencies for known Go vulnerabilities
 ```
 
@@ -25,6 +26,10 @@ go test ./tests/                                # integration tests — hit the 
 ```
 
 The tests in `tests/sdk_test.go` (and `client/client_test.go`, `workflows/client_test.go`) are integration tests against a live StackGuardian org; they require `SG_API_TOKEN` and `SG_BASE_URL` env vars (default base URL: `https://api.app.stackguardian.io`, auth header format: `"apikey <token>"`). Don't expect them to pass without credentials. Offline unit tests live in `internal/` and `core/`.
+
+## CI
+
+Every PR to `main` runs `.github/workflows/test.yaml`: `go build ./...`, `go vet ./...`, `make govulncheck` and `make test`. The integration tests are not run in CI (they need credentials), but `go vet ./...` type-checks them, so a test file drifting behind the SDK types fails the build instead of silently not compiling.
 
 ## History: Fern generation and the patch workflow
 

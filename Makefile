@@ -20,3 +20,9 @@ build: format apply-patch
 govulncheck:
 	go install golang.org/x/vuln/cmd/govulncheck@v1.9.0
 	govulncheck ./...
+
+# Run the offline unit tests (internal/ and core/). The integration tests in
+# tests/ and the per-resource client_test.go files hit the live StackGuardian
+# API and need SG_API_TOKEN / SG_BASE_URL, so they are not part of this target.
+test:
+	go test ./internal/... ./core/...
